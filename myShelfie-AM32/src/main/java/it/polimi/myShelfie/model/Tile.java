@@ -1,7 +1,7 @@
 package it.polimi.myShelfie.model;
 public class Tile {
 
-    enum Color {
+    public enum Color {
         BLUE,
         LIGHTBLUE,
         WHITE,
@@ -14,7 +14,7 @@ public class Tile {
     private String imagePath;
     private Color myColor;
 
-    public Tile() {
+    public Tile(String imagePath, Color color) {
         this.imagePath = imagePath;
         this.myColor = color;
     }
@@ -28,8 +28,12 @@ public class Tile {
         return this.myColor;
     }
 
-    public static void main(String[] args) {
-        Tile testTile = new Tile();
-        System.out.println("Color: " + testTile.getColor());
+    /**
+     * Set the color of the related object
+     *
+     * @param color Object's color
+     */
+    public void setColor(Color color){
+        this.myColor = color;
     }
 }
