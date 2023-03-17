@@ -52,4 +52,13 @@ public class Board {
                 this.grid[Math.max(row - 1, 0)][column].getColor() == Tile.Color.NULLTILE ||
                 this.grid[row][Math.max(column - 1, 0)].getColor() == Tile.Color.NULLTILE;
     }
+
+    public void initBoard(int players, Tile[] myDeck){
+        switch(players){
+            case 2: 
+                break;
+            case 3: break;
+            case 4: break;
+        }
+    }
 }

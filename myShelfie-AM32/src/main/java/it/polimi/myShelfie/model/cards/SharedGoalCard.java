@@ -1,5 +1,7 @@
 package it.polimi.myShelfie.model.cards;
 
+import it.polimi.myShelfie.model.Player;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -15,7 +17,7 @@ public class SharedGoalCard extends Card{
         pointsTokenStack.add(6);
         pointsTokenStack.add(8);
 
-        this.achievedBy = new List<Player>();
+        this.achievedBy = new ArrayList<Player>();
 
     }
 

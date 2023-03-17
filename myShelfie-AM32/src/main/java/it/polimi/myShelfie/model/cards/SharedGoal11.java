@@ -1,5 +1,7 @@
 package it.polimi.myShelfie.model.cards;
 
+import it.polimi.myShelfie.model.Player;
+
 public class SharedGoal11 extends SharedGoalCard implements CheckSharedGoal {
     SharedGoal11(){super("");}
 
