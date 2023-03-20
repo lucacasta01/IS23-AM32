@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Stack;
 
 public class SharedGoalCard extends Card{
+
     private Stack<Integer> pointsTokenStack;
     private List<Player> achievedBy;
 
@@ -45,6 +46,15 @@ public class SharedGoalCard extends Card{
      */
     public boolean isAchieved(Player p){
         return achievedBy.contains(p);
+    }
+
+
+    /**
+     * adds the player p to the achievedBy list
+     * @param p Player to add
+     */
+    public void addPlayer(Player p){
+        achievedBy.add(p);
     }
 }
 
