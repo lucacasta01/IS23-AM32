@@ -89,7 +89,7 @@ public class Shelf {
      * insert the given tile in the first free position from the bottom in the given column
      */
     public void insertTile(Tile t, int column){
-        for(int i = MAXROW-1; i>=0; i++){
+        for(int i = MAXROW-1; i>=0; i--){
             if(tileMartrix[i][column].getColor()==Tile.Color.NULLTILE){
                 tileMartrix[i][column]=t;
             }
