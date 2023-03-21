@@ -59,6 +59,7 @@ public class Board {
             return false;
         }
         Tile toCheck = this.grid[row][column];
+        // might need to be modified
         return  ((this.grid[Math.min(row + 1, 8)][column].getColor() == Tile.Color.NULLTILE) &&  this.grid[Math.min(row + 1, 8)][column] != toCheck) ||
                 ((this.grid[row][Math.min(column + 1, 8)].getColor() == Tile.Color.NULLTILE) && this.grid[row][Math.min(column + 1, 8)] != toCheck) ||
                 ((this.grid[Math.max(row - 1, 0)][column].getColor() == Tile.Color.NULLTILE) && this.grid[Math.max(row - 1, 0)][column] != toCheck) ||
