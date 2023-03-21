@@ -2,7 +2,7 @@ package it.polimi.myShelfie.model;
 public class Board {
     private Tile[][] grid;
 
-    public Board(Tile[][] grid) {
+    public Board() {
         this.grid = new Tile[9][9];
     }
 
@@ -53,6 +53,7 @@ public class Board {
                 this.grid[row][Math.max(column - 1, 0)].getColor() == Tile.Color.NULLTILE;
     }
 
+    
     public void initBoard(int players, Tile[] myDeck){
         switch(players){
             case 2: 
