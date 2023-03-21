@@ -12,7 +12,7 @@ class SharedGoalCardTest {
     @Test
     @DisplayName("addPlayer method")
     void addPlayer(){
-        SharedGoalCard sharedGoalCard = new SharedGoalCard("testCard");
+        SharedGoalCard sharedGoalCard = new SharedGoal1Card("testCard");
         Player p1 = new Player("Test1", "192.168.1.1");
         Player p2 = new Player("Test2", "192.168.1.2");
         Player p3 = new Player("Test3", "192.168.1.3");
@@ -27,7 +27,7 @@ class SharedGoalCardTest {
     @Test
     @DisplayName("isAchieved method")
     void isAchieved() {
-        SharedGoalCard sharedGoalCard = new SharedGoalCard("testCard");
+        SharedGoalCard sharedGoalCard = new SharedGoal1Card("testCard");
         Player p = new Player("Test", "192.168.1.1");
         assertFalse(sharedGoalCard.isAchieved(p));
         sharedGoalCard.addPlayer(p);
@@ -37,7 +37,7 @@ class SharedGoalCardTest {
     @Test
     @DisplayName("popPointToken method")
     void popPointToken(){
-        SharedGoalCard sharedGoalCard = new SharedGoalCard("testCard");
+        SharedGoalCard sharedGoalCard = new SharedGoal1Card("testCard");
         assertEquals(8, sharedGoalCard.popPointToken());
         assertEquals(6, sharedGoalCard.popPointToken());
         assertEquals(4, sharedGoalCard.popPointToken());

@@ -58,19 +58,25 @@ public class Board {
         if (this.grid[row][column].getColor() == Tile.Color.NULLTILE) {
             return false;
         }
-        return this.grid[Math.min(row + 1, 8)][column].getColor() == Tile.Color.NULLTILE ||
-                this.grid[row][Math.min(column + 1, 8)].getColor() == Tile.Color.NULLTILE ||
-                this.grid[Math.max(row - 1, 0)][column].getColor() == Tile.Color.NULLTILE ||
-                this.grid[row][Math.max(column - 1, 0)].getColor() == Tile.Color.NULLTILE;
+        Tile toCheck = this.grid[row][column];
+        return  ((this.grid[Math.min(row + 1, 8)][column].getColor() == Tile.Color.NULLTILE) &&  this.grid[Math.min(row + 1, 8)][column] != toCheck) ||
+                ((this.grid[row][Math.min(column + 1, 8)].getColor() == Tile.Color.NULLTILE) && this.grid[row][Math.min(column + 1, 8)] != toCheck) ||
+                ((this.grid[Math.max(row - 1, 0)][column].getColor() == Tile.Color.NULLTILE) && this.grid[Math.max(row - 1, 0)][column] != toCheck) ||
+                (( this.grid[row][Math.max(column - 1, 0)].getColor() == Tile.Color.NULLTILE) && this.grid[row][Math.max(column - 1, 0)] != toCheck);
     }
 
     
     public void initBoard(int players, Tile[] myDeck){
         switch(players){
-            case 2: 
+            case 2:
+                // Initialises board for two players
                 break;
-            case 3: break;
-            case 4: break;
+            case 3:
+                // initialises board for three players
+                break;
+            case 4:
+                // initialises board for four players
+                break;
         }
     }
 }
