@@ -38,14 +38,13 @@ public class PersonalGoalCard extends Card{
     public Tile[][] getPattern(){return patternToMatch;}
 
     /**
-     * set the entire constraints pattern
+     * set the entire constraints pattern, the color is linked to a specific position by his index
      * @param positions list of the constraints positions in the shelf
      * @param colors list of the tile colors related to the position (color colors[i] in position positions[i])
      */
-    public void setPattern(ArrayList<Position> positions, ArrayList<Tile.Color> colors){
-                for(int i=0; i<positions.size(); i++){
-                    this.addConstraint(colors.get(i),positions.get(i));
-                }
+    public void setPattern(List<Position> positions, List<Tile.Color> colors){
+        for(int i=0; i<positions.size(); i++){
+            this.addConstraint(colors.get(i),positions.get(i));
+        }
     }
-
 }

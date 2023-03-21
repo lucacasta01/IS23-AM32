@@ -16,8 +16,8 @@ public class PersonalGoalCardTest {
     void setPatternTest() {
         PersonalGoalCard testCard = new PersonalGoalCard("test");
         Tile[][] pattern = new Tile[6][5];
-        ArrayList<Tile.Color> colors = new ArrayList<>();
-        ArrayList<Position> positions = new ArrayList<>();
+        List<Tile.Color> colors = new ArrayList<>();
+        List<Position> positions = new ArrayList<>();
         colors.add(Tile.Color.BLUE);
         colors.add(Tile.Color.WHITE);
         positions.add(new Position(0, 0));
