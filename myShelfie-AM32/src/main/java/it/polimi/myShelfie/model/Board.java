@@ -34,11 +34,12 @@ public class Board {
         boolean check = true;
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
+                Tile toCheck = this.grid[i][j];
                 if (this.grid[i][j].getColor() != Tile.Color.NULLTILE) {
-                    if (this.grid[Math.min(i + 1, 8)][j].getColor() != Tile.Color.NULLTILE ||
-                            this.grid[i][Math.min(j + 1, 8)].getColor() != Tile.Color.NULLTILE ||
-                            this.grid[Math.max(i - 1, 0)][j].getColor() != Tile.Color.NULLTILE ||
-                            this.grid[i][Math.max(j - 1, 0)].getColor() != Tile.Color.NULLTILE) {
+                    if (((this.grid[Math.min(i + 1, 8)][j].getColor() != Tile.Color.NULLTILE) &&  this.grid[Math.min(i + 1, 8)][j] != toCheck) ||
+                            ((this.grid[i][Math.min(j + 1, 8)].getColor() != Tile.Color.NULLTILE) && this.grid[i][Math.min(j + 1, 8)] != toCheck) ||
+                            ((this.grid[Math.max(i - 1, 0)][j].getColor() != Tile.Color.NULLTILE) && this.grid[Math.max(i - 1, 0)][j] != toCheck) ||
+                            (( this.grid[i][Math.max(j - 1, 0)].getColor() != Tile.Color.NULLTILE) && this.grid[i][Math.max(j - 1, 0)] != toCheck)) {
                         check = false;
                     }
                 }
