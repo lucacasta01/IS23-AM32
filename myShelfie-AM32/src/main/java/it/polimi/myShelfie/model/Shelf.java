@@ -11,7 +11,7 @@ public class Shelf {
 
 
     public Shelf() {
-        this.tileMartrix = new Tile[6][5];
+        this.tileMartrix = new Tile[MAXROW][MAXCOLUMN];
 
     }
     /**
@@ -55,7 +55,7 @@ public class Shelf {
      */
     public int freeTiles(int column){
         int free = 0;
-        for(int i=0; i<6; i++){
+        for(int i=0; i<MAXROW; i++){
             if(this.tileMartrix[i][column].getColor()!=Tile.Color.NULLTILE){
                 return free;
             }else{

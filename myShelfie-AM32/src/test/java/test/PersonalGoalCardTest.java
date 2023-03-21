@@ -10,11 +10,14 @@ import org.junit.jupiter.api.Test;
 
 
 public class PersonalGoalCardTest {
+
+    private final String fakePath = "testPath";
+
     @Test
     @DisplayName("setPattern test")
     void setPatternTest() {
-        PersonalGoalCard testCard = new PersonalGoalCard("test");
-        Tile[][] pattern = new Tile[6][5];
+        PersonalGoalCard testCard = new PersonalGoalCard(fakePath);
+        Tile[][] pattern;
         List<Tile.Color> colors = new ArrayList<>();
         List<Position> positions = new ArrayList<>();
         colors.add(Tile.Color.BLUE);

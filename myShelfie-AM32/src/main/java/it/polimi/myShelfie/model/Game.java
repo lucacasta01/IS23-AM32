@@ -1,7 +1,9 @@
 package it.polimi.myShelfie.model;
 
 import it.polimi.myShelfie.model.cards.PersonalGoalCard;
+import it.polimi.myShelfie.model.cards.CheckSharedGoal;
 import it.polimi.myShelfie.model.cards.SharedGoalCard;
+
 import java.util.*;
 
 public class Game {
@@ -18,8 +20,8 @@ public class Game {
     private Board gameBoard;
     private GameStatus status;
     private List<PersonalGoalCard> personalDeck;
-    private List<SharedGoalCard> sharedDeck;
-    private List<SharedGoalCard> actualSharedGoal;
+    private List<CheckSharedGoal> sharedDeck;
+    private List<CheckSharedGoal> actualSharedGoal;
     private Tile[] tileHeap;
 
     public Game(int nplayers){
@@ -102,11 +104,11 @@ public class Game {
      * Takes a random shared goal card from the initial deck and returns it
      * @return the drawn card (SharedGoalCard)
      */
-    public SharedGoalCard drawSharedGoal(){
+    public CheckSharedGoal drawSharedGoal(){
         int upperBound = this.sharedDeck.size();
         Random rand = new Random();
         int myRand = rand.nextInt(upperBound);
-        SharedGoalCard toReturn = this.sharedDeck.get(myRand);
+        CheckSharedGoal toReturn = this.sharedDeck.get(myRand);
         this.personalDeck.remove(myRand);
         return toReturn;
     }
@@ -198,10 +200,12 @@ public class Game {
     public void checkSharedGoal(){
         Player current = this.players[this.getCurrentPlayer()];
         Shelf currentShelf = current.getMyShelf();
-        for(SharedGoalCard c : this.actualSharedGoal){
-            c.CheckSharedGoal();
+        for(CheckSharedGoal c : this.actualSharedGoal){
+            c.checkPattern(current);
         }
     }
     */
+
+
 
 }

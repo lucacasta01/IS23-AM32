@@ -8,6 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GameTest {
+    private final String fakeIP = "192.168.1.1";
+    private final String fakeName = "testName";
 
     @Test
     @DisplayName("Turn handling test")
@@ -21,9 +23,9 @@ public class GameTest {
     @Test
     @DisplayName("Winner check test")
     public void winnerCheckTest(){
-        Player p1 = new Player("p1", "192.168.0.1");
-        Player p2 = new Player("p2", "192.168.0.2");
-        Player p3 = new Player("p3", "192.168.0.3");
+        Player p1 = new Player(fakeName, fakeIP);
+        Player p2 = new Player(fakeName, fakeIP);
+        Player p3 = new Player(fakeName, fakeIP);
         p1.setScore(2);
         p2.setScore(3);
         p3.setScore(4);

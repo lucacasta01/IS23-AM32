@@ -10,6 +10,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class ShelfTest {
+    private final int MAXROW = 6;
+    private final int MAXCOLUMN = 5;
     @Test
     @DisplayName("initShelf test")
     void initShelfTest(){
@@ -17,8 +19,8 @@ public class ShelfTest {
         Tile[][] matrix;
         testShelf.initShelf();
         matrix=testShelf.getTileMartrix();
-        for(int i=0; i<6; i++){
-            for(int j=0; j<5; j++){
+        for(int i=0; i<MAXROW; i++){
+            for(int j=0; j<MAXCOLUMN; j++){
                 assertEquals(Tile.Color.NULLTILE, matrix[i][j].getColor());
             }
         }
@@ -29,7 +31,7 @@ public class ShelfTest {
 
         Shelf testShelf = new Shelf();
         testShelf.initShelf();
-       for(int i=0; i<6; i++){
+       for(int i=0; i<MAXROW; i++){
            testShelf.insertTile(new Tile("test", Tile.Color.BLUE), 0);
        }
         assertEquals(0, testShelf.freeTiles(0));
