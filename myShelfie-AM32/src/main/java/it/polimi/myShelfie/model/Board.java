@@ -4,6 +4,11 @@ public class Board {
 
     public Board() {
         this.grid = new Tile[9][9];
+        for(int i=0;i<9;i++){
+            for(int j=0;j<9;j++){
+                this.grid[i][j] = new Tile("",Tile.Color.NULLTILE);
+            }
+        }
     }
 
     /**
@@ -15,10 +20,16 @@ public class Board {
         return this.grid;
     }
 
+
+
+
     /**
      * Checks whether the board's grid needs to be refilled
      * @return true if needed, false otherwise
      */
+
+
+    //IF SUI BORDI CONTROLLA ANCHE SE' STESSO COME SE FOSSE UN VICINO
     public boolean needToRefill() {
         boolean check = true;
         for (int i = 0; i < 9; i++) {
