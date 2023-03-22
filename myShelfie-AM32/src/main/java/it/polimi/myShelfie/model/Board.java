@@ -33,13 +33,14 @@ public class Board {
     //IF SUI BORDI CONTROLLA ANCHE SE' STESSO COME SE FOSSE UN VICINO
     public boolean needToRefill() {
         boolean check = true;
-        for (int i = 0; i < BOARD_DIM; i++) {
-            for (int j = 0; j < BOARD_DIM; j++) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                Tile toCheck = this.grid[i][j];
                 if (this.grid[i][j].getColor() != Tile.Color.NULLTILE) {
-                    if (this.grid[Math.min(i + 1, BOARD_DIM-1)][j].getColor() != Tile.Color.NULLTILE ||
-                            this.grid[i][Math.min(j + 1, BOARD_DIM-1)].getColor() != Tile.Color.NULLTILE ||
-                            this.grid[Math.max(i - 1, 0)][j].getColor() != Tile.Color.NULLTILE ||
-                            this.grid[i][Math.max(j - 1, 0)].getColor() != Tile.Color.NULLTILE) {
+                    if (((this.grid[Math.min(i + 1, 8)][j].getColor() != Tile.Color.NULLTILE) &&  this.grid[Math.min(i + 1, 8)][j] != toCheck) ||
+                            ((this.grid[i][Math.min(j + 1, 8)].getColor() != Tile.Color.NULLTILE) && this.grid[i][Math.min(j + 1, 8)] != toCheck) ||
+                            ((this.grid[Math.max(i - 1, 0)][j].getColor() != Tile.Color.NULLTILE) && this.grid[Math.max(i - 1, 0)][j] != toCheck) ||
+                            (( this.grid[i][Math.max(j - 1, 0)].getColor() != Tile.Color.NULLTILE) && this.grid[i][Math.max(j - 1, 0)] != toCheck)) {
                         check = false;
                     }
                 }
@@ -60,8 +61,9 @@ public class Board {
             return false;
         }
         Tile toCheck = this.grid[row][column];
-        return  ((this.grid[Math.min(row + 1, BOARD_DIM-1)][column].getColor() == Tile.Color.NULLTILE) &&  this.grid[Math.min(row + 1, 8)][column] != toCheck) ||
-                ((this.grid[row][Math.min(column + 1, BOARD_DIM-1)].getColor() == Tile.Color.NULLTILE) && this.grid[row][Math.min(column + 1, 8)] != toCheck) ||
+        // might need to be modified
+        return  ((this.grid[Math.min(row + 1, 8)][column].getColor() == Tile.Color.NULLTILE) &&  this.grid[Math.min(row + 1, 8)][column] != toCheck) ||
+                ((this.grid[row][Math.min(column + 1, 8)].getColor() == Tile.Color.NULLTILE) && this.grid[row][Math.min(column + 1, 8)] != toCheck) ||
                 ((this.grid[Math.max(row - 1, 0)][column].getColor() == Tile.Color.NULLTILE) && this.grid[Math.max(row - 1, 0)][column] != toCheck) ||
                 (( this.grid[row][Math.max(column - 1, 0)].getColor() == Tile.Color.NULLTILE) && this.grid[row][Math.max(column - 1, 0)] != toCheck);
     }
