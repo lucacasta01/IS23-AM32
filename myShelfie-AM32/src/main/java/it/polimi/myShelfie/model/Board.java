@@ -1,13 +1,8 @@
 package it.polimi.myShelfie.model;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import it.polimi.myShelfie.utilities.jsonParser;
-import org.apache.commons.io.IOUtils;
+import it.polimi.myShelfie.utilities.JsonParser;
 
 import java.io.*;
-import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -176,10 +171,10 @@ public class Board {
      */
     public void initBoard(int players) throws IOException{
 
-        setNullTiles(jsonParser.getNullConfig("src/config/boardconfig.json"));
+        setNullTiles(JsonParser.getNullConfig("src/config/boardconfig.json"));
         switch (players) {
-            case 2 -> setNullTiles(jsonParser.getNullConfig("src/config/boardconfig2p.json"));
-            case 3 -> setNullTiles(jsonParser.getNullConfig("src/config/boardconfig3p.json"));
+            case 2 -> setNullTiles(JsonParser.getNullConfig("src/config/boardconfig2p.json"));
+            case 3 -> setNullTiles(JsonParser.getNullConfig("src/config/boardconfig3p.json"));
         }
         setTileColors();
     }

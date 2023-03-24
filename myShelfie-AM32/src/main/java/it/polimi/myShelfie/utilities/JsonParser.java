@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class jsonParser {
+public class JsonParser {
     /**
      * converts the json constraint file into a list of positions
      * @param jPath path of the json file
@@ -25,6 +25,15 @@ public class jsonParser {
             String jsonString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             Type type = new TypeToken<ArrayList<Position>>() {}.getType();
             return new Gson().fromJson(jsonString, type);
+        }
+    }
+
+    public static List<ColorPosition> getPersonalGoalConfig(String jPath) throws IOException{
+        try (InputStream inputStream = new FileInputStream(jPath)) {
+            String jsonString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+            Type type = new TypeToken<ArrayList<ColorPosition>>() {}.getType();
+            List<ColorPosition> toReturn = new Gson().fromJson(jsonString, type);
+            return toReturn;
         }
     }
 }

@@ -1,0 +1,32 @@
+[
+{
+	"row" : "0",
+	"column" : "0",
+	"color" : "PINK"
+},
+{
+	"row" : "0",
+	"column" : "2",
+	"color" : "BLUE"
+},
+{
+	"row" : "1",
+	"column" : "4",
+	"color" : "GREEN"
+},
+{
+	"row" : "2",
+	"column" : "3",
+	"color" : "WHITE"
+},
+{
+	"row" : "3",
+	"column" : "1",
+	"color" : "YELLOW"
+},
+{
+	"row" : "5",
+	"column" : "2",
+	"color" : "LIGHTBLUE"
+}
+]

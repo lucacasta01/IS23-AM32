@@ -8,12 +8,14 @@ import java.util.List;
 
 public class PersonalGoalCard extends Card{
     private final Tile[][] patternToMatch;
+    private final int PATTERN_ROWS = 6;
+    private final int PATTERN_COLUMNS = 5;
 
     public PersonalGoalCard(String imgPath) {
         super(imgPath);
-        this.patternToMatch = new Tile[6][5];
-        for(int i=0;i<6;i++){
-            for(int j=0;j<5;j++){
+        this.patternToMatch = new Tile[PATTERN_ROWS][PATTERN_COLUMNS];
+        for(int i=0;i<PATTERN_ROWS;i++){
+            for(int j=0;j<PATTERN_COLUMNS;j++){
                 patternToMatch[i][j] = new Tile("",Tile.Color.NULLTILE);
             }
         }
@@ -46,5 +48,28 @@ public class PersonalGoalCard extends Card{
         for(int i=0; i<positions.size(); i++){
             this.addConstraint(colors.get(i),positions.get(i));
         }
+    }
+
+    private boolean isNull(){
+        for(int i=0;i<PATTERN_ROWS;i++){
+            for(int j=0;j<PATTERN_COLUMNS;j++){
+                if(patternToMatch[i][j].getColor() != Tile.Color.NULLTILE)
+                    return false;
+            }
+        }
+        return true;
+    }
+    @Override
+    public String toString(){
+        if(isNull()){return "";}
+
+        StringBuilder s = new StringBuilder();
+        for(int i=0;i<PATTERN_ROWS;i++){
+            for(int j=0;j<PATTERN_COLUMNS;j++){
+                s.append(patternToMatch[i][j].toString()).append("\t");
+            }
+            s.append("\n");
+        }
+        return s.toString();
     }
 }

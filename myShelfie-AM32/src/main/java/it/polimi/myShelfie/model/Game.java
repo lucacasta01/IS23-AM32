@@ -2,8 +2,10 @@ package it.polimi.myShelfie.model;
 
 import it.polimi.myShelfie.model.cards.PersonalGoalCard;
 import it.polimi.myShelfie.model.cards.CheckSharedGoal;
-import it.polimi.myShelfie.model.cards.SharedGoalCard;
+import it.polimi.myShelfie.utilities.ColorPosition;
+import it.polimi.myShelfie.utilities.JsonParser;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Game {
@@ -35,17 +37,36 @@ public class Game {
     }
 
     private void initializePersonalDeck(){
-        // does something
+        personalDeck = new ArrayList<>();
+        try{
+            for(int i=1;i<=12;i++){
+                String jPath = new String("src/config/personalgoals/pg"+i+".json");
+                PersonalGoalCard cardToAdd = generatePersonalGoalCard(JsonParser.getPersonalGoalConfig(jPath),i);
+                personalDeck.add(cardToAdd);
+            }
+        } catch (IOException e) {
+            System.out.println(e.toString());
+        }
+    }
+
+    private PersonalGoalCard generatePersonalGoalCard(List<ColorPosition> colorPositions, int n){
+        List<Tile.Color> colors = new ArrayList<>();
+        List<Position> positions = new ArrayList<>();
+        for(ColorPosition c : colorPositions){
+            colors.add(c.getTileColor());
+            positions.add(new Position(c.getRow(),c.getColumn()));
+        }
+        StringBuilder s = new StringBuilder();
+        s.append("graphics/personalGoalCards/Personal_Goals").append(n).append(".png");
+        PersonalGoalCard myCard = new PersonalGoalCard(s.toString());
+        myCard.setPattern(positions,colors);
+        return myCard;
     }
 
     private void initializeSharedDeck(){
         // does something
     }
 
-    private void initializeTilesHeap(){
-        // does something
-    }
-    
     public int getPlayersNumber() {
         return playersNumber;
     }
@@ -93,9 +114,16 @@ public class Game {
     public PersonalGoalCard drawPersonalGoal(){
         int upperBound = this.personalDeck.size();
         Random rand = new Random();
-        int myRand = rand.nextInt(upperBound);
-        PersonalGoalCard toReturn = this.personalDeck.get(myRand);
-        this.personalDeck.remove(myRand);
+        PersonalGoalCard toReturn = new PersonalGoalCard("emptycard");
+        try {
+            int myRand = rand.nextInt(upperBound);
+            toReturn = this.personalDeck.get(myRand);
+            this.personalDeck.remove(myRand);
+        }
+        catch (Exception e){
+            System.out.println("Illegal action: PersonalDeck is empty.");
+        }
+
         return toReturn;
     }
 
