@@ -2,6 +2,7 @@ package it.polimi.myShelfie.model;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import it.polimi.myShelfie.utilities.jsonParser;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
@@ -10,6 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+
 
 public class Board {
     private Tile[][] grid;
@@ -83,6 +86,9 @@ public class Board {
                 (( this.grid[row][Math.max(column - 1, 0)].getColor() == Tile.Color.NULLTILE) && this.grid[row][Math.max(column - 1, 0)] != toCheck);
     }
 
+    /**
+     * Initializes the tiles heap with relative colors and image path
+     */
     private void initTileHeap(){
         this.tileHeap = new ArrayList<>();
         for(int i=0;i<TILES_GROUP;i++){
@@ -153,22 +159,34 @@ public class Board {
         }
     }
 
+    /**
+     *Casually picks a tile from the tileHeap then deletes the picked tile from the heap
+     * @return the randomly picked tile
+     */
     private Tile pickTile(){
         Tile t = tileHeap.get(new Random().nextInt(0,tileHeap.size()-1));
         tileHeap.remove(t);
         return t;
     }
 
+    /**
+     * initiaslizes the board with all the necessary tiles
+     * @param players is the game's number of players
+     * @throws IOException
+     */
     public void initBoard(int players) throws IOException{
 
-        setNullTiles(NullTiles.getNullConfig("src/config/boardconfig.json"));
+        setNullTiles(jsonParser.getNullConfig("src/config/boardconfig.json"));
         switch (players) {
-            case 2 -> setNullTiles(NullTiles.getNullConfig("src/config/boardconfig2p.json"));
-            case 3 -> setNullTiles(NullTiles.getNullConfig("src/config/boardconfig3p.json"));
+            case 2 -> setNullTiles(jsonParser.getNullConfig("src/config/boardconfig2p.json"));
+            case 3 -> setNullTiles(jsonParser.getNullConfig("src/config/boardconfig3p.json"));
         }
         setTileColors();
     }
 
+    /**
+     * pick tiles from the heap and assign them to their relative place
+     */
     private void setTileColors(){
         for(int i=0;i<BOARD_DIM;i++){
             for(int j=0;j<BOARD_DIM;j++){
@@ -179,11 +197,16 @@ public class Board {
         }
     }
 
+    /**
+     * sets all out of borders tiles
+     * @param nullTiles list of all the out of border positions
+     */
     private void setNullTiles(List<Position> nullTiles){
         for(Position p : nullTiles){
             grid[p.getRow()][p.getColumn()] = new Tile("graphics/itemTiles/transparent.png", Tile.Color.NULLTILE);
         }
     }
+
 
     @Override
     public String toString(){
@@ -203,14 +226,4 @@ public class Board {
     }
 }
 
-class NullTiles{
-    List<Position> nullTiles;
 
-    public static List<Position> getNullConfig(String jPath) throws IOException {
-        try(InputStream inputStream = new FileInputStream(jPath)){
-            String jsonString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-            Type type = new TypeToken<ArrayList<Position>>(){}.getType();
-            return new Gson().fromJson(jsonString,type);
-        }
-    }
-}
