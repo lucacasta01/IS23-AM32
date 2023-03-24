@@ -36,4 +36,32 @@ public class Tile {
     public void setColor(Color color){
         this.myColor = color;
     }
+
+    @Override
+    public String toString(){
+        switch(myColor){
+            case BLUE -> {
+                return "B";
+            }
+            case WHITE -> {
+                return "W";
+            }
+            case LIGHTBLUE -> {
+                return "L";
+            }
+            case PINK -> {
+                return "P";
+            }
+            case GREEN -> {
+                return "G";
+            }
+            case YELLOW -> {
+                return "Y";
+            }
+            case NULLTILE -> {
+                return "-";
+            }
+        }
+        return "!";
+    }
 }

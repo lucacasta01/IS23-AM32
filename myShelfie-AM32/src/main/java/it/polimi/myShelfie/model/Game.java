@@ -22,7 +22,7 @@ public class Game {
     private List<PersonalGoalCard> personalDeck;
     private List<CheckSharedGoal> sharedDeck;
     private List<CheckSharedGoal> actualSharedGoal;
-    private Tile[] tileHeap;
+
 
     public Game(int nplayers){
         setPlayersNumber(nplayers);
@@ -30,9 +30,8 @@ public class Game {
         this.currentPlayer = 0;
         initializePersonalDeck();
         initializeSharedDeck();
-        initializeTilesHeap();
         this.gameBoard = new Board();
-        this.gameBoard.initBoard(playersNumber, this.tileHeap);
+        initBoard();
     }
 
     private void initializePersonalDeck(){
@@ -206,6 +205,14 @@ public class Game {
     }
     */
 
+    private void initBoard(){
+        try {
+            this.gameBoard.initBoard(this.playersNumber);
+        }
+        catch(Exception e){
+            System.out.println(e.toString());
+        }
+    }
 
 
 }
