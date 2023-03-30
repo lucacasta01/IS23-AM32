@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class SharedGoalCard extends Card{
+public class SharedGoalCard extends Card implements CheckSharedGoal{
     private Stack<Integer> pointsTokenStack;
     private List<Player> achievedBy;
     public SharedGoalCard(String imgPath){
@@ -23,6 +23,7 @@ public class SharedGoalCard extends Card{
      *
      * @return Value of point-token (if present), 0 otherwise
      */
+
     public Integer popPointToken(){
         int p=0;
         try{
@@ -53,5 +54,8 @@ public class SharedGoalCard extends Card{
         achievedBy.add(p);
     }
 
+    public boolean checkPattern(Player p){
+        return false;
+    }
 
 }

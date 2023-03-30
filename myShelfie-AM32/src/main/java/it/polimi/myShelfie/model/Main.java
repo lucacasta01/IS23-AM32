@@ -1,5 +1,9 @@
 package it.polimi.myShelfie.model;
 
+import it.polimi.myShelfie.model.cards.CheckSharedGoal;
+import it.polimi.myShelfie.model.cards.SharedGoal1Card;
+import it.polimi.myShelfie.model.cards.SharedGoalCard;
+
 public class Main {
     public static void main(String[] args) {
         Game game2 = new Game(2);
@@ -17,5 +21,7 @@ public class Main {
             System.out.println(game2.drawPersonalGoal().toString());
         }
         System.out.println(game2.drawPersonalGoal().toString()); //TEST FOR OUTERBOUND INDEX EXCEPTION
+        SharedGoalCard card = new SharedGoal1Card("test");
+        card.checkPattern(new Player("test", "19022"));
     }
 }
