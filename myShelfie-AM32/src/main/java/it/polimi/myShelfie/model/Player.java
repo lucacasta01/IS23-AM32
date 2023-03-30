@@ -1,6 +1,10 @@
 package it.polimi.myShelfie.model;
 
 import it.polimi.myShelfie.model.cards.Card;
+import it.polimi.myShelfie.model.cards.PersonalGoalCard;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player {
 
@@ -11,7 +15,23 @@ public class Player {
     private int failedPings;
     private Shelf myShelf;
 
-    private Card[] myCards;
+    private Card myGoalCard;
+
+    public Player(String name, String addr) {
+        username = name;
+        score = 0;
+        ipAddress = addr;
+        myShelf = new Shelf();
+        myGoalCard = null;
+    }
+
+    public void setGoalCard(Card goalCard){
+        myGoalCard = goalCard;
+    }
+
+    public void setMyShelf(Shelf myShelf){
+        this.myShelf = myShelf;
+    }
 
     /**
      * Returns the player's shelf
@@ -74,11 +94,7 @@ public class Player {
         this.failedPings++;
     }
 
-    public Player(String name, String addr) {
-        username = name;
-        score = 0;
-        ipAddress = addr;
-    }
+
 
     public static void main(String[] args) {
         Player test = new Player("andrea", "128.0.0.1");

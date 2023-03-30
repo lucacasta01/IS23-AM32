@@ -3,12 +3,14 @@ package it.polimi.myShelfie.model;
 import it.polimi.myShelfie.model.cards.CheckSharedGoal;
 import it.polimi.myShelfie.model.cards.SharedGoal1Card;
 import it.polimi.myShelfie.model.cards.SharedGoalCard;
+import it.polimi.myShelfie.utilities.Constants;
 
 public class Main {
     public static void main(String[] args) {
         Game game2 = new Game(2);
-        Game game3 = new Game(3);
-        Game game4 = new Game(4);
+
+        Player p1 = new Player("root","fakeAddress");
+        game2.addPlayer(p1);
 
         /*System.out.println(game2.getGameBoard().toString()+"\n\n");
         System.out.println(game3.getGameBoard().toString()+"\n\n");
@@ -17,11 +19,42 @@ public class Main {
         /*
          * Print whole deck patterns
          */
+
+        /*
         for(int i=0;i<12;i++) {
             System.out.println(game2.drawPersonalGoal().toString());
         }
         System.out.println(game2.drawPersonalGoal().toString()); //TEST FOR OUTERBOUND INDEX EXCEPTION
-        SharedGoalCard card = new SharedGoal1Card("test");
-        card.checkPattern(new Player("test", "19022"));
+         */
+
+        Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
+        for(int i=0;i<Constants.SHELFROW;i++){
+            for(int j=0;j<Constants.SHELFCOLUMN;j++){
+                testingShelf[i][j] = new Tile("",Tile.Color.NULLTILE);
+            }
+        }
+
+        testingShelf[0][0].setColor(Tile.Color.GREEN);
+        testingShelf[0][1].setColor(Tile.Color.LIGHTBLUE);
+        testingShelf[1][0].setColor(Tile.Color.PINK);
+        testingShelf[1][1].setColor(Tile.Color.GREEN);
+
+        testingShelf[0][2].setColor(Tile.Color.GREEN);
+        testingShelf[0][3].setColor(Tile.Color.LIGHTBLUE);
+        testingShelf[1][2].setColor(Tile.Color.PINK);
+        testingShelf[1][3].setColor(Tile.Color.GREEN);
+
+        p1.setMyShelf(new Shelf(testingShelf));
+
+        if(game2.sharedDeck.get(0).checkPattern(p1)){
+            System.out.println("Achieved");
+        }
+        else{
+            System.out.println("Not achieved");
+        }
+
+
+
+
     }
 }

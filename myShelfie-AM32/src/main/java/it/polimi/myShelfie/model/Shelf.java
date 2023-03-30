@@ -13,7 +13,10 @@ public class Shelf {
 
     public Shelf() {
         this.tileMartrix = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
+    }
 
+    public Shelf(Tile[][] tileMartrix){
+        this.tileMartrix = tileMartrix;
     }
     /**
      * initialize the shelf with NULLTILE type tiles

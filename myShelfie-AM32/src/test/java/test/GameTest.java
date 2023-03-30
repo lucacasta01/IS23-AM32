@@ -5,6 +5,9 @@ import it.polimi.myShelfie.model.Player;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GameTest {
@@ -29,10 +32,10 @@ public class GameTest {
         p1.setScore(2);
         p2.setScore(3);
         p3.setScore(4);
-        Player[] myPlayers = new Player[3];
-        myPlayers[0] = p1;
-        myPlayers[1] = p2;
-        myPlayers[2] = p3;
+        List<Player> myPlayers = new ArrayList<>();
+        myPlayers.add(p1);
+        myPlayers.add(p2);
+        myPlayers.add(p3);
         Game myGame = new Game(3);
         myGame.setPlayers(myPlayers);
         myGame.getWinner();

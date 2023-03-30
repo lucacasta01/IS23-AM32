@@ -1,7 +1,6 @@
 package it.polimi.myShelfie.model;
 
-import it.polimi.myShelfie.model.cards.PersonalGoalCard;
-import it.polimi.myShelfie.model.cards.CheckSharedGoal;
+import it.polimi.myShelfie.model.cards.*;
 import it.polimi.myShelfie.utilities.ColorPosition;
 import it.polimi.myShelfie.utilities.JsonParser;
 
@@ -17,17 +16,18 @@ public class Game {
         GAMEENDEDNORMALLY
     }
     private int playersNumber;
-    private Player[] players;
+    private List<Player> players;
     private int currentPlayer;
     private Board gameBoard;
     private GameStatus status;
     private List<PersonalGoalCard> personalDeck;
-    private List<CheckSharedGoal> sharedDeck;
+    public List<CheckSharedGoal> sharedDeck;
     private List<CheckSharedGoal> actualSharedGoal;
 
 
     public Game(int nplayers){
         setPlayersNumber(nplayers);
+        players = new ArrayList<>();
         setStatus(GameStatus.WAITINGFORPLAYERS);
         this.currentPlayer = 0;
         initializePersonalDeck();
@@ -56,26 +56,49 @@ public class Game {
             colors.add(c.getTileColor());
             positions.add(new Position(c.getRow(),c.getColumn()));
         }
-        StringBuilder s = new StringBuilder();
-        s.append("graphics/personalGoalCards/Personal_Goals").append(n).append(".png");
-        PersonalGoalCard myCard = new PersonalGoalCard(s.toString());
+        PersonalGoalCard myCard = new PersonalGoalCard("graphics/personalGoalCards/Personal_Goals" + n + ".png");
         myCard.setPattern(positions,colors);
         return myCard;
     }
 
     private void initializeSharedDeck(){
-        // does something
+        sharedDeck = new ArrayList<>();
+        Random rnd = new Random();
+        SharedGoalCard[] sharedGoalCards = new SharedGoalCard[12];
+        sharedGoalCards[0] = new SharedGoal1Card("graphics/commonGoalCards/1.jpg");
+        sharedGoalCards[1] = new SharedGoal2Card("graphics/commonGoalCards/2.jpg");
+        sharedGoalCards[2] = new SharedGoal3Card("graphics/commonGoalCards/3.jpg");
+        sharedGoalCards[3] = new SharedGoal4Card("graphics/commonGoalCards/4.jpg");
+        sharedGoalCards[4] = new SharedGoal5Card("graphics/commonGoalCards/5.jpg");
+        sharedGoalCards[5] = new SharedGoal6Card("graphics/commonGoalCards/6.jpg");
+        sharedGoalCards[6] = new SharedGoal7Card("graphics/commonGoalCards/7.jpg");
+        sharedGoalCards[7] = new SharedGoal8Card("graphics/commonGoalCards/8.jpg");
+        sharedGoalCards[8] = new SharedGoal9Card("graphics/commonGoalCards/9.jpg");
+        sharedGoalCards[9] = new SharedGoal10Card("graphics/commonGoalCards/10.jpg");
+        sharedGoalCards[10] = new SharedGoal11Card("graphics/commonGoalCards/11.jpg");
+        sharedGoalCards[11] = new SharedGoal12Card("graphics/commonGoalCards/12.jpg");
+
+        /*int card1 = rnd.nextInt(0,11);
+        int card2 = rnd.nextInt(0,11);
+        while(card1 == card2){
+            card2 = rnd.nextInt(0,11);
+        }
+        sharedDeck.add(sharedGoalCards[card1]);
+        sharedDeck.add(sharedGoalCards[card2]);
+         */
+
+        sharedDeck.add(sharedGoalCards[0]);
     }
 
     public int getPlayersNumber() {
         return playersNumber;
     }
 
-    public Player[] getPlayers() {
+    public List<Player> getPlayers() {
         return players;
     }
 
-    public void setPlayers(Player[] players) {
+    public void setPlayers(List<Player> players) {
         this.players = players;
     }
 
@@ -151,7 +174,7 @@ public class Game {
      * Takes a tile from the game board and returns it as a list of a single object
      * @return The said tile as a list of tiles
      */
-    public List<Tile> collectTIle(Position pos){
+    public List<Tile> collectTile(Position pos){
         assert this.gameBoard.isCatchable(pos.getRow(), pos.getColumn());
         Tile[][] currentGrid = this.gameBoard.getGrid();
         List<Tile> toReturn = new ArrayList<>();
@@ -200,7 +223,7 @@ public class Game {
      * looping the Shelf.insertTile method
      */
     public void insertTile(List<Tile> toInsert, int column){
-        Player current = this.players[currentPlayer];
+        Player current = this.players.get(currentPlayer);
         Shelf currentShelf = current.getMyShelf();
         for(Tile t : toInsert) {
             currentShelf.insertTile(t, column);
@@ -213,7 +236,7 @@ public class Game {
      */
     public Player getWinner(){
         int max = 0;
-        Player winner = this.players[0];
+        Player winner = this.players.get(0);
         for(Player p : this.players){
             if(p.getScore() >= max){
                 max = p.getScore();
@@ -240,6 +263,16 @@ public class Game {
         }
         catch(Exception e){
             System.out.println(e.toString());
+        }
+    }
+
+    public void addPlayer(Player p){
+        if(players.size()<playersNumber) {
+            players.add(p);
+            p.setGoalCard(drawPersonalGoal());
+        }
+        else{
+            System.out.println("No more places available");
         }
     }
 
