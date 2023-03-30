@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Stack;
 
 public class SharedGoalCard extends Card implements CheckSharedGoal{
-    private Stack<Integer> pointsTokenStack;
-    private List<Player> achievedBy;
+    protected Stack<Integer> pointsTokenStack;
+    protected List<Player> achievedBy;
     public SharedGoalCard(String imgPath){
         super(imgPath);
         this.pointsTokenStack = new Stack<>();

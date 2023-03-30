@@ -78,16 +78,13 @@ public class Game {
         sharedGoalCards[10] = new SharedGoal11Card("graphics/commonGoalCards/11.jpg");
         sharedGoalCards[11] = new SharedGoal12Card("graphics/commonGoalCards/12.jpg");
 
-        /*int card1 = rnd.nextInt(0,11);
+        int card1 = rnd.nextInt(0,11);
         int card2 = rnd.nextInt(0,11);
         while(card1 == card2){
             card2 = rnd.nextInt(0,11);
         }
         sharedDeck.add(sharedGoalCards[card1]);
         sharedDeck.add(sharedGoalCards[card2]);
-         */
-
-        sharedDeck.add(sharedGoalCards[0]);
     }
 
     public int getPlayersNumber() {

@@ -11,12 +11,8 @@ import java.util.List;
 import java.util.Stack;
 
 public class SharedGoal1Card extends SharedGoalCard implements CheckSharedGoal {
-    private Boolean flags[][];
     public SharedGoal1Card(String imgPath) {
         super(imgPath);
-
-        flags = new Boolean[Constants.SHELFROW][Constants.SHELFCOLUMN];
-        initFlags();
     }
 
     /*
@@ -28,6 +24,7 @@ public class SharedGoal1Card extends SharedGoalCard implements CheckSharedGoal {
      *
      * @return Check result
      */
+    @Override
     public boolean checkPattern(Player p){
         if(isAchieved(p)){
             return false;
@@ -62,7 +59,13 @@ public class SharedGoal1Card extends SharedGoalCard implements CheckSharedGoal {
             }
         }
 
-        return count >= 1;
+        if(count>=1){
+            achievedBy.add(p);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     private boolean equalsSubmatrixs(Tile[][] sub1, Tile[][] sub2){
@@ -76,13 +79,5 @@ public class SharedGoal1Card extends SharedGoalCard implements CheckSharedGoal {
             }
         }
         return true;
-    }
-
-    private void initFlags(){
-        for(int i=0;i<Constants.SHELFROW;i++){
-            for(int j=0;j<Constants.SHELFCOLUMN;j++){
-                flags[i][j] = false;
-            }
-        }
     }
 }

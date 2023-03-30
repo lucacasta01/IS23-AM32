@@ -35,14 +35,18 @@ public class Main {
         }
 
         testingShelf[0][0].setColor(Tile.Color.GREEN);
-        testingShelf[0][1].setColor(Tile.Color.LIGHTBLUE);
-        testingShelf[1][0].setColor(Tile.Color.PINK);
-        testingShelf[1][1].setColor(Tile.Color.GREEN);
+        testingShelf[1][0].setColor(Tile.Color.LIGHTBLUE);
+        testingShelf[2][0].setColor(Tile.Color.PINK);
+        testingShelf[3][0].setColor(Tile.Color.WHITE);
+        testingShelf[4][0].setColor(Tile.Color.YELLOW);
+        testingShelf[5][0].setColor(Tile.Color.BLUE);
 
-        testingShelf[0][2].setColor(Tile.Color.GREEN);
-        testingShelf[0][3].setColor(Tile.Color.LIGHTBLUE);
-        testingShelf[1][2].setColor(Tile.Color.PINK);
-        testingShelf[1][3].setColor(Tile.Color.GREEN);
+        testingShelf[0][3].setColor(Tile.Color.BLUE);
+        testingShelf[1][3].setColor(Tile.Color.LIGHTBLUE);
+        testingShelf[2][3].setColor(Tile.Color.WHITE);
+        testingShelf[3][3].setColor(Tile.Color.GREEN);
+        testingShelf[4][3].setColor(Tile.Color.PINK);
+        testingShelf[5][3].setColor(Tile.Color.BLUE);
 
         p1.setMyShelf(new Shelf(testingShelf));
 
