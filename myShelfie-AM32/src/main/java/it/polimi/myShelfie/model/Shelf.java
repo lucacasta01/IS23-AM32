@@ -1,25 +1,26 @@
 package it.polimi.myShelfie.model;
 
+import it.polimi.myShelfie.utilities.Constants;
+
 import java.util.List;
 
 public class Shelf {
     private Tile[][] tileMartrix;
 
-    private final int MAXROW = 6;
-    private final int MAXCOLUMN = 5;
+
 
 
 
     public Shelf() {
-        this.tileMartrix = new Tile[MAXROW][MAXCOLUMN];
+        this.tileMartrix = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
 
     }
     /**
      * initialize the shelf with NULLTILE type tiles
      */
     public void initShelf(){
-        for(int i = 0; i<MAXROW; i++){
-            for(int j = 0; j<MAXCOLUMN; j++){
+        for(int i = 0; i<Constants.SHELFROW; i++){
+            for(int j = 0; j<Constants.SHELFCOLUMN; j++){
                 this.tileMartrix[i][j] = new Tile("test", Tile.Color.NULLTILE);
             }
         }
@@ -37,8 +38,8 @@ public class Shelf {
      */
     private boolean checkIsFull(){
         boolean check = true;
-        for(int i=0; i<MAXROW; i++){
-            for(int j=0; j<MAXCOLUMN; j++){
+        for(int i=0; i<Constants.SHELFROW; i++){
+            for(int j=0; j<Constants.SHELFCOLUMN; j++){
                 if(tileMartrix[i][j].getColor()==Tile.Color.NULLTILE){
                     return false;
                 }
@@ -55,7 +56,7 @@ public class Shelf {
      */
     public int freeTiles(int column){
         int free = 0;
-        for(int i=0; i<MAXROW; i++){
+        for(int i=0; i<Constants.SHELFROW; i++){
             if(this.tileMartrix[i][column].getColor()!=Tile.Color.NULLTILE){
                 return free;
             }else{
@@ -71,8 +72,8 @@ public class Shelf {
      */
     public int maxInsert(){
         int act = 0, max = 0;
-        for(int i = 0; i<MAXCOLUMN; i++){
-            for(int j=0; j<MAXROW; j++){
+        for(int i = 0; i<Constants.SHELFCOLUMN; i++){
+            for(int j=0; j<Constants.SHELFROW; j++){
                 if(tileMartrix[j][i].getColor()==Tile.Color.NULLTILE){
                     act++;
                 }
@@ -89,7 +90,7 @@ public class Shelf {
      * insert the given tile in the first free position from the bottom in the given column
      */
     public void insertTile(Tile t, int column) {
-        for (int i = MAXROW - 1; i >= 0; i--) {
+        for (int i = Constants.SHELFROW - 1; i >= 0; i--) {
             if (tileMartrix[i][column].getColor() == Tile.Color.NULLTILE) {
                 tileMartrix[i][column] = t;
             }
