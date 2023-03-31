@@ -8,10 +8,6 @@ import java.util.List;
 public class Shelf {
     private Tile[][] tileMatrix;
 
-
-
-
-
     public Shelf() {
         this.tileMatrix = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
     }
@@ -101,6 +97,7 @@ public class Shelf {
         for (int i = Constants.SHELFROW - 1; i >= 0; i--) {
             if (tileMatrix[i][column].getColor() == Tile.Color.NULLTILE) {
                 tileMatrix[i][column] = t;
+                return;
             }
         }
     }

@@ -1,9 +1,7 @@
 package it.polimi.myShelfie.model;
-
 import it.polimi.myShelfie.model.cards.*;
 import it.polimi.myShelfie.utilities.ColorPosition;
 import it.polimi.myShelfie.utilities.JsonParser;
-
 import java.io.IOException;
 import java.util.*;
 
