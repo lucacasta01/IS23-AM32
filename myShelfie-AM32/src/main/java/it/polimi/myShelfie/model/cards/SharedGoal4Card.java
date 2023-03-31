@@ -42,6 +42,7 @@ public class SharedGoal4Card extends SharedGoalCard implements CheckSharedGoal {
                 }
             }
             if(numberOfColPairs>=6 || numberOfRowPairs>=6){
+                addPlayer(p);
                 return true;
             }else{
                 return false;
