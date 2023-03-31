@@ -21,18 +21,27 @@ public class SharedGoal4Card extends SharedGoalCard implements CheckSharedGoal {
      */
     public boolean checkPattern(Player p){
 
-        int numberOfPairs = 0;
+        int numberOfColPairs = 0;
+        int numberOfRowPairs = 0;
         Tile[][] grid = p.getMyShelf().getTileMartrix();
         if(!isAchieved(p)){
             for(int col = 0; col< Constants.SHELFCOLUMN; col++){
                 for(int row = 0; row<Constants.SHELFROW-1; row++){
-                    if(grid[row][col].getColor()==grid[row+1][col].getColor()){
+                    if((grid[row][col].getColor()==grid[row+1][col].getColor())&&(grid[row][col].getColor()!=Tile.Color.NULLTILE)){
                         row++;
-                        numberOfPairs++;
+                        numberOfColPairs++;
                     }
                 }
             }
-            if(numberOfPairs>=6){
+            for(int row = 0; row < Constants.SHELFROW; row++){
+                for(int col = 0; col<Constants.SHELFCOLUMN-1; col++){
+                    if((grid[row][col].getColor()==grid[row][col+1].getColor())&&(grid[row][col].getColor()!=Tile.Color.NULLTILE)){
+                        col++;
+                        numberOfRowPairs++;
+                    }
+                }
+            }
+            if(numberOfColPairs>=6 || numberOfRowPairs>=6){
                 return true;
             }else{
                 return false;

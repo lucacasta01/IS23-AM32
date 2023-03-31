@@ -5,18 +5,18 @@ import it.polimi.myShelfie.utilities.Constants;
 import java.util.List;
 
 public class Shelf {
-    private Tile[][] tileMartrix;
+    private Tile[][] tileMatrix;
 
 
 
 
 
     public Shelf() {
-        this.tileMartrix = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
+        this.tileMatrix = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
     }
 
-    public Shelf(Tile[][] tileMartrix){
-        this.tileMartrix = tileMartrix;
+    public Shelf(Tile[][] tileMatrix){
+        this.tileMatrix = tileMatrix;
     }
     /**
      * initialize the shelf with NULLTILE type tiles
@@ -24,7 +24,7 @@ public class Shelf {
     public void initShelf(){
         for(int i = 0; i<Constants.SHELFROW; i++){
             for(int j = 0; j<Constants.SHELFCOLUMN; j++){
-                this.tileMartrix[i][j] = new Tile("test", Tile.Color.NULLTILE);
+                this.tileMatrix[i][j] = new Tile("test", Tile.Color.NULLTILE);
             }
         }
     }
@@ -32,7 +32,7 @@ public class Shelf {
      * @return this object Tile[6][5] tileMatrix
      */
     public Tile[][] getTileMartrix() {
-        return tileMartrix;
+        return tileMatrix;
     }
 
     /**
@@ -43,7 +43,7 @@ public class Shelf {
         boolean check = true;
         for(int i=0; i<Constants.SHELFROW; i++){
             for(int j=0; j<Constants.SHELFCOLUMN; j++){
-                if(tileMartrix[i][j].getColor()==Tile.Color.NULLTILE){
+                if(tileMatrix[i][j].getColor()==Tile.Color.NULLTILE){
                     return false;
                 }
             }
@@ -60,7 +60,7 @@ public class Shelf {
     public int freeTiles(int column){
         int free = 0;
         for(int i=0; i<Constants.SHELFROW; i++){
-            if(this.tileMartrix[i][column].getColor()!=Tile.Color.NULLTILE){
+            if(this.tileMatrix[i][column].getColor()!=Tile.Color.NULLTILE){
                 return free;
             }else{
                 free++;
@@ -77,7 +77,7 @@ public class Shelf {
         int act = 0, max = 0;
         for(int i = 0; i<Constants.SHELFCOLUMN; i++){
             for(int j=0; j<Constants.SHELFROW; j++){
-                if(tileMartrix[j][i].getColor()==Tile.Color.NULLTILE){
+                if(tileMatrix[j][i].getColor()==Tile.Color.NULLTILE){
                     act++;
                 }
             }
@@ -94,8 +94,8 @@ public class Shelf {
      */
     public void insertTile(Tile t, int column) {
         for (int i = Constants.SHELFROW - 1; i >= 0; i--) {
-            if (tileMartrix[i][column].getColor() == Tile.Color.NULLTILE) {
-                tileMartrix[i][column] = t;
+            if (tileMatrix[i][column].getColor() == Tile.Color.NULLTILE) {
+                tileMatrix[i][column] = t;
             }
         }
     }
