@@ -24,7 +24,8 @@ public class SharedGoal5Card extends SharedGoalCard implements CheckSharedGoal {
        if(!isAchieved(p)){
            int achievedCols = 0;
            int numberOfColors = 0;
-           boolean  g = false, b=false, lb=false, w=false, y=false, pi=false;
+           int numberOfNulls = 0;
+           boolean  g = false, b=false, lb=false, w=false, y=false, pi=false, n=false;
             for(int col = 0; col< Constants.SHELFCOLUMN; col++){
                 for(int row=0; row<Constants.SHELFROW; row++){
                     switch (p.getMyShelf().getTileMartrix()[row][col].getColor()){
@@ -46,35 +47,42 @@ public class SharedGoal5Card extends SharedGoalCard implements CheckSharedGoal {
                         case WHITE:
                             w=true;
                             break;
+                        case NULLTILE:
+                            numberOfNulls++;
+                            break;
+                        default:
+                            break;
                     }
                 }
-                if(b=true){
+                if(b){
                     numberOfColors++;
                 }
-                if(g=true){
+                if(g){
                     numberOfColors++;
                 }
-                if(lb=true){
+                if(lb){
                     numberOfColors++;
                 }
-                if(y=true){
+                if(y){
                     numberOfColors++;
                 }
-                if(pi=true){
+                if(pi){
                     numberOfColors++;
                 }
-                if(w=true){
+                if(w){
                     numberOfColors++;
                 }
-                if(numberOfColors<=3){
+
+                if(numberOfColors<=3&&numberOfNulls!=6){
                     achievedCols++;
                 }
                 b=false; g=false; lb=false; y=false; pi=false; w=false;
-
-
+                numberOfColors = 0;
+                numberOfNulls = 0;
             }
+
             if(achievedCols>=3){
-                addPlayer(p);
+                super.addPlayer(p);
                 return true;
             }else{
                 return false;

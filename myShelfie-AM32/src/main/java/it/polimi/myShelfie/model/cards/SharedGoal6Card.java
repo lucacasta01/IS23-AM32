@@ -19,35 +19,46 @@ public class SharedGoal6Card extends SharedGoalCard implements CheckSharedGoal {
 
     /**
      * Returns true if the player passed by parameter has achieved the shared goal
-     *
+     * adds the player to the achievedBy list if needed
      * @return Check result
      */
     public boolean checkPattern(Player p){
-        boolean  g = false, b=false, lb=false, w=false, y=false, pi=false;
+        List<Tile.Color> colors = new ArrayList<>();
         int achievedRows = 0;
-
         if(!isAchieved(p)){
             for(int row = 0; row< Constants.SHELFROW; row++){
                 for(int col = 0; col < Constants.SHELFCOLUMN; col++){
 
                     if((p.getMyShelf().getTileMartrix()[row][col].getColor()== Tile.Color.BLUE)&&(p.getMyShelf().getTileMartrix()[row][col].getColor()!=Tile.Color.NULLTILE)){
-                        b=true;
+                        if(!colors.contains(Tile.Color.BLUE)){
+                            colors.add(Tile.Color.BLUE);
+                        }
                     }else if((p.getMyShelf().getTileMartrix()[row][col].getColor()== Tile.Color.GREEN)&&(p.getMyShelf().getTileMartrix()[row][col].getColor()!=Tile.Color.NULLTILE)){
-                        g=true;
+                        if(!colors.contains(Tile.Color.GREEN)){
+                            colors.add(Tile.Color.GREEN);
+                        }
                     }else if((p.getMyShelf().getTileMartrix()[row][col].getColor()== Tile.Color.LIGHTBLUE)&&(p.getMyShelf().getTileMartrix()[row][col].getColor()!=Tile.Color.NULLTILE)){
-                        lb = true;
+                        if(!colors.contains(Tile.Color.LIGHTBLUE)){
+                            colors.add(Tile.Color.LIGHTBLUE);
+                        }
                     }else if((p.getMyShelf().getTileMartrix()[row][col].getColor()== Tile.Color.WHITE)&&(p.getMyShelf().getTileMartrix()[row][col].getColor()!=Tile.Color.NULLTILE)){
-                        w=true;
+                        if(!colors.contains(Tile.Color.WHITE)){
+                            colors.add(Tile.Color.WHITE);
+                        }
                     }else if((p.getMyShelf().getTileMartrix()[row][col].getColor()== Tile.Color.YELLOW)&&(p.getMyShelf().getTileMartrix()[row][col].getColor()!=Tile.Color.NULLTILE)){
-                        y=true;
+                        if(!colors.contains(Tile.Color.YELLOW)){
+                            colors.add(Tile.Color.YELLOW);
+                        }
                     }else if((p.getMyShelf().getTileMartrix()[row][col].getColor()== Tile.Color.PINK)&&(p.getMyShelf().getTileMartrix()[row][col].getColor()!=Tile.Color.NULLTILE)){
-                        pi=true;
+                        if(!colors.contains(Tile.Color.PINK)){
+                            colors.add(Tile.Color.PINK);
+                        }
                     }
                 }
-                if(b && g && lb && w && y && pi){
+                if(colors.size()>=5){
                     achievedRows++;
                 }
-                b=false; g=false; lb=false; w=false; y=false; pi=false;
+                colors.clear();
             }
             if(achievedRows>=3){
                 addPlayer(p);
