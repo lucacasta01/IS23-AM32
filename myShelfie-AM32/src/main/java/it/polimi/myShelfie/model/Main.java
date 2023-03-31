@@ -1,8 +1,6 @@
 package it.polimi.myShelfie.model;
 
-import it.polimi.myShelfie.model.cards.CheckSharedGoal;
-import it.polimi.myShelfie.model.cards.SharedGoal1Card;
-import it.polimi.myShelfie.model.cards.SharedGoalCard;
+import it.polimi.myShelfie.model.cards.*;
 import it.polimi.myShelfie.utilities.Constants;
 
 public class Main {
@@ -27,30 +25,54 @@ public class Main {
         System.out.println(game2.drawPersonalGoal().toString()); //TEST FOR OUTERBOUND INDEX EXCEPTION
          */
 
-        Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
+        SharedGoalCard testCard = new SharedGoal3Card("");
+        Tile[][] testingShelfAchieved = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
-                testingShelf[i][j] = new Tile("",Tile.Color.NULLTILE);
+                testingShelfAchieved[i][j] = new Tile("",Tile.Color.NULLTILE);
             }
         }
 
-        testingShelf[0][0].setColor(Tile.Color.GREEN);
-        testingShelf[1][0].setColor(Tile.Color.LIGHTBLUE);
-        testingShelf[2][0].setColor(Tile.Color.PINK);
-        testingShelf[3][0].setColor(Tile.Color.WHITE);
-        testingShelf[4][0].setColor(Tile.Color.YELLOW);
-        testingShelf[5][0].setColor(Tile.Color.BLUE);
+        testingShelfAchieved[0][0].setColor(Tile.Color.BLUE);
+        testingShelfAchieved[1][0].setColor(Tile.Color.BLUE);
+        testingShelfAchieved[2][0].setColor(Tile.Color.BLUE);
+        testingShelfAchieved[3][0].setColor(Tile.Color.BLUE);
+        testingShelfAchieved[4][0].setColor(Tile.Color.PINK);
+        testingShelfAchieved[5][0].setColor(Tile.Color.PINK);
 
-        testingShelf[0][3].setColor(Tile.Color.BLUE);
-        testingShelf[1][3].setColor(Tile.Color.LIGHTBLUE);
-        testingShelf[2][3].setColor(Tile.Color.WHITE);
-        testingShelf[3][3].setColor(Tile.Color.GREEN);
-        testingShelf[4][3].setColor(Tile.Color.PINK);
-        testingShelf[5][3].setColor(Tile.Color.BLUE);
+        //testingShelfAchieved[0][1].setColor(Tile.Color.BLUE);
+        testingShelfAchieved[1][1].setColor(Tile.Color.PINK);
+        testingShelfAchieved[2][1].setColor(Tile.Color.BLUE);
+        testingShelfAchieved[3][1].setColor(Tile.Color.LIGHTBLUE);
+        testingShelfAchieved[4][1].setColor(Tile.Color.PINK);
+        testingShelfAchieved[5][1].setColor(Tile.Color.GREEN);
 
-        p1.setMyShelf(new Shelf(testingShelf));
+        //testingShelfAchieved[0][2].setColor(Tile.Color.BLUE);
+        testingShelfAchieved[1][2].setColor(Tile.Color.PINK);
+        testingShelfAchieved[2][2].setColor(Tile.Color.BLUE);
+        testingShelfAchieved[3][2].setColor(Tile.Color.LIGHTBLUE);
+        testingShelfAchieved[4][2].setColor(Tile.Color.PINK);
+        testingShelfAchieved[5][2].setColor(Tile.Color.LIGHTBLUE);
 
-        if(game2.sharedDeck.get(0).checkPattern(p1)){
+        //testingShelfAchieved[0][3].setColor(Tile.Color.YELLOW);
+        testingShelfAchieved[1][3].setColor(Tile.Color.PINK);
+        testingShelfAchieved[2][3].setColor(Tile.Color.BLUE);
+        testingShelfAchieved[3][3].setColor(Tile.Color.LIGHTBLUE);
+        testingShelfAchieved[4][3].setColor(Tile.Color.PINK);
+        testingShelfAchieved[5][3].setColor(Tile.Color.GREEN);
+
+        testingShelfAchieved[0][4].setColor(Tile.Color.PINK);
+        testingShelfAchieved[1][4].setColor(Tile.Color.PINK);
+        testingShelfAchieved[2][4].setColor(Tile.Color.PINK);
+        testingShelfAchieved[3][4].setColor(Tile.Color.LIGHTBLUE);
+        testingShelfAchieved[4][4].setColor(Tile.Color.GREEN);
+        testingShelfAchieved[5][4].setColor(Tile.Color.GREEN);
+
+        //expected 4 groups
+
+        p1.setMyShelf(new Shelf(testingShelfAchieved));
+
+        if(testCard.checkPattern(p1)){
             System.out.println("Achieved");
         }
         else{

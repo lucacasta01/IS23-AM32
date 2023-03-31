@@ -2,6 +2,7 @@ package it.polimi.myShelfie.model;
 
 import it.polimi.myShelfie.utilities.Constants;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Shelf {
@@ -29,10 +30,14 @@ public class Shelf {
         }
     }
     /**
-     * @return this object Tile[6][5] tileMatrix
+     * @return a copy of this object Tile[6][5] tileMatrix
      */
     public Tile[][] getTileMartrix() {
-        return tileMatrix;
+        Tile[][] toReturn = new Tile[Constants.SHELFROW][];
+        for(int i=0;i<Constants.SHELFROW;i++){
+            toReturn[i] = this.tileMatrix[i].clone();
+        }
+        return toReturn;
     }
 
     /**
