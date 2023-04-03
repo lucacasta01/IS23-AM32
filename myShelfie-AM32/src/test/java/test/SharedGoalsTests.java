@@ -728,9 +728,32 @@ public class SharedGoalsTests {
                 testingShelf[i][j] = new Tile(fakePath,Tile.Color.NULLTILE);
             }
         }
+        p1.setMyShelf(new Shelf(testingShelf));
+        assertFalse(testCard.checkPattern(p1));
 
+        testingShelf[0][0] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[1][0] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[2][0] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[3][0] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[4][0] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[5][0] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[1][1] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[2][1] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[3][1] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[4][1] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[5][1] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[2][2] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[3][2] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[4][2] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[5][2] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[3][3] = new Tile(fakePath, Tile.Color.PINK);
+        testingShelf[4][3] = new Tile(fakePath, Tile.Color.PINK);
+        testingShelf[5][3] = new Tile(fakePath, Tile.Color.PINK);
+        testingShelf[4][4] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[5][4] = new Tile(fakePath, Tile.Color.PINK);
 
-    }
+        p1.setMyShelf(new Shelf(testingShelf));
+        assertTrue(testCard.checkPattern(p1));
 
     private void resetMatrix(Tile[][] matrix){
         for(int i=0;i<Constants.SHELFROW;i++){

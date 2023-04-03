@@ -25,14 +25,21 @@ public class SharedGoal12Card extends SharedGoalCard implements CheckSharedGoal 
 
         Shelf playerShelf = p.getMyShelf();
         Tile[][] matrix = playerShelf.getTileMartrix();
-        int columnCount[] = new int[]{0,0,0,0,0};
+        int columnCount[] = {0, 0, 0, 0, 0};
+        final int minHigh = 5;
 
-        for(int i = 0; i< Constants.SHELFROW - 1; i++) {
-            for (int j = 0; j < Constants.SHELFCOLUMN - 1; j++) {
-                if(!matrix[i][j].getColor().equals(Tile.Color.NULLTILE));
-                columnCount[j] ++;
+        for(int i = 0; i< Constants.SHELFROW; i++) {
+            for (int j = 0; j < Constants.SHELFCOLUMN; j++) {
+                if(!(matrix[i][j].getColor().equals(Tile.Color.NULLTILE))){
+                columnCount[j]++;
+                }
             }
         }
+
+        for(int i = 0; i< Constants.SHELFCOLUMN; i++){
+            if(columnCount[i] == 0){return false;}
+        }
+
         int i=0;
         if(columnCount[i] > columnCount[i+1]) {
             for(int j = 0; j< Constants.SHELFROW - 2; j++){
