@@ -280,9 +280,6 @@ public class SharedGoalsTests {
 
         assertTrue(card.checkPattern(p1));
 
-        resetMatrix(testingShelf);
-        Player p2 = new Player(fakeName,fakeIP);
-
         testingShelf[0][0] = new Tile(fakePath, Tile.Color.GREEN);
         testingShelf[1][0] = new Tile(fakePath, Tile.Color.GREEN);
 
@@ -301,8 +298,8 @@ public class SharedGoalsTests {
         testingShelf[2][2] = new Tile(fakePath, Tile.Color.GREEN);
         testingShelf[3][2] = new Tile(fakePath, Tile.Color.GREEN);
 
-        p2.setMyShelf(new Shelf(testingShelf));
-        assertTrue(card.checkPattern(p2));
+        p1.setMyShelf(new Shelf(testingShelf));
+        assertTrue(card.checkPattern(p1));
     }
 
 
@@ -346,8 +343,6 @@ public class SharedGoalsTests {
 
         p1.setMyShelf(new Shelf(testingShelf));
         assertTrue(card.checkPattern(p1));
-
-        resetMatrix(testingShelf);
 
         testingShelf[0][0] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[1][0] = new Tile(fakePath, Tile.Color.YELLOW);
@@ -412,11 +407,8 @@ public class SharedGoalsTests {
         testingShelf[2][4] = new Tile(fakePath, Tile.Color.BLUE);
 
 
-
         p1.setMyShelf(new Shelf(testingShelf));
         assertTrue(card.checkPattern(p1));
-
-        resetMatrix(testingShelf);
 
         testingShelf[0][0] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[0][1] = new Tile(fakePath, Tile.Color.YELLOW);
@@ -461,66 +453,29 @@ public class SharedGoalsTests {
 
         testingShelf[0][0] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[0][1] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[0][2] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[0][2] = new Tile(fakePath, Tile.Color.LIGHTBLUE);
         testingShelf[0][3] = new Tile(fakePath, Tile.Color.GREEN);
         testingShelf[0][4] = new Tile(fakePath, Tile.Color.PINK);
 
         testingShelf[1][0] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[1][1] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[1][2] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[1][2] = new Tile(fakePath, Tile.Color.LIGHTBLUE);
         testingShelf[1][3] = new Tile(fakePath, Tile.Color.GREEN);
         testingShelf[1][4] = new Tile(fakePath, Tile.Color.PINK);
 
         testingShelf[2][0] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[2][1] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[2][2] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[2][2] = new Tile(fakePath, Tile.Color.LIGHTBLUE);
         testingShelf[2][3] = new Tile(fakePath, Tile.Color.GREEN);
         testingShelf[2][4] = new Tile(fakePath, Tile.Color.PINK);
 
-        testingShelf[4][0] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[4][1] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[4][2] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[4][3] = new Tile(fakePath, Tile.Color.GREEN);
-        testingShelf[4][4] = new Tile(fakePath, Tile.Color.PINK);
-
         p1.setMyShelf(new Shelf(testingShelf));
         assertTrue(testCard.checkPattern(p1));
-
 
         testingShelf[0][0] = new Tile(fakePath, Tile.Color.NULLTILE);
 
         p1.setMyShelf(new Shelf(testingShelf));
         assertFalse(testCard.checkPattern(p1));
-
-        resetMatrix(testingShelf);
-
-        testingShelf[0][0] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[0][1] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[0][2] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[0][3] = new Tile(fakePath, Tile.Color.GREEN);
-        testingShelf[0][4] = new Tile(fakePath, Tile.Color.PINK);
-
-        testingShelf[1][0] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[1][1] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[1][2] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[1][3] = new Tile(fakePath, Tile.Color.GREEN);
-        testingShelf[1][4] = new Tile(fakePath, Tile.Color.PINK);
-
-        testingShelf[2][0] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[2][1] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[2][2] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[2][3] = new Tile(fakePath, Tile.Color.GREEN);
-        testingShelf[2][4] = new Tile(fakePath, Tile.Color.PINK);
-
-        testingShelf[4][0] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[4][1] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[4][2] = new Tile(fakePath, Tile.Color.LIGHTBLUE);
-        testingShelf[4][3] = new Tile(fakePath, Tile.Color.GREEN);
-        testingShelf[4][4] = new Tile(fakePath, Tile.Color.PINK);
-
-        p1.setMyShelf(new Shelf(testingShelf));
-        assertFalse(testCard.checkPattern(p1));
-
     }
 
 
@@ -585,7 +540,6 @@ public class SharedGoalsTests {
         p1.setMyShelf(new Shelf(testingShelf));
         assertFalse(testCard.checkPattern(p1));
 
-
         testingShelf[0][0] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[0][2] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[1][1] = new Tile(fakePath, Tile.Color.BLUE);
@@ -597,10 +551,6 @@ public class SharedGoalsTests {
 
         p1.setMyShelf(new Shelf(testingShelf));
         assertTrue(testCard.checkPattern(p1));
-
-        resetMatrix(testingShelf);
-
-        Player p2 = new Player(fakeName,fakeIP);
 
         testingShelf[0][0] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[0][2] = new Tile(fakePath, Tile.Color.PINK);
@@ -616,8 +566,8 @@ public class SharedGoalsTests {
         testingShelf[5][2] = new Tile(fakePath, Tile.Color.WHITE);
         testingShelf[5][4] = new Tile(fakePath, Tile.Color.WHITE);
 
-        p2.setMyShelf(new Shelf(testingShelf));
-        assertFalse(testCard.checkPattern(p2));
+        p1.setMyShelf(new Shelf(testingShelf));
+        assertFalse(testCard.checkPattern(p1));
     }
     @Test
     @DisplayName("CheckSharedGoal 11 test")
@@ -633,88 +583,30 @@ public class SharedGoalsTests {
         p1.setMyShelf(new Shelf(testingShelf));
         assertFalse(testCard.checkPattern(p1));
 
-        resetMatrix(testingShelf);
-
-        testingShelf[0][0] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[1][1] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[2][2] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[3][3] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[4][4] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[5][0] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[4][1] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[3][2] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[2][3] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[1][4] = new Tile(fakePath, Tile.Color.BLUE);
 
         p1.setMyShelf(new Shelf(testingShelf));
         assertTrue(testCard.checkPattern(p1));
 
-        resetMatrix(testingShelf);
+        for(int i=0;i<Constants.SHELFROW;i++){
+            for(int j=0;j<Constants.SHELFCOLUMN;j++){
+                testingShelf[i][j] = new Tile(fakePath,Tile.Color.NULLTILE);
+            }
+        }
 
-        Player p2 = new Player(fakeName,fakeIP);
-
-        testingShelf[1][0] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[2][1] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[3][2] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[4][3] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[5][4] = new Tile(fakePath, Tile.Color.BLUE);
-
-        p2.setMyShelf(new Shelf(testingShelf));
-        assertTrue(testCard.checkPattern(p2));
-
-        resetMatrix(testingShelf);
-
-        Player p3 = new Player(fakeName,fakeIP);
-
-        testingShelf[0][0] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[1][1] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[2][2] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[3][3] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[4][4] = new Tile(fakePath, Tile.Color.BLUE);
-
-        p3.setMyShelf(new Shelf(testingShelf));
-        assertTrue(testCard.checkPattern(p3));
-
-        resetMatrix(testingShelf);
-
-        Player p4 = new Player(fakeName,fakeIP);
-
-        testingShelf[1][0] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[1][0] = new Tile(fakePath, Tile.Color.PINK);
         testingShelf[2][1] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[3][2] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[4][3] = new Tile(fakePath, Tile.Color.LIGHTBLUE);
-        testingShelf[5][4] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[5][4] = new Tile(fakePath, Tile.Color.PINK);
 
-        p4.setMyShelf(new Shelf(testingShelf));
-        assertFalse(testCard.checkPattern(p4));
+        p1.setMyShelf(new Shelf(testingShelf));
+        assertFalse(testCard.checkPattern(p1));
 
-        Player p5 = new Player(fakeName,fakeIP);
-
-        testingShelf[0][1] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[1][2] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[2][2] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[3][3] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[4][4] = new Tile(fakePath, Tile.Color.BLUE);
-
-        p5.setMyShelf(new Shelf(testingShelf));
-        assertFalse(testCard.checkPattern(p5));
-
-        Player p6 = new Player(fakeName,fakeIP);
-
-        testingShelf[0][4] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[1][3] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[2][2] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[3][1] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[4][0] = new Tile(fakePath, Tile.Color.BLUE);
-
-        p6.setMyShelf(new Shelf(testingShelf));
-        assertTrue(testCard.checkPattern(p6));
-
-        Player p7 = new Player(fakeName,fakeIP);
-
-        testingShelf[1][4] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[2][3] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[3][2] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[4][1] = new Tile(fakePath, Tile.Color.BLUE);
-        testingShelf[5][0] = new Tile(fakePath, Tile.Color.BLUE);
-
-        p7.setMyShelf(new Shelf(testingShelf));
-        assertTrue(testCard.checkPattern(p7));
 
     }
     @Test
@@ -755,12 +647,83 @@ public class SharedGoalsTests {
         p1.setMyShelf(new Shelf(testingShelf));
         assertTrue(testCard.checkPattern(p1));
 
-    private void resetMatrix(Tile[][] matrix){
+        Player p2 = new Player(fakeName, fakeIP);
+
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
-                matrix[i][j].setColor(Tile.Color.NULLTILE);
+                testingShelf[i][j] = new Tile(fakePath,Tile.Color.NULLTILE);
             }
         }
-    }
 
+        testingShelf[5][0] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[5][1] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[5][2] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[5][3] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[5][4] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[4][1] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[4][2] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[4][3] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[4][4] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[3][2] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[3][3] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[3][4] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[2][3] = new Tile(fakePath, Tile.Color.PINK);
+        testingShelf[2][4] = new Tile(fakePath, Tile.Color.PINK);
+        testingShelf[1][4] = new Tile(fakePath, Tile.Color.PINK);
+
+        p2.setMyShelf(new Shelf(testingShelf));
+        assertTrue(testCard.checkPattern(p2));
+
+        Player p3 = new Player(fakeName, fakeIP);
+
+        for(int i=0;i<Constants.SHELFROW;i++){
+            for(int j=0;j<Constants.SHELFCOLUMN;j++){
+                testingShelf[i][j] = new Tile(fakePath,Tile.Color.NULLTILE);
+            }
+        }
+
+        testingShelf[5][1] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[5][2] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[5][3] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[5][4] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[4][1] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[4][2] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[4][3] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[4][4] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[3][2] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[3][3] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[3][4] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[2][3] = new Tile(fakePath, Tile.Color.PINK);
+        testingShelf[2][4] = new Tile(fakePath, Tile.Color.PINK);
+        testingShelf[1][4] = new Tile(fakePath, Tile.Color.PINK);
+
+        p3.setMyShelf(new Shelf(testingShelf));
+        assertFalse(testCard.checkPattern(p3));
+
+        Player p4 = new Player(fakeName, fakeIP);
+
+        for(int i=0;i<Constants.SHELFROW;i++){
+            for(int j=0;j<Constants.SHELFCOLUMN;j++){
+                testingShelf[i][j] = new Tile(fakePath,Tile.Color.NULLTILE);
+            }
+        }
+
+        testingShelf[5][0] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[5][1] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[5][2] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[5][3] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[5][4] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[4][1] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[4][2] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[4][3] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[4][4] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[3][2] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[3][3] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[3][4] = new Tile(fakePath, Tile.Color.BLUE);
+        testingShelf[2][3] = new Tile(fakePath, Tile.Color.PINK);
+        testingShelf[2][4] = new Tile(fakePath, Tile.Color.PINK);
+
+        p4.setMyShelf(new Shelf(testingShelf));
+        assertFalse(testCard.checkPattern(p4));
+    }
 }

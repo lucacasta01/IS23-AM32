@@ -42,19 +42,20 @@ public class SharedGoal12Card extends SharedGoalCard implements CheckSharedGoal 
 
         int i=0;
         if(columnCount[i] > columnCount[i+1]) {
-            for(int j = 0; j< Constants.SHELFROW - 2; j++){
-                if (columnCount[j] != columnCount[j + 1] + 1) {return false;}
-            }
-            addPlayer(p);
+            if(columnCount[i] < minHigh){return false;}
+                for(int j = 0; j < Constants.SHELFCOLUMN - 1; j++){
+                    if (columnCount[j] != (columnCount[j + 1] + 1)) {return false;}
+                }
             return true;
         }
         else if(columnCount[i] < columnCount[i+1]){
-            for(int j = 0; j< Constants.SHELFROW - 2; i++) {
-                if (columnCount[i] != columnCount[i + 1] - 1) {return false;}
-            }
-            addPlayer(p);
+            if(columnCount[Constants.SHELFCOLUMN - 1] < minHigh){return false;}
+                for(int j = 0; j< Constants.SHELFCOLUMN - 1; j++) {
+                    if (columnCount[j] != columnCount[j + 1] - 1) {return false;}
+                }
             return true;
         }
+        else if(columnCount[i] == columnCount[i+1]){return false;}
 
         return false;
     }
