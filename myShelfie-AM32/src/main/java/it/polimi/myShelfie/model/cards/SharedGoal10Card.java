@@ -1,6 +1,9 @@
 package it.polimi.myShelfie.model.cards;
 
 import it.polimi.myShelfie.model.Player;
+import it.polimi.myShelfie.model.Shelf;
+import it.polimi.myShelfie.model.Tile;
+import it.polimi.myShelfie.utilities.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +23,20 @@ public class SharedGoal10Card extends SharedGoalCard implements CheckSharedGoal 
      * @return Check result
      */
     public boolean checkPattern(Player p){
-        //does some stuff
-        return true;
+
+        Shelf playerShelf = p.getMyShelf();
+        Tile[][] matrix = playerShelf.getTileMartrix();
+
+        for(int i = 0; i < Constants.SHELFROW - 2; i++){
+            for(int j = 0; j < Constants.SHELFCOLUMN - 2; j++){
+                if((matrix[i][j].getColor().equals(matrix[i][j+2].getColor())) && !(matrix[i][j].getColor().equals(Tile.Color.NULLTILE)) &&
+                        (matrix[i][j].getColor().equals(matrix[i+1][j+1].getColor())) &&
+                        (matrix[i][j].getColor().equals(matrix[i+2][j].getColor())) &&
+                        (matrix[i][j].getColor().equals(matrix[i+2][j+2].getColor()))){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

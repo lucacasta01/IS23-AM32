@@ -23,46 +23,38 @@ public class SharedGoal11Card extends SharedGoalCard implements CheckSharedGoal 
      */
     public boolean checkPattern(Player p){
         if(isAchieved(p)){return false;}
-        Shelf playerShelf = p.getMyShelf();
-        Tile[][] matrix = playerShelf.getTileMartrix();
+        Tile[][] matrix = p.getMyShelf().getTileMartrix();
         int countEquals = 0;
         final int controlli = 4;
 
-        for(int i = 0; i < Constants.SHELFCOLUMN - 2; i++){
-            if(matrix[i][i].getColor().equals(matrix[i+1][i+1].getColor())){
-            countEquals++;
+        for(int i = 0; i < Constants.SHELFROW - 2; i++){
+            if(matrix[i][i].getColor().equals(matrix[i+1][i+1].getColor()) && !(matrix[i][i].getColor().equals(Tile.Color.NULLTILE))){
+                countEquals++;
             }
         }
         if(countEquals == controlli){return true;}
 
-        for(int i = 0; i < Constants.SHELFCOLUMN - 2; i++) {
-            if (i == 0) {
-                countEquals = 0;
-            }
-            if (matrix[i + 1][i].getColor().equals(matrix[i + 2][i + 1].getColor())){
-
-            countEquals++;
+        countEquals=0;
+        for(int i = 0; i < Constants.SHELFROW - 2; i++) {
+            if (matrix[i+1][i].getColor().equals(matrix[i + 2][i + 1].getColor()) && !(matrix[i+1][i].getColor().equals(Tile.Color.NULLTILE))){
+                countEquals++;
             }
         }
         if(countEquals == controlli){return true;}
 
         int j=0;
-        for(int i = Constants.SHELFCOLUMN - 1; i > 0; i--){
-            if (i == Constants.SHELFCOLUMN - 1) {
-                countEquals = 0;
-            }
-            if (matrix[i][j].getColor().equals(matrix[i-1][j+1].getColor())){
+        countEquals=0;
+        for(int i = Constants.SHELFROW - 2; i > 0; i--){
+            if (matrix[i][j].getColor().equals(matrix[i-1][j+1].getColor()) && !(matrix[i][j].getColor().equals(Tile.Color.NULLTILE))){
             countEquals++;
             }
             j++;
         }if(countEquals == controlli){return true;}
 
         int k=0;
-        for(int i = Constants.SHELFCOLUMN ; i > 1; i--){
-            if (i == Constants.SHELFCOLUMN) {
-                countEquals = 0;
-            }
-            if (matrix[i][k].getColor().equals(matrix[i-1][k+1].getColor())){
+        countEquals=0;
+        for(int i = Constants.SHELFROW - 1 ; i > 1; i--){
+            if (matrix[i][k].getColor().equals(matrix[i-1][k+1].getColor()) && !(matrix[i][k].getColor().equals(Tile.Color.NULLTILE))){
                 countEquals++;
             }
             k++;
