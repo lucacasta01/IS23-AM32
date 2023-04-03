@@ -18,6 +18,9 @@ public class SharedGoal9Card extends SharedGoalCard implements CheckSharedGoal {
      * @return Check result
      */
     public boolean checkPattern(Player p){
+        if(isAchieved(p)){
+            return false;
+        }
         Map<Tile.Color, Integer> colorMap = new HashMap<>();
         colorMap.put(Tile.Color.BLUE, 0);
         colorMap.put(Tile.Color.LIGHTBLUE, 0);
@@ -41,7 +44,7 @@ public class SharedGoal9Card extends SharedGoalCard implements CheckSharedGoal {
             }
         }
         if(max > 7){
-            achievedBy.add(p);
+            addPlayer(p);
             return true;
         }
         else return false;

@@ -32,7 +32,11 @@ public class SharedGoal11Card extends SharedGoalCard implements CheckSharedGoal 
                 countEquals++;
             }
         }
-        if(countEquals == controlli){return true;}
+        if(countEquals == controlli){
+            addPlayer(p);
+            return true;
+        }
+
 
         countEquals=0;
         for(int i = 0; i < Constants.SHELFROW - 2; i++) {
@@ -40,7 +44,10 @@ public class SharedGoal11Card extends SharedGoalCard implements CheckSharedGoal 
                 countEquals++;
             }
         }
-        if(countEquals == controlli){return true;}
+        if(countEquals == controlli){
+            addPlayer(p);
+            return true;
+        }
 
         int j=0;
         countEquals=0;
@@ -49,7 +56,10 @@ public class SharedGoal11Card extends SharedGoalCard implements CheckSharedGoal 
             countEquals++;
             }
             j++;
-        }if(countEquals == controlli){return true;}
+        }if(countEquals == controlli){
+            addPlayer(p);
+            return true;
+        }
 
         int k=0;
         countEquals=0;
@@ -58,7 +68,10 @@ public class SharedGoal11Card extends SharedGoalCard implements CheckSharedGoal 
                 countEquals++;
             }
             k++;
-        }if(countEquals == controlli){return true;}
+        }if(countEquals == controlli){
+            addPlayer(p);
+            return true;
+        }
 
         return false;
     }

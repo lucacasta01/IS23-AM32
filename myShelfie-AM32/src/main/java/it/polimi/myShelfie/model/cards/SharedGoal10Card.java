@@ -24,6 +24,10 @@ public class SharedGoal10Card extends SharedGoalCard implements CheckSharedGoal 
      */
     public boolean checkPattern(Player p){
 
+        if(isAchieved(p)){
+            return false;
+        }
+
         Shelf playerShelf = p.getMyShelf();
         Tile[][] matrix = playerShelf.getTileMartrix();
 
@@ -33,6 +37,7 @@ public class SharedGoal10Card extends SharedGoalCard implements CheckSharedGoal 
                         (matrix[i][j].getColor().equals(matrix[i+1][j+1].getColor())) &&
                         (matrix[i][j].getColor().equals(matrix[i+2][j].getColor())) &&
                         (matrix[i][j].getColor().equals(matrix[i+2][j+2].getColor()))){
+                    addPlayer(p);
                     return true;
                 }
             }

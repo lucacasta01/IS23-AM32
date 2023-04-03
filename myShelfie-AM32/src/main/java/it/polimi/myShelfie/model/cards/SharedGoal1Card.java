@@ -60,7 +60,7 @@ public class SharedGoal1Card extends SharedGoalCard implements CheckSharedGoal {
         }
 
         if(count>=1){
-            achievedBy.add(p);
+            addPlayer(p);
             return true;
         }
         else{

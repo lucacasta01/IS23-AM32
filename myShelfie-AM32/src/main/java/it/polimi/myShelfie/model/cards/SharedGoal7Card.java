@@ -19,24 +19,27 @@ public class SharedGoal7Card extends SharedGoalCard implements CheckSharedGoal {
      * @return Check result
      */
     public boolean checkPattern(Player p){
+        if(isAchieved(p)){
+            return false;
+        }
         int properRows = 0;
         Tile[][] toCheck = p.getMyShelf().getTileMartrix();
         List<Tile.Color> colorList = new ArrayList<>();
         for(int i = 0; i< Constants.SHELFROW; i++){
-            if(!colorList.isEmpty()){
-                if(colorList.size() <= 3) {
-                    properRows++;
-                }
-                colorList.removeAll(colorList);
-            }
             for(int j = 0; j<Constants.SHELFCOLUMN; j++){
                 if(!colorList.contains(toCheck[i][j].getColor()) && toCheck[i][j].getColor() != Tile.Color.NULLTILE && isRowFull(toCheck[i])){
                     colorList.add(toCheck[i][j].getColor());
                 }
             }
+            if(!colorList.isEmpty()){
+                if(colorList.size() <= 3) {
+                    properRows++;
+                }
+                colorList.clear();
+            }
         }
         if(properRows >= 4){
-            achievedBy.add(p);
+            addPlayer(p);
             return true;
         }
         else{

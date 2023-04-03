@@ -38,15 +38,16 @@ public class SharedGoal12Card extends SharedGoalCard implements CheckSharedGoal 
             for(int j = 0; j< Constants.SHELFROW - 2; j++){
                 if (columnCount[j] != columnCount[j + 1] + 1) {return false;}
             }
+            addPlayer(p);
             return true;
         }
         else if(columnCount[i] < columnCount[i+1]){
             for(int j = 0; j< Constants.SHELFROW - 2; i++) {
                 if (columnCount[i] != columnCount[i + 1] - 1) {return false;}
             }
+            addPlayer(p);
             return true;
         }
-        else if(columnCount[i] == columnCount[i+1]){return false;}
 
         return false;
     }

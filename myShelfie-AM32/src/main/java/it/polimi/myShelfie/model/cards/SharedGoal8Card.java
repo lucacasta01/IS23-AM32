@@ -22,11 +22,14 @@ public class SharedGoal8Card extends SharedGoalCard implements CheckSharedGoal {
      * @return Check result
      */
     public boolean checkPattern(Player p){
+        if(isAchieved(p)){
+            return false;
+        }
         Tile[][] toCheck = p.getMyShelf().getTileMartrix();
         if(toCheck[0][0].getColor() == toCheck[Constants.SHELFROW-1][0].getColor()
                 && toCheck[Constants.SHELFROW-1][Constants.SHELFCOLUMN-1].getColor() == toCheck[Constants.SHELFROW-1][0].getColor()
                 && toCheck[Constants.SHELFROW-1][0].getColor() == toCheck[0][Constants.SHELFCOLUMN-1].getColor()){
-            achievedBy.add(p);
+            addPlayer(p);
             return true;
         }
         else return false;

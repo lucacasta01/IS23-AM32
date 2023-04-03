@@ -94,7 +94,7 @@ public class SharedGoal3Card extends SharedGoalCard implements CheckSharedGoal {
         }
 
         if(count>=4){
-            achievedBy.add(p);
+            addPlayer(p);
             return true;
         }
         else{

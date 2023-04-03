@@ -67,7 +67,7 @@ public class SharedGoal2Card extends SharedGoalCard implements CheckSharedGoal {
         }
 
         if(count>=2){
-            achievedBy.add(p);
+            addPlayer(p);
             return true;
         }
         else{
