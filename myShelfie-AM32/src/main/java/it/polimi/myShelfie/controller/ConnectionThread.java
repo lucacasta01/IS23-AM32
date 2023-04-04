@@ -1,47 +1,64 @@
 package it.polimi.myShelfie.controller;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.*;
 import java.rmi.*;
 import java.rmi.registry.*;
-import java.rmi.server.*;
-import java.util.Locale;
+
 public class ConnectionThread extends Thread implements Runnable {
     private Socket clientSocket;
-    private ObjectInputStream inputStream;
-    private ObjectOutputStream outputStream;
+    private String nickname;
     private Registry registry;
     private boolean isRMI = false;
     private Remote client;
+    private BufferedReader in;
+    private PrintWriter out;
+
 
     public ConnectionThread(Socket clientSocket, Registry registry){
         this.clientSocket = clientSocket;
         this.registry = registry;
     }
 
+    public void shutdown() {
+        try {
+            in.close();
+            out.close();
+            if (!clientSocket.isClosed()) {
+                clientSocket.close();
+            }
+        }
+        catch(Exception e){
+
+        }
+    }
+
     public void run(){
         try{
-            inputStream = new ObjectInputStream(clientSocket.getInputStream());
-            outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            out = new PrintWriter(clientSocket.getOutputStream(), true);
         }
         catch(Exception e){
             System.err.println("Exception throws during stream creation: " + e.toString());
             e.printStackTrace();
         }
         try{
-            sendMessage("WELCOME TO THE SERVER");
-            Object input;
-            while((input = inputStream.readObject()) != null){
-                if(isRMI){
-                    handleRMICom(input);
+            out.println("Please insert your username");
+            nickname = in.readLine();
+            System.out.println(nickname + " connected to the server");
+            Server myServer = Server.getInstance();
+            myServer.broadcastMessage(nickname + " joined");
+            String message;
+            while((message = in.readLine()) != null){
+                if(message.startsWith("/nick")){
+
+                }
+                else if(message.startsWith("/quit")){
+                    shutdown();
                 }
                 else {
-                    handleTCPCom(input);
+                    Server.getInstance().broadcastMessage(nickname + ": " + message);
                 }
             }
-            inputStream.close();
-            outputStream.close();
-            clientSocket.close();
         }
         catch(Exception e){
             System.err.println("Exception throws while handling connection");
@@ -49,6 +66,7 @@ public class ConnectionThread extends Thread implements Runnable {
         }
     }
 
+    /*
     public void setRMI(boolean isRMI){
         this.isRMI = isRMI;
         if(isRMI){
@@ -100,11 +118,11 @@ public class ConnectionThread extends Thread implements Runnable {
             sendMessage("Invalid message received via RMI");
         }
     }
+    */
 
     public synchronized void sendMessage(String message){
         try{
-            outputStream.writeObject(message);
-            outputStream.flush();
+            out.println(message);
         }
         catch(Exception e){
             System.out.println("Error occurred while sending a message: " + e.toString());

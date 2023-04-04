@@ -25,14 +25,14 @@ public class SharedGoal11Card extends SharedGoalCard implements CheckSharedGoal 
         if(isAchieved(p)){return false;}
         Tile[][] matrix = p.getMyShelf().getTileMartrix();
         int countEquals = 0;
-        final int controlli = 4;
+        final int threshold = 4;
 
         for(int i = 0; i < Constants.SHELFROW - 2; i++){
             if(matrix[i][i].getColor().equals(matrix[i+1][i+1].getColor()) && !(matrix[i][i].getColor().equals(Tile.Color.NULLTILE))){
                 countEquals++;
             }
         }
-        if(countEquals == controlli){
+        if(countEquals == threshold){
             addPlayer(p);
             return true;
         }
@@ -44,7 +44,7 @@ public class SharedGoal11Card extends SharedGoalCard implements CheckSharedGoal 
                 countEquals++;
             }
         }
-        if(countEquals == controlli){
+        if(countEquals == threshold){
             addPlayer(p);
             return true;
         }
@@ -56,7 +56,7 @@ public class SharedGoal11Card extends SharedGoalCard implements CheckSharedGoal 
             countEquals++;
             }
             j++;
-        }if(countEquals == controlli){
+        }if(countEquals == threshold){
             addPlayer(p);
             return true;
         }
@@ -68,7 +68,7 @@ public class SharedGoal11Card extends SharedGoalCard implements CheckSharedGoal 
                 countEquals++;
             }
             k++;
-        }if(countEquals == controlli){
+        }if(countEquals == threshold){
             addPlayer(p);
             return true;
         }
