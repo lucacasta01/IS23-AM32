@@ -1,14 +1,11 @@
-package it.polimi.myShelfie.controller;
+package it.polimi.myShelfie.server;
+import it.polimi.myShelfie.utilities.Constants;
+
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.io.*;
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-import java.rmi.server.*;
-import java.util.Locale;
 
-public class ClientImp implements Runnable{
+public class Client implements Runnable{
 
     private BufferedReader in;
 
@@ -21,7 +18,7 @@ public class ClientImp implements Runnable{
     @Override
     public void run() {
         try{
-            client = new Socket("127.0.0.1", 1234);
+            client = new Socket(Constants.SERVER_IP, Constants.PORT);
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
             out = new PrintWriter(client.getOutputStream(), true);
 
@@ -53,7 +50,7 @@ public class ClientImp implements Runnable{
     }
 
     public static void main(String[] args) {
-        ClientImp client = new ClientImp();
+        Client client = new Client();
         client.run();
     }
 
