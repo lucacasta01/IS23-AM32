@@ -32,7 +32,7 @@ public class Client implements Runnable{
             }
         }
         catch(Exception e){
-            shutdown();
+            System.out.println("Server not found");
         }
     }
 
@@ -45,7 +45,7 @@ public class Client implements Runnable{
                 client.close();
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.toString());
         }
     }
 
