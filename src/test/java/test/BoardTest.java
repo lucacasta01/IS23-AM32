@@ -6,6 +6,7 @@ import it.polimi.myShelfie.model.Board;
 import it.polimi.myShelfie.model.Position;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.model.cards.PersonalGoalCard;
+import it.polimi.myShelfie.utilities.Constants;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -16,10 +17,25 @@ public class BoardTest {
         Board boardToRefill = new Board();
         Board boardNotToRefill = new Board();
 
-        boardToRefill.getGrid()[0][0].setColor(Tile.Color.BLUE);
+        for(int i=0;i< Constants.BOARD_DIM;i++){
+            for(int j=0;j<Constants.BOARD_DIM;j++){
+                boardToRefill.getGrid()[i][j] = new Tile("fakePath", Tile.Color.NULLTILE);
+                boardNotToRefill.getGrid()[i][j] = new Tile("fakePath", Tile.Color.NULLTILE);
+            }
+        }
 
-        boardNotToRefill.getGrid()[0][0].setColor(Tile.Color.BLUE);
-        boardNotToRefill.getGrid()[0][1].setColor(Tile.Color.LIGHTBLUE);
+        boardToRefill.getGrid()[3][3].setColor(Tile.Color.BLUE);
+        boardToRefill.getGrid()[4][4].setColor(Tile.Color.BLUE);
+        boardToRefill.getGrid()[6][3].setColor(Tile.Color.BLUE);
+        boardToRefill.getGrid()[7][1].setColor(Tile.Color.BLUE);
+
+        boardNotToRefill.getGrid()[3][3].setColor(Tile.Color.BLUE);
+        boardNotToRefill.getGrid()[3][4].setColor(Tile.Color.LIGHTBLUE);
+        boardNotToRefill.getGrid()[1][3].setColor(Tile.Color.BLUE);
+        boardNotToRefill.getGrid()[1][5].setColor(Tile.Color.LIGHTBLUE);
+
+        System.out.println(boardToRefill.toString());
+        System.out.println(boardNotToRefill.toString());
 
         assertTrue(boardToRefill.needToRefill());
         assertFalse(boardNotToRefill.needToRefill());

@@ -15,7 +15,7 @@ public class Player {
     private int failedPings;
     private Shelf myShelf;
 
-    private Card myGoalCard;
+    private PersonalGoalCard myGoalCard;
 
     public Player(String name, String addr) {
         username = name;
@@ -25,7 +25,7 @@ public class Player {
         myGoalCard = null;
     }
 
-    public void setGoalCard(Card goalCard){
+    public void setGoalCard(PersonalGoalCard goalCard){
         myGoalCard = goalCard;
     }
 
@@ -94,19 +94,11 @@ public class Player {
         this.failedPings++;
     }
 
+    public PersonalGoalCard getMyGoalCard() {
+        return myGoalCard;
+    }
 
-
-    public static void main(String[] args) {
-        Player test = new Player("andrea", "128.0.0.1");
-        System.out.println("Score: " + test.getScore());
-        System.out.println("Username: " + test.getUsername());
-        System.out.println("Ip address: " + test.getIpAddress());
-        System.out.println("FailedPings: " + test.getFailedPings());
-        System.out.println("Adding a failed ping");
-        test.addFailedPing();
-        System.out.println("FailedPings: " + test.getFailedPings());
-        System.out.println("Setting score to 5..");
-        test.setScore(5);
-        System.out.println("New Score: " + test.getScore());
+    public void initShelf(){
+        this.myShelf  = new Shelf();
     }
 }

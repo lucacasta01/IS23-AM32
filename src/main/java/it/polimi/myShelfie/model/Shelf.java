@@ -1,7 +1,9 @@
 package it.polimi.myShelfie.model;
 
+import it.polimi.myShelfie.utilities.ColorPosition;
 import it.polimi.myShelfie.utilities.Constants;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,6 +12,7 @@ public class Shelf {
 
     public Shelf() {
         this.tileMatrix = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
+        initShelf();
     }
 
     public Shelf(Tile[][] tileMatrix){
@@ -100,5 +103,16 @@ public class Shelf {
                 return;
             }
         }
+    }
+
+    public List<ColorPosition> toColorPosition(){
+        List<ColorPosition> toReturn = new ArrayList<>();
+        for(int i=0;i<Constants.SHELFROW;i++){
+            for(int j=0;j<Constants.SHELFCOLUMN;j++){
+                toReturn.add(new ColorPosition(tileMatrix[i][j].toString(),i,j));
+            }
+        }
+
+        return toReturn;
     }
 }

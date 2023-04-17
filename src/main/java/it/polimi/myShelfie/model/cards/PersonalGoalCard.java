@@ -74,4 +74,23 @@ public class PersonalGoalCard extends Card{
         }
         return s.toString();
     }
+
+    public Integer getIndex(){
+        String[] strings = imgPath.split("/");
+        String myString = strings[2];
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(myString.charAt(14));
+        if(myString.charAt(15) != '.'){
+            stringBuilder.append(myString.charAt(15));
+        }
+        int toReturn = -1;
+        try{
+            toReturn = Integer.parseInt(stringBuilder.toString());
+        }
+        catch (Exception e){
+            System.out.println(e.toString());
+        }
+
+        return toReturn;
+    }
 }

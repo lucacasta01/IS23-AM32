@@ -1,7 +1,7 @@
 package it.polimi.myShelfie.model.cards;
 
 public abstract class Card {
-    private final String imgPath;
+    protected final String imgPath;
 
     public Card(String imgPath) {
         this.imgPath = imgPath;

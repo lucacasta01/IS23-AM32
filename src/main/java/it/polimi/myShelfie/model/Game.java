@@ -1,11 +1,21 @@
 package it.polimi.myShelfie.model;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import it.polimi.myShelfie.model.cards.*;
 import it.polimi.myShelfie.utilities.ColorPosition;
+import it.polimi.myShelfie.utilities.GameParameters;
 import it.polimi.myShelfie.utilities.JsonParser;
+import it.polimi.myShelfie.utilities.Utils;
+
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
-public class Game {
+public class Game implements Runnable{
     enum GameStatus{
         WAITINGFORPLAYERS,
         INPROGRESS,
@@ -19,12 +29,15 @@ public class Game {
     private Board gameBoard;
     private GameStatus status;
     private List<PersonalGoalCard> personalDeck;
-    public List<CheckSharedGoal> sharedDeck;
-    private List<CheckSharedGoal> actualSharedGoal;
+    private List<SharedGoalCard> sharedDeck;
+    private String UID;
+    private boolean isNewGame;
+    private List<Player> oldGamePlayers;
 
 
-    public Game(int nplayers){
-        setPlayersNumber(nplayers);
+    //da rimuovere
+    public Game(int playersNumber){
+        setPlayersNumber(playersNumber);
         players = new ArrayList<>();
         setStatus(GameStatus.WAITINGFORPLAYERS);
         this.currentPlayer = 0;
@@ -34,6 +47,102 @@ public class Game {
         initBoard();
     }
 
+    public Game(String UID, int playersNumber){
+        this.players = new ArrayList<>();
+        this.gameBoard = new Board();
+        this.playersNumber = playersNumber;
+        this.currentPlayer = 0;
+        this.UID = UID;
+        this.isNewGame = true;
+        this.status = GameStatus.WAITINGFORPLAYERS;
+
+        initializePersonalDeck();
+        initializeSharedDeck();
+        initBoard();
+    }
+
+    public Game(String UID){
+        this.UID = UID;
+        this.isNewGame = false;
+        //load game by UID
+        /*
+        * JSON:
+        *   UID
+        *   PLAYER USERNAMES
+        *   PLAYER SHELVES
+        *   BOARD
+        *   POINTS AND CARDS (FOR EACH PLAYER)
+        *   SHARED CARDS
+        */
+    }
+
+    public void saveGame(){
+        GameParameters gameParameters = new GameParameters();
+
+        gameParameters.setUID(this.UID);
+        gameParameters.setBoard(this.gameBoard.toColorPosition());
+        gameParameters.setCurrentPlayer(this.currentPlayer);
+
+        for(Player p : players){
+            gameParameters.addUsername(p.getUsername());
+            gameParameters.addShelf(p.getMyShelf().toColorPosition());
+            gameParameters.addScore(p.getScore());
+            gameParameters.addPersonalCard(p.getMyGoalCard().getIndex());
+        }
+
+        for(SharedGoalCard c : sharedDeck){
+            gameParameters.addSharedCard(c.getIndex());
+        }
+
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+        try {
+            FileWriter fw = new FileWriter("src/config/savedgames/" + UID +".json");
+            fw.write(gson.toJson(gameParameters));
+            fw.close();
+        }
+        catch (IOException e){
+            System.out.println(e.toString());
+        }
+    }
+
+    public boolean loadGame(String UID){
+        Path path = Paths.get("src/config/savedgames/" + UID +".json");
+
+        if(!path.toFile().isFile()){
+            return false;
+        }
+
+        GameParameters gameParameters = null;
+
+        try {
+                gameParameters = JsonParser.getGameParameters(path.toString());
+        }catch (Exception e){
+            System.out.println(e.toString());
+        }
+
+        this.UID = gameParameters.getUID();
+        this.playersNumber = oldGamePlayers.size();
+        this.currentPlayer = gameParameters.getCurrentPlayer();
+        oldGamePlayers = new ArrayList<>();
+        for(int i=0;i<playersNumber;i++){
+            Player p = new Player(gameParameters.getUsernames().get(i),"fakeAddress");
+            //ASSEGNARE A PLAYER SHELF,CARTA E SCORE
+            oldGamePlayers.add(p);
+        }
+
+        return true;
+    }
+
+    @Override
+    public void run(){
+
+    }
+
+    private void initShelves(){
+
+    }
     private void initializePersonalDeck(){
         personalDeck = new ArrayList<>();
         try{
@@ -126,7 +235,7 @@ public class Game {
     }
 
     /**
-     * Takes a random personal goal card from the initial deck and returns it
+     * Takes a random personal goal card from the initial deck and returns it removing it from the deck
      * @return the drawn card (PersonalGoalCard)
      */
     public PersonalGoalCard drawPersonalGoal(){
@@ -265,6 +374,7 @@ public class Game {
         if(players.size()<playersNumber) {
             players.add(p);
             p.setGoalCard(drawPersonalGoal());
+            p.initShelf();
         }
         else{
             System.out.println("No more places available");

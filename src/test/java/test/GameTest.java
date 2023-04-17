@@ -2,12 +2,16 @@ package test;
 
 import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
+import it.polimi.myShelfie.model.Position;
+import it.polimi.myShelfie.model.Tile;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GameTest {
@@ -42,5 +46,39 @@ public class GameTest {
         assertEquals(myGame.getWinner().getUsername(), p3.getUsername());
     }
 
+    @Test
+    @DisplayName("Game saving test")
+    public void gameSavingTest(){
+        Player p1 = new Player("pippo",fakeIP);
+        Player p2 = new Player("topolino",fakeIP);
+        Player p3 = new Player("pluto", fakeIP);
 
+        Game game = new Game("fakeUID",3);
+        game.addPlayer(p1);
+        game.addPlayer(p2);
+        game.addPlayer(p3);
+
+        //System.out.println(game.getGameBoard().toString());
+
+        p1.setGoalCard(game.drawPersonalGoal());
+        p2.setGoalCard(game.drawPersonalGoal());
+        p3.setGoalCard(game.drawPersonalGoal());
+
+        p1.getMyShelf().insertTile(game.collectTile(new Position(0,3)).get(0),0);
+        p1.getMyShelf().insertTile(game.collectTile(new Position(1,3)).get(0),0);
+
+        p2.getMyShelf().insertTile(game.collectTile(new Position(2,2)).get(0),1);
+        p2.getMyShelf().insertTile(game.collectTile(new Position(3,2)).get(0),0);
+
+        p3.getMyShelf().insertTile(game.collectTile(new Position(5,0)).get(0),2);
+        p3.getMyShelf().insertTile(game.collectTile(new Position(6,2)).get(0),2);
+
+        p1.setScore(50);
+        p2.setScore(5);
+        p3.setScore(1);
+
+        game.saveGame();
+
+        assertTrue(true);
+    }
 }

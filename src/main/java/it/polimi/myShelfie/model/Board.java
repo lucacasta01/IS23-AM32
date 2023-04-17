@@ -1,5 +1,6 @@
 package it.polimi.myShelfie.model;
 
+import it.polimi.myShelfie.utilities.ColorPosition;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.JsonParser;
 
@@ -165,18 +166,22 @@ public class Board {
     }
 
     /**
-     * initiaslizes the board with all the necessary tiles
+     * initializes the board with all the necessary tiles
      * @param players is the game's number of players
-     * @throws IOException
      */
-    public void initBoard(int players) throws IOException{
+    public void initBoard(int players){
 
-        setNullTiles(JsonParser.getNullConfig("src/config/boardconfig.json"));
-        switch (players) {
-            case 2 -> setNullTiles(JsonParser.getNullConfig("src/config/boardconfig2p.json"));
-            case 3 -> setNullTiles(JsonParser.getNullConfig("src/config/boardconfig3p.json"));
+        try {
+            setNullTiles(JsonParser.getNullConfig("src/config/boardconfig.json"));
+            switch (players) {
+                case 2 -> setNullTiles(JsonParser.getNullConfig("src/config/boardconfig2p.json"));
+                case 3 -> setNullTiles(JsonParser.getNullConfig("src/config/boardconfig3p.json"));
+            }
+            setTileColors();
         }
-        setTileColors();
+        catch (IOException e){
+            System.out.println("JSON parsing error");
+        }
     }
 
     /**
@@ -218,6 +223,17 @@ public class Board {
             s.append("\n");
         }
         return s.toString();
+    }
+
+    public List<ColorPosition> toColorPosition(){
+        List<ColorPosition> toReturn = new ArrayList<>();
+        for(int i=0;i<Constants.BOARD_DIM;i++){
+            for(int j=0;j<Constants.BOARD_DIM;j++){
+                toReturn.add(new ColorPosition(grid[i][j].toString(),i,j));
+            }
+        }
+
+        return toReturn;
     }
 }
 

@@ -36,5 +36,14 @@ public class JsonParser {
             return toReturn;
         }
     }
+
+    public static GameParameters getGameParameters(String jPath) throws IOException{
+        try (InputStream inputStream = new FileInputStream(jPath)) {
+            String jsonString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+            Type type = new TypeToken<GameParameters>() {}.getType();
+            GameParameters toReturn = new Gson().fromJson(jsonString, type);
+            return toReturn;
+        }
+    }
 }
 
