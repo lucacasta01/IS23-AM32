@@ -3,11 +3,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import it.polimi.myShelfie.model.cards.*;
-import it.polimi.myShelfie.utilities.ColorPosition;
-import it.polimi.myShelfie.utilities.GameParameters;
-import it.polimi.myShelfie.utilities.JsonParser;
-import it.polimi.myShelfie.utilities.Utils;
+import it.polimi.myShelfie.utilities.*;
 
+import javax.swing.text.Utilities;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -61,6 +59,10 @@ public class Game implements Runnable{
         initBoard();
     }
 
+    /**
+     * create a Game loading (if exists) the configuration from file UID.json
+     * @param UID
+     */
     public Game(String UID){
         this.UID = UID;
         this.isNewGame = false;
@@ -74,6 +76,8 @@ public class Game implements Runnable{
         *   POINTS AND CARDS (FOR EACH PLAYER)
         *   SHARED CARDS
         */
+        initializePersonalDeck();
+        loadGame(UID);
     }
 
     public void saveGame(){
@@ -92,6 +96,10 @@ public class Game implements Runnable{
 
         for(SharedGoalCard c : sharedDeck){
             gameParameters.addSharedCard(c.getIndex());
+        }
+
+        for(Tile t : this.gameBoard.getTileHeap()){
+            gameParameters.addTileToHeap(t);
         }
 
         Gson gson = new GsonBuilder()
@@ -123,21 +131,45 @@ public class Game implements Runnable{
         }
 
         this.UID = gameParameters.getUID();
-        this.playersNumber = oldGamePlayers.size();
+        this.playersNumber = gameParameters.getUsernames().size();
         this.currentPlayer = gameParameters.getCurrentPlayer();
+        this.gameBoard = loadBoard(gameParameters.getBoard(),gameParameters.getTileHeap());
         oldGamePlayers = new ArrayList<>();
         for(int i=0;i<playersNumber;i++){
             Player p = new Player(gameParameters.getUsernames().get(i),"fakeAddress");
-            //ASSEGNARE A PLAYER SHELF,CARTA E SCORE
+            p.setScore(gameParameters.getScore().get(i));
+            p.setMyShelf(loadShelf(gameParameters.getShelf().get(i)));
+            p.setGoalCard(personalDeck.get(gameParameters.getPersonalCards().get(i)-1));
             oldGamePlayers.add(p);
         }
 
+
         return true;
+    }
+
+    private Shelf loadShelf(List<ColorPosition> colorPositions){
+        Tile[][] tileMatrix = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
+        for(ColorPosition cp : colorPositions){
+            tileMatrix[cp.getRow()][cp.getColumn()] = new Tile(cp.getImgpath(),cp.getTileColor());
+        }
+        return new Shelf(tileMatrix);
+    }
+
+    private Board loadBoard(List<ColorPosition> colorPositions, List<Tile> tileHeap){
+        Tile[][] tileMatrix = new Tile[Constants.BOARD_DIM][Constants.BOARD_DIM];
+        for(ColorPosition cp : colorPositions){
+            tileMatrix[cp.getRow()][cp.getColumn()] = new Tile(cp.getImgpath(),cp.getTileColor());
+        }
+        return new Board(tileMatrix,tileHeap);
     }
 
     @Override
     public void run(){
 
+    }
+
+    public String getUID() {
+        return UID;
     }
 
     private void initShelves(){
@@ -349,6 +381,14 @@ public class Game implements Runnable{
         }
         return winner;
 
+    }
+
+    public List<SharedGoalCard> getSharedDeck() {
+        return sharedDeck;
+    }
+
+    public List<Player> getOldGamePlayers() {
+        return oldGamePlayers;
     }
 
     /*

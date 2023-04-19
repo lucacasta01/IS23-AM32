@@ -6,6 +6,7 @@ out/
  
 # Mac
 .DS_Store
+*.icloud
  
 # Maven
 log/

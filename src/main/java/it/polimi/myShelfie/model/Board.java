@@ -26,6 +26,11 @@ public class Board {
         initTileHeap();
     }
 
+    public Board(Tile[][] tileMatrix, List<Tile> tileHeap) {
+        this.grid = tileMatrix;
+        this.tileHeap = tileHeap;
+    }
+
     /**
      * Returns the current state of a board's grid
      *
@@ -35,8 +40,9 @@ public class Board {
         return this.grid;
     }
 
-
-
+    public List<Tile> getTileHeap() {
+        return tileHeap;
+    }
 
     /**
      * Checks whether the board's grid needs to be refilled
@@ -229,7 +235,7 @@ public class Board {
         List<ColorPosition> toReturn = new ArrayList<>();
         for(int i=0;i<Constants.BOARD_DIM;i++){
             for(int j=0;j<Constants.BOARD_DIM;j++){
-                toReturn.add(new ColorPosition(grid[i][j].toString(),i,j));
+                toReturn.add(new ColorPosition(grid[i][j].toString(),grid[i][j].getImagePath(),i,j));
             }
         }
 

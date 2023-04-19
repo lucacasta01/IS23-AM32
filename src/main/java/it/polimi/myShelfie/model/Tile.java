@@ -37,6 +37,10 @@ public class Tile {
         this.myColor = color;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
     @Override
     public String toString(){
         switch(myColor){

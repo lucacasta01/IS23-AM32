@@ -109,10 +109,22 @@ public class Shelf {
         List<ColorPosition> toReturn = new ArrayList<>();
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
-                toReturn.add(new ColorPosition(tileMatrix[i][j].toString(),i,j));
+                toReturn.add(new ColorPosition(tileMatrix[i][j].toString(),tileMatrix[i][j].getImagePath(),i,j));
             }
         }
 
         return toReturn;
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder s = new StringBuilder();
+        for(int i=0;i<Constants.SHELFROW;i++){
+            for(int j=0;j<Constants.SHELFCOLUMN;j++){
+                s.append(tileMatrix[i][j].toString()).append("\t");
+            }
+            s.append("\n");
+        }
+        return s.toString();
     }
 }

@@ -1,5 +1,7 @@
 package it.polimi.myShelfie.utilities;
 
+import it.polimi.myShelfie.model.Tile;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,7 @@ public class GameParameters {
      *   PLAYER USERNAMES
      *   PLAYER SHELVES
      *   BOARD
+     *   TILEHEAP
      *   POINTS AND CARDS (FOR EACH PLAYER)
      */
 
@@ -21,6 +24,7 @@ public class GameParameters {
     private List<Integer> personalCards;
     private List<Integer> sharedCards;
     private Integer currentPlayer;
+    private List<Tile> tileHeap;
 
     public GameParameters(){
         usernames = new ArrayList<>();
@@ -28,6 +32,15 @@ public class GameParameters {
         score = new ArrayList<>();
         personalCards = new ArrayList<>();
         sharedCards = new ArrayList<>();
+        tileHeap = new ArrayList<>();
+    }
+
+    public void addTileToHeap(Tile t){
+        this.tileHeap.add(t);
+    }
+
+    public List<Tile> getTileHeap() {
+        return tileHeap;
     }
 
     public void setCurrentPlayer(Integer currentPlayer) {

@@ -101,4 +101,9 @@ public class Player {
     public void initShelf(){
         this.myShelf  = new Shelf();
     }
+
+    @Override
+    public String toString(){
+        return username+"\n"+score;
+    }
 }

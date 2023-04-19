@@ -77,4 +77,5 @@ public class SharedGoalCard extends Card implements CheckSharedGoal{
         return toReturn;
     }
 
+
 }
