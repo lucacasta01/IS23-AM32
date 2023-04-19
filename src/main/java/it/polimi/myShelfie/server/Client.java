@@ -33,6 +33,7 @@ public class Client implements Runnable{
         }
         catch(Exception e){
             System.out.println("Server not found");
+            throw new RuntimeException();
         }
     }
 
@@ -51,7 +52,12 @@ public class Client implements Runnable{
 
     public static void main(String[] args) {
         Client client = new Client();
-        client.run();
+        try {
+            client.run();
+        }
+        catch(RuntimeException e){
+            System.out.println("Closing");
+        }
     }
 
     class InputHandler implements Runnable {
