@@ -44,6 +44,14 @@ public class Board {
         return tileHeap;
     }
 
+    public String getTileHeapToString(){
+        StringBuilder toReturn = new StringBuilder();
+        for(Tile t : tileHeap){
+            toReturn.append(t.toString()).append("\n");
+        }
+        return toReturn.toString();
+    }
+
     /**
      * Checks whether the board's grid needs to be refilled
      * @return true if needed, false otherwise

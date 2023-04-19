@@ -33,18 +33,11 @@ public class Game implements Runnable{
     private List<Player> oldGamePlayers;
 
 
-    //da rimuovere
-    public Game(int playersNumber){
-        setPlayersNumber(playersNumber);
-        players = new ArrayList<>();
-        setStatus(GameStatus.WAITINGFORPLAYERS);
-        this.currentPlayer = 0;
-        initializePersonalDeck();
-        initializeSharedDeck();
-        this.gameBoard = new Board();
-        initBoard();
-    }
-
+    /**
+     * Create a brand-new game
+     * @param UID
+     * @param playersNumber
+     */
     public Game(String UID, int playersNumber){
         this.players = new ArrayList<>();
         this.gameBoard = new Board();
@@ -60,7 +53,7 @@ public class Game implements Runnable{
     }
 
     /**
-     * create a Game loading (if exists) the configuration from file UID.json
+     * Load a Game from the configuration file UID.json (if exists)
      * @param UID
      */
     public Game(String UID){
@@ -77,7 +70,12 @@ public class Game implements Runnable{
         *   SHARED CARDS
         */
         initializePersonalDeck();
-        loadGame(UID);
+        try{
+            loadGame(UID);
+        }
+        catch (IOException e){
+            System.out.println("Partita non trovata");
+        }
     }
 
     public void saveGame(){
@@ -115,11 +113,11 @@ public class Game implements Runnable{
         }
     }
 
-    public boolean loadGame(String UID){
+    public void loadGame(String UID) throws IOException{
         Path path = Paths.get("src/config/savedgames/" + UID +".json");
 
         if(!path.toFile().isFile()){
-            return false;
+            throw new IOException();
         }
 
         GameParameters gameParameters = null;
@@ -142,9 +140,8 @@ public class Game implements Runnable{
             p.setGoalCard(personalDeck.get(gameParameters.getPersonalCards().get(i)-1));
             oldGamePlayers.add(p);
         }
+        initializeSharedDeck(gameParameters.getSharedCards().get(0),gameParameters.getSharedCards().get(1));
 
-
-        return true;
     }
 
     private Shelf loadShelf(List<ColorPosition> colorPositions){
@@ -170,10 +167,6 @@ public class Game implements Runnable{
 
     public String getUID() {
         return UID;
-    }
-
-    private void initShelves(){
-
     }
     private void initializePersonalDeck(){
         personalDeck = new ArrayList<>();
@@ -224,6 +217,26 @@ public class Game implements Runnable{
         }
         sharedDeck.add(sharedGoalCards[card1]);
         sharedDeck.add(sharedGoalCards[card2]);
+    }
+
+    private void initializeSharedDeck(int card1, int card2){
+        sharedDeck = new ArrayList<>();
+        SharedGoalCard[] sharedGoalCards = new SharedGoalCard[12];
+        sharedGoalCards[0] = new SharedGoal1Card("graphics/commonGoalCards/1.jpg");
+        sharedGoalCards[1] = new SharedGoal2Card("graphics/commonGoalCards/2.jpg");
+        sharedGoalCards[2] = new SharedGoal3Card("graphics/commonGoalCards/3.jpg");
+        sharedGoalCards[3] = new SharedGoal4Card("graphics/commonGoalCards/4.jpg");
+        sharedGoalCards[4] = new SharedGoal5Card("graphics/commonGoalCards/5.jpg");
+        sharedGoalCards[5] = new SharedGoal6Card("graphics/commonGoalCards/6.jpg");
+        sharedGoalCards[6] = new SharedGoal7Card("graphics/commonGoalCards/7.jpg");
+        sharedGoalCards[7] = new SharedGoal8Card("graphics/commonGoalCards/8.jpg");
+        sharedGoalCards[8] = new SharedGoal9Card("graphics/commonGoalCards/9.jpg");
+        sharedGoalCards[9] = new SharedGoal10Card("graphics/commonGoalCards/10.jpg");
+        sharedGoalCards[10] = new SharedGoal11Card("graphics/commonGoalCards/11.jpg");
+        sharedGoalCards[11] = new SharedGoal12Card("graphics/commonGoalCards/12.jpg");
+
+        sharedDeck.add(sharedGoalCards[card1-1]);
+        sharedDeck.add(sharedGoalCards[card2-1]);
     }
 
     public int getPlayersNumber() {

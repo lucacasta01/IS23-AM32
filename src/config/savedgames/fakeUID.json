@@ -341,13 +341,13 @@
       },
       {
         "color": "-",
-        "imgpath": "graphics/itemTiles/Giochi1.2.png",
+        "imgpath": "graphics/itemTiles/Cornici1.3.png",
         "row": 5,
         "column": 0
       },
       {
         "color": "-",
-        "imgpath": "graphics/itemTiles/Giochi1.1.png",
+        "imgpath": "graphics/itemTiles/Trofei1.3.png",
         "row": 5,
         "column": 1
       },
@@ -535,7 +535,7 @@
       },
       {
         "color": "-",
-        "imgpath": "graphics/itemTiles/Piante1.3.png",
+        "imgpath": "graphics/itemTiles/Cornici1.2.png",
         "row": 5,
         "column": 2
       },
@@ -574,7 +574,7 @@
     },
     {
       "color": "-",
-      "imgpath": "graphics/itemTiles/Giochi1.2.png",
+      "imgpath": "graphics/itemTiles/Libri1.1.png",
       "row": 0,
       "column": 3
     },
@@ -630,293 +630,293 @@
       "color": "-",
       "imgpath": "graphics/itemTiles/Trofei1.2.png",
       "row": 1,
-      "column": 3
-    },
-    {
-      "color": "G",
-      "imgpath": "graphics/itemTiles/Gatti1.2.png",
-      "row": 1,
-      "column": 4
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/transparent.png",
-      "row": 1,
-      "column": 5
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/transparent.png",
-      "row": 1,
-      "column": 6
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/transparent.png",
-      "row": 1,
-      "column": 7
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/transparent.png",
-      "row": 1,
-      "column": 8
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/transparent.png",
-      "row": 2,
-      "column": 0
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/transparent.png",
-      "row": 2,
-      "column": 1
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/Giochi1.1.png",
-      "row": 2,
-      "column": 2
-    },
-    {
-      "color": "W",
-      "imgpath": "graphics/itemTiles/Libri1.3.png",
-      "row": 2,
       "column": 3
     },
     {
       "color": "G",
       "imgpath": "graphics/itemTiles/Gatti1.1.png",
-      "row": 2,
+      "row": 1,
       "column": 4
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 5
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 6
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/transparent.png",
+      "row": 2,
+      "column": 0
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/transparent.png",
+      "row": 2,
+      "column": 1
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/Trofei1.3.png",
+      "row": 2,
+      "column": 2
     },
     {
       "color": "P",
       "imgpath": "graphics/itemTiles/Piante1.1.png",
       "row": 2,
-      "column": 5
-    },
-    {
-      "color": "B",
-      "imgpath": "graphics/itemTiles/Cornici1.2.png",
-      "row": 2,
-      "column": 6
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/transparent.png",
-      "row": 2,
-      "column": 7
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/transparent.png",
-      "row": 2,
-      "column": 8
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/transparent.png",
-      "row": 3,
-      "column": 0
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/transparent.png",
-      "row": 3,
-      "column": 1
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/Giochi1.2.png",
-      "row": 3,
-      "column": 2
-    },
-    {
-      "color": "G",
-      "imgpath": "graphics/itemTiles/Gatti1.3.png",
-      "row": 3,
       "column": 3
-    },
-    {
-      "color": "P",
-      "imgpath": "graphics/itemTiles/Piante1.2.png",
-      "row": 3,
-      "column": 4
-    },
-    {
-      "color": "W",
-      "imgpath": "graphics/itemTiles/Libri1.2.png",
-      "row": 3,
-      "column": 5
-    },
-    {
-      "color": "W",
-      "imgpath": "graphics/itemTiles/Libri1.3.png",
-      "row": 3,
-      "column": 6
-    },
-    {
-      "color": "L",
-      "imgpath": "graphics/itemTiles/Trofei1.3.png",
-      "row": 3,
-      "column": 7
-    },
-    {
-      "color": "L",
-      "imgpath": "graphics/itemTiles/Trofei1.1.png",
-      "row": 3,
-      "column": 8
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/transparent.png",
-      "row": 4,
-      "column": 0
-    },
-    {
-      "color": "P",
-      "imgpath": "graphics/itemTiles/Piante1.3.png",
-      "row": 4,
-      "column": 1
-    },
-    {
-      "color": "B",
-      "imgpath": "graphics/itemTiles/Cornici1.2.png",
-      "row": 4,
-      "column": 2
-    },
-    {
-      "color": "L",
-      "imgpath": "graphics/itemTiles/Trofei1.2.png",
-      "row": 4,
-      "column": 3
-    },
-    {
-      "color": "L",
-      "imgpath": "graphics/itemTiles/Trofei1.1.png",
-      "row": 4,
-      "column": 4
-    },
-    {
-      "color": "G",
-      "imgpath": "graphics/itemTiles/Gatti1.2.png",
-      "row": 4,
-      "column": 5
-    },
-    {
-      "color": "P",
-      "imgpath": "graphics/itemTiles/Piante1.2.png",
-      "row": 4,
-      "column": 6
-    },
-    {
-      "color": "Y",
-      "imgpath": "graphics/itemTiles/Giochi1.2.png",
-      "row": 4,
-      "column": 7
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/transparent.png",
-      "row": 4,
-      "column": 8
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/Gatti1.2.png",
-      "row": 5,
-      "column": 0
-    },
-    {
-      "color": "Y",
-      "imgpath": "graphics/itemTiles/Giochi1.3.png",
-      "row": 5,
-      "column": 1
-    },
-    {
-      "color": "L",
-      "imgpath": "graphics/itemTiles/Trofei1.1.png",
-      "row": 5,
-      "column": 2
-    },
-    {
-      "color": "L",
-      "imgpath": "graphics/itemTiles/Trofei1.2.png",
-      "row": 5,
-      "column": 3
-    },
-    {
-      "color": "B",
-      "imgpath": "graphics/itemTiles/Cornici1.3.png",
-      "row": 5,
-      "column": 4
-    },
-    {
-      "color": "B",
-      "imgpath": "graphics/itemTiles/Cornici1.2.png",
-      "row": 5,
-      "column": 5
-    },
-    {
-      "color": "G",
-      "imgpath": "graphics/itemTiles/Gatti1.3.png",
-      "row": 5,
-      "column": 6
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/transparent.png",
-      "row": 5,
-      "column": 7
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/transparent.png",
-      "row": 5,
-      "column": 8
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/transparent.png",
-      "row": 6,
-      "column": 0
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/transparent.png",
-      "row": 6,
-      "column": 1
-    },
-    {
-      "color": "-",
-      "imgpath": "graphics/itemTiles/Piante1.3.png",
-      "row": 6,
-      "column": 2
     },
     {
       "color": "W",
       "imgpath": "graphics/itemTiles/Libri1.1.png",
-      "row": 6,
-      "column": 3
-    },
-    {
-      "color": "B",
-      "imgpath": "graphics/itemTiles/Cornici1.3.png",
-      "row": 6,
+      "row": 2,
       "column": 4
     },
     {
-      "color": "P",
-      "imgpath": "graphics/itemTiles/Piante1.2.png",
-      "row": 6,
+      "color": "G",
+      "imgpath": "graphics/itemTiles/Gatti1.2.png",
+      "row": 2,
       "column": 5
     },
     {
       "color": "W",
       "imgpath": "graphics/itemTiles/Libri1.2.png",
+      "row": 2,
+      "column": 6
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/transparent.png",
+      "row": 2,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/transparent.png",
+      "row": 2,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/transparent.png",
+      "row": 3,
+      "column": 0
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/transparent.png",
+      "row": 3,
+      "column": 1
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/Cornici1.3.png",
+      "row": 3,
+      "column": 2
+    },
+    {
+      "color": "G",
+      "imgpath": "graphics/itemTiles/Gatti1.3.png",
+      "row": 3,
+      "column": 3
+    },
+    {
+      "color": "Y",
+      "imgpath": "graphics/itemTiles/Giochi1.1.png",
+      "row": 3,
+      "column": 4
+    },
+    {
+      "color": "G",
+      "imgpath": "graphics/itemTiles/Gatti1.2.png",
+      "row": 3,
+      "column": 5
+    },
+    {
+      "color": "G",
+      "imgpath": "graphics/itemTiles/Gatti1.3.png",
+      "row": 3,
+      "column": 6
+    },
+    {
+      "color": "W",
+      "imgpath": "graphics/itemTiles/Libri1.2.png",
+      "row": 3,
+      "column": 7
+    },
+    {
+      "color": "B",
+      "imgpath": "graphics/itemTiles/Cornici1.2.png",
+      "row": 3,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/transparent.png",
+      "row": 4,
+      "column": 0
+    },
+    {
+      "color": "P",
+      "imgpath": "graphics/itemTiles/Piante1.3.png",
+      "row": 4,
+      "column": 1
+    },
+    {
+      "color": "L",
+      "imgpath": "graphics/itemTiles/Trofei1.3.png",
+      "row": 4,
+      "column": 2
+    },
+    {
+      "color": "P",
+      "imgpath": "graphics/itemTiles/Piante1.1.png",
+      "row": 4,
+      "column": 3
+    },
+    {
+      "color": "L",
+      "imgpath": "graphics/itemTiles/Trofei1.3.png",
+      "row": 4,
+      "column": 4
+    },
+    {
+      "color": "L",
+      "imgpath": "graphics/itemTiles/Trofei1.1.png",
+      "row": 4,
+      "column": 5
+    },
+    {
+      "color": "W",
+      "imgpath": "graphics/itemTiles/Libri1.1.png",
+      "row": 4,
+      "column": 6
+    },
+    {
+      "color": "W",
+      "imgpath": "graphics/itemTiles/Libri1.3.png",
+      "row": 4,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/transparent.png",
+      "row": 4,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/Giochi1.2.png",
+      "row": 5,
+      "column": 0
+    },
+    {
+      "color": "G",
+      "imgpath": "graphics/itemTiles/Gatti1.2.png",
+      "row": 5,
+      "column": 1
+    },
+    {
+      "color": "Y",
+      "imgpath": "graphics/itemTiles/Giochi1.1.png",
+      "row": 5,
+      "column": 2
+    },
+    {
+      "color": "P",
+      "imgpath": "graphics/itemTiles/Piante1.3.png",
+      "row": 5,
+      "column": 3
+    },
+    {
+      "color": "B",
+      "imgpath": "graphics/itemTiles/Cornici1.3.png",
+      "row": 5,
+      "column": 4
+    },
+    {
+      "color": "Y",
+      "imgpath": "graphics/itemTiles/Giochi1.1.png",
+      "row": 5,
+      "column": 5
+    },
+    {
+      "color": "W",
+      "imgpath": "graphics/itemTiles/Libri1.1.png",
+      "row": 5,
+      "column": 6
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/transparent.png",
+      "row": 5,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/transparent.png",
+      "row": 5,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/transparent.png",
+      "row": 6,
+      "column": 0
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/transparent.png",
+      "row": 6,
+      "column": 1
+    },
+    {
+      "color": "-",
+      "imgpath": "graphics/itemTiles/Cornici1.2.png",
+      "row": 6,
+      "column": 2
+    },
+    {
+      "color": "Y",
+      "imgpath": "graphics/itemTiles/Giochi1.3.png",
+      "row": 6,
+      "column": 3
+    },
+    {
+      "color": "L",
+      "imgpath": "graphics/itemTiles/Trofei1.1.png",
+      "row": 6,
+      "column": 4
+    },
+    {
+      "color": "Y",
+      "imgpath": "graphics/itemTiles/Giochi1.3.png",
+      "row": 6,
+      "column": 5
+    },
+    {
+      "color": "G",
+      "imgpath": "graphics/itemTiles/Gatti1.3.png",
       "row": 6,
       "column": 6
     },
@@ -957,14 +957,14 @@
       "column": 3
     },
     {
-      "color": "L",
-      "imgpath": "graphics/itemTiles/Trofei1.2.png",
+      "color": "Y",
+      "imgpath": "graphics/itemTiles/Giochi1.2.png",
       "row": 7,
       "column": 4
     },
     {
-      "color": "B",
-      "imgpath": "graphics/itemTiles/Cornici1.2.png",
+      "color": "Y",
+      "imgpath": "graphics/itemTiles/Giochi1.2.png",
       "row": 7,
       "column": 5
     },
@@ -1017,8 +1017,8 @@
       "column": 4
     },
     {
-      "color": "L",
-      "imgpath": "graphics/itemTiles/Trofei1.3.png",
+      "color": "G",
+      "imgpath": "graphics/itemTiles/Gatti1.1.png",
       "row": 8,
       "column": 5
     },
@@ -1047,13 +1047,13 @@
     1
   ],
   "personalCards": [
+    11,
     2,
-    7,
-    11
+    12
   ],
   "sharedCards": [
-    2,
-    1
+    4,
+    8
   ],
   "currentPlayer": 0,
   "tileHeap": [
@@ -1094,6 +1094,14 @@
       "myColor": "BLUE"
     },
     {
+      "imagePath": "graphics/itemTiles/Cornici1.2.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "graphics/itemTiles/Cornici1.2.png",
+      "myColor": "BLUE"
+    },
+    {
       "imagePath": "graphics/itemTiles/Cornici1.1.png",
       "myColor": "BLUE"
     },
@@ -1162,14 +1170,6 @@
       "myColor": "GREEN"
     },
     {
-      "imagePath": "graphics/itemTiles/Gatti1.1.png",
-      "myColor": "GREEN"
-    },
-    {
-      "imagePath": "graphics/itemTiles/Gatti1.3.png",
-      "myColor": "GREEN"
-    },
-    {
       "imagePath": "graphics/itemTiles/Gatti1.3.png",
       "myColor": "GREEN"
     },
@@ -1226,10 +1226,6 @@
       "myColor": "YELLOW"
     },
     {
-      "imagePath": "graphics/itemTiles/Giochi1.3.png",
-      "myColor": "YELLOW"
-    },
-    {
       "imagePath": "graphics/itemTiles/Giochi1.1.png",
       "myColor": "YELLOW"
     },
@@ -1246,12 +1242,8 @@
       "myColor": "YELLOW"
     },
     {
-      "imagePath": "graphics/itemTiles/Giochi1.1.png",
-      "myColor": "YELLOW"
-    },
-    {
-      "imagePath": "graphics/itemTiles/Giochi1.1.png",
-      "myColor": "YELLOW"
+      "imagePath": "graphics/itemTiles/Libri1.3.png",
+      "myColor": "WHITE"
     },
     {
       "imagePath": "graphics/itemTiles/Libri1.3.png",
@@ -1295,18 +1287,6 @@
     },
     {
       "imagePath": "graphics/itemTiles/Libri1.2.png",
-      "myColor": "WHITE"
-    },
-    {
-      "imagePath": "graphics/itemTiles/Libri1.1.png",
-      "myColor": "WHITE"
-    },
-    {
-      "imagePath": "graphics/itemTiles/Libri1.1.png",
-      "myColor": "WHITE"
-    },
-    {
-      "imagePath": "graphics/itemTiles/Libri1.1.png",
       "myColor": "WHITE"
     },
     {
@@ -1362,7 +1342,15 @@
       "myColor": "PINK"
     },
     {
-      "imagePath": "graphics/itemTiles/Piante1.1.png",
+      "imagePath": "graphics/itemTiles/Piante1.2.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "graphics/itemTiles/Piante1.2.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "graphics/itemTiles/Piante1.2.png",
       "myColor": "PINK"
     },
     {
@@ -1384,6 +1372,10 @@
     {
       "imagePath": "graphics/itemTiles/Piante1.1.png",
       "myColor": "PINK"
+    },
+    {
+      "imagePath": "graphics/itemTiles/Trofei1.1.png",
+      "myColor": "LIGHTBLUE"
     },
     {
       "imagePath": "graphics/itemTiles/Trofei1.1.png",
@@ -1418,7 +1410,15 @@
       "myColor": "LIGHTBLUE"
     },
     {
-      "imagePath": "graphics/itemTiles/Trofei1.3.png",
+      "imagePath": "graphics/itemTiles/Trofei1.2.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "graphics/itemTiles/Trofei1.2.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "graphics/itemTiles/Trofei1.2.png",
       "myColor": "LIGHTBLUE"
     },
     {

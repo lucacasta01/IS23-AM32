@@ -80,4 +80,9 @@ public class SharedGoal1Card extends SharedGoalCard implements CheckSharedGoal {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Card 1";
+    }
 }

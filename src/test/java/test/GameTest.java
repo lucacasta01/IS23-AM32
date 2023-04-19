@@ -132,6 +132,6 @@ public class GameTest {
             assertEquals(game.getSharedDeck().get(i).toString(), game2.getSharedDeck().get(i).toString());
         }
         assertEquals(game.getGameBoard().toString(),game2.getGameBoard().toString());
-        assertEquals(game.getGameBoard().getTileHeap(),game2.getGameBoard().getTileHeap());
+        assertEquals(game.getGameBoard().getTileHeapToString(),game2.getGameBoard().getTileHeapToString());
     }
 }
