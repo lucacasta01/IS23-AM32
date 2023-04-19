@@ -2,6 +2,7 @@ package it.polimi.myShelfie.server;
 import it.polimi.myShelfie.utilities.Constants;
 
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.io.*;
 
@@ -18,7 +19,25 @@ public class Client implements Runnable{
     @Override
     public void run() {
         try{
-            client = new Socket(Constants.SERVER_IP, Constants.PORT);
+            try {
+                client = new Socket(Constants.SERVER_IP, Constants.PORT);
+            }
+            catch (ConnectException connectException){
+                System.out.println("Server not found");
+                if(in != null){
+                    try {
+                        System.out.println("chiudo in");
+                        in.close();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+                if(out!=null){
+                    System.out.println("chiudo out");
+                    out.close();
+                }
+                throw new RuntimeException();
+            }
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
             out = new PrintWriter(client.getOutputStream(), true);
 
@@ -32,7 +51,6 @@ public class Client implements Runnable{
             }
         }
         catch(Exception e){
-            System.out.println("Server not found");
             throw new RuntimeException();
         }
     }
@@ -57,6 +75,7 @@ public class Client implements Runnable{
         }
         catch(RuntimeException e){
             System.out.println("Closing");
+
         }
     }
 

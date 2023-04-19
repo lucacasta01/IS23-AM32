@@ -58,7 +58,6 @@ public class ClientHandler implements Runnable {
                 out.println("Nickname "+nickname+" used, retry:");
                 nickname = in.readLine();
             }
-            server.getUserGame().put(nickname, "/");
             System.out.println(nickname + " connected to the server");
             server.broadcastMessage(nickname + " joined");
             String message;
@@ -85,6 +84,7 @@ public class ClientHandler implements Runnable {
                     filteredLobbyList.get(0).acceptPlayer(this);
                     lobby.broadcastMessage(nickname+ " joined");
                     System.out.println(nickname + "joined game "+lobby.getLobbyUID());
+                    server.getUserGame().put(nickname, lobby.getLobbyUID());
                 }
                 else{
                     System.out.println(nickname + "rejected invitation from " + lobby.getLobbyUID());
@@ -125,6 +125,7 @@ public class ClientHandler implements Runnable {
                             server.getLobbyList().add(lobby);
                             lobby.run();
                             System.out.println("New lobby created ["+UID+"]");
+                            server.getUserGame().put(nickname, lobby.getLobbyUID());
                             lobbyCreated = true;
                         }
                         case "2" -> {
@@ -153,6 +154,7 @@ public class ClientHandler implements Runnable {
                                     l.acceptPlayer(this);
                                     l.broadcastMessage(nickname+ " joined");
                                     System.out.println(nickname + "joined game "+l.getLobbyUID());
+                                    server.getUserGame().put(nickname, l.getLobbyUID());
                                     flag = true;
                                     lobbyCreated = true;
                                     break;
