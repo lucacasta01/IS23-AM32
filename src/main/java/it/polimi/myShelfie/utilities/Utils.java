@@ -14,7 +14,7 @@ public class Utils {
         do {
             for (int i = 0; i < 8; i++) {
                 r = random.nextInt(48, 123);
-                while ((r > 57 && r < 65) || (r> 91 && r< 96)) {
+                while ((r > 57 && r < 65) || (r> 90 && r< 96)) {
                     r = random.nextInt(48, 123);
                 }
                 stringBuilder.append((char) r);

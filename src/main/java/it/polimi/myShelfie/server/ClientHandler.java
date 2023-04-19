@@ -98,7 +98,8 @@ public class ClientHandler implements Runnable {
             //Lobby not found ->
             else{
                 String chose = "1";
-                while(!chose.equals("4")) {
+                boolean lobbyCreated = false;
+                while(!chose.equals("4") && !lobbyCreated) {
                     out.println("(1) New Game");
                     out.println("(2) Load last game");
                     out.println("(3) Join random game");
@@ -124,6 +125,7 @@ public class ClientHandler implements Runnable {
                             server.getLobbyList().add(lobby);
                             lobby.run();
                             System.out.println("New lobby created ["+UID+"]");
+                            lobbyCreated = true;
                         }
                         case "2" -> {
                             out.println("* GAME LOADING *\n\n");
@@ -136,6 +138,7 @@ public class ClientHandler implements Runnable {
                                 lobby.run();
                                 server.getLobbyList().add(lobby);
                                 System.out.println("New lobby created ["+lobby.getLobbyUID()+"]");
+                                lobbyCreated = true;
                             }
                         }
                         case "3" -> {
@@ -151,6 +154,7 @@ public class ClientHandler implements Runnable {
                                     l.broadcastMessage(nickname+ " joined");
                                     System.out.println(nickname + "joined game "+l.getLobbyUID());
                                     flag = true;
+                                    lobbyCreated = true;
                                     break;
                                 }
                             }
@@ -170,7 +174,7 @@ public class ClientHandler implements Runnable {
                 //firt case: finding a saved game
             }
 
-            
+
         } catch (Exception e) {
             server.removeClient(this);
             server.getUserGame().remove(nickname);
