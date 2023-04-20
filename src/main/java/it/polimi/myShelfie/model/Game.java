@@ -1,12 +1,10 @@
 package it.polimi.myShelfie.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import it.polimi.myShelfie.model.cards.*;
 import it.polimi.myShelfie.utilities.*;
+import it.polimi.myShelfie.utilities.beans.GameParameters;
 
-import javax.swing.text.Utilities;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -86,7 +84,7 @@ public class Game implements Runnable{
         gameParameters.setCurrentPlayer(this.currentPlayer);
 
         for(Player p : players){
-            gameParameters.addUsername(p.getUsername());
+            gameParameters.addUsername(p.getUsername() + " - " + p.getIpAddress());
             gameParameters.addShelf(p.getMyShelf().toColorPosition());
             gameParameters.addScore(p.getScore());
             gameParameters.addPersonalCard(p.getMyGoalCard().getIndex());
@@ -428,6 +426,19 @@ public class Game implements Runnable{
             players.add(p);
             p.setGoalCard(drawPersonalGoal());
             p.initShelf();
+        }
+        else{
+            System.out.println("No more places available");
+        }
+    }
+
+    public void addPlayer(List<Player> p){
+        if(players.size() + p.size() <= playersNumber) {
+            players.addAll(p);
+            for(Player player : p) {
+                player.setGoalCard(drawPersonalGoal());
+                player.initShelf();
+            }
         }
         else{
             System.out.println("No more places available");

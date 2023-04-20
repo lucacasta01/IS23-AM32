@@ -98,7 +98,7 @@ public class Server implements Runnable{
 
     public void broadcastMessage(String message){
         for(ClientHandler t : connectedClients){
-            t.sendMessage(message);
+            t.sendInfoMessage(message);
         }
     }
 

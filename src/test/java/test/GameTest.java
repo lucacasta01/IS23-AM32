@@ -21,7 +21,7 @@ public class GameTest {
     @Test
     @DisplayName("Turn handling test")
     public void turnHandlingTest(){
-        Game myGame = new Game(5);
+        Game myGame = new Game("");
         assertEquals(myGame.getCurrentPlayer(), 0);
         myGame.handleTurn();
         assertEquals(myGame.getCurrentPlayer(),1);
@@ -40,7 +40,7 @@ public class GameTest {
         myPlayers.add(p1);
         myPlayers.add(p2);
         myPlayers.add(p3);
-        Game myGame = new Game(3);
+        Game myGame = new Game("");
         myGame.setPlayers(myPlayers);
         myGame.getWinner();
         assertEquals(myGame.getWinner().getUsername(), p3.getUsername());

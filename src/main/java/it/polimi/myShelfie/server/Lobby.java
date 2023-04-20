@@ -1,6 +1,7 @@
 package it.polimi.myShelfie.server;
 
 import it.polimi.myShelfie.model.Game;
+import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.utilities.Utils;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class Lobby implements Runnable{
     }
 
     @Override
-    public void run() {
+    public void run(){
         switch (gameMode){
             case NEWGAME -> {
                 Game game = new Game(lobbyUID,playersNumber);
@@ -56,15 +57,30 @@ public class Lobby implements Runnable{
                     throw new RuntimeException(e);
                 }
                 broadcastMessage("Starting new game");
+                game.addPlayer(generatePlayers());
+                game.saveGame();
+                broadcastMessage("/CONFIGURATION_OK");
 
+                updateView();
             }
             case SAVEDGAME -> {
                 Game game = new Game(lobbyUID);
                 playersNumber = game.getPlayersNumber();
                 //read json from controller
-                break;
+
             }
         }
+    }
+
+    private void updateView(){
+        broadcastMessage("/UPDATE_VIEW");
+    }
+    private List<Player> generatePlayers(){
+        List<Player> toReturn = new ArrayList<>();
+        for(ClientHandler p : lobbyPlayers){
+            toReturn.add(new Player(p.getNickname(),p.getClientSocket().getLocalAddress().getHostAddress()));
+        }
+        return toReturn;
     }
 
     public GameMode getGameMode() {
@@ -116,7 +132,7 @@ public class Lobby implements Runnable{
 
     public void broadcastMessage(String message){
         for(ClientHandler t : lobbyPlayers){
-            t.sendMessage(message);
+            t.sendInfoMessage(message);
         }
     }
 

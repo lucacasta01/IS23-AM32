@@ -17,4 +17,16 @@ public class UtilsTest {
     void UIDGeneratorTest() {
         System.out.println(Utils.UIDGenerator());
     }
+
+    @Test
+    @DisplayName("Substrings test")
+    void substringsTest() {
+        String s = "/collect 12,31,11";
+        int firstTile = s.indexOf("/collect") + "/collect ".length();
+        String substr = s.substring(firstTile);
+        String[] pos = substr.split(",");
+        for(String str : pos){
+            System.out.println(str);
+        }
+    }
 }

@@ -3,6 +3,9 @@ package it.polimi.myShelfie.utilities;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.myShelfie.model.Position;
+import it.polimi.myShelfie.utilities.beans.Action;
+import it.polimi.myShelfie.utilities.beans.GameParameters;
+import it.polimi.myShelfie.utilities.beans.Response;
 import org.apache.commons.io.IOUtils;
 
 import java.io.FileInputStream;
@@ -44,6 +47,16 @@ public class JsonParser {
             GameParameters toReturn = new Gson().fromJson(jsonString, type);
             return toReturn;
         }
+    }
+
+    public static Action getAction(String jString) throws IOException{
+        Type type = new TypeToken<Action>(){}.getType();
+        return new Gson().fromJson(jString,type);
+    }
+
+    public static Response getResponse(String jString) throws IOException{
+        Type type = new TypeToken<Response>(){}.getType();
+        return new Gson().fromJson(jString,type);
     }
 }
 
