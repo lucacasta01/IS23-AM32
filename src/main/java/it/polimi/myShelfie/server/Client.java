@@ -45,6 +45,7 @@ public class Client implements Runnable{
 
             String inMessage;
             while((inMessage = in.readLine()) != null){
+
                 System.out.println(inMessage);
             }
         }
@@ -75,6 +76,7 @@ public class Client implements Runnable{
             System.out.println("Closing");
 
         }
+
     }
 
     class InputHandler implements Runnable {

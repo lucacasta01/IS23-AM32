@@ -50,10 +50,12 @@ public class Lobby implements Runnable{
             case NEWGAME -> {
                 Game game = new Game(lobbyUID,playersNumber);
                 try {
+                    broadcastMessage("Waiting for players..."+" "+"("+getLobbySize()+"/"+getPlayersNumber()+")");
                     waitForPlayers();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
+                broadcastMessage("Starting new game");
 
             }
             case SAVEDGAME -> {
@@ -90,7 +92,7 @@ public class Lobby implements Runnable{
         synchronized (lobbyPlayers) {
             while (getLobbySize() < getPlayersNumber()) {
                 lobbyPlayers.wait();
-                broadcastMessage("("+getLobbySize()+"/"+getPlayersNumber()+")");
+
             }
         }
     }
@@ -105,10 +107,9 @@ public class Lobby implements Runnable{
                 throw new RuntimeException("player number exceeded");
             }
         }
-
-        broadcastMessage(player.getNickname()+" joined the lobby");
         synchronized (lobbyPlayers){
             lobbyPlayers.add(player);
+            broadcastMessage(player.getNickname()+" joined the lobby "+"("+getLobbySize()+"/"+getPlayersNumber()+")");
             lobbyPlayers.notifyAll();
         }
     }

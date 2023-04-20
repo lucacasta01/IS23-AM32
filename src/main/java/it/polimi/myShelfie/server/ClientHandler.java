@@ -59,7 +59,6 @@ public class ClientHandler implements Runnable {
                 nickname = in.readLine();
             }
             System.out.println(nickname + " connected to the server");
-            server.broadcastMessage(nickname + " joined");
             String message;
 
             //finding an old game
@@ -81,10 +80,10 @@ public class ClientHandler implements Runnable {
                     out.println("Type the right key...");
                 }
                 if(message.toUpperCase().equals("Y")) {
-                    filteredLobbyList.get(0).acceptPlayer(this);
                     lobby.broadcastMessage(nickname+ " joined");
                     System.out.println(nickname + "joined game "+lobby.getLobbyUID());
                     server.getUserGame().put(nickname, lobby.getLobbyUID());
+                    filteredLobbyList.get(0).acceptPlayer(this);
                 }
                 else{
                     System.out.println(nickname + "rejected invitation from " + lobby.getLobbyUID());
@@ -99,13 +98,14 @@ public class ClientHandler implements Runnable {
             else{
                 String chose = "1";
                 boolean lobbyCreated = false;
-                while(!chose.equals("4") && !lobbyCreated) {
+                while(!chose.equals("0") && !lobbyCreated) {
                     out.println("(1) New Game");
                     out.println("(2) Load last game");
                     out.println("(3) Join random game");
-                    out.println("(4) Exit\n");
+                    out.println("(4) Search for stared saved game");
+                    out.println("(0) Exit\n");
                     chose = in.readLine();
-                    while (!chose.equals("1") && !chose.equals("2") && !chose.equals("3") && !chose.equals("4")) {
+                    while (!chose.equals("1") && !chose.equals("2") && !chose.equals("3") && !chose.equals("4") && !chose.equals("0")) {
                         out.println("Type the right key...");
                         chose = in.readLine();
                     }
@@ -123,10 +123,10 @@ public class ClientHandler implements Runnable {
                             String UID = Utils.UIDGenerator();
                             Lobby lobby = new Lobby(this, UID, playersNumber);
                             server.getLobbyList().add(lobby);
-                            lobby.run();
                             System.out.println("New lobby created ["+UID+"]");
                             server.getUserGame().put(nickname, lobby.getLobbyUID());
                             lobbyCreated = true;
+                            lobby.run();
                         }
                         case "2" -> {
                             out.println("* GAME LOADING *\n\n");
@@ -136,10 +136,10 @@ public class ClientHandler implements Runnable {
                             else {
                                 Lobby lobby = new Lobby(this,server.getUserGame().get(nickname));
                                 out.println("Joining game "+server.getUserGame().get(nickname));
-                                lobby.run();
                                 server.getLobbyList().add(lobby);
                                 System.out.println("New lobby created ["+lobby.getLobbyUID()+"]");
                                 lobbyCreated = true;
+                                lobby.run();
                             }
                         }
                         case "3" -> {
@@ -151,12 +151,11 @@ public class ClientHandler implements Runnable {
                             }
                             for(Lobby l : lobbyList){
                                 if(l.isOpen()){
-                                    l.acceptPlayer(this);
-                                    l.broadcastMessage(nickname+ " joined");
                                     System.out.println(nickname + "joined game "+l.getLobbyUID());
                                     server.getUserGame().put(nickname, l.getLobbyUID());
                                     flag = true;
                                     lobbyCreated = true;
+                                    l.acceptPlayer(this);
                                     break;
                                 }
                             }
@@ -164,7 +163,44 @@ public class ClientHandler implements Runnable {
                                 out.println("No game available. You should create a new one");
                             }
                         }
-                        case "4" -> {
+                        case "4" ->{
+                            filteredLobbyList = server.getLobbyList().stream()
+                                    .filter(l -> l.getGameMode() == Lobby.GameMode.SAVEDGAME)
+                                    .filter(l -> l.getLobbyUID().equals(server.getUserGame().get(nickname)))
+                                    .toList();
+                            if(filteredLobbyList.size() > 1){
+                                throw new RuntimeException("UID not unique");
+                            }
+                            else if(filteredLobbyList.size() == 1){
+                                Lobby lobby = filteredLobbyList.get(0);
+                                out.println("Game "+ lobby.getLobbyUID() + "started by " + lobby.getLobbyPlayers().get(0).nickname);
+                                out.println("Would you like to join? [y/n]");
+
+                                System.out.println("Saved game for "+nickname+" found");
+
+                                while(!(message = in.readLine()).toUpperCase().equals("Y") && !(message = in.readLine()).toUpperCase().equals("N")){
+                                    out.println("Type the right key...");
+                                }
+                                if(message.toUpperCase().equals("Y")) {
+                                    lobby.broadcastMessage(nickname+ " joined");
+                                    System.out.println(nickname + "joined game "+lobby.getLobbyUID());
+                                    server.getUserGame().put(nickname, lobby.getLobbyUID());
+                                    filteredLobbyList.get(0).acceptPlayer(this);
+                                }
+                                else{
+                                    System.out.println(nickname + "rejected invitation from " + lobby.getLobbyUID());
+                                    lobby.broadcastMessage(nickname+" has rejected the invitation.");
+                                    lobby.broadcastMessage("Game is closing...");
+                                    lobby.shutdown();
+                                    server.getLobbyList().remove(lobby);
+                                    System.out.println("Lobby "+lobby.getLobbyUID()+" killed.");
+                                }
+                            }else{
+                                out.println("No lobby was found.");
+                            }
+
+                        }
+                        case "0" -> {
                             out.println("Closing...");
                             server.removeClient(this);
                             server.getUserGame().remove(nickname);
