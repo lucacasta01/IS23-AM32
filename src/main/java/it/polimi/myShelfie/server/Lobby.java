@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Lobby implements Runnable{
-    private List<ClientHandler> lobbyPlayers;
+    private final List<ClientHandler> lobbyPlayers;
     private String lobbyUID;
-    private int playersNumber;
+    private Integer playersNumber;
     private GameMode gameMode;
     private boolean isOpen;
 
@@ -49,7 +49,12 @@ public class Lobby implements Runnable{
         switch (gameMode){
             case NEWGAME -> {
                 Game game = new Game(lobbyUID,playersNumber);
-                break;
+                try {
+                    waitForPlayers();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
             }
             case SAVEDGAME -> {
                 Game game = new Game(lobbyUID);
@@ -76,16 +81,36 @@ public class Lobby implements Runnable{
         return playersNumber;
     }
 
+    public int getLobbySize(){
+        return lobbyPlayers.size();
+    }
+
+
+    private void waitForPlayers() throws InterruptedException {
+        synchronized (lobbyPlayers) {
+            while (getLobbySize() < getPlayersNumber()) {
+                lobbyPlayers.wait();
+                broadcastMessage("("+getLobbySize()+"/"+getPlayersNumber()+")");
+            }
+        }
+    }
+
     public boolean isOpen() {
         return isOpen;
     }
 
     public void acceptPlayer(ClientHandler player) throws RuntimeException{
-        if(lobbyPlayers.size() + 1 > this.playersNumber){
-            throw new RuntimeException("player number exceeded");
+        synchronized (lobbyPlayers) {
+            if (lobbyPlayers.size() + 1 > this.playersNumber) {
+                throw new RuntimeException("player number exceeded");
+            }
         }
 
-        lobbyPlayers.add(player);
+        broadcastMessage(player.getNickname()+" joined the lobby");
+        synchronized (lobbyPlayers){
+            lobbyPlayers.add(player);
+            lobbyPlayers.notifyAll();
+        }
     }
 
     public void broadcastMessage(String message){

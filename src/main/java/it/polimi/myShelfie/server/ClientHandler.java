@@ -186,7 +186,11 @@ public class ClientHandler implements Runnable {
         }
     }
 
-        /*
+    public String getNickname() {
+        return nickname;
+    }
+
+    /*
         public void setRMI(boolean isRMI){
             this.isRMI = isRMI;
             if(isRMI){

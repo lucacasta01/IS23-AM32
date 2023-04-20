@@ -26,14 +26,12 @@ public class Client implements Runnable{
                 System.out.println("Server not found");
                 if(in != null){
                     try {
-                        System.out.println("chiudo in");
                         in.close();
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                 }
                 if(out!=null){
-                    System.out.println("chiudo out");
                     out.close();
                 }
                 throw new RuntimeException();
