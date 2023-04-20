@@ -26,8 +26,7 @@ public class JsonParser {
     public static List<Position> getNullConfig(String jPath) throws IOException {
         try (InputStream inputStream = new FileInputStream(jPath)) {
             String jsonString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-            Type type = new TypeToken<ArrayList<Position>>() {}.getType();
-            return new Gson().fromJson(jsonString, type);
+
         }
     }
 
