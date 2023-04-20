@@ -61,7 +61,7 @@ public class Lobby implements Runnable{
                 game.saveGame();
                 broadcastMessage("/CONFIGURATION_OK");
 
-                updateView();
+                broadcastUpdate();
             }
             case SAVEDGAME -> {
                 Game game = new Game(lobbyUID);
@@ -72,9 +72,6 @@ public class Lobby implements Runnable{
         }
     }
 
-    private void updateView(){
-        broadcastMessage("/UPDATE_VIEW");
-    }
     private List<Player> generatePlayers(){
         List<Player> toReturn = new ArrayList<>();
         for(ClientHandler p : lobbyPlayers){
@@ -133,6 +130,12 @@ public class Lobby implements Runnable{
     public void broadcastMessage(String message){
         for(ClientHandler t : lobbyPlayers){
             t.sendInfoMessage(message);
+        }
+    }
+
+    public void broadcastUpdate(){
+        for(ClientHandler t : lobbyPlayers){
+            t.sendUpdateRequest();
         }
     }
 

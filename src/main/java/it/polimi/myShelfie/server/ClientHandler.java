@@ -63,11 +63,15 @@ public class ClientHandler implements Runnable {
         try {
             sendInfoMessage("Please insert your username");
             Action action = getAction();
-            while(action.getActionType() != Action.ActionType.INFO && server.getUserGame().containsKey(nickname)) {
-                sendDeny("Nickname "+nickname+" already used, retry:");
-                action = getAction();
-            }
             nickname = action.getInfo();
+            while(action.getActionType() != Action.ActionType.INFO || server.getUserGame().containsKey(nickname)) {
+                sendDeny("Nickname " + nickname + " already used, retry:");
+                action = getAction();
+                nickname = action.getInfo();
+            }
+            synchronized (server.getUserGame()){
+                server.getUserGame().put(nickname,"-");
+            }
             sendAccept("Username accepted");
 
             System.out.println(nickname + " connected to the server");
@@ -107,13 +111,13 @@ public class ClientHandler implements Runnable {
                         Lobby lobby = new Lobby(this, UID, playersNumber);
                         server.getLobbyList().add(lobby);
                         System.out.println("New lobby created ["+UID+"]");
-                        server.getUserGame().put(nickname, lobby.getLobbyUID());
+                        server.getUserGame().replace(nickname, lobby.getLobbyUID());
                         lobbyCreated = true;
                         lobby.run();
                     }
                     case "2" -> {
                         sendInfoMessage("* GAME LOADING *\n\n");
-                        if (!server.getUserGame().containsKey(nickname)) {
+                        if (!server.getUserGame().containsKey(nickname) || server.getUserGame().get(nickname).equals("-")){
                             sendDeny("No game found");
                         }
                         else {
@@ -135,7 +139,7 @@ public class ClientHandler implements Runnable {
                         for(Lobby l : lobbyList){
                             if(l.isOpen()){
                                 System.out.println(nickname + "joined game "+l.getLobbyUID());
-                                server.getUserGame().put(nickname, l.getLobbyUID());
+                                server.getUserGame().replace(nickname, l.getLobbyUID());
                                 flag = true;
                                 lobbyCreated = true;
                                 l.acceptPlayer(this);
@@ -171,7 +175,7 @@ public class ClientHandler implements Runnable {
                             if(message.toUpperCase().equals("Y")) {
                                 lobby.broadcastMessage(nickname+ " joined");
                                 System.out.println(nickname + "joined game "+lobby.getLobbyUID());
-                                server.getUserGame().put(nickname, lobby.getLobbyUID());
+                                server.getUserGame().replace(nickname, lobby.getLobbyUID());
                                 filteredLobbyList.get(0).acceptPlayer(this);
                             }
                             else{
@@ -299,5 +303,9 @@ public class ClientHandler implements Runnable {
             System.out.println("Error occurred while sending a message: " + e.toString());
             e.printStackTrace();
         }
+    }
+
+    public synchronized void sendUpdateRequest() {
+        //TODO IMPLEMENTATION
     }
 }
