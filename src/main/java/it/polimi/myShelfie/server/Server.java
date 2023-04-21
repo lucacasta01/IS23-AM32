@@ -138,6 +138,16 @@ public class Server implements Runnable{
         }
     }
 
+    public void killLobby(String UID){
+        for(Lobby l: lobbyList){
+            if(l.getLobbyUID().equals(UID)){
+                lobbyList.remove(l);
+                for( ClientHandler ch: l.getLobbyPlayers()){
+                    ch.run();
+                }
+            }
+        }
+    }
 
     public Lobby lobbyOf(ClientHandler ch){
         for(Lobby l : lobbyList){

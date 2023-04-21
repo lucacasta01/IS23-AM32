@@ -87,6 +87,7 @@ public class Action {
         PICKTILES,
         SELECTCOLUMN,
         INFO,
-        PING
+        PING,
+        QUIT
     }
 }

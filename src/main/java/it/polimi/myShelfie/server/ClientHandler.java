@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 public class ClientHandler implements Runnable {
     private Socket clientSocket;
-    private String nickname;
+    private String nickname="/";
     private Registry registry;
     private boolean isRMI = false;
     private Remote client;
@@ -52,7 +52,7 @@ public class ClientHandler implements Runnable {
     }
 
     public Action getAction() throws IOException {
-        return JsonParser.getAction(in.readLine());
+         return JsonParser.getAction(in.readLine());
     }
     public void run() {
         try {
@@ -62,29 +62,34 @@ public class ClientHandler implements Runnable {
             System.err.println("Exception throws during stream creation: " + e.toString());
             e.printStackTrace();
         }
+
         try {
-            sendInfoMessage("Please insert your username");
-            Action action = getAction();
-            nickname = action.getInfo();
-            while(action.getActionType() != Action.ActionType.INFO || server.isConnected(nickname)) {
-                if(action.getActionType() == Action.ActionType.INFO) {
-                    sendDeny("Nickname " + nickname + " already used, retry:");
-                }
+            Action action;
+            if(nickname.equals("/")){
+                sendInfoMessage("Please insert your username");
+                 action = getAction();
+                nickname = action.getInfo();
+                while(action.getActionType() != Action.ActionType.INFO || server.isConnected(nickname)) {
+                    if(action.getActionType() == Action.ActionType.INFO) {
+                        sendDeny("Nickname " + nickname + " already used, retry:");
+                    }
 
-                action = getAction();
-                if(action.getActionType() == Action.ActionType.INFO) {
-                    nickname = action.getInfo();
-                }
+                    action = getAction();
+                    if(action.getActionType() == Action.ActionType.INFO) {
+                        nickname = action.getInfo();
+                    }
 
+                }
+                synchronized (server.getUserGame()){
+                    if(!server.getUserGame().containsKey(nickname)) {
+                        server.getUserGame().put(nickname, "-");
+                    }
+                }
+                sendAccept("Username accepted");
+
+                System.out.println(nickname + " connected to the server");
             }
-            synchronized (server.getUserGame()){
-                if(!server.getUserGame().containsKey(nickname)) {
-                    server.getUserGame().put(nickname, "-");
-                }
-            }
-            sendAccept("Username accepted");
 
-            System.out.println(nickname + " connected to the server");
             String message;
 
             String chose = "1";

@@ -73,7 +73,8 @@ public class Lobby implements Runnable{
                     game = new Game(lobbyUID);
                 }catch(Exception e){
                     broadcastMessage("No configuration file found...");
-                    shutdown();
+                    Server server = Server.getInstance();
+                    server.killLobby(lobbyUID);
                 }
 
                 playersNumber = game.getPlayersNumber();

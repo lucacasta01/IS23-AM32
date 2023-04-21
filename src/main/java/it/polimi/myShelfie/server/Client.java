@@ -151,6 +151,8 @@ public class Client implements Runnable{
                     message = inReader.readLine();
 
                     if(message.equals("/quit")){
+                        Action a = new Action(Action.ActionType.QUIT, nickname, "", "", null, null);
+                        sendAction(a);
                         out.println(message);
                         System.out.println("quitting...");
                         inReader.close();
