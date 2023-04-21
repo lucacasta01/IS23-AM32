@@ -111,7 +111,13 @@ public class Server implements Runnable{
                 .create();
         try {
             FileWriter fw = new FileWriter("src/config/usergame.json");
-            fw.write(gson.toJson(userGame));
+            Map<String,String> toSave = new HashMap<>();
+            for(String k : userGame.keySet()){
+                if(!userGame.get(k).equals("-")){
+                    toSave.put(k,userGame.get(k));
+                }
+            }
+            fw.write(gson.toJson(toSave));
             fw.close();
         }
         catch (IOException e){
@@ -128,22 +134,6 @@ public class Server implements Runnable{
         }
     }
 
-    private void connectionPing() throws InterruptedException {
-        while(true){
-            for(ClientHandler ch : connectedClients){
-                if(!ch.getClientSocket().isConnected()){
-                    Lobby lobby = lobbyOf(ch);
-                    if(ch.isPlaying()){
-                        Objects.requireNonNull(lobby).clientError(ch);
-                    }
-                    lobbyList.remove(lobby);
-                    ch.shutdown();
-                    connectedClients.remove(ch);
-                }
-            }
-            this.wait(2000);
-        }
-    }
 
     public Lobby lobbyOf(ClientHandler ch){
         for(Lobby l : lobbyList){
@@ -158,34 +148,41 @@ public class Server implements Runnable{
         return connectedClients;
     }
 
+    public boolean isConnected(String nickname){
+        int count = 0;
+        for(ClientHandler ch : connectedClients){
+            if(ch.getNickname().equals(nickname)){
+                count++;
+            }
+        }
+
+        return count>1;
+    }
+
     public Thread createPingThread(){
         Server server = Server.getInstance();
         return new Thread(){
             public void run() {
                 while (true) {
-                    List<ClientHandler> connectedClients = server.getConnectedClients();
-                    List<Lobby> lobbyList = server.getLobbyList();
+                    List<ClientHandler> connectedClients;
+                    List<Lobby> lobbyList;
+                    synchronized (server.getConnectedClients()){
+                        connectedClients = server.getConnectedClients();
+                    }
+                    synchronized (server.getLobbyList()){
+                        lobbyList = server.getLobbyList();
+                    }
                     for (ClientHandler ch : connectedClients) {
                         try {
                             ch.sendPing();
-                        }
-                        catch(IOException e) {
-                            if (!ch.getClientSocket().isConnected()) {
-                                Lobby lobby = server.lobbyOf(ch);
-                                if (ch.isPlaying()) {
-                                    Objects.requireNonNull(lobby).clientError(ch);
-                                }
-                                lobbyList.remove(lobby);
-                                ch.shutdown();
-                                connectedClients.remove(ch);
-                            }
-                        }
-                        try {
-                            sleep(2000);
-                        } catch (InterruptedException e) {
+                        } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-                        System.out.println("ping executed");
+                    }
+                    try {
+                        sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
                     }
                 }
             }

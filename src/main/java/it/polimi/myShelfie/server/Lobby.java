@@ -42,6 +42,7 @@ public class Lobby implements Runnable{
     public Lobby(ClientHandler lobbyHost, String lobbyUID) {
         this.lobbyPlayers = new ArrayList<>();
         lobbyPlayers.add(lobbyHost);
+        lobbyHost.setPlaying(true);
         this.lobbyUID = lobbyUID;
         this.gameMode = GameMode.SAVEDGAME;
         this.isOpen = false;
@@ -114,6 +115,7 @@ public class Lobby implements Runnable{
 
     public void clientError(ClientHandler ch){
         lobbyPlayers.remove(ch);
+        ch.setPlaying(false);
         broadcastMessage(ch.getNickname() + " connection lost");
         broadcastMessage("Game is closing...");
         game.saveGame();
@@ -124,6 +126,7 @@ public class Lobby implements Runnable{
     }
 
     public void acceptPlayer(ClientHandler player) throws RuntimeException{
+        player.setPlaying(true);
         synchronized (lobbyPlayers) {
             if (lobbyPlayers.size() + 1 > this.playersNumber) {
                 throw new RuntimeException("player number exceeded");

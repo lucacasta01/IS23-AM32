@@ -17,6 +17,7 @@ import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -65,7 +66,7 @@ public class ClientHandler implements Runnable {
             sendInfoMessage("Please insert your username");
             Action action = getAction();
             nickname = action.getInfo();
-            while(action.getActionType() != Action.ActionType.INFO || server.getUserGame().containsKey(nickname)) {
+            while(action.getActionType() != Action.ActionType.INFO || server.isConnected(nickname)) {
                 sendDeny("Nickname " + nickname + " already used, retry:");
                 action = getAction();
                 nickname = action.getInfo();
@@ -223,6 +224,19 @@ public class ClientHandler implements Runnable {
             synchronized (server.getUserGame()){
                 server.saveUserGame();
             }
+
+            if(this.isPlaying){
+                Lobby lobby = server.lobbyOf(this);
+                lobby.clientError(this);
+                server.getLobbyList().remove(lobby);
+            }
+
+            this.shutdown();
+            server.getConnectedClients().remove(this);
+            if(server.getUserGame().get(this.nickname).equals("-")){
+                server.getUserGame().remove(this.nickname);
+            }
+
             //handle lost connection, save and close game.
         }
     }

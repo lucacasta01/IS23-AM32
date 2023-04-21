@@ -101,8 +101,25 @@ public class Client implements Runnable{
         }
     }
 
+    public Thread pingThread(){
+        return new Thread(){
+          public void run(){
+              while(true) {
+                  try {
+                      sendAction(new Action(Action.ActionType.PING, null, null, null, null, null));
+                  } catch (IOException e) {
+                      if(client.isConnected()) {
+                          System.exit(10);
+                      }
+                  }
+              }
+          }
+        };
+    }
+
     public static void main(String[] args) {
         Client client = new Client();
+        client.pingThread().start();
         try {
             client.run();
         }
@@ -166,14 +183,9 @@ public class Client implements Runnable{
         return JsonParser.getResponse(jString);
     }
 
-    private synchronized void sendAction(Action action){
+    private synchronized void sendAction(Action action) throws IOException {
         Gson gson = new Gson();
-        try {
-            out.println(gson.toJson(action));
-        } catch (Exception e) {
-            System.out.println("Error occurred while sending a message: " + e.toString());
-            e.printStackTrace();
-        }
+        out.println(gson.toJson(action));
     }
 
 }
