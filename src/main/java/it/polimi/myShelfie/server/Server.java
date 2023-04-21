@@ -1,11 +1,14 @@
 package it.polimi.myShelfie.server;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.JsonParser;
+import it.polimi.myShelfie.utilities.beans.Action;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.rmi.Remote;
 import java.util.*;
 import java.rmi.registry.*;
@@ -28,7 +31,6 @@ public class Server implements Runnable{
     private Server(){
         try {
             connectedClients = new ArrayList<>();
-            userGame = new HashMap<>();
             lobbyList = new ArrayList<>();
             serverSocket = new ServerSocket(Constants.PORT);
             registry = LocateRegistry.createRegistry(Constants.PORT+1);
@@ -52,7 +54,7 @@ public class Server implements Runnable{
         return userGame;
     }
 
-    public List<Lobby> getLobbyList() {
+    public synchronized List<Lobby> getLobbyList() {
         return lobbyList;
     }
 
@@ -81,6 +83,7 @@ public class Server implements Runnable{
     public void run(){
         System.out.println("Server started");
         pool = Executors.newCachedThreadPool();
+        this.userGame = loadUserGame();
         while(!done){
             try {
                 Socket clientSocket = serverSocket.accept();
@@ -102,10 +105,98 @@ public class Server implements Runnable{
         }
     }
 
-    public static void main(String[] args){
-        Server server = Server.getInstance();
-        server.run();
+    public void saveUserGame(){
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+        try {
+            FileWriter fw = new FileWriter("src/config/usergame.json");
+            fw.write(gson.toJson(userGame));
+            fw.close();
+        }
+        catch (IOException e){
+            System.out.println(e.toString());
+        }
+    }
+    public Map<String,String> loadUserGame(){
+        Path path = Paths.get("src/config/usergame.json");
+        if(!path.toFile().isFile()){
+            return new HashMap<>();
+        }
+        else{
+            return JsonParser.getUsergame(path.toString());
+        }
     }
 
+    private void connectionPing() throws InterruptedException {
+        while(true){
+            for(ClientHandler ch : connectedClients){
+                if(!ch.getClientSocket().isConnected()){
+                    Lobby lobby = lobbyOf(ch);
+                    if(ch.isPlaying()){
+                        Objects.requireNonNull(lobby).clientError(ch);
+                    }
+                    lobbyList.remove(lobby);
+                    ch.shutdown();
+                    connectedClients.remove(ch);
+                }
+            }
+            this.wait(2000);
+        }
+    }
+
+    public Lobby lobbyOf(ClientHandler ch){
+        for(Lobby l : lobbyList){
+            if(l.getLobbyPlayers().contains(ch)){
+                return l;
+            }
+        }
+        return null;
+    }
+
+    public synchronized List<ClientHandler> getConnectedClients() {
+        return connectedClients;
+    }
+
+    public Thread createPingThread(){
+        Server server = Server.getInstance();
+        return new Thread(){
+            public void run() {
+                while (true) {
+                    List<ClientHandler> connectedClients = server.getConnectedClients();
+                    List<Lobby> lobbyList = server.getLobbyList();
+                    for (ClientHandler ch : connectedClients) {
+                        try {
+                            ch.sendPing();
+                        }
+                        catch(IOException e) {
+                            if (!ch.getClientSocket().isConnected()) {
+                                Lobby lobby = server.lobbyOf(ch);
+                                if (ch.isPlaying()) {
+                                    Objects.requireNonNull(lobby).clientError(ch);
+                                }
+                                lobbyList.remove(lobby);
+                                ch.shutdown();
+                                connectedClients.remove(ch);
+                            }
+                        }
+                        try {
+                            sleep(2000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                        System.out.println("ping executed");
+                    }
+                }
+            }
+        };
+    }
+
+
+    public static void main(String[] args){
+        Server server = Server.getInstance();
+        server.createPingThread().start();
+        server.run();
+    }
 
 }
