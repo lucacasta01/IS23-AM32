@@ -79,6 +79,10 @@ public class Client implements Runnable{
                 }else if(response.getResponseType() == Response.ResponseType.PING){
                   //ping messages are thrown away
                 }
+                else if(response.getResponseType() == Response.ResponseType.SHUTDOWN){
+                    System.out.println(response.getInfoMessage());
+                    shutdown();
+                }
             }
 
 
@@ -96,6 +100,7 @@ public class Client implements Runnable{
             if(!client.isClosed()){
                 client.close();
             }
+            System.exit(0);
         } catch (IOException e) {
             System.out.println(e.toString());
         }
@@ -124,7 +129,7 @@ public class Client implements Runnable{
 
     public static void main(String[] args) {
         Client client = new Client();
-        client.pingThread().start();
+        //client.pingThread().start();
         try {
             client.run();
         }

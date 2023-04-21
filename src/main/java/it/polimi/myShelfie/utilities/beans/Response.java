@@ -19,7 +19,8 @@ public class Response {
         VALID,
         DENIED,
         INFO,
-        PING
+        PING,
+        SHUTDOWN
     }
 
     public static class ChatMessage{

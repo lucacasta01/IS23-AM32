@@ -67,9 +67,15 @@ public class ClientHandler implements Runnable {
             Action action = getAction();
             nickname = action.getInfo();
             while(action.getActionType() != Action.ActionType.INFO || server.isConnected(nickname)) {
-                sendDeny("Nickname " + nickname + " already used, retry:");
+                if(action.getActionType() == Action.ActionType.INFO) {
+                    sendDeny("Nickname " + nickname + " already used, retry:");
+                }
+
                 action = getAction();
-                nickname = action.getInfo();
+                if(action.getActionType() == Action.ActionType.INFO) {
+                    nickname = action.getInfo();
+                }
+
             }
             synchronized (server.getUserGame()){
                 server.getUserGame().put(nickname,"-");
@@ -90,9 +96,11 @@ public class ClientHandler implements Runnable {
                 action = getAction();
                 chose = action.getInfo();
                 while(action.getActionType() != Action.ActionType.INFO && !chose.equals("1") && !chose.equals("2") && !chose.equals("3") && !chose.equals("4") && !chose.equals("0")) {
-                    sendDeny("Type the right key...");
-                    action = getAction();
-                    chose = action.getInfo();
+                    if(action.getActionType()!= Action.ActionType.PING) {
+                        sendDeny("Type the right key...");
+                        action = getAction();
+                        chose = action.getInfo();
+                    }
                 }
                 sendAccept("Game mode selected");
 
@@ -206,7 +214,7 @@ public class ClientHandler implements Runnable {
 
                     }
                     case "0" -> {
-                        sendInfoMessage("Closing...");
+                        sendShutdown();
                         server.removeClient(this);
                         shutdown();
                         System.out.println(nickname+" disconnected");
@@ -344,6 +352,11 @@ public class ClientHandler implements Runnable {
     public synchronized void sendPing() throws IOException{
         Gson gson = new Gson();
         out.println(gson.toJson(new Response(Response.ResponseType.PING, null,null, "ping")));
+    }
+
+    public synchronized void sendShutdown() throws IOException{
+        Gson gson = new Gson();
+        out.println(gson.toJson(new Response(Response.ResponseType.SHUTDOWN, null,null, "Closing...")));
     }
 
     public synchronized void sendUpdateRequest() {

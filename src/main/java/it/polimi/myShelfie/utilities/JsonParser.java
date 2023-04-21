@@ -6,6 +6,7 @@ import it.polimi.myShelfie.model.Position;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.GameParameters;
 import it.polimi.myShelfie.utilities.beans.Response;
+import it.polimi.myShelfie.utilities.beans.Usergame;
 import org.apache.commons.io.IOUtils;
 
 import java.io.FileInputStream;
@@ -14,6 +15,7 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,8 +62,16 @@ public class JsonParser {
     }
 
     public static Map<String,String> getUsergame(String jPath){
-        Type type = new TypeToken<Map<String,String>>(){}.getType();
-        return new Gson().fromJson(jPath,type);
+        Type type = new TypeToken<Usergame>(){}.getType();
+        Usergame usergame = new Gson().fromJson(jPath,type);
+
+        Map<String,String> toReturn = new HashMap<>();
+        int i=0;
+        for(String s : usergame.getNicknames()){
+            toReturn.put(s,usergame.getUIDs().get(i));
+            i++;
+        }
+        return toReturn;
     }
 }
 

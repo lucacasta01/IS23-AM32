@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.beans.Action;
+import it.polimi.myShelfie.utilities.beans.Usergame;
 
 import java.io.*;
 import java.net.*;
@@ -112,12 +113,15 @@ public class Server implements Runnable{
         try {
             FileWriter fw = new FileWriter("src/config/usergame.json");
             Map<String,String> toSave = new HashMap<>();
+            Usergame usergame = new Usergame();
             for(String k : userGame.keySet()){
                 if(!userGame.get(k).equals("-")){
-                    toSave.put(k,userGame.get(k));
+                    usergame.getNicknames().add(k);
+                    usergame.getUIDs().add(userGame.get(k));
                 }
             }
-            fw.write(gson.toJson(toSave));
+
+            fw.write(gson.toJson(usergame));
             fw.close();
         }
         catch (IOException e){
@@ -192,7 +196,7 @@ public class Server implements Runnable{
 
     public static void main(String[] args){
         Server server = Server.getInstance();
-        server.createPingThread().start();
+        //server.createPingThread().start();
         server.run();
     }
 
