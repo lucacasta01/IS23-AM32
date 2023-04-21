@@ -62,6 +62,21 @@ public class JsonParser {
     }
 
     public static Map<String,String> getUsergame(String jPath){
+        try (InputStream inputStream = new FileInputStream(jPath)) {
+            String jsonString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+            Type type = new TypeToken<Usergame>() {}.getType();
+            Usergame usergame = new Gson().fromJson(jsonString, type);
+            Map<String,String> toReturn = new HashMap<>();
+            int i=0;
+            for(String s : usergame.getNicknames()){
+                toReturn.put(s,usergame.getUIDs().get(i));
+                i++;
+            }
+            return toReturn;
+        } catch (IOException e) {
+            return new HashMap<>();
+        }
+/*
         Type type = new TypeToken<Usergame>(){}.getType();
         Usergame usergame = new Gson().fromJson(jPath,type);
 
@@ -71,7 +86,9 @@ public class JsonParser {
             toReturn.put(s,usergame.getUIDs().get(i));
             i++;
         }
-        return toReturn;
+
+ */
+
     }
 }
 

@@ -78,7 +78,9 @@ public class ClientHandler implements Runnable {
 
             }
             synchronized (server.getUserGame()){
-                server.getUserGame().put(nickname,"-");
+                if(!server.getUserGame().containsKey(nickname)) {
+                    server.getUserGame().put(nickname, "-");
+                }
             }
             sendAccept("Username accepted");
 
@@ -91,7 +93,7 @@ public class ClientHandler implements Runnable {
                 sendInfoMessage("\n(1) New Game");
                 sendInfoMessage("(2) Load last game");
                 sendInfoMessage("(3) Join random game");
-                sendInfoMessage("(4) Search for stared saved game");
+                sendInfoMessage("(4) Search for started saved game");
                 sendInfoMessage("(0) Exit\n");
                 action = getAction();
                 chose = action.getInfo();

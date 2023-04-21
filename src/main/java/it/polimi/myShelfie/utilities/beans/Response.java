@@ -14,6 +14,7 @@ public class Response {
     }
 
     public enum ResponseType{
+
         UPDATE,
         CHATMESSAGE,
         VALID,

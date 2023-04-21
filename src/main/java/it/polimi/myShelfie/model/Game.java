@@ -72,7 +72,7 @@ public class Game implements Runnable{
             loadGame(UID);
         }
         catch (IOException e){
-            System.out.println("Partita non trovata");
+            throw new RuntimeException();
         }
     }
 

@@ -2,7 +2,9 @@ package it.polimi.myShelfie.server;
 
 import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
+import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.Utils;
+import it.polimi.myShelfie.utilities.beans.GameParameters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,9 +69,16 @@ public class Lobby implements Runnable{
                 broadcastUpdate();
             }
             case SAVEDGAME -> {
-                game = new Game(lobbyUID);
+                try{
+                    game = new Game(lobbyUID);
+                }catch(Exception e){
+                    broadcastMessage("No configuration file found...");
+                    shutdown();
+                }
+
                 playersNumber = game.getPlayersNumber();
                 //read json from controller
+
 
             }
         }
