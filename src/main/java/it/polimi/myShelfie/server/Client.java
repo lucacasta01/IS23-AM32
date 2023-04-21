@@ -33,6 +33,7 @@ public class Client implements Runnable{
         try{
             try {
                 client = new Socket(Constants.SERVER_IP, Constants.PORT);
+
             }
             catch (ConnectException connectException){
                 System.out.println("Server not found");
@@ -75,6 +76,8 @@ public class Client implements Runnable{
                 }
                 else if (response.getResponseType() == Response.ResponseType.UPDATE) {
                     //UPDATE THE VIEW
+                }else if(response.getResponseType() == Response.ResponseType.PING){
+                  //ping messages are thrown away
                 }
             }
 
@@ -172,4 +175,5 @@ public class Client implements Runnable{
             e.printStackTrace();
         }
     }
+
 }

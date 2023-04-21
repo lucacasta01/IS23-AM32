@@ -86,6 +86,7 @@ public class Action {
         CHAT,
         PICKTILES,
         SELECTCOLUMN,
-        INFO
+        INFO,
+        PING
     }
 }
