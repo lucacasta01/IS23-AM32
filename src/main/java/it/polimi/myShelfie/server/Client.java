@@ -112,6 +112,11 @@ public class Client implements Runnable{
                           System.exit(10);
                       }
                   }
+                  try {
+                      sleep(1000);
+                  } catch (InterruptedException e) {
+                      throw new RuntimeException(e);
+                  }
               }
           }
         };
@@ -185,7 +190,9 @@ public class Client implements Runnable{
 
     private synchronized void sendAction(Action action) throws IOException {
         Gson gson = new Gson();
-        out.println(gson.toJson(action));
+        if(out!=null) {
+            out.println(gson.toJson(action));
+        }
     }
 
 }
