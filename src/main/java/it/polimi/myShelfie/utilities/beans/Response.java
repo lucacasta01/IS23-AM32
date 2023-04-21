@@ -6,29 +6,11 @@ public class Response {
     private String infoMessage = "";
     private ResponseType responseType;
 
-    public Response(String sender, String message) {
-        this.responseType = ResponseType.CHATMESSAGE;
-        this.chatMessage = new ChatMessage(sender, message);
-        this.view = null;
-    }
-
-    public Response(View view){
-        this.responseType = ResponseType.UPDATE;
-        this.chatMessage = null;
+    public Response(ResponseType responseType, ChatMessage chatMessage, View view, String infoMessage) {
+        this.chatMessage = chatMessage;
         this.view = view;
-    }
-
-    public Response(ResponseType responseType, String infoMessage) {
+        this.infoMessage = infoMessage;
         this.responseType = responseType;
-        this.infoMessage = infoMessage;
-        this.chatMessage = null;
-        this.view = null;
-    }
-    public Response(String infoMessage) {
-        this.responseType = ResponseType.INFO;
-        this.infoMessage = infoMessage;
-        this.chatMessage = null;
-        this.view = null;
     }
 
     public enum ResponseType{
@@ -36,7 +18,8 @@ public class Response {
         CHATMESSAGE,
         VALID,
         DENIED,
-        INFO
+        INFO,
+        PING
     }
 
     public static class ChatMessage{

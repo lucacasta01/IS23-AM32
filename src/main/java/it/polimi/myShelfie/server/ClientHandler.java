@@ -29,6 +29,7 @@ public class ClientHandler implements Runnable {
     private BufferedReader in;
     private PrintWriter out;
     private Server server;
+    private boolean isPlaying = false;
 
 
     public ClientHandler(Socket clientSocket, Registry registry) {
@@ -50,7 +51,7 @@ public class ClientHandler implements Runnable {
     }
 
     public Action getAction() throws IOException {
-       return JsonParser.getAction(in.readLine());
+        return JsonParser.getAction(in.readLine());
     }
     public void run() {
         try {
@@ -80,7 +81,7 @@ public class ClientHandler implements Runnable {
             String chose = "1";
             boolean lobbyCreated = false;
             while(!chose.equals("0") && !lobbyCreated) {
-                sendInfoMessage("(1) New Game");
+                sendInfoMessage("\n(1) New Game");
                 sendInfoMessage("(2) Load last game");
                 sendInfoMessage("(3) Join random game");
                 sendInfoMessage("(4) Search for stared saved game");
@@ -96,7 +97,7 @@ public class ClientHandler implements Runnable {
 
                 switch (chose) {
                     case "1" -> {
-                        sendInfoMessage("* CREATE NEW GAME *\n\n");
+                        sendInfoMessage("* CREATE NEW GAME *\n");
                         sendInfoMessage("Enter number of players: ");
                         action = getAction();
                         message = action.getInfo();
@@ -111,26 +112,36 @@ public class ClientHandler implements Runnable {
                         Lobby lobby = new Lobby(this, UID, playersNumber);
                         server.getLobbyList().add(lobby);
                         System.out.println("New lobby created ["+UID+"]");
-                        server.getUserGame().replace(nickname, lobby.getLobbyUID());
+                        synchronized (server.getUserGame()) {
+                            server.getUserGame().put(nickname, lobby.getLobbyUID());
+                            server.saveUserGame();
+                        }
                         lobbyCreated = true;
                         lobby.run();
                     }
                     case "2" -> {
-                        sendInfoMessage("* GAME LOADING *\n\n");
-                        if (!server.getUserGame().containsKey(nickname) || server.getUserGame().get(nickname).equals("-")){
+                        sendInfoMessage("* GAME LOADING *\n");
+                        Map<String,String> userGame;
+                        synchronized (server.getUserGame()){
+                            userGame = server.getUserGame();
+                        }
+
+                        if (!userGame.containsKey(nickname) || userGame.get(nickname).equals("-")){
                             sendDeny("No game found");
                         }
                         else {
-                            Lobby lobby = new Lobby(this,server.getUserGame().get(nickname));
-                            sendInfoMessage("Joining game "+server.getUserGame().get(nickname));
-                            server.getLobbyList().add(lobby);
+                            Lobby lobby = new Lobby(this,userGame.get(nickname));
+                            sendInfoMessage("Joining game "+userGame.get(nickname));
+                            synchronized (server.getLobbyList()) {
+                                server.getLobbyList().add(lobby);
+                            }
                             System.out.println("New lobby created ["+lobby.getLobbyUID()+"]");
                             lobbyCreated = true;
                             lobby.run();
                         }
                     }
                     case "3" -> {
-                        sendInfoMessage("* GAME JOINING *\n\n");
+                        sendInfoMessage("* GAME JOINING *\n");
                         List<Lobby> lobbyList;
                         boolean flag = false;
                         synchronized (server.getLobbyList()){
@@ -139,7 +150,10 @@ public class ClientHandler implements Runnable {
                         for(Lobby l : lobbyList){
                             if(l.isOpen()){
                                 System.out.println(nickname + "joined game "+l.getLobbyUID());
-                                server.getUserGame().replace(nickname, l.getLobbyUID());
+                                synchronized (server.getUserGame()) {
+                                    server.getUserGame().put(nickname, l.getLobbyUID());
+                                    server.saveUserGame();
+                                }
                                 flag = true;
                                 lobbyCreated = true;
                                 l.acceptPlayer(this);
@@ -175,7 +189,6 @@ public class ClientHandler implements Runnable {
                             if(message.toUpperCase().equals("Y")) {
                                 lobby.broadcastMessage(nickname+ " joined");
                                 System.out.println(nickname + "joined game "+lobby.getLobbyUID());
-                                server.getUserGame().replace(nickname, lobby.getLobbyUID());
                                 filteredLobbyList.get(0).acceptPlayer(this);
                             }
                             else{
@@ -194,21 +207,22 @@ public class ClientHandler implements Runnable {
                     case "0" -> {
                         sendInfoMessage("Closing...");
                         server.removeClient(this);
-                        server.getUserGame().remove(nickname);
                         shutdown();
                         System.out.println(nickname+" disconnected");
                     }
                 }
             }
-                //firt case: finding a saved game
+            //firt case: finding a saved game
 
 
 
         } catch (Exception e) {
             server.removeClient(this);
-            server.getUserGame().remove(nickname);
             shutdown();
             System.err.println("Client lost connection");
+            synchronized (server.getUserGame()){
+                server.saveUserGame();
+            }
             //handle lost connection, save and close game.
         }
     }
@@ -219,6 +233,14 @@ public class ClientHandler implements Runnable {
 
     public Socket getClientSocket() {
         return clientSocket;
+    }
+
+    public synchronized boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public synchronized void setPlaying(boolean playing) {
+        isPlaying = playing;
     }
 
     /*
@@ -278,7 +300,7 @@ public class ClientHandler implements Runnable {
     public synchronized void sendInfoMessage(String message) {
         Gson gson = new Gson();
         try {
-            out.println(gson.toJson(new Response(message)));
+            out.println(gson.toJson(new Response(Response.ResponseType.INFO,null,null,message)));
         } catch (Exception e) {
             System.out.println("Error occurred while sending a message: " + e.toString());
             e.printStackTrace();
@@ -288,7 +310,7 @@ public class ClientHandler implements Runnable {
     public synchronized void sendDeny(String message) {
         Gson gson = new Gson();
         try {
-            out.println(gson.toJson(new Response(Response.ResponseType.DENIED, message)));
+            out.println(gson.toJson(new Response(Response.ResponseType.DENIED, null ,null,message)));
         } catch (Exception e) {
             System.out.println("Error occurred while sending a message: " + e.toString());
             e.printStackTrace();
@@ -298,11 +320,16 @@ public class ClientHandler implements Runnable {
     public synchronized void sendAccept(String message) {
         Gson gson = new Gson();
         try {
-            out.println(gson.toJson(new Response(Response.ResponseType.VALID, message)));
+            out.println(gson.toJson(new Response(Response.ResponseType.VALID, null,null, message)));
         } catch (Exception e) {
             System.out.println("Error occurred while sending a message: " + e.toString());
             e.printStackTrace();
         }
+    }
+
+    public synchronized void sendPing() throws IOException{
+        Gson gson = new Gson();
+        out.println(gson.toJson(new Response(Response.ResponseType.PING, null,null, "ping")));
     }
 
     public synchronized void sendUpdateRequest() {

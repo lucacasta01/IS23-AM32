@@ -15,6 +15,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class JsonParser {
     /**
@@ -56,6 +57,11 @@ public class JsonParser {
     public static Response getResponse(String jString) throws IOException{
         Type type = new TypeToken<Response>(){}.getType();
         return new Gson().fromJson(jString,type);
+    }
+
+    public static Map<String,String> getUsergame(String jPath){
+        Type type = new TypeToken<Map<String,String>>(){}.getType();
+        return new Gson().fromJson(jPath,type);
     }
 }
 

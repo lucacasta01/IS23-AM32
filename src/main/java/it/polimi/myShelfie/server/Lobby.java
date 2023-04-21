@@ -14,6 +14,8 @@ public class Lobby implements Runnable{
     private GameMode gameMode;
     private boolean isOpen;
 
+    private Game game;
+
 
     /**
      * Create a lobby for a new game
@@ -49,7 +51,7 @@ public class Lobby implements Runnable{
     public void run(){
         switch (gameMode){
             case NEWGAME -> {
-                Game game = new Game(lobbyUID,playersNumber);
+                game = new Game(lobbyUID,playersNumber);
                 try {
                     broadcastMessage("Waiting for players..."+" "+"("+getLobbySize()+"/"+getPlayersNumber()+")");
                     waitForPlayers();
@@ -64,7 +66,7 @@ public class Lobby implements Runnable{
                 broadcastUpdate();
             }
             case SAVEDGAME -> {
-                Game game = new Game(lobbyUID);
+                game = new Game(lobbyUID);
                 playersNumber = game.getPlayersNumber();
                 //read json from controller
 
@@ -110,6 +112,13 @@ public class Lobby implements Runnable{
         }
     }
 
+    public void clientError(ClientHandler ch){
+        lobbyPlayers.remove(ch);
+        broadcastMessage(ch.getNickname() + " connection lost");
+        broadcastMessage("Game is closing...");
+        game.saveGame();
+    }
+
     public boolean isOpen() {
         return isOpen;
     }
@@ -141,6 +150,7 @@ public class Lobby implements Runnable{
 
     public void shutdown(){
         for(ClientHandler t : lobbyPlayers){
+            //REPLACE WITH: GOTO MENU
             t.shutdown();
         }
 
