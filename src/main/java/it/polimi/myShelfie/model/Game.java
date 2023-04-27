@@ -335,8 +335,10 @@ public class Game implements Runnable{
         if( this.gameBoard.isCatchable(pos.getRow(), pos.getColumn())) {
             Tile[][] currentGrid = this.gameBoard.getGrid();
             List<Tile> toReturn = new ArrayList<>();
-            toReturn.add(currentGrid[pos.getRow()][pos.getColumn()]);
-            currentGrid[pos.getRow()][pos.getColumn()].setColor(Tile.Color.NULLTILE);
+            Tile t = currentGrid[pos.getRow()][pos.getColumn()];
+            toReturn.add(new Tile(t.getImagePath(), t.getColor()));
+            t.setColor(Tile.Color.NULLTILE);
+            t.setImagePath("graphics/itemTiles/Transparent.png");
             return toReturn;
         }else{
             return null;
@@ -385,11 +387,16 @@ public class Game implements Runnable{
      * Takes a list of tiles as parameter and adds it inside the player's shelf by
      * looping the Shelf.insertTile method
      */
-    public void insertTile(List<Tile> toInsert, int column){
+    public boolean insertTiles(List<Tile> toInsert, int column){
         Player current = this.players.get(currentPlayer);
         Shelf currentShelf = current.getMyShelf();
-        for(Tile t : toInsert) {
-            currentShelf.insertTile(t, column);
+        if(currentShelf.maxInsert()>=toInsert.size()) {
+            for (Tile t : toInsert) {
+                currentShelf.insertTile(t, column);
+            }
+            return true;
+        }else{
+            return false;
         }
     }
 

@@ -99,7 +99,7 @@ public class Lobby implements Runnable{
                 broadcastMessage("Starting new game");
                 game.addPlayer(generatePlayers());
                 game.saveGame();
-                broadcastMessage("/CONFIGURATION_OK");
+                broadcastMessage("Game board:\n"+game.getGameBoard().toString());
 
                 while(!ended) {
                     while (actions.size() == 0) {
@@ -132,6 +132,12 @@ public class Lobby implements Runnable{
                                            ch.sendDeny("Cannot pick those tiles");
                                        }
                                    }else{
+                                       StringBuilder builder = new StringBuilder();
+                                       builder.append("picked tiles: ");
+                                       for(Tile t: collectedTiles){
+                                           builder.append(t.toString()+" ");
+                                       }
+                                       ch.sendInfoMessage(builder.toString());
                                        ch.sendInfoMessage("Insert column");
                                    }
 
@@ -145,11 +151,25 @@ public class Lobby implements Runnable{
                             }else if(a.getActionType()== Action.ActionType.SELECTCOLUMN){
                                 if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){
                                     System.out.println("Column selected: "+a.getChosenColumn());
+                                    if(collectedTiles==null){
+                                        ch.sendDeny("Not selected tiles yet...");
+                                    }else{
+                                        if(game.insertTiles(collectedTiles, a.getChosenColumn())){
+                                            ch.sendAccept("Tiles inserted correctly");
+                                        }else{
+                                            ch.sendDeny("Cannot insert tiles in this column...");
+                                        }
+                                        ch.sendInfoMessage(game.getPlayers().get(game.getCurrentPlayer()).getMyShelf().toString());
+                                        game.handleTurn();
+                                    }
                                 }else {
                                     if (ch != null) {
                                         ch.sendDeny("Is not your turn...");
                                     }
                                 }
+                                iter.remove();
+                            }else if(a.getActionType()== Action.ActionType.PRINTBOARD){
+                                ch.sendInfoMessage(game.getGameBoard().toString());
                                 iter.remove();
                             }
                         }
