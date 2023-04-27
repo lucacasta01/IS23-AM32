@@ -317,52 +317,68 @@ public class Game implements Runnable{
         this.currentPlayer = (this.currentPlayer +1 ) % this.playersNumber;
     }
 
+    public List<Tile> collectTiles(List<Position> tiles){
+        if(tiles.size()==1){
+            return this.collectTile(tiles.get(0));
+        }else if(tiles.size()==2){
+            return this.collectTile(tiles.get(0), tiles.get(1));
+        }else if (tiles.size()==3){
+            return this.collectTile(tiles.get(0), tiles.get(1), tiles.get(2));
+        }
+        return null;
+    }
     /**
      * Takes a tile from the game board and returns it as a list of a single object
      * @return The said tile as a list of tiles
      */
-    public List<Tile> collectTile(Position pos){
-        assert this.gameBoard.isCatchable(pos.getRow(), pos.getColumn());
-        Tile[][] currentGrid = this.gameBoard.getGrid();
-        List<Tile> toReturn = new ArrayList<>();
-        toReturn.add(currentGrid[pos.getRow()][pos.getColumn()]);
-        currentGrid[pos.getRow()][pos.getColumn()].setColor(Tile.Color.NULLTILE);
-        return toReturn;
+    private List<Tile> collectTile(Position pos){
+        if( this.gameBoard.isCatchable(pos.getRow(), pos.getColumn())) {
+            Tile[][] currentGrid = this.gameBoard.getGrid();
+            List<Tile> toReturn = new ArrayList<>();
+            toReturn.add(currentGrid[pos.getRow()][pos.getColumn()]);
+            currentGrid[pos.getRow()][pos.getColumn()].setColor(Tile.Color.NULLTILE);
+            return toReturn;
+        }else{
+            return null;
+        }
     }
 
     /**
      * Takes two tiles from the game board and returns them in a list
      * @return a list containing the picked tiles
      */
-    public List<Tile> collectTile(Position pos1, Position pos2){
-        assert this.gameBoard.isCatchable(pos1.getRow(), pos1.getColumn());
-        assert this.gameBoard.isCatchable(pos2.getRow(), pos2.getColumn());
-        Tile[][] currentGrid = this.gameBoard.getGrid();
-        List<Tile> toReturn = new ArrayList<>();
-        toReturn.add(currentGrid[pos1.getRow()][pos1.getColumn()]);
-        toReturn.add(currentGrid[pos2.getRow()][pos2.getColumn()]);
-        currentGrid[pos1.getRow()][pos1.getColumn()].setColor(Tile.Color.NULLTILE);
-        currentGrid[pos2.getRow()][pos2.getColumn()].setColor(Tile.Color.NULLTILE);
-        return toReturn;
+    private List<Tile> collectTile(Position pos1, Position pos2){
+        if(this.gameBoard.isCatchable(pos1.getRow(), pos1.getColumn())&&this.gameBoard.isCatchable(pos2.getRow(), pos2.getColumn())) {
+            Tile[][] currentGrid = this.gameBoard.getGrid();
+            List<Tile> toReturn = new ArrayList<>();
+            toReturn.add(currentGrid[pos1.getRow()][pos1.getColumn()]);
+            toReturn.add(currentGrid[pos2.getRow()][pos2.getColumn()]);
+            currentGrid[pos1.getRow()][pos1.getColumn()].setColor(Tile.Color.NULLTILE);
+            currentGrid[pos2.getRow()][pos2.getColumn()].setColor(Tile.Color.NULLTILE);
+            return toReturn;
+        }else{
+            return null;
+        }
     }
 
     /**
      * Takes three tiles from the game board and returns them in a list
      * @return a list containing the picked tiles
      */
-    public List<Tile> collectTile(Position pos1, Position pos2, Position pos3){
-        assert this.gameBoard.isCatchable(pos1.getRow(), pos1.getColumn());
-        assert this.gameBoard.isCatchable(pos2.getRow(), pos2.getColumn());
-        assert this.gameBoard.isCatchable(pos3.getRow(), pos3.getColumn());
-        Tile[][] currentGrid = this.gameBoard.getGrid();
-        List<Tile> toReturn = new ArrayList<>();
-        toReturn.add(currentGrid[pos1.getRow()][pos1.getColumn()]);
-        toReturn.add(currentGrid[pos2.getRow()][pos2.getColumn()]);
-        toReturn.add(currentGrid[pos3.getRow()][pos3.getColumn()]);
-        currentGrid[pos1.getRow()][pos1.getColumn()].setColor(Tile.Color.NULLTILE);
-        currentGrid[pos2.getRow()][pos2.getColumn()].setColor(Tile.Color.NULLTILE);
-        currentGrid[pos3.getRow()][pos3.getColumn()].setColor(Tile.Color.NULLTILE);
-        return toReturn;
+    private List<Tile> collectTile(Position pos1, Position pos2, Position pos3){
+        if(this.gameBoard.isCatchable(pos1.getRow(), pos1.getColumn())&&this.gameBoard.isCatchable(pos2.getRow(), pos2.getColumn())&&this.gameBoard.isCatchable(pos3.getRow(), pos3.getColumn())) {
+            Tile[][] currentGrid = this.gameBoard.getGrid();
+            List<Tile> toReturn = new ArrayList<>();
+            toReturn.add(currentGrid[pos1.getRow()][pos1.getColumn()]);
+            toReturn.add(currentGrid[pos2.getRow()][pos2.getColumn()]);
+            toReturn.add(currentGrid[pos3.getRow()][pos3.getColumn()]);
+            currentGrid[pos1.getRow()][pos1.getColumn()].setColor(Tile.Color.NULLTILE);
+            currentGrid[pos2.getRow()][pos2.getColumn()].setColor(Tile.Color.NULLTILE);
+            currentGrid[pos3.getRow()][pos3.getColumn()].setColor(Tile.Color.NULLTILE);
+            return toReturn;
+        }else{
+            return null;
+        }
     }
 
     /**
