@@ -69,6 +69,9 @@ public class Client implements Runnable{
                 }
                 else if(response.getResponseType() == Response.ResponseType.VALID){
                     validRecieved = true;
+                    if(response.getInfoMessage().equals("Username accepted")){
+                        nickname = response.getChatMessage().getSender();
+                    }
                     System.out.println(response.getInfoMessage());
                 }
                 else if(response.getResponseType() == Response.ResponseType.DENIED){
@@ -162,19 +165,20 @@ public class Client implements Runnable{
                         Action a = new Action(Action.ActionType.CHAT,nickname,message.substring(message.indexOf("/chat") + "/chat ".length()),"",null,null);
                         sendAction(a);
                     }
+                    /*
+                     *
+                     */
                     else if(message.startsWith("/collect")){
-                        int firstTile = message.indexOf("/collect") + "/collect ".length();
+                        int firstTile = "/collect ".length();
                         String substr = message.substring(firstTile);
                         String[] pos = substr.split(",");
                         List<Position> tilesSelected = new ArrayList<>();
-                        for(String s : pos){
-                            tilesSelected.add(new Position(Integer.parseInt(s.substring(0,0)), Integer.parseInt(s.substring(1))));
-                        }
+                        tilesSelected.add(new Position(Integer.parseInt(pos[0]), Integer.parseInt(pos[1])));
                         Action a = new Action(Action.ActionType.PICKTILES,nickname,"","",tilesSelected,null);
                         sendAction(a);
                     }
                     else if(message.startsWith("/column")){
-                        int index = message.indexOf("/collect") + "/collect ".length();
+                        int index = message.indexOf("/column") + "/column ".length();
                         String substr = message.substring(index);
                         int col = Integer.parseInt(substr.substring(0,0));
                         Action a = new Action(Action.ActionType.SELECTCOLUMN,nickname,"","",null,col);
