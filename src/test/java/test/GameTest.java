@@ -52,7 +52,7 @@ public class GameTest {
         tiles.add(new Tile("", Tile.Color.BLUE));
         tiles.add(new Tile("", Tile.Color.GREEN));
         tiles.add(new Tile("", Tile.Color.LIGHTBLUE));
-        myGame.insertTile(tiles,1);
+        myGame.insertTiles(tiles,1);
         System.out.println(myGame.getPlayers().get(myGame.getCurrentPlayer()).getMyShelf().toString());
     }
 

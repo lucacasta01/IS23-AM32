@@ -15,7 +15,10 @@ public class UtilsTest {
     @Test
     @DisplayName("UID generator test")
     void UIDGeneratorTest() {
-        System.out.println(Utils.UIDGenerator());
+        for(int i=0;i<100;i++){
+            String UID = Utils.UIDGenerator();
+            System.out.println(UID);
+        }
     }
 
     @Test
@@ -28,5 +31,6 @@ public class UtilsTest {
         for(String str : pos){
             System.out.println(str);
         }
+
     }
 }
