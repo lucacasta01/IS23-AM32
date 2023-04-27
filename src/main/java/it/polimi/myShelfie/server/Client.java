@@ -166,21 +166,23 @@ public class Client implements Runnable{
                         sendAction(a);
                     }
                     /*
-                     *
+                     * /collect x1,y1 (opt)x2,y2 (opt)x3,y3
                      */
                     else if(message.startsWith("/collect")){
                         int firstTile = "/collect ".length();
                         String substr = message.substring(firstTile);
-                        String[] pos = substr.split(",");
+                        String[] pos = substr.split(" ");
                         List<Position> tilesSelected = new ArrayList<>();
-                        tilesSelected.add(new Position(Integer.parseInt(pos[0]), Integer.parseInt(pos[1])));
+                        for(String s : pos){
+                            tilesSelected.add(new Position(Integer.parseInt(s.split(",")[0]), Integer.parseInt(s.split(",")[1])));
+                        }
                         Action a = new Action(Action.ActionType.PICKTILES,nickname,"","",tilesSelected,null);
                         sendAction(a);
                     }
                     else if(message.startsWith("/column")){
-                        int index = message.indexOf("/column") + "/column ".length();
+                        int index = "/column ".length();
                         String substr = message.substring(index);
-                        int col = Integer.parseInt(substr.substring(0,0));
+                        int col = Integer.parseInt(substr.substring(0,1));
                         Action a = new Action(Action.ActionType.SELECTCOLUMN,nickname,"","",null,col);
                         sendAction(a);
                     }
