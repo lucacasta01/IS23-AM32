@@ -2,6 +2,8 @@ package it.polimi.myShelfie.server;
 
 import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
+import it.polimi.myShelfie.model.Position;
+import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.Utils;
 import it.polimi.myShelfie.utilities.beans.Action;
@@ -17,6 +19,7 @@ public class Lobby implements Runnable{
     private GameMode gameMode;
     private boolean isOpen;
     private boolean ended = false;
+    private List<Tile> collectedTiles;
 
     private Game game;
     public final List<Action> actions = new ArrayList<>();
@@ -112,6 +115,7 @@ public class Lobby implements Runnable{
                         Iterator<Action> iter = actions.iterator();
                         while(iter.hasNext()){
                             Action a = iter.next();
+                            ClientHandler ch = clientHandlerOf(a.getNickname());
                             String nickname = a.getNickname();
                             if(a.getActionType()== Action.ActionType.INFO){
                                 System.out.println("Info from:"+nickname+" "+a.getInfo());
@@ -121,9 +125,18 @@ public class Lobby implements Runnable{
                                 iter.remove();
                             }else if(a.getActionType()== Action.ActionType.PICKTILES){
                                 if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){
-                                    //todo
+                                   List<Position> tiles = a.getChosenTiles();
+                                   collectedTiles = game.collectTiles(tiles);
+                                   if(collectedTiles == null){
+                                       if(ch!=null){
+                                           ch.sendDeny("Cannot pick those tiles");
+                                       }
+                                   }else{
+                                       ch.sendInfoMessage("Insert column");
+                                   }
+
+
                                 }else{
-                                    ClientHandler ch = clientHandlerOf(nickname);
                                     if(ch!=null){
                                         ch.sendDeny("Is not your turn...");
                                     }
@@ -131,9 +144,8 @@ public class Lobby implements Runnable{
                                 iter.remove();
                             }else if(a.getActionType()== Action.ActionType.SELECTCOLUMN){
                                 if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){
-                                    //todo
+                                    System.out.println("Column selected: "+a.getChosenColumn());
                                 }else {
-                                    ClientHandler ch = clientHandlerOf(nickname);
                                     if (ch != null) {
                                         ch.sendDeny("Is not your turn...");
                                     }
