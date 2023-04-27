@@ -72,6 +72,12 @@ public class ClientHandler implements Runnable {
                 while(action.getActionType() != Action.ActionType.INFO || server.isConnected(nickname)) {
                     if(action.getActionType() == Action.ActionType.INFO) {
                         sendDeny("Nickname " + nickname + " already used, retry:");
+                    }else if(action.getActionType()== Action.ActionType.CHAT){
+                        sendDeny("The chat is not active now");
+                    }else if(action.getActionType()== Action.ActionType.PICKTILES){
+                        sendDeny("Cannot pick tiles here, game not started");
+                    }else if(action.getActionType()== Action.ActionType.SELECTCOLUMN){
+                        sendDeny("Cannot select column here, game not started");
                     }
 
                     action = getAction();
@@ -90,144 +96,162 @@ public class ClientHandler implements Runnable {
                 System.out.println(nickname + " connected to the server");
             }
 
-            String message;
-
-            String chose = "1";
             boolean lobbyCreated = false;
-            while(!chose.equals("0") && !lobbyCreated) {
-                sendInfoMessage("\n(1) New Game");
-                sendInfoMessage("(2) Load last game");
-                sendInfoMessage("(3) Join random game");
-                sendInfoMessage("(4) Search for started saved game");
-                sendInfoMessage("(0) Exit\n");
-                action = getAction();
-                chose = action.getInfo();
-                while(action.getActionType() != Action.ActionType.INFO && !chose.equals("1") && !chose.equals("2") && !chose.equals("3") && !chose.equals("4") && !chose.equals("0")) {
-                    if(action.getActionType()!= Action.ActionType.PING) {
-                        sendDeny("Type the right key...");
+            String message;
+            String chose;
+
+            sendInfoMessage("\n(1) New Game");
+            sendInfoMessage("(2) Load last game");
+            sendInfoMessage("(3) Join random game");
+            sendInfoMessage("(4) Search for started saved game");
+            sendInfoMessage("(0) Exit\n");
+            while((action=getAction())!=null){
+                if(!lobbyCreated){
+                    sendInfoMessage("\n(1) New Game");
+                    sendInfoMessage("(2) Load last game");
+                    sendInfoMessage("(3) Join random game");
+                    sendInfoMessage("(4) Search for started saved game");
+                    sendInfoMessage("(0) Exit\n");
+                    chose=action.getInfo();
+                    while(action.getActionType() != Action.ActionType.INFO ||(action.getActionType()== Action.ActionType.INFO&&(!chose.equals("1") && !chose.equals("2") && !chose.equals("3") && !chose.equals("4") && !chose.equals("0")))){
+                        if(action.getActionType() == Action.ActionType.INFO) {
+                            sendDeny("Type the right key");
+                        }else if(action.getActionType()== Action.ActionType.CHAT){
+                            sendDeny("The chat is not active now");
+                        }else if(action.getActionType()== Action.ActionType.PICKTILES){
+                            sendDeny("Cannot pick tiles here, game not started");
+                        }else if(action.getActionType()== Action.ActionType.SELECTCOLUMN){
+                            sendDeny("Cannot select column here, game not started");
+                        }
                         action = getAction();
                         chose = action.getInfo();
                     }
-                }
-                sendAccept("Game mode selected");
 
-                switch (chose) {
-                    case "1" -> {
-                        sendInfoMessage("* CREATE NEW GAME *\n");
-                        sendInfoMessage("Enter number of players: ");
-                        action = getAction();
-                        message = action.getInfo();
-                        while(action.getActionType() != Action.ActionType.INFO && !message.equals("2") && !message.equals("3") && !message.equals("4")) {
-                            sendDeny("Type the right key...");
-                            action = getAction();
-                            message = action.getInfo();
-                        }
+                        sendAccept("Game mode selected");
+                        switch (chose) {
+                            case "1" -> {
+                                sendInfoMessage("* CREATE NEW GAME *\n");
 
-                        int playersNumber = Integer.parseInt(message);
-                        String UID = Utils.UIDGenerator();
-                        Lobby lobby = new Lobby(this, UID, playersNumber);
-                        server.getLobbyList().add(lobby);
-                        System.out.println("New lobby created ["+UID+"]");
-                        synchronized (server.getUserGame()) {
-                            server.getUserGame().put(nickname, lobby.getLobbyUID());
-                            server.saveUserGame();
-                        }
-                        lobbyCreated = true;
-                        lobby.run();
-                    }
-                    case "2" -> {
-                        sendInfoMessage("* GAME LOADING *\n");
-                        Map<String,String> userGame;
-                        synchronized (server.getUserGame()){
-                            userGame = server.getUserGame();
-                        }
 
-                        if (!userGame.containsKey(nickname) || userGame.get(nickname).equals("-")){
-                            sendDeny("No game found");
-                        }
-                        else {
-                            Lobby lobby = new Lobby(this,userGame.get(nickname));
-                            sendInfoMessage("Joining game "+userGame.get(nickname));
-                            synchronized (server.getLobbyList()) {
+
+                                String UID = Utils.UIDGenerator();
+                                Lobby lobby = new Lobby(this, UID, 0);
+                                System.out.println("New lobby created [" + UID + "]");
                                 server.getLobbyList().add(lobby);
-                            }
-                            System.out.println("New lobby created ["+lobby.getLobbyUID()+"]");
-                            lobbyCreated = true;
-                            lobby.run();
-                        }
-                    }
-                    case "3" -> {
-                        sendInfoMessage("* GAME JOINING *\n");
-                        List<Lobby> lobbyList;
-                        boolean flag = false;
-                        synchronized (server.getLobbyList()){
-                            lobbyList = server.getLobbyList();
-                        }
-                        for(Lobby l : lobbyList){
-                            if(l.isOpen()){
-                                System.out.println(nickname + "joined game "+l.getLobbyUID());
                                 synchronized (server.getUserGame()) {
-                                    server.getUserGame().put(nickname, l.getLobbyUID());
+                                    server.getUserGame().put(nickname, lobby.getLobbyUID());
                                     server.saveUserGame();
                                 }
-                                flag = true;
                                 lobbyCreated = true;
-                                l.acceptPlayer(this);
-                                break;
+                                server.runLobby(lobby);
+                            }
+                            case "2" -> {
+                                sendInfoMessage("* GAME LOADING *\n");
+                                Map<String, String> userGame;
+                                synchronized (server.getUserGame()) {
+                                    userGame = server.getUserGame();
+                                }
+
+                                if (!userGame.containsKey(nickname) || userGame.get(nickname).equals("-")) {
+                                    sendDeny("No game found");
+                                } else {
+                                    Lobby lobby = new Lobby(this, userGame.get(nickname));
+                                    sendInfoMessage("Joining game " + userGame.get(nickname));
+                                    synchronized (server.getLobbyList()) {
+                                        server.getLobbyList().add(lobby);
+                                    }
+                                    System.out.println("New lobby created [" + lobby.getLobbyUID() + "]");
+                                    lobbyCreated = true;
+                                    server.runLobby(lobby);
+                                }
+                            }
+                            case "3" -> {
+                                sendInfoMessage("* GAME JOINING *\n");
+                                List<Lobby> lobbyList;
+                                boolean flag = false;
+                                synchronized (server.getLobbyList()) {
+                                    lobbyList = server.getLobbyList();
+                                }
+                                for (Lobby l : lobbyList) {
+                                    if (l.isOpen()) {
+                                        System.out.println(nickname + "joined game " + l.getLobbyUID());
+                                        synchronized (server.getUserGame()) {
+                                            server.getUserGame().put(nickname, l.getLobbyUID());
+                                            server.saveUserGame();
+                                        }
+                                        flag = true;
+                                        lobbyCreated = true;
+                                        l.acceptPlayer(this);
+                                        break;
+                                    }
+                                }
+                                if (!flag) {
+                                    sendInfoMessage("No game available. You should create a new one");
+                                }
+                            }
+                            case "4" -> {
+                                List<Lobby> filteredLobbyList = server.getLobbyList().stream()
+                                        .filter(l -> l.getGameMode() == Lobby.GameMode.SAVEDGAME)
+                                        .filter(l -> l.getLobbyUID().equals(server.getUserGame().get(nickname)))
+                                        .toList();
+                                if (filteredLobbyList.size() > 1) {
+                                    throw new RuntimeException("UID not unique");
+                                } else if (filteredLobbyList.size() == 1) {
+                                    Lobby lobby = filteredLobbyList.get(0);
+                                    sendInfoMessage("Game " + lobby.getLobbyUID() + "started by " + lobby.getLobbyPlayers().get(0).nickname);
+                                    sendInfoMessage("Would you like to join? [y/n]");
+
+                                    System.out.println("Saved game for " + nickname + " found");
+
+                                    action = getAction();
+
+                                    while (!action.getActionType().equals(Action.ActionType.INFO) && !action.getInfo().toUpperCase().equals("Y") && !action.getInfo().toUpperCase().equals("N")) {
+                                        sendDeny("Type the right key...");
+                                        action = getAction();
+                                    }
+                                    message = action.getInfo();
+                                    if (message.toUpperCase().equals("Y")) {
+                                        lobby.broadcastMessage(nickname + " joined");
+                                        System.out.println(nickname + "joined game " + lobby.getLobbyUID());
+                                        filteredLobbyList.get(0).acceptPlayer(this);
+                                    } else {
+                                        System.out.println(nickname + "rejected invitation from " + lobby.getLobbyUID());
+                                        lobby.broadcastMessage(nickname + " has rejected the invitation.");
+                                        lobby.broadcastMessage("Game is closing...");
+                                        lobby.shutdown();
+                                        server.getLobbyList().remove(lobby);
+                                        System.out.println("Lobby " + lobby.getLobbyUID() + " killed.");
+                                    }
+                                } else {
+                                    sendInfoMessage("No lobby was found.");
+                                }
+
+                            }
+                            case "0" -> {
+                                sendShutdown();
+                                server.removeClient(this);
+                                shutdown();
+                                System.out.println(nickname + " disconnected");
                             }
                         }
-                        if(!flag){
-                            sendInfoMessage("No game available. You should create a new one");
-                        }
-                    }
-                    case "4" ->{
-                        List<Lobby> filteredLobbyList = server.getLobbyList().stream()
-                                .filter(l -> l.getGameMode() == Lobby.GameMode.SAVEDGAME)
-                                .filter(l -> l.getLobbyUID().equals(server.getUserGame().get(nickname)))
-                                .toList();
-                        if(filteredLobbyList.size() > 1){
-                            throw new RuntimeException("UID not unique");
-                        }
-                        else if(filteredLobbyList.size() == 1){
-                            Lobby lobby = filteredLobbyList.get(0);
-                            sendInfoMessage("Game "+ lobby.getLobbyUID() + "started by " + lobby.getLobbyPlayers().get(0).nickname);
-                            sendInfoMessage("Would you like to join? [y/n]");
 
-                            System.out.println("Saved game for "+nickname+" found");
 
-                            action = getAction();
-
-                            while(!action.getActionType().equals(Action.ActionType.INFO) && !action.getInfo().toUpperCase().equals("Y") && !action.getInfo().toUpperCase().equals("N")){
-                                sendDeny("Type the right key...");
-                                action = getAction();
+                }else{
+                    for(Lobby l:server.getLobbyList()){
+                        for(ClientHandler ch: l.getLobbyPlayers()){
+                            if(ch.equals(this)){
+                                synchronized (l.actions){
+                                    l.recieveAction(action);
+                                    l.actions.notifyAll();
+                                }
                             }
-                            message = action.getInfo();
-                            if(message.toUpperCase().equals("Y")) {
-                                lobby.broadcastMessage(nickname+ " joined");
-                                System.out.println(nickname + "joined game "+lobby.getLobbyUID());
-                                filteredLobbyList.get(0).acceptPlayer(this);
-                            }
-                            else{
-                                System.out.println(nickname + "rejected invitation from " + lobby.getLobbyUID());
-                                lobby.broadcastMessage(nickname+" has rejected the invitation.");
-                                lobby.broadcastMessage("Game is closing...");
-                                lobby.shutdown();
-                                server.getLobbyList().remove(lobby);
-                                System.out.println("Lobby "+lobby.getLobbyUID()+" killed.");
-                            }
-                        }else{
-                            sendInfoMessage("No lobby was found.");
                         }
-
-                    }
-                    case "0" -> {
-                        sendShutdown();
-                        server.removeClient(this);
-                        shutdown();
-                        System.out.println(nickname+" disconnected");
                     }
                 }
+
             }
+
+
             //firt case: finding a saved game
 
 
@@ -336,6 +360,17 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    public synchronized void sendChatMessage(String message, String sender){
+        Response r = new Response(Response.ResponseType.CHATMESSAGE, new Response.ChatMessage(sender, message), null, null);
+        Gson gson = new Gson();
+        try {
+            out.println(gson.toJson(r));
+        } catch (Exception e) {
+            System.out.println("Error occurred while sending a message: " + e.toString());
+            e.printStackTrace();
+        }
+    }
+
     public synchronized void sendDeny(String message) {
         Gson gson = new Gson();
         try {
@@ -349,7 +384,7 @@ public class ClientHandler implements Runnable {
     public synchronized void sendAccept(String message) {
         Gson gson = new Gson();
         try {
-            out.println(gson.toJson(new Response(Response.ResponseType.VALID, null,null, message)));
+            out.println(gson.toJson(new Response(Response.ResponseType.VALID, new Response.ChatMessage(this.nickname, ""),null, message)));
         } catch (Exception e) {
             System.out.println("Error occurred while sending a message: " + e.toString());
             e.printStackTrace();

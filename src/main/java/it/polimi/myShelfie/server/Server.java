@@ -24,6 +24,7 @@ public class Server implements Runnable{
     private ServerSocket serverSocket;
     private Registry registry;
     private ExecutorService pool;
+    private ExecutorService lobbyPool;
     private List<ClientHandler> connectedClients;
     private Map<String, String> userGame;
     private List <Lobby> lobbyList;
@@ -35,6 +36,7 @@ public class Server implements Runnable{
             lobbyList = new ArrayList<>();
             serverSocket = new ServerSocket(Constants.PORT);
             registry = LocateRegistry.createRegistry(Constants.PORT+1);
+            userGame = new HashMap<>();
         }
         catch(Exception e){
             System.err.println("Server side exception thrown: " + e.toString());
@@ -84,7 +86,7 @@ public class Server implements Runnable{
     public void run(){
         System.out.println("Server started");
         pool = Executors.newCachedThreadPool();
-        this.userGame = loadUserGame();
+        lobbyPool = Executors.newCachedThreadPool();
         while(!done){
             try {
                 Socket clientSocket = serverSocket.accept();
@@ -199,8 +201,12 @@ public class Server implements Runnable{
                         throw new RuntimeException(e);
                     }
                 }
+
             }
         };
+    }
+    public synchronized void runLobby(Lobby lobby){
+        lobbyPool.execute(lobby);
     }
 
 
@@ -211,3 +217,4 @@ public class Server implements Runnable{
     }
 
 }
+

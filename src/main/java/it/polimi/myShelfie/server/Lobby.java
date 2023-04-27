@@ -4,10 +4,11 @@ import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.Utils;
+import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.GameParameters;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 public class Lobby implements Runnable{
     private final List<ClientHandler> lobbyPlayers;
@@ -15,9 +16,11 @@ public class Lobby implements Runnable{
     private Integer playersNumber;
     private GameMode gameMode;
     private boolean isOpen;
+    private boolean ended = false;
 
     private Game game;
-
+    public final List<Action> actions = new ArrayList<>();
+    public final Object locker = new Object();
 
     /**
      * Create a lobby for a new game
@@ -33,7 +36,6 @@ public class Lobby implements Runnable{
         this.playersNumber = playersNumber;
         this.gameMode = GameMode.NEWGAME;
         this.isOpen = true;
-
     }
 
     /**
@@ -54,6 +56,36 @@ public class Lobby implements Runnable{
     public void run(){
         switch (gameMode){
             case NEWGAME -> {
+                lobbyPlayers.get(0).sendInfoMessage("Enter number of players: ");
+                while(actions.size()==0){
+                    try {
+                        synchronized (actions){
+                            actions.wait();
+                        }
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Action action = actions.get(0);
+                    if(action.getActionType() == Action.ActionType.INFO) {
+                        if(!action.getInfo().equals("2")&&!action.getInfo().equals("3")&&!action.getInfo().equals("4")){
+                            lobbyPlayers.get(0).sendDeny("Invalid players number, please retry");
+                            actions.remove(0);
+                        }
+
+                    }else if(action.getActionType()== Action.ActionType.CHAT){
+                        lobbyPlayers.get(0).sendDeny("The chat is not active now");
+                        actions.remove(0);
+                    }else if(action.getActionType()== Action.ActionType.PICKTILES){
+                        lobbyPlayers.get(0).sendDeny("Cannot pick tiles here, game not started");
+                        actions.remove(0);
+                    }else if(action.getActionType()== Action.ActionType.SELECTCOLUMN){
+                        lobbyPlayers.get(0).sendDeny("Cannot select column here, game not started");
+                        actions.remove(0);
+                    }
+
+                }
+                playersNumber = Integer.parseInt(actions.get(0).getInfo());
+                actions.remove(0);
                 game = new Game(lobbyUID,playersNumber);
                 try {
                     broadcastMessage("Waiting for players..."+" "+"("+getLobbySize()+"/"+getPlayersNumber()+")");
@@ -66,6 +98,53 @@ public class Lobby implements Runnable{
                 game.saveGame();
                 broadcastMessage("/CONFIGURATION_OK");
 
+                while(!ended) {
+                    while (actions.size() == 0) {
+                        synchronized (actions) {
+                            try {
+                                actions.wait();
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
+                    synchronized (actions){
+                        Iterator<Action> iter = actions.iterator();
+                        while(iter.hasNext()){
+                            Action a = iter.next();
+                            String nickname = a.getNickname();
+                            if(a.getActionType()== Action.ActionType.INFO){
+                                System.out.println("Info from:"+nickname+" "+a.getInfo());
+                                iter.remove();
+                            } else if (a.getActionType()== Action.ActionType.CHAT) {
+                                sendChat(nickname, a.getChatMessage());
+                                iter.remove();
+                            }else if(a.getActionType()== Action.ActionType.PICKTILES){
+                                if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){
+                                    //todo
+                                }else{
+                                    ClientHandler ch = clientHandlerOf(nickname);
+                                    if(ch!=null){
+                                        ch.sendDeny("Is not your turn...");
+                                    }
+                                }
+                                iter.remove();
+                            }else if(a.getActionType()== Action.ActionType.SELECTCOLUMN){
+                                if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){
+                                    //todo
+                                }else {
+                                    ClientHandler ch = clientHandlerOf(nickname);
+                                    if (ch != null) {
+                                        ch.sendDeny("Is not your turn...");
+                                    }
+                                }
+                                iter.remove();
+                            }
+                        }
+                    }
+
+
+                }
                 broadcastUpdate();
             }
             case SAVEDGAME -> {
@@ -154,6 +233,13 @@ public class Lobby implements Runnable{
             t.sendInfoMessage(message);
         }
     }
+    public void sendChat(String sender, String message){
+        for(ClientHandler ch : lobbyPlayers){
+            if(!ch.getNickname().equals(sender)){
+                ch.sendChatMessage(message, sender);
+            }
+        }
+    }
 
     public void broadcastUpdate(){
         for(ClientHandler t : lobbyPlayers){
@@ -168,8 +254,18 @@ public class Lobby implements Runnable{
         }
 
     }
+    public synchronized void recieveAction(Action a){
+        actions.add(a);
+    }
 
-
+    private ClientHandler clientHandlerOf(String nickname){
+        for(ClientHandler ch: lobbyPlayers){
+            if(ch.getNickname().equals(nickname)){
+                return ch;
+            }
+        }
+        return null;
+    }
 
 
     public enum GameMode{
@@ -192,3 +288,7 @@ public class Lobby implements Runnable{
                     Server.getInstance().broadcastMessage(nickname + ": " + message);
                 }
             }*/
+
+/*
+
+ */
