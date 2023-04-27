@@ -88,6 +88,7 @@ public class Action {
         SELECTCOLUMN,
         INFO,
         PING,
-        QUIT
+        QUIT,
+        PRINTBOARD
     }
 }

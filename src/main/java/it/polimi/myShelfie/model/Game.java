@@ -331,7 +331,7 @@ public class Game implements Runnable{
      * Takes a tile from the game board and returns it as a list of a single object
      * @return The said tile as a list of tiles
      */
-    private List<Tile> collectTile(Position pos){
+    public List<Tile> collectTile(Position pos){
         if( this.gameBoard.isCatchable(pos.getRow(), pos.getColumn())) {
             Tile[][] currentGrid = this.gameBoard.getGrid();
             List<Tile> toReturn = new ArrayList<>();
@@ -347,7 +347,7 @@ public class Game implements Runnable{
      * Takes two tiles from the game board and returns them in a list
      * @return a list containing the picked tiles
      */
-    private List<Tile> collectTile(Position pos1, Position pos2){
+    public List<Tile> collectTile(Position pos1, Position pos2){
         if(this.gameBoard.isCatchable(pos1.getRow(), pos1.getColumn())&&this.gameBoard.isCatchable(pos2.getRow(), pos2.getColumn())) {
             Tile[][] currentGrid = this.gameBoard.getGrid();
             List<Tile> toReturn = new ArrayList<>();
@@ -365,7 +365,7 @@ public class Game implements Runnable{
      * Takes three tiles from the game board and returns them in a list
      * @return a list containing the picked tiles
      */
-    private List<Tile> collectTile(Position pos1, Position pos2, Position pos3){
+    public List<Tile> collectTile(Position pos1, Position pos2, Position pos3){
         if(this.gameBoard.isCatchable(pos1.getRow(), pos1.getColumn())&&this.gameBoard.isCatchable(pos2.getRow(), pos2.getColumn())&&this.gameBoard.isCatchable(pos3.getRow(), pos3.getColumn())) {
             Tile[][] currentGrid = this.gameBoard.getGrid();
             List<Tile> toReturn = new ArrayList<>();

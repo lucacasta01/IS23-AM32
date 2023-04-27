@@ -37,5 +37,17 @@ public class ShelfTest {
         assertEquals(0, testShelf.freeTiles(0));
         assertEquals(6, testShelf.freeTiles(1));
     }
+
+    @Test
+    @DisplayName("insertTiles test")
+    void insertTilesTest(){
+
+        Shelf testShelf = new Shelf();
+        testShelf.initShelf();
+        for(int i=0; i<MAXROW; i++){
+            testShelf.insertTile(new Tile("test", Tile.Color.BLUE), 0);
+        }
+        System.out.println(testShelf.toString());
+    }
 }
 

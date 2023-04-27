@@ -28,6 +28,35 @@ public class GameTest {
     }
 
     @Test
+    @DisplayName("Pick tiles test")
+    public void pickTilesTest(){
+        Player p1 = new Player("pippo",fakeIP);
+        Player p2 = new Player("topolino",fakeIP);
+
+        Game game = new Game("fakeUID",2);
+        game.addPlayer(p1);
+        game.addPlayer(p2);
+
+        System.out.println(game.getGameBoard().toString());
+
+        String collectedTile = game.collectTile(new Position(2,3)).get(0).toString();
+        assertEquals(collectedTile,"-");
+    }
+
+    @Test
+    @DisplayName("Tile insert test")
+    public void tileInsertTest(){
+        Game myGame = new Game("",2);
+        myGame.getPlayers().add(new Player(fakeName,fakeIP));
+        List<Tile> tiles = new ArrayList<>();
+        tiles.add(new Tile("", Tile.Color.BLUE));
+        tiles.add(new Tile("", Tile.Color.GREEN));
+        tiles.add(new Tile("", Tile.Color.LIGHTBLUE));
+        myGame.insertTile(tiles,1);
+        System.out.println(myGame.getPlayers().get(myGame.getCurrentPlayer()).getMyShelf().toString());
+    }
+
+    @Test
     @DisplayName("Winner check test")
     public void winnerCheckTest(){
         Player p1 = new Player(fakeName, fakeIP);

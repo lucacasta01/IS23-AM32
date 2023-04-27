@@ -186,6 +186,10 @@ public class Client implements Runnable{
                         Action a = new Action(Action.ActionType.SELECTCOLUMN,nickname,"","",null,col);
                         sendAction(a);
                     }
+                    else if(message.startsWith("/printboard")){
+                        Action a = new Action(Action.ActionType.PRINTBOARD,nickname,"",null,null,null);
+                        sendAction(a);
+                    }
                     else {
                         Action a = new Action(Action.ActionType.INFO,nickname,"",message,null,null);
                         sendAction(a);
