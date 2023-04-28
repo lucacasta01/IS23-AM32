@@ -82,8 +82,12 @@ public class Client implements Runnable{
                 }
                 else if (response.getResponseType() == Response.ResponseType.UPDATE) {
                     view = response.getView();
-                    System.out.println();
-                }else if(response.getResponseType() == Response.ResponseType.PING){
+                    System.out.println(view.getBoard()+"\n");
+                    for(String s : view.getShelves()){
+                        System.out.println(s+"\n");
+                    }
+                }
+                else if(response.getResponseType() == Response.ResponseType.PING){
                   //ping messages are thrown away
                 }
                 else if(response.getResponseType() == Response.ResponseType.SHUTDOWN){
@@ -222,6 +226,9 @@ public class Client implements Runnable{
                             System.out.println("Wrong command syntax. Use: /order [color1][color2][color3](opt.)");
                         }
 
+                    }
+                    else if(message.startsWith("/help")){
+                        sendAction(new Action(Action.ActionType.HELP,nickname,null,null,null,null));
                     }
                     else {
                         Action a = new Action(Action.ActionType.INFO,nickname,"",message,null,null);
