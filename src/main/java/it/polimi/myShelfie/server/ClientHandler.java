@@ -266,8 +266,10 @@ public class ClientHandler implements Runnable {
 
             server.getConnectedClients().remove(this);
             if(server.getUserGame()!=null){
-                if(server.getUserGame().get(this.nickname).equals("-")){
-                    server.getUserGame().remove(this.nickname);
+                if(server.getUserGame().get(this.nickname)!=null) {
+                    if (server.getUserGame().get(this.nickname).equals("-")) {
+                        server.getUserGame().remove(this.nickname);
+                    }
                 }
             }
             this.shutdown();
