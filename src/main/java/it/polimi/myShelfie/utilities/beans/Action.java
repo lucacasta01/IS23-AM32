@@ -91,6 +91,7 @@ public class Action {
         QUIT,
         PRINTBOARD,
         ORDER,
-        LOBBYKILL
+        LOBBYKILL,
+        HELP
     }
 }

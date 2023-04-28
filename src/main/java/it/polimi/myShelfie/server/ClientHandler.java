@@ -6,6 +6,7 @@ import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.Utils;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.Response;
+import it.polimi.myShelfie.utilities.beans.View;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -100,18 +101,9 @@ public class ClientHandler implements Runnable {
             String message;
             String chose;
 
-            sendInfoMessage("\n(1) New Game");
-            sendInfoMessage("(2) Load last game");
-            sendInfoMessage("(3) Join random game");
-            sendInfoMessage("(4) Search for started saved game");
-            sendInfoMessage("(0) Exit\n");
+            sendMenu();
             while((action=getAction())!=null){
                 if(!lobbyCreated){
-                    sendInfoMessage("\n(1) New Game");
-                    sendInfoMessage("(2) Load last game");
-                    sendInfoMessage("(3) Join random game");
-                    sendInfoMessage("(4) Search for started saved game");
-                    sendInfoMessage("(0) Exit\n");
                     chose=action.getInfo();
                     while(action.getActionType() != Action.ActionType.INFO ||(action.getActionType()== Action.ActionType.INFO&&(!chose.equals("1") && !chose.equals("2") && !chose.equals("3") && !chose.equals("4") && !chose.equals("0")))){
                         if(action.getActionType() == Action.ActionType.INFO) {
@@ -248,7 +240,7 @@ public class ClientHandler implements Runnable {
                         }
                     }
                 }
-
+                sendMenu();
             }
 
 
@@ -403,7 +395,15 @@ public class ClientHandler implements Runnable {
         out.println(gson.toJson(new Response(Response.ResponseType.SHUTDOWN, null,null, "Closing...")));
     }
 
-    public synchronized void sendUpdateRequest() {
-        //TODO IMPLEMENTATION
+    public synchronized void sendView(View view) {
+        Gson gson = new Gson();
+        out.println(gson.toJson(new Response(Response.ResponseType.UPDATE, null, view, null)));
+    }
+    private void sendMenu(){
+        sendInfoMessage("\n(1) New Game");
+        sendInfoMessage("(2) Load last game");
+        sendInfoMessage("(3) Join random game");
+        sendInfoMessage("(4) Search for started saved game");
+        sendInfoMessage("(0) Exit\n");
     }
 }

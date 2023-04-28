@@ -8,6 +8,7 @@ import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.Utils;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.GameParameters;
+import it.polimi.myShelfie.utilities.beans.View;
 
 import java.io.IOException;
 import java.util.*;
@@ -139,7 +140,7 @@ public class Lobby implements Runnable{
                                            builder.append(t.toString()+" ");
                                        }
                                        ch.sendInfoMessage(builder.toString());
-                                       ch.sendInfoMessage("Insert column");
+                                       ch.sendInfoMessage("Insert column or change order");
                                    }
 
 
@@ -156,11 +157,11 @@ public class Lobby implements Runnable{
                                     }else{
                                         if(game.insertTiles(collectedTiles, a.getChosenColumn())){
                                             ch.sendAccept("Tiles inserted correctly");
+                                            ch.sendInfoMessage(game.getPlayers().get(game.getCurrentPlayer()).getMyShelf().toString());
                                             game.handleTurn();
                                         }else{
                                             ch.sendDeny("Cannot insert tiles in this column...");
                                         }
-                                        ch.sendInfoMessage(game.getPlayers().get(game.getCurrentPlayer()).getMyShelf().toString());
                                     }
                                 }else {
                                     if (ch != null) {
@@ -176,21 +177,26 @@ public class Lobby implements Runnable{
                             }else if(a.getActionType()==Action.ActionType.ORDER){
                                 if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)) {
                                     String order = a.getInfo();
-                                    String[] Tiles = order.split(" ");
-                                    List<Tile> toInsert = new ArrayList<>();
+                                    String[] colors = order.split(" ");
+                                    Tile[] tiles = new Tile[colors.length];
                                     if (this.collectedTiles != null) {
                                         if (this.collectedTiles.size()!=0) {
-                                            for(String s:Tiles){
-                                                toInsert.add(this.collectedTiles.get(Integer.parseInt(s)));
+                                            for(String s:colors){
+                                                for(Tile t:collectedTiles){
+                                                    if(t.toString().equals(s)){
+                                                        tiles[List.of(colors).indexOf(s)]=new Tile(t.getImagePath(), t.getColor());
+                                                    }
+                                                }
                                             }
+
                                             this.collectedTiles.clear();
-                                            this.collectedTiles.addAll(toInsert);
+                                            this.collectedTiles.addAll(List.of(tiles));
                                             if(ch!=null){
                                                 StringBuilder string = new StringBuilder();
                                                 for(Tile t: this.collectedTiles){
                                                     string.append(t.getColor().toString()).append(" ");
                                                 }
-                                                ch.sendAccept("Order changed successfully"+string.toString());
+                                                ch.sendAccept("Order changed successfully "+string.toString());
 
                                             }
                                     }else{
@@ -215,6 +221,9 @@ public class Lobby implements Runnable{
                                     client.sendInfoMessage("Lobby is killing");
                                 }
                                 ended=true;
+                            }else if(a.getActionType()== Action.ActionType.HELP){
+                                sendCommands(ch);
+                                iter.remove();
                             }
                         }
                     }
@@ -238,6 +247,7 @@ public class Lobby implements Runnable{
 
             }
         }
+
     }
 
     private List<Player> generatePlayers(){
@@ -267,6 +277,19 @@ public class Lobby implements Runnable{
     public int getLobbySize(){
         return lobbyPlayers.size();
     }
+    private void sendCommands(ClientHandler ch){
+        StringBuilder string = new StringBuilder();
+        string.append("*** MY SHELFIE ***\n\n");
+        string.append("Command list:\n");
+        string.append("/chat\t\t\t\t\t\t\tBroadcast message between lobby players\n");
+        string.append("/collect x1,y1 (x2,y2) (x3,y3)\t\tCommand to collect tiles from the board\n");
+        string.append("/order C1 C2 C3\t\t\t\tCommand to select in which order insert the collected tiles in the shelf\n");
+        string.append("/column x\t\t\t\t\t\tSelect in whic column of the shelf insert the selected tiles\n");
+        string.append("/printboard\t\t\t\t\t\tPrint the up-to-date board\n");
+        string.append("/quit\t\t\t\t\t\t\tExit from the game\n");
+        ch.sendInfoMessage(string.toString());
+    }
+
 
 
     private void waitForPlayers() throws InterruptedException {
@@ -317,9 +340,22 @@ public class Lobby implements Runnable{
     }
 
     public void broadcastUpdate(){
-        for(ClientHandler t : lobbyPlayers){
-            t.sendUpdateRequest();
+        View view = new View();
+        List<String> toSend = new ArrayList<>();
+        view.setBoard(this.game.getGameBoard().toString());
+        for(ClientHandler ch:lobbyPlayers){
+            for(Player p:game.getPlayers()){
+                if(p.getUsername().equals(ch.getNickname())){
+                    String s = "You:\nScore "+p.getScore()+"\n"+p.getMyShelf().toString();
+                    toSend.add(s);
+                }else{
+                    String s = p.getUsername()+":\nScore "+p.getScore()+"\n"+p.getMyShelf().toString();
+                    toSend.add(s);
+                }
+            }
+            ch.sendView(view);
         }
+
     }
 
     public void shutdown(){
