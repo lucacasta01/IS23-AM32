@@ -4,6 +4,7 @@ import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Position;
 import it.polimi.myShelfie.model.Tile;
+import it.polimi.myShelfie.model.cards.PersonalGoalCard;
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.Utils;
@@ -166,7 +167,7 @@ public class Lobby implements Runnable{
                                             ch.sendAccept("Tiles inserted correctly");
                                             ch.sendInfoMessage(game.getPlayers().get(game.getCurrentPlayer()).getMyShelf().toString());
                                             broadcastUpdate();
-                                            game.handleTurn();
+                                            handleTurn(ch);
                                         }else{
                                             ch.sendDeny("Cannot insert tiles in this column...");
                                         }
@@ -296,6 +297,16 @@ public class Lobby implements Runnable{
         string.append("/printboard\t\t\t\t\t\t\tPrint the up-to-date board\n");
         string.append("/quit\t\t\t\t\t\t\t\tExit from the game\n");
         ch.sendInfoMessage(string.toString());
+    }
+
+    private void handleTurn(ClientHandler current){
+        Player p = this.game.getPlayers().get(this.game.getCurrentPlayer());
+        PersonalGoalCard card = p.getMyGoalCard();
+        //todo personal card checkpattern
+        //check shared goal
+        //check is full shelf
+        //check refill board
+        this.game.handleTurn();
     }
 
 
