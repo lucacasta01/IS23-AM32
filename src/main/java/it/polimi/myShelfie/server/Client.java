@@ -6,6 +6,7 @@ import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.Response;
+import it.polimi.myShelfie.utilities.beans.View;
 
 import java.io.PrintWriter;
 import java.net.ConnectException;
@@ -28,6 +29,7 @@ public class Client implements Runnable{
     private boolean configurationDone = false;
     private Response response;
     private boolean validRecieved = false;
+    private View view;
 
     @Override
     public void run() {
@@ -79,7 +81,8 @@ public class Client implements Runnable{
                     System.out.println(response.getInfoMessage());
                 }
                 else if (response.getResponseType() == Response.ResponseType.UPDATE) {
-                    //UPDATE THE VIEW
+                    view = response.getView();
+                    System.out.println();
                 }else if(response.getResponseType() == Response.ResponseType.PING){
                   //ping messages are thrown away
                 }
@@ -196,16 +199,12 @@ public class Client implements Runnable{
                         String substr = message.substring(index);
                         List<String> tiles = List.of(substr.split(" "));
                         List<String> newOrder = new ArrayList<>();
-                        List<String> newOrderColors = new ArrayList<>();
-                        Integer p=0;
                         for(String t : tiles){
                             if(isColor(t)){
-                               newOrder.add(p.toString());
-                               newOrderColors.add(t);
+                               newOrder.add(t);
                             }
-                            p++;
                         }
-                        if(newOrder.size() == tiles.size() && new HashSet<>(newOrderColors).containsAll(tiles)){
+                        if(newOrder.size() == tiles.size() && new HashSet<>(newOrder).containsAll(tiles)){
                             StringBuilder builder = new StringBuilder();
                             for(int i=0;i<newOrder.size();i++){
                                 builder.append(newOrder.get(i));
@@ -216,7 +215,7 @@ public class Client implements Runnable{
                             Action a = new Action(Action.ActionType.ORDER,nickname,"",builder.toString(),null,null);
                             sendAction(a);
                         }
-                        else if(!new HashSet<>(newOrderColors).containsAll(tiles)){
+                        else if(!new HashSet<>(newOrder).containsAll(tiles)){
                             System.out.println("You must chose the tiles you have collected");
                         }
                         else{
