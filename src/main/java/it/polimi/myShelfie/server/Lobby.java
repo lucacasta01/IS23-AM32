@@ -4,6 +4,7 @@ import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Position;
 import it.polimi.myShelfie.model.Tile;
+import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.Utils;
 import it.polimi.myShelfie.utilities.beans.Action;
@@ -21,6 +22,7 @@ public class Lobby implements Runnable{
     private boolean isOpen;
     private boolean ended = false;
     private List<Tile> collectedTiles;
+    private Stack<String> colors;
 
     private Game game;
     public final List<Action> actions = new ArrayList<>();
@@ -36,10 +38,16 @@ public class Lobby implements Runnable{
     public Lobby(ClientHandler lobbyHost, String lobbyUID, int playersNumber) {
         this.lobbyPlayers = new ArrayList<>();
         lobbyPlayers.add(lobbyHost);
+        lobbyHost.setColor(ANSI.BLUE);
         this.lobbyUID = lobbyUID;
         this.playersNumber = playersNumber;
         this.gameMode = GameMode.NEWGAME;
         this.isOpen = true;
+        this.colors = new Stack<>();
+        colors.push(ANSI.PURPLE);
+        colors.push(ANSI.GREEN);
+        colors.push(ANSI.YELLOW);
+
     }
 
     /**
@@ -101,8 +109,7 @@ public class Lobby implements Runnable{
                 this.isOpen = false;
                 game.addPlayer(generatePlayers());
                 game.saveGame();
-                broadcastMessage("Game board:\n"+game.getGameBoard().toString());
-
+                broadcastUpdate();
                 while(!ended) {
                     while (actions.size() == 0) {
                         synchronized (actions) {
@@ -123,7 +130,7 @@ public class Lobby implements Runnable{
                                 System.out.println("Info from:"+nickname+" "+a.getInfo());
                                 iter.remove();
                             } else if (a.getActionType()== Action.ActionType.CHAT) {
-                                sendChat(nickname, a.getChatMessage());
+                                sendChat(ch.getColor()+nickname+ANSI.RESET, a.getChatMessage());
                                 iter.remove();
                             }else if(a.getActionType()== Action.ActionType.PICKTILES){
                                 if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){
@@ -158,6 +165,7 @@ public class Lobby implements Runnable{
                                         if(game.insertTiles(collectedTiles, a.getChosenColumn())){
                                             ch.sendAccept("Tiles inserted correctly");
                                             ch.sendInfoMessage(game.getPlayers().get(game.getCurrentPlayer()).getMyShelf().toString());
+                                            broadcastUpdate();
                                             game.handleTurn();
                                         }else{
                                             ch.sendDeny("Cannot insert tiles in this column...");
@@ -230,7 +238,7 @@ public class Lobby implements Runnable{
 
 
                 }
-                broadcastUpdate();
+
             }
             case SAVEDGAME -> {
                 try{
@@ -281,12 +289,12 @@ public class Lobby implements Runnable{
         StringBuilder string = new StringBuilder();
         string.append("*** MY SHELFIE ***\n\n");
         string.append("Command list:\n");
-        string.append("/chat\t\t\t\t\t\t\tBroadcast message between lobby players\n");
+        string.append("/chat\t\t\t\t\t\t\t\tBroadcast message between lobby players\n");
         string.append("/collect x1,y1 (x2,y2) (x3,y3)\t\tCommand to collect tiles from the board\n");
-        string.append("/order C1 C2 C3\t\t\t\tCommand to select in which order insert the collected tiles in the shelf\n");
-        string.append("/column x\t\t\t\t\t\tSelect in whic column of the shelf insert the selected tiles\n");
-        string.append("/printboard\t\t\t\t\t\tPrint the up-to-date board\n");
-        string.append("/quit\t\t\t\t\t\t\tExit from the game\n");
+        string.append("/order C1 C2 C3\t\t\t\t\t\tCommand to select in which order insert the collected tiles in the shelf\n");
+        string.append("/column x\t\t\t\t\t\t\tSelect in whic column of the shelf insert the selected tiles\n");
+        string.append("/printboard\t\t\t\t\t\t\tPrint the up-to-date board\n");
+        string.append("/quit\t\t\t\t\t\t\t\tExit from the game\n");
         ch.sendInfoMessage(string.toString());
     }
 
@@ -314,6 +322,7 @@ public class Lobby implements Runnable{
 
     public void acceptPlayer(ClientHandler player) throws RuntimeException{
         player.setPlaying(true);
+        player.setColor(colors.pop());
         synchronized (lobbyPlayers) {
             if (lobbyPlayers.size() + 1 > this.playersNumber) {
                 throw new RuntimeException("player number exceeded");
@@ -333,7 +342,7 @@ public class Lobby implements Runnable{
     }
     public void sendChat(String sender, String message){
         for(ClientHandler ch : lobbyPlayers){
-            if(!ch.getNickname().equals(sender)){
+            if(!(ch.getColor()+ch.getNickname()+ANSI.RESET).equals(sender)){
                 ch.sendChatMessage(message, sender);
             }
         }
@@ -353,6 +362,7 @@ public class Lobby implements Runnable{
                     toSend.add(s);
                 }
             }
+            view.setShelves(toSend);
             ch.sendView(view);
         }
 

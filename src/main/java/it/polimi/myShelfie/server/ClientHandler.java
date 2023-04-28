@@ -2,6 +2,7 @@ package it.polimi.myShelfie.server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.Utils;
 import it.polimi.myShelfie.utilities.beans.Action;
@@ -32,6 +33,7 @@ public class ClientHandler implements Runnable {
     private PrintWriter out;
     private Server server;
     private boolean isPlaying = false;
+    private String color;
 
 
     public ClientHandler(Socket clientSocket, Registry registry) {
@@ -240,7 +242,7 @@ public class ClientHandler implements Runnable {
                         }
                     }
                 }
-                sendMenu();
+
             }
 
 
@@ -276,6 +278,14 @@ public class ClientHandler implements Runnable {
 
     public String getNickname() {
         return nickname;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public Socket getClientSocket() {
