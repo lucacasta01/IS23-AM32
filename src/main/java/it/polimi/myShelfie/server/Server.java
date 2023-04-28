@@ -141,11 +141,15 @@ public class Server implements Runnable{
     }
 
     public void killLobby(String UID){
-        for(Lobby l: lobbyList){
-            if(l.getLobbyUID().equals(UID)){
-                lobbyList.remove(l);
-                synchronized (l.actions){
-                    l.actions.add(new Action(Action.ActionType.LOBBYKILL, "server", null, null , null , null ));
+        synchronized (lobbyList){
+            Iterator<Lobby> iter =lobbyList.iterator();
+            while(iter.hasNext()){
+                Lobby l = iter.next();
+                if(l.getLobbyUID().equals(UID)){
+                    iter.remove();
+                    synchronized (l.actions){
+                        l.actions.add(new Action(Action.ActionType.LOBBYKILL, "server", null, null , null , null ));
+                    }
                 }
             }
         }
