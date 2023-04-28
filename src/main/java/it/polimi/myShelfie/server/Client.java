@@ -68,7 +68,7 @@ public class Client implements Runnable{
                     System.out.println(response.getInfoMessage());
                 }
                 else if(response.getResponseType() == Response.ResponseType.CHATMESSAGE){
-                    System.out.println("*NEW CHAT MESSAGE* : "+response.getChatMessage().getSender()+": "+response.getChatMessage().getMessage());
+                    System.out.println(">"+response.getChatMessage().getSender()+": "+response.getChatMessage().getMessage());
                 }
                 else if(response.getResponseType() == Response.ResponseType.VALID){
                     validRecieved = true;
