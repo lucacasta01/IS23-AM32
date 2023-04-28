@@ -105,6 +105,9 @@ public class ClientHandler implements Runnable {
 
             sendMenu();
             while((action=getAction())!=null){
+                if(server.lobbyOf(this)==null){
+                    lobbyCreated=false;
+                }
                 if(!lobbyCreated){
                     chose=action.getInfo();
                     while(action.getActionType() != Action.ActionType.INFO ||(action.getActionType()== Action.ActionType.INFO&&(!chose.equals("1") && !chose.equals("2") && !chose.equals("3") && !chose.equals("4") && !chose.equals("0")))){
@@ -410,7 +413,7 @@ public class ClientHandler implements Runnable {
         Gson gson = new Gson();
         out.println(gson.toJson(new Response(Response.ResponseType.UPDATE, null, view, null)));
     }
-    private void sendMenu(){
+    public void sendMenu(){
         sendInfoMessage("\n(1) New Game");
         sendInfoMessage("(2) Load last game");
         sendInfoMessage("(3) Join random game");

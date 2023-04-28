@@ -147,6 +147,7 @@ public class Server implements Runnable{
                 Lobby l = iter.next();
                 if(l.getLobbyUID().equals(UID)){
                     iter.remove();
+
                     synchronized (l.actions){
                         l.actions.add(new Action(Action.ActionType.LOBBYKILL, "server", null, null , null , null ));
                     }

@@ -229,7 +229,9 @@ public class Lobby implements Runnable{
                                 for(ClientHandler client:lobbyPlayers){
                                     client.sendInfoMessage("Lobby is being killed");
                                     client.setPlaying(false);
+                                    client.sendMenu();
                                 }
+                                iter.remove();
                                 ended=true;
                             }else if(a.getActionType()== Action.ActionType.HELP){
                                 sendCommands(ch);
@@ -257,7 +259,6 @@ public class Lobby implements Runnable{
 
             }
         }
-
     }
 
     private List<Player> generatePlayers(){
