@@ -227,7 +227,8 @@ public class Lobby implements Runnable{
                             }else if(a.getActionType()== Action.ActionType.LOBBYKILL){
                                 game.saveGame();
                                 for(ClientHandler client:lobbyPlayers){
-                                    client.sendInfoMessage("Lobby is killing");
+                                    client.sendInfoMessage("Lobby is being killed");
+                                    client.setPlaying(false);
                                 }
                                 ended=true;
                             }else if(a.getActionType()== Action.ActionType.HELP){
