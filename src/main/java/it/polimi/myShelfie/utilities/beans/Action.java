@@ -90,6 +90,7 @@ public class Action {
         PING,
         QUIT,
         PRINTBOARD,
-        ORDER
+        ORDER,
+        LOBBYKILL
     }
 }

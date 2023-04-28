@@ -97,6 +97,7 @@ public class Lobby implements Runnable{
                     throw new RuntimeException(e);
                 }
                 broadcastMessage("Starting new game");
+                this.isOpen = false;
                 game.addPlayer(generatePlayers());
                 game.saveGame();
                 broadcastMessage("Game board:\n"+game.getGameBoard().toString());
@@ -115,8 +116,8 @@ public class Lobby implements Runnable{
                         Iterator<Action> iter = actions.iterator();
                         while(iter.hasNext()){
                             Action a = iter.next();
-                            ClientHandler ch = clientHandlerOf(a.getNickname());
                             String nickname = a.getNickname();
+                            ClientHandler ch = clientHandlerOf(a.getNickname());
                             if(a.getActionType()== Action.ActionType.INFO){
                                 System.out.println("Info from:"+nickname+" "+a.getInfo());
                                 iter.remove();
@@ -150,17 +151,16 @@ public class Lobby implements Runnable{
                                 iter.remove();
                             }else if(a.getActionType()== Action.ActionType.SELECTCOLUMN){
                                 if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){
-                                    System.out.println("Column selected: "+a.getChosenColumn());
                                     if(collectedTiles==null){
                                         ch.sendDeny("Not selected tiles yet...");
                                     }else{
                                         if(game.insertTiles(collectedTiles, a.getChosenColumn())){
                                             ch.sendAccept("Tiles inserted correctly");
+                                            game.handleTurn();
                                         }else{
                                             ch.sendDeny("Cannot insert tiles in this column...");
                                         }
                                         ch.sendInfoMessage(game.getPlayers().get(game.getCurrentPlayer()).getMyShelf().toString());
-                                        game.handleTurn();
                                     }
                                 }else {
                                     if (ch != null) {
@@ -169,8 +169,52 @@ public class Lobby implements Runnable{
                                 }
                                 iter.remove();
                             }else if(a.getActionType()== Action.ActionType.PRINTBOARD){
-                                ch.sendInfoMessage(game.getGameBoard().toString());
+                                if(ch!=null){
+                                    ch.sendInfoMessage(game.getGameBoard().toString());
+                                }
                                 iter.remove();
+                            }else if(a.getActionType()==Action.ActionType.ORDER){
+                                if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)) {
+                                    String order = a.getInfo();
+                                    String[] Tiles = order.split(" ");
+                                    List<Tile> toInsert = new ArrayList<>();
+                                    if (this.collectedTiles != null) {
+                                        if (this.collectedTiles.size()!=0) {
+                                            for(String s:Tiles){
+                                                toInsert.add(this.collectedTiles.get(Integer.parseInt(s)));
+                                            }
+                                            this.collectedTiles.clear();
+                                            this.collectedTiles.addAll(toInsert);
+                                            if(ch!=null){
+                                                StringBuilder string = new StringBuilder();
+                                                for(Tile t: this.collectedTiles){
+                                                    string.append(t.getColor().toString()).append(" ");
+                                                }
+                                                ch.sendAccept("Order changed successfully"+string.toString());
+
+                                            }
+                                    }else{
+                                            if(ch!=null) {
+                                                ch.sendDeny("You haven't picked tiles yet...");
+                                            }
+                                        }
+                                    } else {
+                                        if(ch!=null) {
+                                            ch.sendDeny("You haven't picked tiles yet...");
+                                        }
+                                    }
+                                }else{
+                                    if(ch!=null){
+                                        ch.sendDeny("It's not your turn...");
+                                    }
+                                }
+                                iter.remove();
+                            }else if(a.getActionType()== Action.ActionType.LOBBYKILL){
+                                game.saveGame();
+                                for(ClientHandler client:lobbyPlayers){
+                                    client.sendInfoMessage("Lobby is killing");
+                                }
+                                ended=true;
                             }
                         }
                     }
@@ -239,7 +283,6 @@ public class Lobby implements Runnable{
         ch.setPlaying(false);
         broadcastMessage(ch.getNickname() + " connection lost");
         broadcastMessage("Game is closing...");
-        game.saveGame();
     }
 
     public boolean isOpen() {

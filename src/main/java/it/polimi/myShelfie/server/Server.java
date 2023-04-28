@@ -144,8 +144,8 @@ public class Server implements Runnable{
         for(Lobby l: lobbyList){
             if(l.getLobbyUID().equals(UID)){
                 lobbyList.remove(l);
-                for( ClientHandler ch: l.getLobbyPlayers()){
-                    ch.run();
+                synchronized (l.actions){
+                    l.actions.add(new Action(Action.ActionType.LOBBYKILL, "server", null, null , null , null ));
                 }
             }
         }

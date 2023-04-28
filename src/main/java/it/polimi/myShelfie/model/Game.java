@@ -350,13 +350,17 @@ public class Game implements Runnable{
      * @return a list containing the picked tiles
      */
     public List<Tile> collectTile(Position pos1, Position pos2){
-        if(this.gameBoard.isCatchable(pos1.getRow(), pos1.getColumn())&&this.gameBoard.isCatchable(pos2.getRow(), pos2.getColumn())) {
+        if(areCatchable(pos1, pos2)) {
             Tile[][] currentGrid = this.gameBoard.getGrid();
             List<Tile> toReturn = new ArrayList<>();
-            toReturn.add(currentGrid[pos1.getRow()][pos1.getColumn()]);
-            toReturn.add(currentGrid[pos2.getRow()][pos2.getColumn()]);
-            currentGrid[pos1.getRow()][pos1.getColumn()].setColor(Tile.Color.NULLTILE);
-            currentGrid[pos2.getRow()][pos2.getColumn()].setColor(Tile.Color.NULLTILE);
+            Tile t1 = currentGrid[pos1.getRow()][pos1.getColumn()];
+            Tile t2 = currentGrid[pos2.getRow()][pos2.getColumn()];
+            toReturn.add(new Tile(t1.getImagePath(), t1.getColor()));
+            toReturn.add(new Tile(t2.getImagePath(), t2.getColor()));
+            t1.setColor(Tile.Color.NULLTILE);
+            t1.setImagePath("graphics/itemTiles/Transparent.png");
+            t2.setColor(Tile.Color.NULLTILE);
+            t2.setImagePath("graphics/itemTiles/Transparent.png");
             return toReturn;
         }else{
             return null;
@@ -368,20 +372,52 @@ public class Game implements Runnable{
      * @return a list containing the picked tiles
      */
     public List<Tile> collectTile(Position pos1, Position pos2, Position pos3){
-        if(this.gameBoard.isCatchable(pos1.getRow(), pos1.getColumn())&&this.gameBoard.isCatchable(pos2.getRow(), pos2.getColumn())&&this.gameBoard.isCatchable(pos3.getRow(), pos3.getColumn())) {
+        if(areCatchable(pos1, pos2, pos3)) {
             Tile[][] currentGrid = this.gameBoard.getGrid();
             List<Tile> toReturn = new ArrayList<>();
-            toReturn.add(currentGrid[pos1.getRow()][pos1.getColumn()]);
-            toReturn.add(currentGrid[pos2.getRow()][pos2.getColumn()]);
-            toReturn.add(currentGrid[pos3.getRow()][pos3.getColumn()]);
-            currentGrid[pos1.getRow()][pos1.getColumn()].setColor(Tile.Color.NULLTILE);
-            currentGrid[pos2.getRow()][pos2.getColumn()].setColor(Tile.Color.NULLTILE);
-            currentGrid[pos3.getRow()][pos3.getColumn()].setColor(Tile.Color.NULLTILE);
+            Tile t1 = currentGrid[pos1.getRow()][pos1.getColumn()];
+            Tile t2 = currentGrid[pos2.getRow()][pos2.getColumn()];
+            Tile t3 = currentGrid[pos3.getRow()][pos3.getColumn()];
+            toReturn.add(new Tile(t1.getImagePath(), t1.getColor()));
+            toReturn.add(new Tile(t2.getImagePath(), t2.getColor()));
+            toReturn.add(new Tile(t3.getImagePath(), t3.getColor()));
+            t1.setColor(Tile.Color.NULLTILE);
+            t1.setImagePath("graphics/itemTiles/Transparent.png");
+            t2.setColor(Tile.Color.NULLTILE);
+            t2.setImagePath("graphics/itemTiles/Transparent.png");
+            t3.setColor(Tile.Color.NULLTILE);
+            t3.setImagePath("graphics/itemTiles/Transparent.png");
             return toReturn;
         }else{
             return null;
         }
     }
+
+    private boolean areCatchable(Position pos1, Position pos2){
+        if(this.gameBoard.isCatchable(pos1.getRow(), pos1.getColumn())&&this.gameBoard.isCatchable(pos2.getRow(), pos2.getColumn())){
+            if((pos1.getRow()==pos2.getRow())||(pos1.getColumn()==pos2.getColumn())){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+
+    private boolean areCatchable(Position pos1, Position pos2, Position pos3){
+        if(this.gameBoard.isCatchable(pos1.getRow(), pos1.getColumn())&&this.gameBoard.isCatchable(pos2.getRow(), pos2.getColumn())&&this.gameBoard.isCatchable(pos3.getRow(), pos3.getColumn())){
+            if(((pos1.getRow()== pos2.getRow())&&(pos2.getRow()==pos3.getRow()))||((pos1.getColumn()== pos2.getColumn())&&(pos2.getColumn()==pos3.getColumn()))){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+
+
 
     /**
      * Takes a list of tiles as parameter and adds it inside the player's shelf by
@@ -390,7 +426,7 @@ public class Game implements Runnable{
     public boolean insertTiles(List<Tile> toInsert, int column){
         Player current = this.players.get(currentPlayer);
         Shelf currentShelf = current.getMyShelf();
-        if(currentShelf.maxInsert()>=toInsert.size()) {
+        if(currentShelf.freeTiles(column)>=toInsert.size()) {
             for (Tile t : toInsert) {
                 currentShelf.insertTile(t, column);
             }

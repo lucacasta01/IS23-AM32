@@ -263,17 +263,19 @@ public class ClientHandler implements Runnable {
             synchronized (server.getUserGame()){
                 server.saveUserGame();
             }
-
             if(this.isPlaying){
                 Lobby lobby = server.lobbyOf(this);
                 lobby.clientError(this);
-                server.getLobbyList().remove(lobby);
             }
 
-            this.shutdown();
             server.getConnectedClients().remove(this);
             if(server.getUserGame().get(this.nickname).equals("-")){
                 server.getUserGame().remove(this.nickname);
+            }
+            this.shutdown();
+            if(server.lobbyOf(this)!=null){
+                Lobby lobby =server.lobbyOf(this);
+                server.killLobby(lobby.getLobbyUID());
             }
 
             //handle lost connection, save and close game.
