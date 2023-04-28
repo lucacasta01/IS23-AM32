@@ -89,6 +89,7 @@ public class Action {
         INFO,
         PING,
         QUIT,
-        PRINTBOARD
+        PRINTBOARD,
+        ORDER
     }
 }

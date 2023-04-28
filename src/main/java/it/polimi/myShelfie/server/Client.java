@@ -12,6 +12,7 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class Client implements Runnable{
@@ -190,6 +191,39 @@ public class Client implements Runnable{
                         Action a = new Action(Action.ActionType.PRINTBOARD,nickname,"",null,null,null);
                         sendAction(a);
                     }
+                    else if(message.startsWith("/order")){
+                        int index = "/order".length()+1;
+                        String substr = message.substring(index);
+                        List<String> tiles = List.of(substr.split(" "));
+                        List<String> newOrder = new ArrayList<>();
+                        List<String> newOrderColors = new ArrayList<>();
+                        Integer p=0;
+                        for(String t : tiles){
+                            if(isColor(t)){
+                               newOrder.add(p.toString());
+                               newOrderColors.add(t);
+                            }
+                            p++;
+                        }
+                        if(newOrder.size() == tiles.size() && new HashSet<>(newOrderColors).containsAll(tiles)){
+                            StringBuilder builder = new StringBuilder();
+                            for(int i=0;i<newOrder.size();i++){
+                                builder.append(newOrder.get(i));
+                                if(i!= newOrder.size()-1){
+                                    builder.append(" ");
+                                }
+                            }
+                            Action a = new Action(Action.ActionType.ORDER,nickname,"",builder.toString(),null,null);
+                            sendAction(a);
+                        }
+                        else if(!new HashSet<>(newOrderColors).containsAll(tiles)){
+                            System.out.println("You must chose the tiles you have collected");
+                        }
+                        else{
+                            System.out.println("Wrong command syntax. Use: /order [color1][color2][color3](opt.)");
+                        }
+
+                    }
                     else {
                         Action a = new Action(Action.ActionType.INFO,nickname,"",message,null,null);
                         sendAction(a);
@@ -199,6 +233,10 @@ public class Client implements Runnable{
                 }
 
             }
+        }
+        private boolean isColor(String s){
+            return s.equals("W") || s.equals("B") || s.equals("L") ||
+                    s.equals("P") || s.equals("G") || s.equals("Y");
         }
     }
     private Response recieveResponse(String jString) throws IOException {
