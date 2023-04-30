@@ -1,6 +1,8 @@
-package it.polimi.myShelfie.server;
+package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.myShelfie.controller.ClientHandler;
+import it.polimi.myShelfie.controller.Lobby;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.beans.Action;
@@ -10,7 +12,6 @@ import java.io.*;
 import java.net.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.rmi.Remote;
 import java.util.*;
 import java.rmi.registry.*;
 import java.util.concurrent.ExecutorService;

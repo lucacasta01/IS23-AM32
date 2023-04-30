@@ -1,9 +1,6 @@
 package it.polimi.myShelfie.utilities.beans;
 
 import it.polimi.myShelfie.model.Position;
-import it.polimi.myShelfie.model.Tile;
-import it.polimi.myShelfie.server.Lobby;
-import it.polimi.myShelfie.utilities.ColorPosition;
 
 import java.util.List;
 

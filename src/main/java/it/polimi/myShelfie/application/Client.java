@@ -1,6 +1,5 @@
-package it.polimi.myShelfie.server;
+package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import it.polimi.myShelfie.model.Position;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.JsonParser;
@@ -154,7 +153,6 @@ public class Client implements Runnable{
     class InputHandler implements Runnable {
 
         public void run() {
-
             String message;
             BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
             while(!done){
@@ -182,7 +180,7 @@ public class Client implements Runnable{
                         String[] pos = substr.split(" ");
                         List<Position> tilesSelected = new ArrayList<>();
                         for(String s : pos){
-                            tilesSelected.add(new Position(Integer.parseInt(s.split(",")[0]), Integer.parseInt(s.split(",")[1])));
+                            tilesSelected.add(new Position(Integer.parseInt(s.split(",")[0])-1, Integer.parseInt(s.split(",")[1])-1));
                         }
                         Action a = new Action(Action.ActionType.PICKTILES,nickname,"","",tilesSelected,null);
                         sendAction(a);
@@ -190,7 +188,7 @@ public class Client implements Runnable{
                     else if(message.startsWith("/column")){
                         int index = "/column ".length();
                         String substr = message.substring(index);
-                        int col = Integer.parseInt(substr.substring(0,1));
+                        int col = Integer.parseInt(substr.substring(0,1))-1;
                         Action a = new Action(Action.ActionType.SELECTCOLUMN,nickname,"","",null,col);
                         sendAction(a);
                     }

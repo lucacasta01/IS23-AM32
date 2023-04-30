@@ -1,7 +1,7 @@
-package it.polimi.myShelfie.server;
+package it.polimi.myShelfie.controller;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.Utils;
@@ -16,12 +16,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.rmi.Remote;
 import java.rmi.registry.Registry;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ClientHandler implements Runnable {
     private Socket clientSocket;
@@ -124,7 +120,7 @@ public class ClientHandler implements Runnable {
                         chose = action.getInfo();
                     }
 
-                        sendAccept("Game mode selected");
+                        //sendAccept("Game mode selected");
                         switch (chose) {
                             case "1" -> {
                                 sendInfoMessage("* CREATE NEW GAME *\n");
@@ -151,6 +147,7 @@ public class ClientHandler implements Runnable {
 
                                 if (!userGame.containsKey(nickname) || userGame.get(nickname).equals("-")) {
                                     sendDeny("No game found");
+                                    sendMenu();
                                 } else {
                                     Lobby lobby = new Lobby(this, userGame.get(nickname));
                                     sendInfoMessage("Joining game " + userGame.get(nickname));
@@ -171,7 +168,7 @@ public class ClientHandler implements Runnable {
                                 }
                                 for (Lobby l : lobbyList) {
                                     if (l.isOpen()) {
-                                        System.out.println(nickname + "joined game " + l.getLobbyUID());
+                                        System.out.println(nickname + " joined game " + l.getLobbyUID());
                                         synchronized (server.getUserGame()) {
                                             server.getUserGame().put(nickname, l.getLobbyUID());
                                             server.saveUserGame();
@@ -184,6 +181,7 @@ public class ClientHandler implements Runnable {
                                 }
                                 if (!flag) {
                                     sendInfoMessage("No game available. You should create a new one");
+                                    sendMenu();
                                 }
                             }
                             case "4" -> {
@@ -221,6 +219,7 @@ public class ClientHandler implements Runnable {
                                     }
                                 } else {
                                     sendInfoMessage("No lobby was found.");
+                                    sendMenu();
                                 }
 
                             }
@@ -414,6 +413,36 @@ public class ClientHandler implements Runnable {
     public synchronized void sendView(View view) {
         Gson gson = new Gson();
         out.println(gson.toJson(new Response(Response.ResponseType.UPDATE, null, view, null)));
+    }
+
+    public synchronized void sendHelpMessage(){
+        /*String[][] data = {
+                { "Command", "Arguments", "Note"},
+                { "/chat", "text message","use it to send a chat message to other players"},
+                { "/collect", "r1,c1 (r2,c2) (r3,c3)", "game command to collect tiles from the board"},
+                { "/order", "C1 C2 C3", "use it if you want change the tiles order before insert them in your shelf"},
+                {"/column", "col number", "game command to insert the tiles you have collected into your shelf at the selected column"},
+                {"/quit","-","exit from the game"}
+        };
+
+        int[] colWidths = { 5, 10, 10 };
+
+        for (String[] row : data) {
+            for (int i = 0; i < row.length; i++) {
+                System.out.printf("%-" + colWidths[i] + "s", row[i]);
+            }
+            System.out.println();
+        }*/
+
+        StringBuilder string = new StringBuilder();
+        string.append("\t\t\t\t\t\t"+ ANSI.BOLD+ANSI.ITALIQUE+"****** MY SHELFIE ******"+ANSI.RESET_STYLE+"\n\n");
+        string.append(ANSI.BOLD+"Command\t\t\tArguments\t\t\t\tNotes"+ANSI.RESET_STYLE+"\n");
+        string.append("/chat\t\t\ttext message\t\t\tuse it to send a chat message to other players\n");
+        string.append("/collect\t\tr1,c1 (r2,c2) (r3,c3)\t\tgame command to collect tiles from the board\n");
+        string.append("/order\t\t\tC1 C2 C3\t\t\t\tuse it if you want change the tiles order before insert them in your shelf\n");
+        string.append("/column\t\t\tcol number\t\t\t\tgame command to insert the tiles you have collected into your shelf at the selected column\n");
+        string.append("/quit\t\t\t-\t\t\t\t\t\texit from the game\n");
+        sendInfoMessage(string.toString());
     }
     public void sendMenu(){
         sendInfoMessage("\n(1) New Game");

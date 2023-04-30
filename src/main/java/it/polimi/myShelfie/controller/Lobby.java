@@ -1,18 +1,15 @@
-package it.polimi.myShelfie.server;
+package it.polimi.myShelfie.controller;
 
+import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Position;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.model.cards.PersonalGoalCard;
 import it.polimi.myShelfie.utilities.ANSI;
-import it.polimi.myShelfie.utilities.JsonParser;
-import it.polimi.myShelfie.utilities.Utils;
 import it.polimi.myShelfie.utilities.beans.Action;
-import it.polimi.myShelfie.utilities.beans.GameParameters;
 import it.polimi.myShelfie.utilities.beans.View;
 
-import java.io.IOException;
 import java.util.*;
 
 public class Lobby implements Runnable{
@@ -107,6 +104,9 @@ public class Lobby implements Runnable{
                     throw new RuntimeException(e);
                 }
                 broadcastMessage("Starting new game");
+                for(ClientHandler ch : lobbyPlayers) {
+                    sendCommands(ch);
+                }
                 this.isOpen = false;
                 game.addPlayer(generatePlayers());
                 game.saveGame();
@@ -131,7 +131,7 @@ public class Lobby implements Runnable{
                                 System.out.println("Info from:"+nickname+" "+a.getInfo());
                                 iter.remove();
                             } else if (a.getActionType()== Action.ActionType.CHAT) {
-                                sendChat(ch.getColor()+nickname+ANSI.RESET, a.getChatMessage());
+                                sendChat(ANSI.BOLD+ch.getColor()+nickname+ANSI.RESET_COLOR+ANSI.RESET_STYLE,ANSI.ITALIQUE +a.getChatMessage()+ANSI.RESET_STYLE);
                                 iter.remove();
                             }else if(a.getActionType()== Action.ActionType.PICKTILES){
                                 if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){
@@ -290,16 +290,7 @@ public class Lobby implements Runnable{
         return lobbyPlayers.size();
     }
     private void sendCommands(ClientHandler ch){
-        StringBuilder string = new StringBuilder();
-        string.append("*** MY SHELFIE ***\n\n");
-        string.append("Command list:\n");
-        string.append("/chat\t\t\t\t\t\t\t\tBroadcast message between lobby players\n");
-        string.append("/collect x1,y1 (x2,y2) (x3,y3)\t\tCommand to collect tiles from the board\n");
-        string.append("/order C1 C2 C3\t\t\t\t\t\tCommand to select in which order insert the collected tiles in the shelf\n");
-        string.append("/column x\t\t\t\t\t\t\tSelect in whic column of the shelf insert the selected tiles\n");
-        string.append("/printboard\t\t\t\t\t\t\tPrint the up-to-date board\n");
-        string.append("/quit\t\t\t\t\t\t\t\tExit from the game\n");
-        ch.sendInfoMessage(string.toString());
+        ch.sendHelpMessage();
     }
 
     private void handleTurn(ClientHandler current){
@@ -356,7 +347,7 @@ public class Lobby implements Runnable{
     }
     public void sendChat(String sender, String message){
         for(ClientHandler ch : lobbyPlayers){
-            if(!(ch.getColor()+ch.getNickname()+ANSI.RESET).equals(sender)){
+            if(!(ANSI.BOLD+ch.getColor()+ch.getNickname()+ANSI.RESET_COLOR+ANSI.RESET_STYLE).equals(sender)){
                 ch.sendChatMessage(message, sender);
             }
         }
@@ -366,17 +357,14 @@ public class Lobby implements Runnable{
         View view = new View();
         List<String> toSend = new ArrayList<>();
         view.setBoard(this.game.getGameBoard().toString());
+
+        for(Player p: game.getPlayers()){
+            toSend.add(clientHandlerOf(p.getUsername()).getColor()+ p.getUsername()+ANSI.RESET_COLOR+"\n"+p.getMyShelf().toString());
+        }
+
+        view.setShelves(toSend);
+
         for(ClientHandler ch:lobbyPlayers){
-            for(Player p:game.getPlayers()){
-                if(p.getUsername().equals(ch.getNickname())){
-                    String s = "You:\nScore "+p.getScore()+"\n"+p.getMyShelf().toString();
-                    toSend.add(s);
-                }else{
-                    String s = p.getUsername()+":\nScore "+p.getScore()+"\n"+p.getMyShelf().toString();
-                    toSend.add(s);
-                }
-            }
-            view.setShelves(toSend);
             ch.sendView(view);
         }
 

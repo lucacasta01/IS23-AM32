@@ -125,6 +125,10 @@ public class Shelf {
             }
             s.append("\n");
         }
+        for(int i=0;i<Constants.SHELFCOLUMN;i++){
+            s.append(i+1).append("\t");
+        }
+        s.append("\n");
         return s.toString();
     }
 }

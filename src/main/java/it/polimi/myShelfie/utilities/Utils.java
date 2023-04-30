@@ -1,8 +1,6 @@
 package it.polimi.myShelfie.utilities;
 
-import it.polimi.myShelfie.model.cards.SharedGoal1Card;
-import it.polimi.myShelfie.model.cards.SharedGoalCard;
-import it.polimi.myShelfie.server.Server;
+import it.polimi.myShelfie.application.Server;
 
 import java.util.Random;
 

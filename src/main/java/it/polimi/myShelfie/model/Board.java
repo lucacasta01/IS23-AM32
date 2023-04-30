@@ -227,10 +227,10 @@ public class Board {
         StringBuilder s = new StringBuilder();
         s.append("\t");
         for(int i=0;i<Constants.BOARD_DIM;i++)
-            s.append(i).append(" | ");
+            s.append(i+1).append(" | ");
         s.append("\n");
         for(int i=0;i<Constants.BOARD_DIM;i++){
-            s.append(i).append("\t");
+            s.append(i+1).append("\t");
             for(int j=0;j<Constants.BOARD_DIM;j++){
                 s.append(grid[i][j].toString()).append(" | ");
             }
