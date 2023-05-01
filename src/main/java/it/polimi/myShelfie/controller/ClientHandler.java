@@ -236,9 +236,12 @@ public class ClientHandler implements Runnable {
                     for(Lobby l:server.getLobbyList()){
                         for(ClientHandler ch: l.getLobbyPlayers()){
                             if(ch.equals(this)){
-                                synchronized (l.actions){
-                                    l.recieveAction(action);
-                                    l.actions.notifyAll();
+                                if(action.getActionType()!= Action.ActionType.QUIT){
+                                    synchronized (l.actions){
+                                        l.recieveAction(action);
+                                        l.actions.notifyAll();
+                                }
+
                                 }
                             }
                         }
