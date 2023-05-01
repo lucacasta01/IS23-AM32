@@ -84,7 +84,7 @@ public class Game implements Runnable{
         gameParameters.setCurrentPlayer(this.currentPlayer);
 
         for(Player p : players){
-            gameParameters.addUsername(p.getUsername() + " - " + p.getIpAddress());
+            gameParameters.addUsername(p.getUsername());
             gameParameters.addShelf(p.getMyShelf().toColorPosition());
             gameParameters.addScore(p.getScore());
             gameParameters.addPersonalCard(p.getMyGoalCard().getIndex());

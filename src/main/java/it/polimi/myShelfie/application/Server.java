@@ -37,7 +37,7 @@ public class Server implements Runnable{
             lobbyList = new ArrayList<>();
             serverSocket = new ServerSocket(Constants.PORT);
             registry = LocateRegistry.createRegistry(Constants.PORT+1);
-            userGame = new HashMap<>();
+            userGame = loadUserGame();
         }
         catch(Exception e){
             System.err.println("Server side exception thrown: " + e.toString());
@@ -148,9 +148,9 @@ public class Server implements Runnable{
                 Lobby l = iter.next();
                 if(l.getLobbyUID().equals(UID)){
                     iter.remove();
-
                     synchronized (l.actions){
                         l.actions.add(new Action(Action.ActionType.LOBBYKILL, "server", null, null , null , null ));
+                        l.actions.notifyAll();
                     }
                 }
             }

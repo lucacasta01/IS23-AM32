@@ -15,4 +15,5 @@ target/
 #User
 *.class
 src/config/savedgames/
+src/config/usergame.json
 src/main/java/it/polimi/myshelfie/utilities/Constants.java

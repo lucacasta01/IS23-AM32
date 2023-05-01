@@ -162,8 +162,6 @@ public class Client implements Runnable{
                     if(message.equals("/quit")){
                         Action a = new Action(Action.ActionType.QUIT, nickname, "", "", null, null);
                         sendAction(a);
-                        out.println(message);
-                        System.out.println("quitting...");
                         inReader.close();
                         shutdown();
                     }
@@ -189,8 +187,13 @@ public class Client implements Runnable{
                         int index = "/column ".length();
                         String substr = message.substring(index);
                         int col = Integer.parseInt(substr.substring(0,1))-1;
-                        Action a = new Action(Action.ActionType.SELECTCOLUMN,nickname,"","",null,col);
-                        sendAction(a);
+                        if(col<0 || col >5){
+                            System.out.println("Invalid column number");
+                        }
+                        else {
+                            Action a = new Action(Action.ActionType.SELECTCOLUMN,nickname,"","",null,col);
+                            sendAction(a);
+                        }
                     }
                     else if(message.startsWith("/printboard")){
                         Action a = new Action(Action.ActionType.PRINTBOARD,nickname,"",null,null,null);
