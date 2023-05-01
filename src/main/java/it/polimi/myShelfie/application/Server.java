@@ -152,6 +152,7 @@ public class Server implements Runnable{
                         l.actions.add(new Action(Action.ActionType.LOBBYKILL, "server", null, null , null , null ));
                         l.actions.notifyAll();
                     }
+                    iter.remove();
                 }
             }
         }

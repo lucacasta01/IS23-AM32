@@ -255,12 +255,6 @@ public class ClientHandler implements Runnable {
                 }
 
             }
-
-
-            //firt case: finding a saved game
-
-
-
         } catch (Exception e) {
             server.removeClient(this);
             shutdown();
