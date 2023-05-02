@@ -1,6 +1,7 @@
 package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
 import it.polimi.myShelfie.model.Position;
+import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.beans.Action;
@@ -81,10 +82,22 @@ public class Client implements Runnable{
                 }
                 else if (response.getResponseType() == Response.ResponseType.UPDATE) {
                     view = response.getView();
-                    System.out.println(view.getBoard()+"\n");
+                    //shelves
                     for(String s : view.getShelves()){
                         System.out.println(s+"\n");
                     }
+                    //personal card
+                    System.out.println(ANSI.ITALIQUE + "Personal goal card:" + ANSI.RESET_STYLE);
+                    System.out.println(view.getPersonalCard());
+
+                    //shared cards
+                    for(int i=0;i<view.getSharedCards().size();i++) {
+                        System.out.println(ANSI.ITALIQUE +"Shared goal "+(i+1)+": "+ ANSI.RESET_STYLE);
+                        System.out.println(view.getSharedCards().get(i)+"\n");
+                    }
+                    //board
+                    System.out.println(ANSI.ITALIQUE + "Board:" + ANSI.RESET_STYLE);
+                    System.out.println(view.getBoard()+"\n");
                 }
                 else if(response.getResponseType() == Response.ResponseType.PING){
                   //ping messages are thrown away
