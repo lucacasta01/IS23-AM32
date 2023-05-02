@@ -21,6 +21,7 @@ public class Response {
         DENIED,
         INFO,
         PING,
+        PONG,
         SHUTDOWN
     }
 

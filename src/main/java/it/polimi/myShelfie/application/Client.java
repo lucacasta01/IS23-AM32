@@ -30,6 +30,7 @@ public class Client implements Runnable{
     private Response response;
     private boolean validRecieved = false;
     private View view;
+    private final List<PingObject> pongResponses = new ArrayList<>();
 
     @Override
     public void run() {
@@ -59,6 +60,7 @@ public class Client implements Runnable{
             Thread t = new Thread(inHandler);
             t.start();
 
+            pingThread().start();
 
             String inMessage;
 
@@ -99,10 +101,16 @@ public class Client implements Runnable{
                     System.out.println(ANSI.ITALIQUE + "Board:" + ANSI.RESET_STYLE);
                     System.out.println(view.getBoard()+"\n");
                 }
-                else if(response.getResponseType() == Response.ResponseType.PING){
-                  //ping messages are thrown away
-                }
-                else if(response.getResponseType() == Response.ResponseType.SHUTDOWN){
+                else if(response.getResponseType() == Response.ResponseType.PONG){
+                    synchronized (pongResponses){
+                        pongResponses.add(new PingObject(false));
+                        pongResponses.notifyAll();
+                    }
+
+                } else if (response.getResponseType() == Response.ResponseType.PING) {
+                    sendAction(new Action(Action.ActionType.PONG,nickname,null,null,null,null));
+
+                } else if(response.getResponseType() == Response.ResponseType.SHUTDOWN){
                     System.out.println(response.getInfoMessage());
                     shutdown();
                 }
@@ -130,29 +138,62 @@ public class Client implements Runnable{
     }
 
     public Thread pingThread(){
+
         return new Thread(){
           public void run(){
               while(true) {
                   try {
                       sendAction(new Action(Action.ActionType.PING, null, null, null, null, null));
                   } catch (IOException e) {
-                      if(client.isConnected()) {
-                          System.exit(10);
+                      System.exit(10);
+                  }
+
+                  SwapElapsed swapElapsed = new SwapElapsed();
+                  swapElapsed.start();
+
+
+                  while(pongResponses.size() == 0){
+                      synchronized (pongResponses) {
+                          try {
+                              pongResponses.wait();
+                          } catch (InterruptedException e) {
+                              throw new RuntimeException(e);
+                          }
                       }
                   }
-                  try {
-                      sleep(1000);
-                  } catch (InterruptedException e) {
-                      throw new RuntimeException(e);
+
+
+                  if(pongResponses.get(0).isElapsed()) {
+                      System.out.println("Server offline: closing...");
+                      shutdown();
                   }
+                  else{
+                      try {
+                          swapElapsed.setRunning(false);
+                      }
+                      catch (Exception e){
+                          //ignore
+                      }
+                      synchronized (pongResponses) {
+                          pongResponses.remove(0);
+                      }
+                      try {
+                          sleep(1000);
+                      } catch (InterruptedException e) {
+                          throw new RuntimeException(e);
+                      }
+
+                  }
+
               }
           }
         };
     }
 
+
+
     public static void main(String[] args) {
         Client client = new Client();
-        //client.pingThread().start();
         try {
             client.run();
         }
@@ -270,4 +311,51 @@ public class Client implements Runnable{
         }
     }
 
+    class SwapElapsed extends Thread{
+        private boolean isRunning = true;
+
+        public boolean isRunning() {
+            return isRunning;
+        }
+
+        public void setRunning(boolean running) {
+            isRunning = running;
+        }
+
+        @Override
+        public void run() {
+            int time = 0;
+            while (isRunning() && time < 10000) {
+                try {
+                    Thread.sleep(500);
+                    time += 500;
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if (isRunning()) {
+                synchronized (pongResponses) {
+                    pongResponses.add(new PingObject(true));
+                    pongResponses.notifyAll();
+                }
+            }
+        }
+    }
+
 }
+
+class PingObject{
+    private boolean isElapsed;
+    public PingObject(boolean isElapsed){
+        this.isElapsed = isElapsed;
+    }
+
+    public boolean isElapsed() {
+        return isElapsed;
+    }
+
+    public void setElapsed(boolean elapsed) {
+        isElapsed = elapsed;
+    }
+}
+
