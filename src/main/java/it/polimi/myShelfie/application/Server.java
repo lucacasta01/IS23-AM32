@@ -183,7 +183,7 @@ public class Server implements Runnable{
         return count>1;
     }
 
-    public Thread createPingThread(){
+    public Thread PingThread(){
         Server server = Server.getInstance();
         return new Thread(){
             public void run() {

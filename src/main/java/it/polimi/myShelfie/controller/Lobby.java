@@ -127,25 +127,26 @@ public class Lobby implements Runnable{
         else if(this.gameMode == GameMode.SAVEDGAME && !close){
             try{
                 game = new Game(lobbyUID);
+                playersNumber = game.getOldGamePlayers().size();
+                try {
+                    broadcastMessage("Waiting for players..." + " " + "(" + getLobbySize() + "/" + getPlayersNumber() + ")");
+                    waitForPlayers();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                game.setPlayers(game.getOldGamePlayers());
             }catch(Exception e){
                 broadcastMessage("No configuration file found...");
                 Server.getInstance().getLobbyList().remove(this);
-                Server.getInstance().removeClient(clientHandlerOf(lobbyPlayers.get(0).getNickname()));
-                Server.getInstance().getUserGame().remove(lobbyPlayers.get(0).getNickname());
+                Server.getInstance().removeClient(lobbyPlayers.get(0));
+                String oldUID = this.lobbyUID;
+                Server.getInstance().getUserGame().entrySet().removeIf(entry -> entry.getValue().equals(oldUID));
                 Server.getInstance().saveUserGame();
                 System.out.println("Lobby " + this.lobbyUID + " killed");
-                lobbyPlayers.get(0).sendShutdown();
                 close = true;
+                this.lobbyPlayers.get(0).sendMenu();
             }
 
-            playersNumber = game.getOldGamePlayers().size();
-            try {
-                broadcastMessage("Waiting for players..." + " " + "(" + getLobbySize() + "/" + getPlayersNumber() + ")");
-                waitForPlayers();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            game.setPlayers(game.getOldGamePlayers());
         }
 
         if(!close){

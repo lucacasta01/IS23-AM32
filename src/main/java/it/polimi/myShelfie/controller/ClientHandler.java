@@ -84,6 +84,8 @@ public class ClientHandler implements Runnable {
                     else if(action.getActionType() == Action.ActionType.QUIT){
                         sendShutdown();
                         shutdown();
+                    }else if(action.getActionType() == Action.ActionType.PING){
+                        sendPong();
                     }
 
                     action = getAction();
@@ -127,6 +129,8 @@ public class ClientHandler implements Runnable {
                             sendShutdown();
                             shutdown();
                             System.out.println(nickname + " disconnected");
+                        }else if(action.getActionType() == Action.ActionType.PING){
+                            sendPong();
                         }
                         action = getAction();
                         chose = action.getInfo();
@@ -260,7 +264,9 @@ public class ClientHandler implements Runnable {
                         for(ClientHandler ch: l.getLobbyPlayers()){
                             if(ch.equals(this)){
                                 synchronized (l.actions){
-                                    if(action.getActionType() != Action.ActionType.QUIT) {
+                                    if(action.getActionType()== Action.ActionType.PING){
+                                        sendPong();
+                                    }else if(action.getActionType() != Action.ActionType.QUIT) {
                                         l.recieveAction(action);
                                         l.actions.notifyAll();
                                     }
@@ -405,6 +411,16 @@ public class ClientHandler implements Runnable {
             out.println(gson.toJson(new Response(Response.ResponseType.DENIED, null ,null,message)));
         } catch (Exception e) {
             System.out.println("Error occurred while sending a message: " + e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    public synchronized  void sendPong(){
+        Gson gson = new Gson();
+        try {
+            out.println(gson.toJson(new Response(Response.ResponseType.PONG, null ,null,null)));
+        } catch (Exception e) {
+            System.out.println("Error occurred while sending a pong: " + e.toString());
             e.printStackTrace();
         }
     }
