@@ -95,7 +95,7 @@ public class PersonalGoalCard extends Card{
         return toReturn;
     }
 
-    private Integer checkPersonalGoal(Shelf s){
+    public Integer checkPersonalGoal(Shelf s){
         Tile[][] toCheck = s.getTileMartrix();
         int score = 0;
         for(int i = 0; i<Constants.SHELFROW; i++){

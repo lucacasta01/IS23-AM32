@@ -6,10 +6,14 @@ import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Position;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.model.cards.PersonalGoalCard;
+import it.polimi.myShelfie.model.cards.SharedGoalCard;
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.View;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class Lobby implements Runnable{
@@ -24,7 +28,8 @@ public class Lobby implements Runnable{
 
     private Game game;
     public final List<Action> actions = new ArrayList<>();
-
+    private boolean isLastTurn = false;
+    private Integer index = null;
     /**
      * Create a lobby for a new game
      *
@@ -148,6 +153,7 @@ public class Lobby implements Runnable{
                 sendCommands(ch);
             }
             this.isOpen = false;
+
             game.saveGame();
             broadcastUpdate();
             while (!ended) {
@@ -205,7 +211,19 @@ public class Lobby implements Runnable{
                                     if (game.insertTiles(collectedTiles, a.getChosenColumn())) {
                                         ch.sendAccept("Tiles inserted correctly");
                                         ch.sendInfoMessage(game.getPlayers().get(game.getCurrentPlayer()).getMyShelf().toString());
+                                        endTurnChecks(ch);
                                         broadcastUpdate();
+                                        if(isLastTurn){
+                                            index = lobbyPlayers.indexOf(ch);
+                                                if(index==lobbyPlayers.size()){
+                                                    broadcastMessage("** GAME ENDED! **");
+                                                    ended = true;
+                                                    game.setFinished(true);
+                                                }
+                                        }
+                                        if(this.game.getGameBoard().needToRefill()){
+                                            this.game.getGameBoard().initBoard(this.playersNumber);
+                                        }
                                         handleTurn(ch);
                                     } else {
                                         ch.sendDeny("Cannot insert tiles in this column...");
@@ -280,6 +298,32 @@ public class Lobby implements Runnable{
                     }
                 }
             }
+            //END OF GAME CHECKS
+            if(game.isFinished()){
+                endGameChecks();
+                String rank = game.getRank();
+                broadcastMessage(rank);
+                broadcastMessage("Closing...");
+
+                for(ClientHandler ch : lobbyPlayers){
+                    Server.getInstance().getUserGame().remove(ch);
+                }
+                Server.getInstance().saveUserGame();
+
+                //delete saved game
+                Path path = Paths.get("src/config/savedgames/"+this.lobbyUID+".json");
+                if(path.toFile().isFile()){
+                    if(path.toFile().delete()){
+                        System.out.println("Successfully deleted saved game file");
+                    }else{
+                        System.out.println("Error while deleting saved game file");
+                    }
+                }
+                for(ClientHandler ch:lobbyPlayers){
+                    ch.sendMenu();
+                }
+                Server.getInstance().getLobbyList().remove(this);
+            }
         }
 
     }
@@ -318,10 +362,7 @@ public class Lobby implements Runnable{
     private void handleTurn(ClientHandler current){
         Player p = this.game.getPlayers().get(this.game.getCurrentPlayer());
         PersonalGoalCard card = p.getMyGoalCard();
-        //todo personal card checkpattern
-        //check shared goal
-        //check is full shelf
-        //check refill board
+        this.game.saveGame();
         this.game.handleTurn();
     }
 
@@ -381,25 +422,60 @@ public class Lobby implements Runnable{
         View view = new View();
         List<String> toSend = new ArrayList<>();
         view.setBoard(this.game.getGameBoard().toString());
-
-        for(Player p: game.getPlayers()){
-            toSend.add(clientHandlerOf(p.getUsername()).getColor()+ p.getUsername()+ANSI.RESET_COLOR+"\n"+p.getMyShelf().toString());
+        synchronized (game.getPlayers()) {
+            for (Player p : game.getPlayers()) {
+                toSend.add(clientHandlerOf(p.getUsername()).getColor() + p.getUsername() + ANSI.RESET_COLOR + ": " + p.getScore() + " points\n" + p.getMyShelf().toString());
+            }
         }
-
         view.setShelves(toSend);
+        List<String> toAdd = new ArrayList<>();
+        for(SharedGoalCard c: game.getSharedDeck()){
+            toAdd.add(c.toString());
+        }
+        view.setSharedCards(toAdd);
 
         for(ClientHandler ch:lobbyPlayers){
+            view.setPersonalCard(game.chToPlayer(ch).getMyGoalCard().toString());
             ch.sendView(view);
         }
-
+    }
+    private void endTurnChecks(ClientHandler ch){
+        Player p = game.chToPlayer(ch);
+        List<SharedGoalCard> SharedDeck = game.getSharedDeck();
+        for (int i = 0; i<SharedDeck.size(); i++){
+            SharedGoalCard c = SharedDeck.get(i);
+            if(!c.isAchieved(p)){
+                if(c.checkPattern(p)){
+                    ch.sendInfoMessage("Shared goal "+(i+1)+" achieved");
+                    for(ClientHandler client : lobbyPlayers){
+                        if(!client.getNickname().equals(ch.getNickname())){
+                            client.sendInfoMessage("Shared goal "+(i+1)+" achieved by "+ ch.getNickname());
+                        }
+                    }
+                    p.updateScore(c.popPointToken());
+                }
+            }
+        }
+        if(p.getMyShelf().checkIsFull()){
+            isLastTurn = true;
+        }
     }
 
+    private void endGameChecks(){
+        for(ClientHandler ch:lobbyPlayers){
+            Player p = game.chToPlayer(ch);
+            p.updateScore(p.getMyGoalCard().checkPersonalGoal(p.getMyShelf()));
+            //p.updateScore(p.getMyShelf().checkFinalScore());
+        }
+    }
+
+
+    //MAYBE USELESS
     public void shutdown(){
         for(ClientHandler t : lobbyPlayers){
             //REPLACE WITH: GOTO MENU
             t.shutdown();
         }
-
     }
     public synchronized void recieveAction(Action a){
         actions.add(a);

@@ -43,7 +43,7 @@ public class Shelf {
      * Checks whether the shelf is full
      * @return true if is full, false otherwise
      */
-    private boolean checkIsFull(){
+    public boolean checkIsFull(){
         boolean check = true;
         for(int i=0; i<Constants.SHELFROW; i++){
             for(int j=0; j<Constants.SHELFCOLUMN; j++){

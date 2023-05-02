@@ -1,6 +1,7 @@
 package it.polimi.myShelfie.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.model.cards.*;
 import it.polimi.myShelfie.utilities.*;
 import it.polimi.myShelfie.utilities.beans.GameParameters;
@@ -27,7 +28,7 @@ public class Game implements Runnable{
     private List<PersonalGoalCard> personalDeck;
     private List<SharedGoalCard> sharedDeck;
     private String UID;
-    private boolean isNewGame;
+    private boolean isFinished;
     private List<Player> oldGamePlayers;
 
 
@@ -42,7 +43,7 @@ public class Game implements Runnable{
         this.playersNumber = playersNumber;
         this.currentPlayer = 0;
         this.UID = UID;
-        this.isNewGame = true;
+        this.isFinished = false;
         this.status = GameStatus.WAITINGFORPLAYERS;
 
         initializePersonalDeck();
@@ -56,7 +57,7 @@ public class Game implements Runnable{
      */
     public Game(String UID){
         this.UID = UID;
-        this.isNewGame = false;
+        this.isFinished = false;
         //load game by UID
         /*
         * JSON:
@@ -239,6 +240,14 @@ public class Game implements Runnable{
 
     public int getPlayersNumber() {
         return playersNumber;
+    }
+
+    public boolean isFinished() {
+        return isFinished;
+    }
+
+    public void setFinished(boolean finished) {
+        isFinished = finished;
     }
 
     public List<Player> getPlayers() {
@@ -474,6 +483,14 @@ public class Game implements Runnable{
 
     public List<Player> getOldGamePlayers() {
         return oldGamePlayers;
+    }
+    public Player chToPlayer(ClientHandler ch){
+        for(Player p:players){
+            if(p.getUsername().equals(ch.getNickname())){
+                return p;
+            }
+        }
+        return null;
     }
 
     /*

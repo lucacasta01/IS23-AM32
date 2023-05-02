@@ -57,8 +57,6 @@ public class Board {
      * @return true if needed, false otherwise
      */
 
-
-    //IF SUI BORDI CONTROLLA ANCHE SE' STESSO COME SE FOSSE UN VICINO
     public boolean needToRefill() {
         boolean check = true;
         for (int i = 0; i < Constants.BOARD_DIM; i++) {

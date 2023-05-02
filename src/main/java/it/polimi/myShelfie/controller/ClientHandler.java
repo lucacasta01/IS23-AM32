@@ -9,13 +9,14 @@ import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.Response;
 import it.polimi.myShelfie.utilities.beans.View;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import javax.imageio.spi.ImageReaderWriterSpi;
+import java.io.*;
 import java.net.Socket;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.rmi.Remote;
 import java.rmi.registry.Registry;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ public class ClientHandler implements Runnable {
     private Server server;
     private boolean isPlaying = false;
     private String color;
+
 
 
     public ClientHandler(Socket clientSocket, Registry registry) {
@@ -134,14 +136,26 @@ public class ClientHandler implements Runnable {
                         switch (chose) {
                             case "1" -> {
                                 sendInfoMessage("* CREATE NEW GAME *\n");
-
-
-
                                 String UID = Utils.UIDGenerator();
                                 Lobby lobby = new Lobby(this, UID, 0);
                                 System.out.println("New lobby created [" + UID + "]");
                                 server.getLobbyList().add(lobby);
                                 synchronized (server.getUserGame()) {
+                                    if(server.getUserGame().containsKey(this.nickname)){
+                                        if(!server.getUserGame().get(this.nickname).equals("-")){
+                                            String oldUID = server.getUserGame().get(this.nickname);
+                                            server.getUserGame().entrySet().removeIf(entry -> entry.getValue().equals(oldUID));
+                                            Path path = Paths.get("src/config/savedgames/"+oldUID+".json");
+                                            if(path.toFile().isFile()){
+                                                if(path.toFile().delete()){
+                                                    System.out.println("Old game file deleted successfully, UID: "+ oldUID);
+                                                }else{
+                                                    System.out.println("Error while deleting old game file, UID: "+oldUID);
+                                                }
+                                            }
+
+                                        }
+                                    }
                                     server.getUserGame().put(nickname, lobby.getLobbyUID());
                                     server.saveUserGame();
                                 }

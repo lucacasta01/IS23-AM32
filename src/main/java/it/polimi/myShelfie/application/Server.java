@@ -29,6 +29,7 @@ public class Server implements Runnable{
     private List<ClientHandler> connectedClients;
     private Map<String, String> userGame;
     private List <Lobby> lobbyList;
+    private Action pingResponse;
 
 
     private Server(){
@@ -147,7 +148,7 @@ public class Server implements Runnable{
             while(iter.hasNext()){
                 Lobby l = iter.next();
                 if(l.getLobbyUID().equals(UID)){
-                    iter.remove();
+
                     synchronized (l.actions){
                         l.actions.add(new Action(Action.ActionType.LOBBYKILL, "server", null, null , null , null ));
                         l.actions.notifyAll();
@@ -198,6 +199,7 @@ public class Server implements Runnable{
                     for (ClientHandler ch : connectedClients) {
                         try {
                             ch.sendPing();
+
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }

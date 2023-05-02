@@ -12,9 +12,9 @@ public class SharedGoalCard extends Card implements CheckSharedGoal{
     public SharedGoalCard(String imgPath){
         super(imgPath);
         this.pointsTokenStack = new Stack<>();
-        pointsTokenStack.add(4);
-        pointsTokenStack.add(6);
-        pointsTokenStack.add(8);
+        pointsTokenStack.push(4);
+        pointsTokenStack.push(6);
+        pointsTokenStack.push(8);
         this.achievedBy = new ArrayList<Player>();
     }
 
