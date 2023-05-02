@@ -120,7 +120,8 @@ public class Lobby implements Runnable{
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                game.addPlayer(generatePlayers());
+            game.addPlayer(generatePlayers());
+
             }
         }
         else if(this.gameMode == GameMode.SAVEDGAME && !close){

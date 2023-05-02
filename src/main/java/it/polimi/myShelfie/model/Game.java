@@ -68,7 +68,7 @@ public class Game implements Runnable{
         *   POINTS AND CARDS (FOR EACH PLAYER)
         *   SHARED CARDS
         */
-        initializePersonalDeck();
+
         try{
             loadGame(UID);
         }
@@ -167,7 +167,7 @@ public class Game implements Runnable{
     public String getUID() {
         return UID;
     }
-    private void initializePersonalDeck(){
+    public void initializePersonalDeck(){
         personalDeck = new ArrayList<>();
         try{
             for(int i=1;i<=12;i++){
