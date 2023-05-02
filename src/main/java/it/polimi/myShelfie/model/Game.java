@@ -437,20 +437,35 @@ public class Game implements Runnable{
     }
 
     /**
-     * Returns the Player object of the winner
-     * @return winner (Player)
+     * Returns the final rank of the game
+     * @return rank (String)
      */
-    public Player getWinner(){
-        int max = 0;
-        Player winner = this.players.get(0);
-        for(Player p : this.players){
-            if(p.getScore() >= max){
-                max = p.getScore();
-                winner = p;
-            }
-        }
-        return winner;
+    public String getRank(){
+        List<Player> sortedPlayers = new ArrayList<>(players);
+        sortedPlayers.sort(Comparator.comparingInt(Player::getScore).reversed());
 
+        StringBuilder rank = new StringBuilder();
+        rank.append(ANSI.BOLD).append("\t\t\t*** GAME RANK ***\n").append(ANSI.RESET_STYLE).append("\n");
+        rank.append(ANSI.ITALIQUE).append("Position\t\tUsername\t\tScore\n");
+        int pos = 1;
+        for(int i=0;i<sortedPlayers.size();i++){
+            if(i==0){
+                rank.append(ANSI.GREEN);
+            }
+            rank.append(pos).append("\t\t\t\t").append(sortedPlayers.get(i).getUsername()).append("\t\t\t").append(sortedPlayers.get(i).getScore()).append("\n");
+            int k = i;
+            while(i<sortedPlayers.size()-1 && (sortedPlayers.get(i).getScore() == sortedPlayers.get(i+1).getScore())){
+                rank.append(pos).append("\t\t\t\t").append(sortedPlayers.get(i+1).getUsername()).append("\t\t\t").append(sortedPlayers.get(i+1).getScore()).append("\n");
+                i++;
+            }
+            if(k==0){
+                rank.append(ANSI.RESET_COLOR);
+            }
+            pos++;
+        }
+
+
+        return rank.toString();
     }
 
     public List<SharedGoalCard> getSharedDeck() {

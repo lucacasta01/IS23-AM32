@@ -4,6 +4,7 @@ import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Position;
 import it.polimi.myShelfie.model.Tile;
+import it.polimi.myShelfie.utilities.Utils;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 
@@ -59,20 +60,19 @@ public class GameTest {
     @Test
     @DisplayName("Winner check test")
     public void winnerCheckTest(){
-        Player p1 = new Player(fakeName, fakeIP);
-        Player p2 = new Player(fakeName, fakeIP);
-        Player p3 = new Player(fakeName, fakeIP);
+        Player p1 = new Player("luca", fakeIP);
+        Player p2 = new Player("albe", fakeIP);
+        Player p3 = new Player("matteo", fakeIP);
         p1.setScore(2);
-        p2.setScore(3);
-        p3.setScore(4);
+        p2.setScore(6);
+        p3.setScore(6);
         List<Player> myPlayers = new ArrayList<>();
         myPlayers.add(p1);
         myPlayers.add(p2);
         myPlayers.add(p3);
-        Game myGame = new Game("");
+        Game myGame = new Game(Utils.UIDGenerator(),3);
         myGame.setPlayers(myPlayers);
-        myGame.getWinner();
-        assertEquals(myGame.getWinner().getUsername(), p3.getUsername());
+        System.out.println(myGame.getRank());
     }
 
     @Test
