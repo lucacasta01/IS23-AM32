@@ -131,4 +131,41 @@ public class Shelf {
         s.append("\n");
         return s.toString();
     }
+
+    /*
+    private Integer checkAdjacentTilesPoints(){
+        int adjacentTiles = 0;
+        Tile[][] toCheck = getTileMartrix();
+        for(int i = 0; i<Constants.SHELFROW; i++){
+            for(int j = 0; j<Constants.SHELFCOLUMN; j++){
+                adjacentTiles += checkAdjacentTiles(i,j,toCheck[i][j].getColor());
+            }
+        }
+        if(adjacentTiles <= 2){
+            return 0;
+        }
+        switch(adjacentTiles){
+            case 3: return 2;
+            case 4: return 3;
+            case 5: return 5;
+            default: return 8;
+        }
+    }
+
+    private Integer checkAdjacentTiles(int r, int c, Tile.Color color){
+        int adjacentsFound = 0;
+        Tile[][] myMatrix = getTileMartrix();
+        List<Tile> adjacentTiles = new ArrayList<>();
+        adjacentTiles.add(myMatrix[r][Math.min(0,c-1)]);
+        adjacentTiles.add(myMatrix[Math.min(r-1,0)][c]);
+        adjacentTiles.add(myMatrix[r][Math.min(Constants.SHELFCOLUMN,c+1)]);
+        adjacentTiles.add(myMatrix[Math.min(Constants.SHELFROW, r+1)][c]);
+        for(Tile t : adjacentTiles){
+            if(t.getColor() == color){
+                adjacentsFound += checkAdjacentTiles()
+            }
+        }
+    }
+
+     */
 }

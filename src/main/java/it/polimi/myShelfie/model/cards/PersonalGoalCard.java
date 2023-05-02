@@ -2,6 +2,7 @@ package it.polimi.myShelfie.model.cards;
 
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Position;
+import it.polimi.myShelfie.model.Shelf;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.utilities.Constants;
 
@@ -92,5 +93,26 @@ public class PersonalGoalCard extends Card{
         }
 
         return toReturn;
+    }
+
+    private Integer checkPersonalGoal(Shelf s){
+        Tile[][] toCheck = s.getTileMartrix();
+        int score = 0;
+        for(int i = 0; i<Constants.SHELFROW; i++){
+            for(int j = 0; j<Constants.SHELFCOLUMN; j++){
+                if(patternToMatch[i][j].getColor() == toCheck[i][j].getColor() && patternToMatch[i][j].getColor() != Tile.Color.NULLTILE){
+                    score ++;
+                }
+            }
+        }
+        switch (score){
+            case 1: return 1;
+            case 2: return 2;
+            case 3: return 4;
+            case 4: return 6;
+            case 5: return 9;
+            case 6: return 12;
+            default: return 0;
+        }
     }
 }
