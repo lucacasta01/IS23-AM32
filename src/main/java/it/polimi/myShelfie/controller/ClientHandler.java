@@ -67,6 +67,7 @@ public class ClientHandler implements Runnable {
             if(nickname.equals("/")){
                 sendInfoMessage("Please insert your username");
                  action = getAction();
+
                 nickname = action.getInfo();
                 while(action.getActionType() != Action.ActionType.INFO || server.isConnected(nickname)) {
                     if(action.getActionType() == Action.ActionType.INFO) {
@@ -77,6 +78,10 @@ public class ClientHandler implements Runnable {
                         sendDeny("Cannot pick tiles here, game not started");
                     }else if(action.getActionType()== Action.ActionType.SELECTCOLUMN){
                         sendDeny("Cannot select column here, game not started");
+                    }
+                    else if(action.getActionType() == Action.ActionType.QUIT){
+                        sendShutdown();
+                        shutdown();
                     }
 
                     action = getAction();
