@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ClientHandler implements Runnable {
     private Socket clientSocket;
@@ -293,14 +294,17 @@ public class ClientHandler implements Runnable {
 
             }
         } catch (Exception e) {
-            server.removeClient(this);
-            shutdown();
-            System.err.println("Client "+nickname+" lost connection");
+            synchronized (server.getConnectedClients()) {
+                if (!server.getConnectedClients().get(this)) {
+                    server.removeClient(this);
+                    shutdown();
+                    System.err.println("Client " + nickname + " lost connection");
+                }
+            }
             synchronized (server.getUserGame()){
                 server.saveUserGame();
             }
 
-            server.getConnectedClients().remove(this);
             if(server.getUserGame()!=null){
                 if(server.getUserGame().get(this.nickname)!=null) {
                     if (server.getUserGame().get(this.nickname).equals("-")) {
@@ -308,7 +312,6 @@ public class ClientHandler implements Runnable {
                     }
                 }
             }
-            this.shutdown();
             if(server.lobbyOf(this)!=null){
                 Lobby lobby =server.lobbyOf(this);
                 server.killLobby(lobby.getLobbyUID());
@@ -511,7 +514,8 @@ public class ClientHandler implements Runnable {
     public Thread pingThread() {
 
         return new Thread(() -> {
-            while (true) {
+            boolean elapsed = false;
+            while (!elapsed) {
                 try {
                     sendPing();
                 } catch (IOException e) {
@@ -536,7 +540,10 @@ public class ClientHandler implements Runnable {
 
 
                 if (pongResponses.get(0).isElapsed()) {
-                    System.err.println("Client "+nickname+" lost connection");
+                    System.err.println("Ping failed for "+nickname+"");
+                    synchronized (server.getConnectedClients()){
+                        server.getConnectedClients().put(this,true);
+                    }
                     if(isPlaying){
                         server.killLobby(server.lobbyOf(this).getLobbyUID());
                         shutdown();
@@ -546,6 +553,7 @@ public class ClientHandler implements Runnable {
                         shutdown();
                         server.removeClient(this);
                     }
+                    elapsed = true;
                 } else {
                     try {
                         swapElapsed.setRunning(false);

@@ -69,6 +69,7 @@ public class Game implements Runnable{
         *   SHARED CARDS
         */
 
+        initializePersonalDeck();
         try{
             loadGame(UID);
         }

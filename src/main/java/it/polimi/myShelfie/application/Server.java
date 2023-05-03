@@ -27,14 +27,14 @@ public class Server implements Runnable{
     private Registry registry;
     private ExecutorService pool;
     private ExecutorService lobbyPool;
-    private List<ClientHandler> connectedClients;
+    private Map<ClientHandler,Boolean> connectedClients;
     private Map<String, String> userGame;
     private List <Lobby> lobbyList;
 
 
     private Server(){
         try {
-            connectedClients = new ArrayList<>();
+            connectedClients = new HashMap<>();
             lobbyList = new ArrayList<>();
             serverSocket = new ServerSocket(Constants.PORT);
             registry = LocateRegistry.createRegistry(Constants.PORT+1);
@@ -47,7 +47,7 @@ public class Server implements Runnable{
     }
 
     public void removeClient(ClientHandler client){
-        if(connectedClients.contains(client)){
+        if(connectedClients.containsKey(client)){
             connectedClients.remove(client);
         }
         else{
@@ -77,7 +77,7 @@ public class Server implements Runnable{
             if(!instance.serverSocket.isClosed()){
                 serverSocket.close();
             }
-            for(ClientHandler t : connectedClients){
+            for(ClientHandler t : connectedClients.keySet()){
                 t.shutdown();
             }
         } catch (IOException e) {
@@ -94,7 +94,7 @@ public class Server implements Runnable{
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client Accepted, number of connected hosts: " + (connectedClients.size()+1));
                 ClientHandler clientHandler = new ClientHandler(clientSocket, registry);
-                connectedClients.add(clientHandler);
+                connectedClients.put(clientHandler,false);
                 pool.execute(clientHandler);
             }
             catch(Exception e){
@@ -105,7 +105,7 @@ public class Server implements Runnable{
     }
 
     public void broadcastMessage(String message){
-        for(ClientHandler t : connectedClients){
+        for(ClientHandler t : connectedClients.keySet()){
             t.sendInfoMessage(message);
         }
     }
@@ -168,13 +168,13 @@ public class Server implements Runnable{
         return null;
     }
 
-    public synchronized List<ClientHandler> getConnectedClients() {
+    public synchronized Map<ClientHandler,Boolean> getConnectedClients() {
         return connectedClients;
     }
 
     public boolean isConnected(String nickname){
         int count = 0;
-        for(ClientHandler ch : connectedClients){
+        for(ClientHandler ch : connectedClients.keySet()){
             if(ch.getNickname().equals(nickname)){
                 count++;
             }
