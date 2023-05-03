@@ -9,10 +9,10 @@ public class Constants {
 
     //TCP
     public static final int PORT = 6666;
-    public static final String SERVER_IP = "192.168.43.174";
+    public static final String SERVER_IP = "localhost";
 
-    public static final int PINGPERIOD = 5000;
-    public static final int PINGTHRESHOLD = 10000;
-    public static final int PINGFACTOR = 20;
+    public static final int PINGPERIOD = 1000;
+    public static final int PINGTHRESHOLD = 4000;
+    public static final int PINGFACTOR = 40;
 
 }

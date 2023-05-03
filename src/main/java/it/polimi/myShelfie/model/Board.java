@@ -182,7 +182,13 @@ public class Board {
      * @param players is the game's number of players
      */
     public void initBoard(int players){
-
+    for(int i=0; i<Constants.BOARD_DIM; i++){
+        for(int j=0; j<Constants.BOARD_DIM; j++){
+            if(this.grid[i][j]!=null&&this.grid[i][j].getColor()== Tile.Color.NULLTILE){
+                this.grid[i][j]=null;
+            }
+        }
+}
         try {
             setNullTiles(JsonParser.getNullConfig("src/config/boardconfig.json"));
             switch (players) {

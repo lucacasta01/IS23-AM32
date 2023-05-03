@@ -95,7 +95,7 @@ public class Lobby implements Runnable{
                     lobbyPlayers.get(0).sendDeny("The chat is not active now");
                     actions.remove(0);
                 } else if (action.getActionType() == Action.ActionType.PICKTILES) {
-                    lobbyPlayers.get(0).sendDeny("Cannot pick tiles here, game not started");
+                    lobbyPlayers.get(0).sendDeny("Cannot pick tiles here, game not startedd");
                     actions.remove(0);
                 } else if (action.getActionType() == Action.ActionType.SELECTCOLUMN) {
                     lobbyPlayers.get(0).sendDeny("Cannot select column here, game not started");
@@ -207,11 +207,12 @@ public class Lobby implements Runnable{
                             iter.remove();
                         } else if (a.getActionType() == Action.ActionType.SELECTCOLUMN) {
                             if (game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)) {
-                                if (collectedTiles == null) {
+                                if (collectedTiles.size()==0) {
                                     ch.sendDeny("Not selected tiles yet...");
                                 } else {
                                     if (game.insertTiles(collectedTiles, a.getChosenColumn())) {
                                         ch.sendAccept("Tiles inserted correctly");
+                                        collectedTiles.clear();
                                         ch.sendInfoMessage(game.getPlayers().get(game.getCurrentPlayer()).getMyShelf().toString());
                                         endTurnChecks(ch);
                                         broadcastUpdate();

@@ -76,6 +76,16 @@ public class GameTest {
     }
 
     @Test
+    @DisplayName("refill board")
+    public void refillBoard(){
+        Game myGame = new Game("T30YX9Dp");
+        if(myGame.getGameBoard().needToRefill()){
+            myGame.getGameBoard().initBoard(2);
+        }
+        System.out.println(myGame.getGameBoard().toString());
+    }
+
+    @Test
     @DisplayName("Game saving test")
     public void gameSavingTest(){
         Player p1 = new Player("pippo",fakeIP);

@@ -36,6 +36,7 @@ public class ClientHandler implements Runnable {
 
 
 
+
     public ClientHandler(Socket clientSocket, Registry registry) {
         this.clientSocket = clientSocket;
         this.registry = registry;
@@ -65,8 +66,13 @@ public class ClientHandler implements Runnable {
             System.err.println("Exception throws during stream creation: " + e.toString());
             e.printStackTrace();
         }
+        try{
+            server.executePingThread(this);
+        }catch(Exception e){
+            System.out.println("Error while adding ping thread");
+            e.printStackTrace();
+        }
 
-        pingThread().start();
 
         try {
             Action action;
@@ -232,13 +238,29 @@ public class ClientHandler implements Runnable {
                                     Lobby lobby = filteredLobbyList.get(0);
                                     sendInfoMessage("Game " + lobby.getLobbyUID() + " started by " + lobby.getLobbyPlayers().get(0).nickname);
                                     sendInfoMessage("Would you like to join? [y/n]");
-
                                     System.out.println("Saved game for " + nickname + " found");
 
                                     action = getAction();
 
-                                    while (!action.getInfo().toUpperCase().equals("Y") && !action.getInfo().toUpperCase().equals("N")) {
-                                        sendDeny("Type the right key...");
+                                    while ((action.getActionType()!= Action.ActionType.INFO)||(action.getActionType()== Action.ActionType.INFO&&(!action.getInfo().toUpperCase().equals("Y")&&!action.getInfo().toUpperCase().equals("N")))){
+                                        if(action.getActionType() == Action.ActionType.INFO) {
+                                            sendDeny("Type the right key...");
+                                        }else if(action.getActionType()== Action.ActionType.CHAT){
+                                            sendDeny("The chat is not active now");
+                                        }else if(action.getActionType()== Action.ActionType.PICKTILES){
+                                            sendDeny("Cannot pick tiles here, game not started");
+                                        }else if(action.getActionType()== Action.ActionType.SELECTCOLUMN){
+                                            sendDeny("Cannot select column here, game not started");
+                                        }
+                                        else if(action.getActionType() == Action.ActionType.QUIT){
+                                            sendShutdown();
+                                            shutdown();
+                                        }else if(action.getActionType() == Action.ActionType.PING){
+                                            sendPong();
+                                        } else if (action.getActionType() == Action.ActionType.PONG){
+                                            addPong();
+                                        }
+
                                         action = getAction();
                                     }
                                     message = action.getInfo();
@@ -246,6 +268,7 @@ public class ClientHandler implements Runnable {
                                         lobby.broadcastMessage(nickname + " joined");
                                         System.out.println(nickname + " joined game " + lobby.getLobbyUID());
                                         filteredLobbyList.get(0).acceptPlayer(this);
+                                        lobbyCreated=true;
                                     } else {
                                         System.out.println(nickname + " rejected invitation from " + lobby.getLobbyUID());
                                         lobby.broadcastMessage(nickname + " has rejected the invitation.");
@@ -294,30 +317,7 @@ public class ClientHandler implements Runnable {
 
             }
         } catch (Exception e) {
-            synchronized (server.getConnectedClients()) {
-                if (!server.getConnectedClients().get(this)) {
-                    server.removeClient(this);
-                    shutdown();
-                    System.err.println("Client " + nickname + " lost connection");
-                }
-            }
-            synchronized (server.getUserGame()){
-                server.saveUserGame();
-            }
-
-            if(server.getUserGame()!=null){
-                if(server.getUserGame().get(this.nickname)!=null) {
-                    if (server.getUserGame().get(this.nickname).equals("-")) {
-                        server.getUserGame().remove(this.nickname);
-                    }
-                }
-            }
-            if(server.lobbyOf(this)!=null){
-                Lobby lobby =server.lobbyOf(this);
-                server.killLobby(lobby.getLobbyUID());
-            }
-
-            //handle lost connection, save and close game.
+            System.out.println(("ClientHandler Exception"));
         }
     }
 
@@ -462,6 +462,12 @@ public class ClientHandler implements Runnable {
         out.println(gson.toJson(new Response(Response.ResponseType.PING, null,null, "ping")));
     }
 
+    public List<PingObject> getPongResponses() {
+        return pongResponses;
+    }
+
+
+
     public synchronized void sendShutdown(){
         Gson gson = new Gson();
         out.println(gson.toJson(new Response(Response.ResponseType.SHUTDOWN, null,null, "Closing...")));
@@ -507,103 +513,5 @@ public class ClientHandler implements Runnable {
         sendInfoMessage("(3) Join random game");
         sendInfoMessage("(4) Search for started saved game");
         sendInfoMessage("(0) Exit\n");
-    }
-
-
-
-    public Thread pingThread() {
-
-        return new Thread(() -> {
-            boolean elapsed = false;
-            while (!elapsed) {
-                try {
-                    sendPing();
-                } catch (IOException e) {
-                    System.exit(10);
-                }
-
-
-
-                SwapElapsed swapElapsed = new SwapElapsed();
-                swapElapsed.start();
-
-
-                while (pongResponses.size() == 0) {
-                    synchronized (pongResponses) {
-                        try {
-                            pongResponses.wait();
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }
-
-
-                if (pongResponses.get(0).isElapsed()) {
-                    System.err.println("Ping failed for "+nickname+"");
-                    synchronized (server.getConnectedClients()){
-                        server.getConnectedClients().put(this,true);
-                    }
-                    if(isPlaying){
-                        server.killLobby(server.lobbyOf(this).getLobbyUID());
-                        shutdown();
-                        server.removeClient(this);
-                    }
-                    else{
-                        shutdown();
-                        server.removeClient(this);
-                    }
-                    elapsed = true;
-                } else {
-                    try {
-                        swapElapsed.setRunning(false);
-                    } catch (Exception e) {
-                        //ignore
-                    }
-                    synchronized (pongResponses) {
-                        pongResponses.remove(0);
-                    }
-                    try {
-                        Thread.sleep(Constants.PINGPERIOD);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                }
-
-            }
-        });
-    }
-
-
-    class SwapElapsed extends Thread {
-        private boolean isRunning = true;
-
-        public boolean isRunning() {
-            return isRunning;
-        }
-
-        public void setRunning(boolean running) {
-            isRunning = running;
-        }
-
-        @Override
-        public void run() {
-            int time = 0;
-            while (isRunning() && time < Constants.PINGTHRESHOLD) {
-                try {
-                    Thread.sleep(Constants.PINGTHRESHOLD/Constants.PINGFACTOR);
-                    time += Constants.PINGTHRESHOLD/Constants.PINGFACTOR;
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            if (isRunning()) {
-                synchronized (pongResponses) {
-                    pongResponses.add(new PingObject(true));
-                    pongResponses.notifyAll();
-                }
-            }
-        }
     }
 }
