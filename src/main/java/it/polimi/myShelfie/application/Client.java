@@ -26,7 +26,6 @@ public class Client implements Runnable {
 
     private Socket client;
     private String nickname;
-
     private boolean done;
     private boolean configurationDone = false;
     private Response response;
@@ -120,16 +119,19 @@ public class Client implements Runnable {
 
     public void shutdown() {
         done = true;
-        try {
-            in.close();
-            out.close();
-            if (!client.isClosed()) {
-                client.close();
+
+            try {
+                in.close();
+                out.close();
+                if (!client.isClosed()) {
+                    client.close();
+                }
+                System.exit(0);
+            } catch (Exception e) {
+                System.out.println(e.toString());
             }
-            System.exit(0);
-        } catch (IOException e) {
-            System.out.println(e.toString());
-        }
+
+
     }
 
     public Thread pingThread() {
@@ -159,7 +161,8 @@ public class Client implements Runnable {
 
                 if (pongResponses.get(0).isElapsed()) {
                     System.out.println("Server offline: closing...");
-                    shutdown();
+                    System.exit(1);
+
                 } else {
                     try {
                         swapElapsed.setRunning(false);
