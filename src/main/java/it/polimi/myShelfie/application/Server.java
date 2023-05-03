@@ -5,6 +5,7 @@ import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.controller.Lobby;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.JsonParser;
+import it.polimi.myShelfie.utilities.PingObject;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.Usergame;
 
@@ -29,7 +30,6 @@ public class Server implements Runnable{
     private List<ClientHandler> connectedClients;
     private Map<String, String> userGame;
     private List <Lobby> lobbyList;
-    private Action pingResponse;
 
 
     private Server(){
@@ -182,41 +182,17 @@ public class Server implements Runnable{
 
         return count>1;
     }
-
-    public Thread PingThread(){
-        Server server = Server.getInstance();
-        return new Thread(){
-            public void run() {
-                while (true) {
-                    List<ClientHandler> connectedClients;
-                    List<Lobby> lobbyList;
-                    synchronized (server.getConnectedClients()){
-                        connectedClients = server.getConnectedClients();
-                    }
-                    synchronized (server.getLobbyList()){
-                        lobbyList = server.getLobbyList();
-                    }
-                    for (ClientHandler ch : connectedClients) {
-                        try {
-                            ch.sendPing();
-
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    try {
-                        sleep(1000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-            }
-        };
-    }
     public synchronized void runLobby(Lobby lobby){
         lobbyPool.execute(lobby);
     }
+
+
+
+
+
+
+
+
 
 
     public static void main(String[] args){
@@ -224,6 +200,8 @@ public class Server implements Runnable{
         //server.createPingThread().start();
         server.run();
     }
+
+
 
 }
 

@@ -2,9 +2,7 @@ package it.polimi.myShelfie.controller;
 
 import com.google.gson.Gson;
 import it.polimi.myShelfie.application.Server;
-import it.polimi.myShelfie.utilities.ANSI;
-import it.polimi.myShelfie.utilities.JsonParser;
-import it.polimi.myShelfie.utilities.Utils;
+import it.polimi.myShelfie.utilities.*;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.Response;
 import it.polimi.myShelfie.utilities.beans.View;
@@ -16,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.rmi.Remote;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +30,8 @@ public class ClientHandler implements Runnable {
     private Server server;
     private boolean isPlaying = false;
     private String color;
+    private final List<PingObject> pongResponses = new ArrayList<>();
+
 
 
 
@@ -64,6 +65,8 @@ public class ClientHandler implements Runnable {
             e.printStackTrace();
         }
 
+        pingThread().start();
+
         try {
             Action action;
             if(nickname.equals("/")){
@@ -86,6 +89,8 @@ public class ClientHandler implements Runnable {
                         shutdown();
                     }else if(action.getActionType() == Action.ActionType.PING){
                         sendPong();
+                    } else if (action.getActionType() == Action.ActionType.PONG) {
+                        addPong();
                     }
 
                     action = getAction();
@@ -131,6 +136,9 @@ public class ClientHandler implements Runnable {
                             System.out.println(nickname + " disconnected");
                         }else if(action.getActionType() == Action.ActionType.PING){
                             sendPong();
+                        }
+                        else if (action.getActionType() == Action.ActionType.PONG) {
+                            addPong();
                         }
                         action = getAction();
                         chose = action.getInfo();
@@ -266,7 +274,11 @@ public class ClientHandler implements Runnable {
                                 synchronized (l.actions){
                                     if(action.getActionType()== Action.ActionType.PING){
                                         sendPong();
-                                    }else if(action.getActionType() != Action.ActionType.QUIT) {
+                                    }
+                                    else if (action.getActionType() == Action.ActionType.PONG) {
+                                        addPong();
+                                    }
+                                    else if(action.getActionType() != Action.ActionType.QUIT) {
                                         l.recieveAction(action);
                                         l.actions.notifyAll();
                                     }
@@ -283,7 +295,7 @@ public class ClientHandler implements Runnable {
         } catch (Exception e) {
             server.removeClient(this);
             shutdown();
-            System.err.println("Client lost connection");
+            System.err.println("Client "+nickname+" lost connection");
             synchronized (server.getUserGame()){
                 server.saveUserGame();
             }
@@ -415,6 +427,13 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    public void addPong(){
+        synchronized (pongResponses){
+            pongResponses.add(new PingObject(false));
+            pongResponses.notifyAll();
+        }
+    }
+
     public synchronized  void sendPong(){
         Gson gson = new Gson();
         try {
@@ -485,5 +504,98 @@ public class ClientHandler implements Runnable {
         sendInfoMessage("(3) Join random game");
         sendInfoMessage("(4) Search for started saved game");
         sendInfoMessage("(0) Exit\n");
+    }
+
+
+
+    public Thread pingThread() {
+
+        return new Thread(() -> {
+            while (true) {
+                try {
+                    sendPing();
+                } catch (IOException e) {
+                    System.exit(10);
+                }
+
+
+
+                SwapElapsed swapElapsed = new SwapElapsed();
+                swapElapsed.start();
+
+
+                while (pongResponses.size() == 0) {
+                    synchronized (pongResponses) {
+                        try {
+                            pongResponses.wait();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+
+
+                if (pongResponses.get(0).isElapsed()) {
+                    System.err.println("Client "+nickname+" lost connection");
+                    if(isPlaying){
+                        server.killLobby(server.lobbyOf(this).getLobbyUID());
+                        shutdown();
+                        server.removeClient(this);
+                    }
+                    else{
+                        shutdown();
+                        server.removeClient(this);
+                    }
+                } else {
+                    try {
+                        swapElapsed.setRunning(false);
+                    } catch (Exception e) {
+                        //ignore
+                    }
+                    synchronized (pongResponses) {
+                        pongResponses.remove(0);
+                    }
+                    try {
+                        Thread.sleep(Constants.PINGPERIOD);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                }
+
+            }
+        });
+    }
+
+
+    class SwapElapsed extends Thread {
+        private boolean isRunning = true;
+
+        public boolean isRunning() {
+            return isRunning;
+        }
+
+        public void setRunning(boolean running) {
+            isRunning = running;
+        }
+
+        @Override
+        public void run() {
+            int time = 0;
+            while (isRunning() && time < Constants.PINGTHRESHOLD) {
+                try {
+                    Thread.sleep(Constants.PINGTHRESHOLD/Constants.PINGFACTOR);
+                    time += Constants.PINGTHRESHOLD/Constants.PINGFACTOR;
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if (isRunning()) {
+                synchronized (pongResponses) {
+                    pongResponses.add(new PingObject(true));
+                    pongResponses.notifyAll();
+                }
+            }
+        }
     }
 }
