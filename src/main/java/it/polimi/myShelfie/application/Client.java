@@ -101,6 +101,7 @@ public class Client implements Runnable {
                     //current player
                     System.out.println(ANSI.ITALIQUE+"Turn of: "+ANSI.RESET_STYLE+view.getCurrentPlayer());
                 } else if (response.getResponseType() == Response.ResponseType.PONG) {
+                    System.out.println("Pong #"+response.getInfoMessage());
                     synchronized (pongResponses) {
                         pongResponses.add(new PingObject(false));
                         pongResponses.notifyAll();
@@ -141,9 +142,10 @@ public class Client implements Runnable {
     public Thread pingThread() {
 
         return new Thread(() -> {
+            int count = 1;
             while (true) {
                 try {
-                    sendAction(new Action(Action.ActionType.PING, null, null, null, null, null));
+                    sendAction(new Action(Action.ActionType.PING, nickname, null, Integer.toString(count), null, null));
                 } catch (IOException e) {
                     System.exit(10);
                 }
@@ -181,9 +183,8 @@ public class Client implements Runnable {
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-
+                    count++;
                 }
-
             }
         });
     }

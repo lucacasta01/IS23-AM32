@@ -96,10 +96,10 @@ public class ClientHandler implements Runnable {
                         sendDeny("Cannot select column here, game not started");
                     }
                     else if(action.getActionType() == Action.ActionType.QUIT){
+                        server.getConnectedClients().get(this).setElapsed();
                         sendShutdown();
                         shutdown();
                     }else if(action.getActionType() == Action.ActionType.PING){
-                        System.out.println("Ping from "+nickname+" #"+action.getInfo());
                         sendPong(action.getInfo());
                     } else if (action.getActionType() == Action.ActionType.PONG) {
                         addPong();
@@ -143,11 +143,11 @@ public class ClientHandler implements Runnable {
                             sendDeny("Cannot select column here, game not started");
                         }
                         else if(action.getActionType() == Action.ActionType.QUIT){
+                            server.getConnectedClients().get(this).setElapsed();
                             sendShutdown();
                             shutdown();
                             System.out.println(nickname + " disconnected");
                         }else if(action.getActionType() == Action.ActionType.PING){
-                            System.out.println("Ping from "+nickname+" #"+action.getInfo());
                             sendPong(action.getInfo());
                         }
                         else if (action.getActionType() == Action.ActionType.PONG) {
@@ -267,8 +267,7 @@ public class ClientHandler implements Runnable {
                                         else if(action.getActionType() == Action.ActionType.QUIT){
                                             sendShutdown();
                                             shutdown();
-                                        }else if(action.getActionType() == Action.ActionType.PING){
-                                            System.out.println("Ping from "+nickname+" #"+action.getInfo());
+                                        }else if(action.getActionType() == Action.ActionType.PING){;
                                             sendPong(action.getInfo());
                                         } else if (action.getActionType() == Action.ActionType.PONG){
                                             addPong();
@@ -305,12 +304,15 @@ public class ClientHandler implements Runnable {
 
 
                 }else{
-                    for(Lobby l:server.getLobbyList()){
+                    List<Lobby> lobbyList;
+                    synchronized (server.getLobbyList()){
+                        lobbyList = new ArrayList<>(server.getLobbyList());
+                    }
+                    for(Lobby l:lobbyList){
                         for(ClientHandler ch: l.getLobbyPlayers()){
                             if(ch.equals(this)){
                                 synchronized (l.actions){
                                     if(action.getActionType()== Action.ActionType.PING){
-                                        System.out.println("Ping from "+nickname+" #"+action.getInfo());
                                         sendPong(action.getInfo());
                                     }
                                     else if (action.getActionType() == Action.ActionType.PONG) {
@@ -321,6 +323,7 @@ public class ClientHandler implements Runnable {
                                         l.actions.notifyAll();
                                     }
                                     else{
+                                        server.getConnectedClients().get(this).setElapsed();
                                         server.killLobby(l.getLobbyUID());
                                     }
                                 }
@@ -331,9 +334,8 @@ public class ClientHandler implements Runnable {
 
             }
         } catch (Exception e) {
-            System.out.println(e.toString());
             e.printStackTrace();
-            if(server.getUserGame()!=null){
+            /*if(server.getUserGame()!=null){
                 if(server.getUserGame().get(this.getNickname())!=null) {
                     if (server.getUserGame().get(this.getNickname()).equals("-")) {
                         server.getUserGame().remove(this.getNickname());
@@ -351,7 +353,7 @@ public class ClientHandler implements Runnable {
             else{
                 this.shutdown();
                 server.removeClient(this);
-            }
+            }*/
         }
     }
 
