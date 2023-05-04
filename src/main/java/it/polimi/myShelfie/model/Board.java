@@ -172,9 +172,13 @@ public class Board {
      * @return the randomly picked tile
      */
     private Tile pickTile(){
-        Tile t = tileHeap.get(new Random().nextInt(0,tileHeap.size()-1));
-        tileHeap.remove(t);
-        return t;
+        if(tileHeap.size()!=0) {
+            Tile t = tileHeap.get(new Random().nextInt(0, tileHeap.size() - 1));
+            tileHeap.remove(t);
+            return t;
+        }else{
+            return new Tile("graphics/itemTiles/transparent.png", Tile.Color.NULLTILE);
+        }
     }
 
     /**

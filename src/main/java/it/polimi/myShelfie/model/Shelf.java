@@ -1,5 +1,6 @@
 package it.polimi.myShelfie.model;
 
+import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.ColorPosition;
 import it.polimi.myShelfie.utilities.Constants;
 
@@ -44,7 +45,6 @@ public class Shelf {
      * @return true if is full, false otherwise
      */
     public boolean checkIsFull(){
-        boolean check = true;
         for(int i=0; i<Constants.SHELFROW; i++){
             for(int j=0; j<Constants.SHELFCOLUMN; j++){
                 if(tileMatrix[i][j].getColor()==Tile.Color.NULLTILE){
@@ -125,9 +125,11 @@ public class Shelf {
             }
             s.append("\n");
         }
+        s.append(ANSI.ITALIQUE).append(ANSI.BOLD);
         for(int i=0;i<Constants.SHELFCOLUMN;i++){
             s.append(i+1).append("\t");
         }
+        s.append(ANSI.RESET_STYLE);
         s.append("\n");
         return s.toString();
     }

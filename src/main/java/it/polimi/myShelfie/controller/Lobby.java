@@ -121,7 +121,6 @@ public class Lobby implements Runnable{
                     throw new RuntimeException(e);
                 }
             game.addPlayer(generatePlayers());
-
             }
         }
         else if(this.gameMode == GameMode.SAVEDGAME && !close){
@@ -213,21 +212,21 @@ public class Lobby implements Runnable{
                                     if (game.insertTiles(collectedTiles, a.getChosenColumn())) {
                                         ch.sendAccept("Tiles inserted correctly");
                                         collectedTiles.clear();
-                                        ch.sendInfoMessage(game.getPlayers().get(game.getCurrentPlayer()).getMyShelf().toString());
                                         endTurnChecks(ch);
-                                        broadcastUpdate();
                                         if(isLastTurn){
                                             index = lobbyPlayers.indexOf(ch);
-                                                if(index==lobbyPlayers.size()){
+                                                if(index==lobbyPlayers.size()-1){
                                                     broadcastMessage("** GAME ENDED! **");
                                                     ended = true;
                                                     game.setFinished(true);
                                                 }
                                         }
-                                        if(this.game.getGameBoard().needToRefill()){
+                                        boolean res = this.game.getGameBoard().needToRefill();
+                                        if(res){
                                             this.game.getGameBoard().initBoard(this.playersNumber);
                                         }
                                         handleTurn(ch);
+                                        broadcastUpdate();
                                     } else {
                                         ch.sendDeny("Cannot insert tiles in this column...");
                                     }
@@ -334,7 +333,9 @@ public class Lobby implements Runnable{
     private List<Player> generatePlayers(){
         List<Player> toReturn = new ArrayList<>();
         for(ClientHandler p : lobbyPlayers){
-            toReturn.add(new Player(p.getNickname(),p.getClientSocket().getLocalAddress().getHostAddress()));
+            Player player = new Player(p.getNickname(),p.getClientSocket().getLocalAddress().getHostAddress());
+            player.setGoalCard(game.drawPersonalGoal());
+            toReturn.add(player);
         }
         return toReturn;
     }
@@ -365,8 +366,8 @@ public class Lobby implements Runnable{
     private void handleTurn(ClientHandler current){
         Player p = this.game.getPlayers().get(this.game.getCurrentPlayer());
         PersonalGoalCard card = p.getMyGoalCard();
-        this.game.saveGame();
         this.game.handleTurn();
+        this.game.saveGame();
     }
 
 
@@ -423,6 +424,8 @@ public class Lobby implements Runnable{
 
     public void broadcastUpdate(){
         View view = new View();
+        ClientHandler client = lobbyPlayers.get(game.getCurrentPlayer());
+        view.setCurrentPlayer(client.getColor()+game.getPlayers().get(game.getCurrentPlayer()).getUsername()+ANSI.RESET_COLOR);
         List<String> toSend = new ArrayList<>();
         view.setBoard(this.game.getGameBoard().toString());
         synchronized (game.getPlayers()) {

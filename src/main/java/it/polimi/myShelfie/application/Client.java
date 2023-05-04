@@ -98,6 +98,8 @@ public class Client implements Runnable {
                     //board
                     System.out.println(ANSI.ITALIQUE + "Board:" + ANSI.RESET_STYLE);
                     System.out.println(view.getBoard() + "\n");
+                    //current player
+                    System.out.println(ANSI.ITALIQUE+"Turn of: "+ANSI.RESET_STYLE+view.getCurrentPlayer());
                 } else if (response.getResponseType() == Response.ResponseType.PONG) {
                     synchronized (pongResponses) {
                         pongResponses.add(new PingObject(false));

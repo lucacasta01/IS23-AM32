@@ -66,13 +66,13 @@ public class ClientHandler implements Runnable {
             System.err.println("Exception throws during stream creation: " + e.toString());
             e.printStackTrace();
         }
-        try{
+        /*try{
             server.executePingThread(this);
         }catch(Exception e){
             System.out.println("Error while adding ping thread");
             e.printStackTrace();
         }
-
+*/
 
         try {
             Action action;
@@ -318,6 +318,25 @@ public class ClientHandler implements Runnable {
             }
         } catch (Exception e) {
             System.out.println(("ClientHandler Exception"));
+            if(server.getUserGame()!=null){
+                if(server.getUserGame().get(this.getNickname())!=null) {
+                    if (server.getUserGame().get(this.getNickname()).equals("-")) {
+                        server.getUserGame().remove(this.getNickname());
+                    }
+                }
+            }
+            synchronized (server.getUserGame()){
+                server.saveUserGame();
+            }
+            if(this.isPlaying()){
+                server.killLobby(server.lobbyOf(this).getLobbyUID());
+                this.shutdown();
+                server.removeClient(this);
+            }
+            else{
+                this.shutdown();
+                server.removeClient(this);
+            }
         }
     }
 

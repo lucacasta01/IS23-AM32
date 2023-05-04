@@ -8,6 +8,7 @@ public class View {
     private List<String> shelves;
     private List<String> sharedCards;
     private String personalCard;
+    private String currentPlayer;
 
 
 
@@ -17,6 +18,14 @@ public class View {
     }
     public List<String> getSharedCards() {
         return sharedCards;
+    }
+
+    public String getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(String currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 
     public String getPersonalCard() {
