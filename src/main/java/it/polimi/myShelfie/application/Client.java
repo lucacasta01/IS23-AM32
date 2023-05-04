@@ -1,5 +1,8 @@
 package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
+import it.polimi.myShelfie.controller.ClientHandler;
+import it.polimi.myShelfie.controller.RMI.RMIClient;
+import it.polimi.myShelfie.controller.RMI.RMIServer;
 import it.polimi.myShelfie.model.Position;
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.Constants;
@@ -13,17 +16,19 @@ import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.io.*;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Client implements Runnable {
+public class Client implements Runnable,RMIClient {
 
     private BufferedReader in;
-
     private PrintWriter out;
-
     private Socket client;
     private String nickname;
     private boolean done;
@@ -32,6 +37,9 @@ public class Client implements Runnable {
     private boolean validRecieved = false;
     private View view;
     private final List<PingObject> pongResponses = new ArrayList<>();
+
+    //rmi server reference
+    RMIServer rmiServer;
 
     @Override
     public void run() {
@@ -121,6 +129,12 @@ public class Client implements Runnable {
                 }
                 break;
             case "RMI":
+                try {
+                    startRMIClient();
+                } catch (RemoteException | NotBoundException e) {
+                    e.printStackTrace();
+                }
+                new Thread(new RMIInputHandler()).start();
 
                 break;
             default:
@@ -128,6 +142,11 @@ public class Client implements Runnable {
         }
     }
 
+    private void startRMIClient() throws RemoteException, NotBoundException {
+        Registry registry = LocateRegistry.getRegistry(Constants.SERVER_IP,Constants.RMIPORT);
+        this.rmiServer = (RMIServer)registry.lookup(Constants.RMINAME);
+        rmiServer.login(this);
+    }
     public void shutdown() {
         done = true;
 
@@ -309,6 +328,90 @@ public class Client implements Runnable {
             }
         }
 
+
+
+        private boolean isColor(String s) {
+            return s.equals("W") || s.equals("B") || s.equals("L") ||
+                    s.equals("P") || s.equals("G") || s.equals("Y");
+        }
+    }
+
+    class RMIInputHandler implements Runnable {
+
+        public void run() {
+            String message;
+            BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
+            while (!done) {
+                try {
+                    message = inReader.readLine();
+
+                    if (message.equals("/quit")) {
+                        rmiServer.quit(nickname);
+                        inReader.close();
+                        shutdown();
+                    } else if (message.startsWith("/chat")) {
+                        rmiServer.chatMessage(nickname,message.substring(message.indexOf("/chat") + "/chat ".length()));
+                    }
+                    /*
+                     * /collect x1,y1 (opt)x2,y2 (opt)x3,y3
+                     */
+                    else if (message.startsWith("/collect")) {
+                        int firstTile = "/collect ".length();
+                        String substr = message.substring(firstTile);
+                        String[] pos = substr.split(" ");
+                        List<Position> tilesSelected = new ArrayList<>();
+                        for (String s : pos) {
+                            tilesSelected.add(new Position(Integer.parseInt(s.split(",")[0]) - 1, Integer.parseInt(s.split(",")[1]) - 1));
+                        }
+                        rmiServer.pickTiles(nickname,tilesSelected);
+                    } else if (message.startsWith("/column")) {
+                        int index = "/column ".length();
+                        String substr = message.substring(index);
+                        int col = Integer.parseInt(substr.substring(0, 1)) - 1;
+                        if (col < 0 || col > 5) {
+                            System.out.println("Invalid column number");
+                        } else {
+                            rmiServer.selectColumn(nickname,col);
+                        }
+                    } else if (message.startsWith("/order")) {
+                        int index = "/order".length() + 1;
+                        String substr = message.substring(index);
+                        List<String> tiles = List.of(substr.split(" "));
+                        List<String> newOrder = new ArrayList<>();
+                        for (String t : tiles) {
+                            if (isColor(t)) {
+                                newOrder.add(t);
+                            }
+                        }
+                        if (newOrder.size() == tiles.size() && new HashSet<>(newOrder).containsAll(tiles)) {
+                            StringBuilder builder = new StringBuilder();
+                            for (int i = 0; i < newOrder.size(); i++) {
+                                builder.append(newOrder.get(i));
+                                if (i != newOrder.size() - 1) {
+                                    builder.append(" ");
+                                }
+                            }
+                            rmiServer.order(nickname,builder.toString());
+                        } else if (!new HashSet<>(newOrder).containsAll(tiles)) {
+                            System.out.println("You must chose the tiles you have collected");
+                        } else {
+                            System.out.println("Wrong command syntax. Use: /order [color1][color2][color3](opt.)");
+                        }
+
+                    } else if (message.startsWith("/help")) {
+                        rmiServer.help(nickname);
+                    } else {
+                        rmiServer.infoMessage(nickname,message);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+
+
         private boolean isColor(String s) {
             return s.equals("W") || s.equals("B") || s.equals("L") ||
                     s.equals("P") || s.equals("G") || s.equals("Y");
@@ -324,6 +427,58 @@ public class Client implements Runnable {
         if (out != null) {
             out.println(gson.toJson(action));
         }
+    }
+
+    //RMIClient interface implementation
+
+
+    @Override
+    public void update(View view) throws RemoteException {
+        //shelves
+        for (String s : view.getShelves()) {
+            System.out.println(s + "\n");
+        }
+        //personal card
+        System.out.println(ANSI.ITALIQUE + "Personal goal card:" + ANSI.RESET_STYLE);
+        System.out.println(view.getPersonalCard());
+
+        //shared cards
+        for (int i = 0; i < view.getSharedCards().size(); i++) {
+            System.out.println(ANSI.ITALIQUE + "Shared goal " + (i + 1) + ": " + ANSI.RESET_STYLE);
+            System.out.println(view.getSharedCards().get(i) + "\n");
+        }
+        //board
+        System.out.println(ANSI.ITALIQUE + "Board:" + ANSI.RESET_STYLE);
+        System.out.println(view.getBoard() + "\n");
+        //current player
+        System.out.println(ANSI.ITALIQUE + "Turn of: " + ANSI.RESET_STYLE + view.getCurrentPlayer());
+    }
+
+    @Override
+    public void chatMessage(String sender, String message) throws RemoteException {
+        System.out.println(">" + sender + ": " + message);
+    }
+
+    @Override
+    public void valid(String message) throws RemoteException {
+        System.out.println(ANSI.GREEN+message+ANSI.RESET_COLOR);
+    }
+
+    @Override
+    public void denied(String message) throws RemoteException {
+        System.err.println(message);
+    }
+
+    @Override
+    public void infoMessage(String message) throws RemoteException {
+        System.out.println(message);
+    }
+
+
+    @Override
+    public void remoteShutdown(String message) throws RemoteException {
+        System.out.println(message);
+        shutdown();
     }
 
     class SwapElapsed extends Thread {

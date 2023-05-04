@@ -1,6 +1,7 @@
 package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.myShelfie.controller.RMI.RMIController;
 import it.polimi.myShelfie.controller.ping.ServerPingThread;
 import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.controller.Lobby;
@@ -65,6 +66,11 @@ public class Server extends UnicastRemoteObject implements Runnable{
         return lobbyList;
     }
 
+    public synchronized void addClientHandler(ClientHandler ch){
+        this.connectedClients.put(ch,null); //new rmi ping thread instead of null
+        pool.execute(ch);
+    }
+
 
     public static synchronized Server getInstance() {
         if(instance == null){
@@ -106,12 +112,16 @@ public class Server extends UnicastRemoteObject implements Runnable{
         pool = Executors.newCachedThreadPool();
         lobbyPool = Executors.newCachedThreadPool();
         pingPool = Executors.newCachedThreadPool();
+
+
+        //Start RMI server
         try {
-            startRmiServer();
+            new Thread(new RMIController()).start();
         } catch (RemoteException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
+        //Start tcp accepter
         new TCPaccepter().start();
     }
 
@@ -153,30 +163,21 @@ public class Server extends UnicastRemoteObject implements Runnable{
         }
     }
 
-    public void killLobby(String UID){
-        synchronized (lobbyList){
-            Iterator<Lobby> iter =lobbyList.iterator();
-            while(iter.hasNext()){
+    public void killLobby(String UID) {
+        synchronized (lobbyList) {
+            Iterator<Lobby> iter = lobbyList.iterator();
+            while (iter.hasNext()) {
                 Lobby l = iter.next();
-                if(l.getLobbyUID().equals(UID)){
+                if (l.getLobbyUID().equals(UID)) {
 
-                    synchronized (l.actions){
-                        l.actions.add(new Action(Action.ActionType.LOBBYKILL, "server", null, null , null , null ));
+                    synchronized (l.actions) {
+                        l.actions.add(new Action(Action.ActionType.LOBBYKILL, "server", null, null, null, null));
                         l.actions.notifyAll();
                     }
                     iter.remove();
                 }
             }
         }
-    }
-    private void startRmiServer() throws RemoteException {
-        Registry registry = LocateRegistry.createRegistry(Constants.RMIPORT);
-        try{
-            registry.bind("RMIserver", this);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        System.out.println("RMI server on");
     }
 
     public Lobby lobbyOf(ClientHandler ch){
@@ -222,30 +223,25 @@ public class Server extends UnicastRemoteObject implements Runnable{
     }
 
 }
-class TCPaccepter extends Thread{
+class TCPaccepter extends Thread {
     @Override
     public void run() {
         Server server = Server.getInstance();
         ServerSocket serverSocket = server.getServerSocket();
-        while(!server.done){
+        while (!server.done) {
             try {
-                synchronized (server.getConnectedClients()){
+                synchronized (server.getConnectedClients()) {
                     Socket clientSocket = serverSocket.accept();
-                    System.out.println("Client Accepted, number of connected hosts: " + (server.getConnectedClients().size()+1));
+                    System.out.println("Client Accepted, number of connected hosts: " + (server.getConnectedClients().size() + 1));
                     ClientHandler clientHandler = new ClientHandler(clientSocket);
                     ServerPingThread pingThread = new ServerPingThread(clientHandler);
-                    server.getConnectedClients().put(clientHandler,pingThread);
+                    server.getConnectedClients().put(clientHandler, pingThread);
                     server.executeClient(clientHandler);
                 }
-            }
-            catch(Exception e){
-                System.err.println("Server side error " +  e.toString());
+            } catch (Exception e) {
+                System.err.println("Server side error " + e.toString());
                 e.printStackTrace();
             }
         }
     }
-}
-
-class RMIaccepter extends Thread{
-
 }

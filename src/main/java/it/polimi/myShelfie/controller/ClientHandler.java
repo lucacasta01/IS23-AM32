@@ -2,6 +2,7 @@ package it.polimi.myShelfie.controller;
 
 import com.google.gson.Gson;
 import it.polimi.myShelfie.application.Server;
+import it.polimi.myShelfie.controller.RMI.RMIClient;
 import it.polimi.myShelfie.utilities.*;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.Response;
@@ -21,30 +22,28 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ClientHandler implements Runnable {
-    private Socket clientSocket;
+    private final Socket clientSocket;
     private String nickname="/";
-    private Registry registry;
     private boolean isRMI = false;
-    private Remote client;
     private BufferedReader in;
     private PrintWriter out;
     private Server server;
     private boolean isPlaying = false;
     private String color;
     private final List<PingObject> pongResponses = new ArrayList<>();
-
+    private Action rmiAction = null;
+    private RMIClient rmiClient;
 
 
 
 
     public ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
-        this.registry = null;
         this.server = Server.getInstance();
+        this.rmiClient = null;
     }
-    public ClientHandler(Registry registry) {
+    public ClientHandler() {
         this.clientSocket = null;
-        this.registry = registry;
         this.server = Server.getInstance();
         this.isRMI = true;
     }
@@ -61,6 +60,10 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    public void setRmiAction(Action rmiAction) {
+        this.rmiAction = rmiAction;
+    }
+
     public Action getAction(){
         if(!isRMI) {
             try {
@@ -73,9 +76,20 @@ public class ClientHandler implements Runnable {
                 return new Action(Action.ActionType.VOID, null, null, null, null, null);
             }
         }else{
-            
+            synchronized (rmiAction){
+                if(rmiAction!=null){
+                    return rmiAction;
+                }
+                else {
+                    return new Action(Action.ActionType.VOID, null, null, null, null, null);
+                }
+            }
+
         }
     }
+
+
+
     public void run() {
         if(!isRMI){
             try {
@@ -312,6 +326,7 @@ public class ClientHandler implements Runnable {
                             }
                             case "0" -> {
                                 sendShutdown();
+                                server.getConnectedClients().get(this).setElapsed();
                                 server.removeClient(this);
                                 shutdown();
                                 System.out.println(nickname + " disconnected");
@@ -397,33 +412,63 @@ public class ClientHandler implements Runnable {
         isPlaying = playing;
     }
     public synchronized void sendInfoMessage(String message) {
-        Gson gson = new Gson();
-        try {
-            out.println(gson.toJson(new Response(Response.ResponseType.INFO,null,null,message)));
-        } catch (Exception e) {
-            System.out.println("Error occurred while sending a message: " + e.toString());
-            e.printStackTrace();
+        if(isRMI){
+            try{
+                rmiClient.infoMessage(message);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Gson gson = new Gson();
+            try {
+                out.println(gson.toJson(new Response(Response.ResponseType.INFO, null, null, message)));
+            } catch (Exception e) {
+                System.out.println("Error occurred while sending a message: " + e.toString());
+                e.printStackTrace();
+            }
         }
     }
 
     public synchronized void sendChatMessage(String message, String sender){
-        Response r = new Response(Response.ResponseType.CHATMESSAGE, new Response.ChatMessage(sender, message), null, null);
-        Gson gson = new Gson();
-        try {
-            out.println(gson.toJson(r));
-        } catch (Exception e) {
-            System.out.println("Error occurred while sending a message: " + e.toString());
-            e.printStackTrace();
+        if(isRMI){
+            try{
+                rmiClient.chatMessage(sender,message);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Response r = new Response(Response.ResponseType.CHATMESSAGE, new Response.ChatMessage(sender, message), null, null);
+            Gson gson = new Gson();
+            try {
+                out.println(gson.toJson(r));
+            } catch (Exception e) {
+                System.out.println("Error occurred while sending a message: " + e.toString());
+                e.printStackTrace();
+            }
         }
     }
 
     public synchronized void sendDeny(String message) {
-        Gson gson = new Gson();
-        try {
-            out.println(gson.toJson(new Response(Response.ResponseType.DENIED, null ,null,message)));
-        } catch (Exception e) {
-            System.out.println("Error occurred while sending a message: " + e.toString());
-            e.printStackTrace();
+        if(isRMI){
+            try {
+                rmiClient.denied(message);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Gson gson = new Gson();
+            try {
+                out.println(gson.toJson(new Response(Response.ResponseType.DENIED, null, null, message)));
+            } catch (Exception e) {
+                System.out.println("Error occurred while sending a message: " + e.toString());
+                e.printStackTrace();
+            }
         }
     }
 
@@ -445,12 +490,22 @@ public class ClientHandler implements Runnable {
     }
 
     public synchronized void sendAccept(String message) {
-        Gson gson = new Gson();
-        try {
-            out.println(gson.toJson(new Response(Response.ResponseType.VALID, new Response.ChatMessage(this.nickname, ""),null, message)));
-        } catch (Exception e) {
-            System.out.println("Error occurred while sending a message: " + e.toString());
-            e.printStackTrace();
+        if(isRMI){
+            try{
+                rmiClient.valid(message);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Gson gson = new Gson();
+            try {
+                out.println(gson.toJson(new Response(Response.ResponseType.VALID, new Response.ChatMessage(this.nickname, ""), null, message)));
+            } catch (Exception e) {
+                System.out.println("Error occurred while sending a message: " + e.toString());
+                e.printStackTrace();
+            }
         }
     }
 
@@ -466,33 +521,36 @@ public class ClientHandler implements Runnable {
 
 
     public synchronized void sendShutdown(){
-        Gson gson = new Gson();
-        out.println(gson.toJson(new Response(Response.ResponseType.SHUTDOWN, null,null, "Closing...")));
+        if(isRMI){
+            try{
+                rmiClient.remoteShutdown("Closing...");
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Gson gson = new Gson();
+            out.println(gson.toJson(new Response(Response.ResponseType.SHUTDOWN, null, null, "Closing...")));
+        }
     }
 
     public synchronized void sendView(View view) {
-        Gson gson = new Gson();
-        out.println(gson.toJson(new Response(Response.ResponseType.UPDATE, null, view, null)));
+        if(isRMI){
+            try{
+                rmiClient.update(view);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Gson gson = new Gson();
+            out.println(gson.toJson(new Response(Response.ResponseType.UPDATE, null, view, null)));
+        }
     }
 
     public synchronized void sendHelpMessage(){
-        /*String[][] data = {
-                { "Command", "Arguments", "Note"},
-                { "/chat", "text message","use it to send a chat message to other players"},
-                { "/collect", "r1,c1 (r2,c2) (r3,c3)", "game command to collect tiles from the board"},
-                { "/order", "C1 C2 C3", "use it if you want change the tiles order before insert them in your shelf"},
-                {"/column", "col number", "game command to insert the tiles you have collected into your shelf at the selected column"},
-                {"/quit","-","exit from the game"}
-        };
-
-        int[] colWidths = { 5, 10, 10 };
-
-        for (String[] row : data) {
-            for (int i = 0; i < row.length; i++) {
-                System.out.printf("%-" + colWidths[i] + "s", row[i]);
-            }
-            System.out.println();
-        }*/
 
         StringBuilder string = new StringBuilder();
         string.append("\t\t\t\t\t\t"+ ANSI.BOLD+ANSI.ITALIQUE+"****** MY SHELFIE ******"+ANSI.RESET_STYLE+"\n\n");
@@ -510,5 +568,9 @@ public class ClientHandler implements Runnable {
         sendInfoMessage("(3) Join random game");
         sendInfoMessage("(4) Search for started saved game");
         sendInfoMessage("(0) Exit\n");
+    }
+
+    public void setRmiClient(RMIClient client){
+        this.rmiClient = client;
     }
 }
