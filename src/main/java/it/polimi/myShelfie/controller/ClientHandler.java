@@ -37,10 +37,16 @@ public class ClientHandler implements Runnable {
 
 
 
-    public ClientHandler(Socket clientSocket, Registry registry) {
+    public ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
+        this.registry = null;
+        this.server = Server.getInstance();
+    }
+    public ClientHandler(Registry registry) {
+        this.clientSocket = null;
         this.registry = registry;
         this.server = Server.getInstance();
+        this.isRMI = true;
     }
 
     public void shutdown() {
@@ -56,25 +62,35 @@ public class ClientHandler implements Runnable {
     }
 
     public Action getAction(){
-        try{
-            return JsonParser.getAction(in.readLine());
-        }catch (Exception e) {
-            return new Action(Action.ActionType.VOID, null, null, null, null, null);
+        if(!isRMI) {
+            try {
+                Action a = JsonParser.getAction(in.readLine());
+                if (a == null) {
+                    return new Action(Action.ActionType.VOID, null, null, null, null, null);
+                }
+                return a;
+            } catch (Exception e) {
+                return new Action(Action.ActionType.VOID, null, null, null, null, null);
+            }
+        }else{
+            
         }
     }
     public void run() {
-        try {
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-        } catch (Exception e) {
-            System.err.println("Exception throws during stream creation: " + e.toString());
-            e.printStackTrace();
-        }
-        try{
-            server.executePingThread(this);
-        }catch(Exception e){
-            System.out.println("Error while adding ping thread");
-            e.printStackTrace();
+        if(!isRMI){
+            try {
+                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                out = new PrintWriter(clientSocket.getOutputStream(), true);
+            } catch (Exception e) {
+                System.err.println("Exception throws during stream creation: " + e.toString());
+                e.printStackTrace();
+            }
+            try{
+                server.executePingThread(this);
+            }catch(Exception e){
+                System.out.println("Error while adding ping thread");
+                e.printStackTrace();
+            }
         }
 
 
@@ -380,61 +396,6 @@ public class ClientHandler implements Runnable {
     public synchronized void setPlaying(boolean playing) {
         isPlaying = playing;
     }
-
-    /*
-        public void setRMI(boolean isRMI){
-            this.isRMI = isRMI;
-            if(isRMI){
-                try{
-                    client = new ClientImp(this);
-                    registry.rebind("client", client);
-                }
-                catch(Exception e){
-                    System.err.println("Error during client rebinding: " + e.toString());
-                    e.printStackTrace();
-                }
-            }
-            else {
-                try{
-                    registry.unbind("client");
-                }
-                catch(Exception e){
-                    System.err.println("Error during client unbinding: "+ e.toString());
-                }
-            }
-        }
-
-        private void handleTCPCom(Object input){
-            if(input instanceof String){
-                String message = (String) input;
-                if(message.equalsIgnoreCase("switch to rmi")) {
-                    sendMessage("Switching to RMI communication");
-                    setRMI(true);
-                }
-                else {sendMessage("Received message via TCP "+ message);}
-            }
-            else {
-                sendMessage("Invalid message received via TCP");
-            }
-        }
-
-        private void handleRMICom(Object input){
-            if(input instanceof String){
-                String message = (String) input;
-                if(message.equalsIgnoreCase("switch to tcp")){
-                    sendMessage("Switching to TCP communication");
-                    setRMI(false);
-                }
-                else {
-                    sendMessage("Received message via RMI" +  message);
-                }
-            }
-            else {
-                sendMessage("Invalid message received via RMI");
-            }
-        }
-        */
-
     public synchronized void sendInfoMessage(String message) {
         Gson gson = new Gson();
         try {

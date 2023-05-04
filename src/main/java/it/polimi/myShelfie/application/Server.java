@@ -1,12 +1,11 @@
 package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.myShelfie.application.ping.ServerPingThread;
+import it.polimi.myShelfie.controller.ping.ServerPingThread;
 import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.controller.Lobby;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.JsonParser;
-import it.polimi.myShelfie.utilities.PingObject;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.Usergame;
 
@@ -14,14 +13,15 @@ import java.io.*;
 import java.net.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.rmi.registry.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
-public class Server implements Runnable{
+public class Server extends UnicastRemoteObject implements Runnable{
 
     boolean done = false;
     private static Server instance;
@@ -34,7 +34,7 @@ public class Server implements Runnable{
     private Map<String, String> userGame;
     private List <Lobby> lobbyList;
 
-    private Server(){
+    private Server() throws RemoteException {
         try {
             connectedClients = new HashMap<>();
             lobbyList = new ArrayList<>();
@@ -66,9 +66,14 @@ public class Server implements Runnable{
     }
 
 
-    public static synchronized Server getInstance(){
+    public static synchronized Server getInstance() {
         if(instance == null){
-            instance = new Server();
+            try {
+                instance = new Server();
+            }catch(RemoteException e){
+                e.printStackTrace();
+                //todo
+            }
         }
         return instance;
     }
@@ -101,20 +106,13 @@ public class Server implements Runnable{
         pool = Executors.newCachedThreadPool();
         lobbyPool = Executors.newCachedThreadPool();
         pingPool = Executors.newCachedThreadPool();
-        while(!done){
-            try {
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("Client Accepted, number of connected hosts: " + (connectedClients.size()+1));
-                ClientHandler clientHandler = new ClientHandler(clientSocket, registry);
-                ServerPingThread pingThread = new ServerPingThread(clientHandler);
-                connectedClients.put(clientHandler,pingThread);
-                pool.execute(clientHandler);
-            }
-            catch(Exception e){
-                System.err.println("Server side error " +  e.toString());
-                e.printStackTrace();
-            }
+        try {
+            startRmiServer();
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
+
+        new TCPaccepter().start();
     }
 
     public void broadcastMessage(String message){
@@ -171,6 +169,15 @@ public class Server implements Runnable{
             }
         }
     }
+    private void startRmiServer() throws RemoteException {
+        Registry registry = LocateRegistry.createRegistry(Constants.RMIPORT);
+        try{
+            registry.bind("RMIserver", this);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        System.out.println("RMI server on");
+    }
 
     public Lobby lobbyOf(ClientHandler ch){
         for(Lobby l : lobbyList){
@@ -184,7 +191,9 @@ public class Server implements Runnable{
     public synchronized Map<ClientHandler,ServerPingThread> getConnectedClients() {
         return connectedClients;
     }
-
+    public void executeClient(ClientHandler ch){
+            pool.execute(ch);
+    }
     public boolean isConnected(String nickname){
         int count = 0;
         for(ClientHandler ch : connectedClients.keySet()){
@@ -197,6 +206,11 @@ public class Server implements Runnable{
 
         return count>1;
     }
+
+    public ServerSocket getServerSocket() {
+        return serverSocket;
+    }
+
     public synchronized void runLobby(Lobby lobby){
         lobbyPool.execute(lobby);
     }
@@ -206,5 +220,32 @@ public class Server implements Runnable{
         //server.createPingThread().start();
         server.run();
     }
+
+}
+class TCPaccepter extends Thread{
+    @Override
+    public void run() {
+        Server server = Server.getInstance();
+        ServerSocket serverSocket = server.getServerSocket();
+        while(!server.done){
+            try {
+                synchronized (server.getConnectedClients()){
+                    Socket clientSocket = serverSocket.accept();
+                    System.out.println("Client Accepted, number of connected hosts: " + (server.getConnectedClients().size()+1));
+                    ClientHandler clientHandler = new ClientHandler(clientSocket);
+                    ServerPingThread pingThread = new ServerPingThread(clientHandler);
+                    server.getConnectedClients().put(clientHandler,pingThread);
+                    server.executeClient(clientHandler);
+                }
+            }
+            catch(Exception e){
+                System.err.println("Server side error " +  e.toString());
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+class RMIaccepter extends Thread{
 
 }

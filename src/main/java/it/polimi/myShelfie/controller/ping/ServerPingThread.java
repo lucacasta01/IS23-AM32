@@ -1,4 +1,4 @@
-package it.polimi.myShelfie.application.ping;
+package it.polimi.myShelfie.controller.ping;
 
 import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.controller.ClientHandler;

@@ -35,90 +35,96 @@ public class Client implements Runnable {
 
     @Override
     public void run() {
-        try {
-            try {
-                client = new Socket(Constants.SERVER_IP, Constants.PORT);
-
-            } catch (ConnectException connectException) {
-                System.out.println("Server not found");
-                if (in != null) {
+        String connectionProtocol = protocolHandler();
+        switch (connectionProtocol){
+            case "TCP":
+                try {
                     try {
-                        in.close();
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
+                        client = new Socket(Constants.SERVER_IP, Constants.PORT);
+
+                    } catch (ConnectException connectException) {
+                        System.out.println("Server not found");
+                        if (in != null) {
+                            try {
+                                in.close();
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }
+                        if (out != null) {
+                            out.close();
+                        }
+                        throw new RuntimeException();
                     }
+                    in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                    out = new PrintWriter(client.getOutputStream(), true);
+
+                    InputHandler inHandler = new InputHandler();
+                    Thread t = new Thread(inHandler);
+                    t.start();
+
+                    //PING THREAD
+                    pingThread().start();
+
+                    String inMessage;
+
+                    while ((inMessage = in.readLine()) != null) {
+                        Response response = recieveResponse(inMessage);
+                        if (response.getResponseType() == Response.ResponseType.INFO) {
+                            System.out.println(response.getInfoMessage());
+                        } else if (response.getResponseType() == Response.ResponseType.CHATMESSAGE) {
+                            System.out.println(">" + response.getChatMessage().getSender() + ": " + response.getChatMessage().getMessage());
+                        } else if (response.getResponseType() == Response.ResponseType.VALID) {
+                            validRecieved = true;
+                            if (response.getInfoMessage().equals("Username accepted")) {
+                                nickname = response.getChatMessage().getSender();
+                            }
+                            System.out.println(response.getInfoMessage());
+                        } else if (response.getResponseType() == Response.ResponseType.DENIED) {
+                            System.out.println(response.getInfoMessage());
+                        } else if (response.getResponseType() == Response.ResponseType.UPDATE) {
+                            view = response.getView();
+                            //shelves
+                            for (String s : view.getShelves()) {
+                                System.out.println(s + "\n");
+                            }
+                            //personal card
+                            System.out.println(ANSI.ITALIQUE + "Personal goal card:" + ANSI.RESET_STYLE);
+                            System.out.println(view.getPersonalCard());
+
+                            //shared cards
+                            for (int i = 0; i < view.getSharedCards().size(); i++) {
+                                System.out.println(ANSI.ITALIQUE + "Shared goal " + (i + 1) + ": " + ANSI.RESET_STYLE);
+                                System.out.println(view.getSharedCards().get(i) + "\n");
+                            }
+                            //board
+                            System.out.println(ANSI.ITALIQUE + "Board:" + ANSI.RESET_STYLE);
+                            System.out.println(view.getBoard() + "\n");
+                            //current player
+                            System.out.println(ANSI.ITALIQUE + "Turn of: " + ANSI.RESET_STYLE + view.getCurrentPlayer());
+                        } else if (response.getResponseType() == Response.ResponseType.PONG) {
+                            synchronized (pongResponses) {
+                                pongResponses.add(new PingObject(false));
+                                pongResponses.notifyAll();
+                            }
+
+                        } else if (response.getResponseType() == Response.ResponseType.PING) {
+                            sendAction(new Action(Action.ActionType.PONG, nickname, null, null, null, null));
+
+                        } else if (response.getResponseType() == Response.ResponseType.SHUTDOWN) {
+                            System.out.println(response.getInfoMessage());
+                            shutdown();
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException();
                 }
-                if (out != null) {
-                    out.close();
-                }
-                throw new RuntimeException();
-            }
-            in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            out = new PrintWriter(client.getOutputStream(), true);
+                break;
+            case "RMI":
 
-            InputHandler inHandler = new InputHandler();
-            Thread t = new Thread(inHandler);
-            t.start();
-
-
-            //PING THREAD
-            pingThread().start();
-
-            String inMessage;
-
-            while ((inMessage = in.readLine()) != null) {
-                Response response = recieveResponse(inMessage);
-                if (response.getResponseType() == Response.ResponseType.INFO) {
-                    System.out.println(response.getInfoMessage());
-                } else if (response.getResponseType() == Response.ResponseType.CHATMESSAGE) {
-                    System.out.println(">" + response.getChatMessage().getSender() + ": " + response.getChatMessage().getMessage());
-                } else if (response.getResponseType() == Response.ResponseType.VALID) {
-                    validRecieved = true;
-                    if (response.getInfoMessage().equals("Username accepted")) {
-                        nickname = response.getChatMessage().getSender();
-                    }
-                    System.out.println(response.getInfoMessage());
-                } else if (response.getResponseType() == Response.ResponseType.DENIED) {
-                    System.out.println(response.getInfoMessage());
-                } else if (response.getResponseType() == Response.ResponseType.UPDATE) {
-                    view = response.getView();
-                    //shelves
-                    for (String s : view.getShelves()) {
-                        System.out.println(s + "\n");
-                    }
-                    //personal card
-                    System.out.println(ANSI.ITALIQUE + "Personal goal card:" + ANSI.RESET_STYLE);
-                    System.out.println(view.getPersonalCard());
-
-                    //shared cards
-                    for (int i = 0; i < view.getSharedCards().size(); i++) {
-                        System.out.println(ANSI.ITALIQUE + "Shared goal " + (i + 1) + ": " + ANSI.RESET_STYLE);
-                        System.out.println(view.getSharedCards().get(i) + "\n");
-                    }
-                    //board
-                    System.out.println(ANSI.ITALIQUE + "Board:" + ANSI.RESET_STYLE);
-                    System.out.println(view.getBoard() + "\n");
-                    //current player
-                    System.out.println(ANSI.ITALIQUE+"Turn of: "+ANSI.RESET_STYLE+view.getCurrentPlayer());
-                } else if (response.getResponseType() == Response.ResponseType.PONG) {
-                    System.out.println("Pong #"+response.getInfoMessage());
-                    synchronized (pongResponses) {
-                        pongResponses.add(new PingObject(false));
-                        pongResponses.notifyAll();
-                    }
-
-                } else if (response.getResponseType() == Response.ResponseType.PING) {
-                    sendAction(new Action(Action.ActionType.PONG, nickname, null, null, null, null));
-
-                } else if (response.getResponseType() == Response.ResponseType.SHUTDOWN) {
-                    System.out.println(response.getInfoMessage());
-                    shutdown();
-                }
-            }
-
-
-        } catch (Exception e) {
-            throw new RuntimeException();
+                break;
+            default:
+                System.exit(11);
         }
     }
 
@@ -199,6 +205,25 @@ public class Client implements Runnable {
             System.exit(0);
         }
 
+    }
+    private String protocolHandler(){
+            String message;
+            BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("Choose your protocol [TCP/RMI]");
+            try {
+                message= inReader.readLine();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            while(!message.toUpperCase().equals("RMI")&&!message.toUpperCase().equals("TCP")){
+                System.out.println("Type the right key...");
+                try {
+                    message= inReader.readLine();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return message;
     }
 
     class InputHandler implements Runnable {
