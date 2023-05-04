@@ -60,7 +60,9 @@ public class Client implements Runnable {
             Thread t = new Thread(inHandler);
             t.start();
 
-            pingThread().start();
+
+            //PING THREAD
+            //pingThread().start();
 
             String inMessage;
 

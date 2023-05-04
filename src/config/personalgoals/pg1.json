@@ -2,31 +2,31 @@
 {
 	"row" : "0",
 	"column" : "0",
-	"color" : "PINK"
+	"color" : "P"
 },
 {
 	"row" : "0",
 	"column" : "2",
-	"color" : "BLUE"
+	"color" : "B"
 },
 {
 	"row" : "1",
 	"column" : "4",
-	"color" : "GREEN"
+	"color" : "G"
 },
 {
 	"row" : "2",
 	"column" : "3",
-	"color" : "WHITE"
+	"color" : "W"
 },
 {
 	"row" : "3",
 	"column" : "1",
-	"color" : "YELLOW"
+	"color" : "Y"
 },
 {
 	"row" : "5",
 	"column" : "2",
-	"color" : "LIGHTBLUE"
+	"color" : "L"
 }
 ]
