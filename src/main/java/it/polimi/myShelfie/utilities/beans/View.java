@@ -1,9 +1,10 @@
 package it.polimi.myShelfie.utilities.beans;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class View {
+public class View implements Serializable {
     private String board;
     private List<String> shelves;
     private List<String> sharedCards;

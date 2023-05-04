@@ -16,6 +16,7 @@ public interface RMIServer extends Remote {
     void help(String username) throws RemoteException;
     void infoMessage(String username, String message) throws RemoteException;
     void quit(String username) throws RemoteException;
-    void login(RMIClient client) throws RemoteException;
+    void addClient(RMIClient client) throws RemoteException;
+    boolean login(String username, RMIClient client) throws RemoteException;
 
 }

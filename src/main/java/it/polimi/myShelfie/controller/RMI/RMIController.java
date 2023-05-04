@@ -48,7 +48,9 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
                 .stream()
                 .filter(c -> c.getNickname().equals(username))
                 .toList().get(0);
-        ch.setRmiAction(new Action(Action.ActionType.CHAT,username,message,null,null,null));
+        synchronized (ch.getRmiActions()) {
+            ch.setRmiAction(new Action(Action.ActionType.CHAT, username, message, null, null, null));
+        }
     }
 
     @Override
@@ -58,8 +60,9 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
                 .stream()
                 .filter(c -> c.getNickname().equals(username))
                 .toList().get(0);
-
-        ch.setRmiAction(new Action(Action.ActionType.PICKTILES,username,null,null,chosenTiles,null));
+        synchronized (ch.getRmiActions()) {
+            ch.setRmiAction(new Action(Action.ActionType.PICKTILES, username, null, null, chosenTiles, null));
+        }
     }
 
     @Override
@@ -70,7 +73,9 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
                 .filter(c -> c.getNickname().equals(username))
                 .toList().get(0);
 
-        ch.setRmiAction(new Action(Action.ActionType.SELECTCOLUMN,username,null,null,null,column));
+        synchronized (ch.getRmiActions()) {
+            ch.setRmiAction(new Action(Action.ActionType.SELECTCOLUMN, username, null, null, null, column));
+        }
     }
 
     @Override
@@ -81,7 +86,9 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
                 .filter(c -> c.getNickname().equals(username))
                 .toList().get(0);
 
-        ch.setRmiAction(new Action(Action.ActionType.ORDER,username,null,newOrder,null,null));
+        synchronized (ch.getRmiActions()) {
+            ch.setRmiAction(new Action(Action.ActionType.ORDER, username, null, newOrder, null, null));
+        }
     }
 
     @Override
@@ -92,7 +99,10 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
                 .filter(c -> c.getNickname().equals(username))
                 .toList().get(0);
 
-        ch.setRmiAction(new Action(Action.ActionType.LOBBYKILL,username,null,null,null,null));
+
+        synchronized (ch.getRmiActions()) {
+            ch.setRmiAction(new Action(Action.ActionType.LOBBYKILL, username, null, null, null, null));
+        }
     }
 
     @Override
@@ -103,7 +113,9 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
                 .filter(c -> c.getNickname().equals(username))
                 .toList().get(0);
 
-        ch.setRmiAction(new Action(Action.ActionType.HELP,username,null,null,null,null));
+        synchronized (ch.getRmiActions()) {
+            ch.setRmiAction(new Action(Action.ActionType.HELP, username, null, null, null, null));
+        }
     }
 
     @Override
@@ -114,7 +126,9 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
                 .filter(c -> c.getNickname().equals(username))
                 .toList().get(0);
 
-        ch.setRmiAction(new Action(Action.ActionType.INFO,username,null,message,null,null));
+        synchronized (ch.getRmiActions()) {
+            ch.setRmiAction(new Action(Action.ActionType.INFO, username, null, message, null, null));
+        }
     }
 
     @Override
@@ -125,13 +139,34 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
                 .filter(c -> c.getNickname().equals(username))
                 .toList().get(0);
 
-        ch.setRmiAction(new Action(Action.ActionType.QUIT,username,null,null,null,null));
+        synchronized (ch.getRmiActions()) {
+            ch.setRmiAction(new Action(Action.ActionType.QUIT, username, null, null, null, null));
+        }
     }
 
     @Override
-    public void login(RMIClient client) throws RemoteException {
+    public void addClient(RMIClient client) throws RemoteException {
         ClientHandler clientHandler = new ClientHandler();
         clientHandler.setRmiClient(client);
         server.addClientHandler(clientHandler);
+    }
+
+    @Override
+    public boolean login(String username, RMIClient client) throws RemoteException {
+        ClientHandler ch = server.getConnectedClients()
+                .keySet()
+                .stream()
+                .filter(c -> c.getRmiClient().equals(client))
+                .toList()
+                .get(0);
+
+        if(server.isConnected(username)){
+            return false;
+        }
+        synchronized (ch.locker) {
+            ch.setNickname(username);
+            ch.locker.notifyAll();
+        }
+        return true;
     }
 }

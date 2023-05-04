@@ -20,12 +20,13 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Client implements Runnable,RMIClient {
+public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     private BufferedReader in;
     private PrintWriter out;
@@ -40,6 +41,9 @@ public class Client implements Runnable,RMIClient {
 
     //rmi server reference
     RMIServer rmiServer;
+
+    protected Client() throws RemoteException {
+    }
 
     @Override
     public void run() {
@@ -134,6 +138,26 @@ public class Client implements Runnable,RMIClient {
                 } catch (RemoteException | NotBoundException e) {
                     e.printStackTrace();
                 }
+
+                String nickname;
+                BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
+
+
+                try {
+                    nickname = inReader.readLine();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    while (!rmiServer.login(nickname, this)){
+                        System.out.println("Nickname already use, retry:");
+                        nickname = inReader.readLine();
+                    }
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+
                 new Thread(new RMIInputHandler()).start();
 
                 break;
@@ -145,7 +169,7 @@ public class Client implements Runnable,RMIClient {
     private void startRMIClient() throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(Constants.SERVER_IP,Constants.RMIPORT);
         this.rmiServer = (RMIServer)registry.lookup(Constants.RMINAME);
-        rmiServer.login(this);
+        rmiServer.addClient(this);
     }
     public void shutdown() {
         done = true;
@@ -215,7 +239,7 @@ public class Client implements Runnable,RMIClient {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RemoteException {
         Client client = new Client();
         try {
             client.run();

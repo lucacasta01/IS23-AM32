@@ -40,7 +40,6 @@ public class Server extends UnicastRemoteObject implements Runnable{
             connectedClients = new HashMap<>();
             lobbyList = new ArrayList<>();
             serverSocket = new ServerSocket(Constants.PORT);
-            registry = LocateRegistry.createRegistry(Constants.PORT+1);
             userGame = loadUserGame();
         }
         catch(Exception e){
