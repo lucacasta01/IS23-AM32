@@ -90,6 +90,7 @@ public class Action {
         PRINTBOARD,
         ORDER,
         LOBBYKILL,
-        HELP
+        HELP,
+        VOID
     }
 }

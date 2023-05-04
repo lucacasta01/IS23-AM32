@@ -62,7 +62,7 @@ public class Client implements Runnable {
 
 
             //PING THREAD
-            //pingThread().start();
+            pingThread().start();
 
             String inMessage;
 

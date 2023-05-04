@@ -186,8 +186,10 @@ public class Server implements Runnable{
     public boolean isConnected(String nickname){
         int count = 0;
         for(ClientHandler ch : connectedClients.keySet()){
-            if(ch.getNickname().equals(nickname)){
-                count++;
+            if(ch.getNickname()!=null) {
+                if (ch.getNickname().equals(nickname)) {
+                    count++;
+                }
             }
         }
 

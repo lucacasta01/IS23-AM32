@@ -55,8 +55,12 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public Action getAction() throws IOException {
-         return JsonParser.getAction(in.readLine());
+    public Action getAction(){
+        try{
+            return JsonParser.getAction(in.readLine());
+        }catch (Exception e) {
+            return new Action(Action.ActionType.VOID, null, null, null, null, null);
+        }
     }
     public void run() {
         try {
@@ -66,13 +70,13 @@ public class ClientHandler implements Runnable {
             System.err.println("Exception throws during stream creation: " + e.toString());
             e.printStackTrace();
         }
-        /*try{
+        try{
             server.executePingThread(this);
         }catch(Exception e){
             System.out.println("Error while adding ping thread");
             e.printStackTrace();
         }
-*/
+
 
         try {
             Action action;
@@ -95,7 +99,8 @@ public class ClientHandler implements Runnable {
                         sendShutdown();
                         shutdown();
                     }else if(action.getActionType() == Action.ActionType.PING){
-                        sendPong();
+                        System.out.println("Ping from "+nickname+" #"+action.getInfo());
+                        sendPong(action.getInfo());
                     } else if (action.getActionType() == Action.ActionType.PONG) {
                         addPong();
                     }
@@ -142,13 +147,17 @@ public class ClientHandler implements Runnable {
                             shutdown();
                             System.out.println(nickname + " disconnected");
                         }else if(action.getActionType() == Action.ActionType.PING){
-                            sendPong();
+                            System.out.println("Ping from "+nickname+" #"+action.getInfo());
+                            sendPong(action.getInfo());
                         }
                         else if (action.getActionType() == Action.ActionType.PONG) {
                             addPong();
                         }
                         action = getAction();
-                        chose = action.getInfo();
+                        if(action !=null){
+                            chose = action.getInfo();
+                        }
+
                     }
 
                         //sendAccept("Game mode selected");
@@ -191,10 +200,13 @@ public class ClientHandler implements Runnable {
                                 if (!userGame.containsKey(nickname) || userGame.get(nickname).equals("-")) {
                                     sendDeny("No game was found");
                                     sendMenu();
+                                } else if(server.getLobbyList().stream().filter(lobby -> lobby.getLobbyUID().equals(userGame.get(nickname))).toList().size()>0){
+                                    sendDeny("Another client started this game, retry to connect...");
+                                    sendMenu();
                                 } else {
                                     Lobby lobby = new Lobby(this, userGame.get(nickname));
-                                    sendInfoMessage("Joining game " + userGame.get(nickname));
                                     synchronized (server.getLobbyList()) {
+                                        sendInfoMessage("Joining game " + userGame.get(nickname));
                                         server.getLobbyList().add(lobby);
                                     }
                                     System.out.println("New lobby created [" + lobby.getLobbyUID() + "]");
@@ -256,7 +268,8 @@ public class ClientHandler implements Runnable {
                                             sendShutdown();
                                             shutdown();
                                         }else if(action.getActionType() == Action.ActionType.PING){
-                                            sendPong();
+                                            System.out.println("Ping from "+nickname+" #"+action.getInfo());
+                                            sendPong(action.getInfo());
                                         } else if (action.getActionType() == Action.ActionType.PONG){
                                             addPong();
                                         }
@@ -297,7 +310,8 @@ public class ClientHandler implements Runnable {
                             if(ch.equals(this)){
                                 synchronized (l.actions){
                                     if(action.getActionType()== Action.ActionType.PING){
-                                        sendPong();
+                                        System.out.println("Ping from "+nickname+" #"+action.getInfo());
+                                        sendPong(action.getInfo());
                                     }
                                     else if (action.getActionType() == Action.ActionType.PONG) {
                                         addPong();
@@ -317,7 +331,8 @@ public class ClientHandler implements Runnable {
 
             }
         } catch (Exception e) {
-            System.out.println(("ClientHandler Exception"));
+            System.out.println(e.toString());
+            e.printStackTrace();
             if(server.getUserGame()!=null){
                 if(server.getUserGame().get(this.getNickname())!=null) {
                     if (server.getUserGame().get(this.getNickname()).equals("-")) {
@@ -456,10 +471,10 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public synchronized  void sendPong(){
+    public synchronized  void sendPong(String count){
         Gson gson = new Gson();
         try {
-            out.println(gson.toJson(new Response(Response.ResponseType.PONG, null ,null,null)));
+            out.println(gson.toJson(new Response(Response.ResponseType.PONG, null ,null,count)));
         } catch (Exception e) {
             System.out.println("Error occurred while sending a pong: " + e.toString());
             e.printStackTrace();
