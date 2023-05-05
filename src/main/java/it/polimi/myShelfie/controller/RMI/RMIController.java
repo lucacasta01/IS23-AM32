@@ -11,12 +11,13 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.rmi.server.Unreferenced;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RMIController extends UnicastRemoteObject implements RMIServer,Runnable{
+public class RMIController extends UnicastRemoteObject implements RMIServer,Runnable, Unreferenced {
     private final List<RMIClient> rmiClients;
     private final Server server;
 
@@ -191,5 +192,10 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
     @Override
     public void ping() throws RemoteException {
 
+    }
+
+    @Override
+    public void unreferenced() {
+        System.out.println("Client disconnesso!");
     }
 }

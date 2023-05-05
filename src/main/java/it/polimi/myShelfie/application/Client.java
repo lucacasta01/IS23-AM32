@@ -136,9 +136,13 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                 try {
                     startRMIClient();
                 } catch (RemoteException | NotBoundException e) {
-                    e.printStackTrace();
+                    System.err.println("Server not found");
+                    System.out.println("Closing...");
+                    System.exit(1);
                 }
                 BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
+                //PING THREAD
+                pingThread().start();
                 try {
                     nickname = inReader.readLine();
                 } catch (IOException e) {
@@ -186,53 +190,74 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     public Thread pingThread() {
 
         return new Thread(() -> {
-            int failedPings = 0;
-            int count = 1;
-            while (true) {
-                try {
-                    sendAction(new Action(Action.ActionType.PING, nickname, null, Integer.toString(count), null, null));
-                } catch (IOException e) {
-                    System.exit(10);
-                }
-
-                SwapElapsed swapElapsed = new SwapElapsed();
-                swapElapsed.start();
-
-
-                while (pongResponses.size() == 0) {
-                    synchronized (pongResponses) {
+            switch (connectionProtocol) {
+                case "TCP" -> {
+                    int failedPings = 0;
+                    int count = 1;
+                    while (true) {
                         try {
-                            pongResponses.wait();
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
+                            sendAction(new Action(Action.ActionType.PING, nickname, null, Integer.toString(count), null, null));
+                        } catch (IOException e) {
+                            System.exit(10);
+                        }
+
+                        SwapElapsed swapElapsed = new SwapElapsed();
+                        swapElapsed.start();
+
+
+                        while (pongResponses.size() == 0) {
+                            synchronized (pongResponses) {
+                                try {
+                                    pongResponses.wait();
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        }
+
+
+                        if (pongResponses.get(0).isElapsed()) {
+                            failedPings++;
+                            System.out.println("Ping #" + count + " elapsed");
+                            if (failedPings > 2) {
+                                System.out.println("Server offline: closing...");
+                                System.exit(1);
+                            }
+
+                        } else {
+                            try {
+                                swapElapsed.setRunning(false);
+                            } catch (Exception e) {
+                                //ignore
+                            }
+                            synchronized (pongResponses) {
+                                pongResponses.remove(0);
+                            }
+                            try {
+                                Thread.sleep(Constants.PINGPERIOD);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            count++;
                         }
                     }
                 }
-
-
-                if (pongResponses.get(0).isElapsed()) {
-                    failedPings++;
-                    System.out.println("Ping #"+count+" elapsed");
-                    if(failedPings>2){
-                        System.out.println("Server offline: closing...");
-                        System.exit(1);
+                case "RMI" -> {
+                    boolean pingFailed = false;
+                    while (!pingFailed) {
+                        try {
+                            rmiServer.ping();
+                        } catch (RemoteException e) { //ping failed
+                            pingFailed = true;
+                            System.err.println("Server offline: closing...");
+                            System.exit(1);
+                        }
+                        try {
+                            Thread.sleep(Constants.PINGPERIOD);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
-
-                } else {
-                    try {
-                        swapElapsed.setRunning(false);
-                    } catch (Exception e) {
-                        //ignore
-                    }
-                    synchronized (pongResponses) {
-                        pongResponses.remove(0);
-                    }
-                    try {
-                        Thread.sleep(Constants.PINGPERIOD);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    count++;
                 }
             }
         });
