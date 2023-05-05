@@ -10,17 +10,15 @@ public class Player {
 
     // private Shelf myShelf;
     private int score;
-    private final String ipAddress;
     private final String username;
     private int failedPings;
     private Shelf myShelf;
 
     private PersonalGoalCard myGoalCard;
 
-    public Player(String name, String addr) {
+    public Player(String name) {
         username = name;
         score = 0;
-        ipAddress = addr;
         myShelf = new Shelf();
         myGoalCard = null;
     }
@@ -65,9 +63,6 @@ public class Player {
      *
      * @return player's ip address (String)
      */
-    public String getIpAddress() {
-        return ipAddress;
-    }
 
     /**
      * Returns the player's username

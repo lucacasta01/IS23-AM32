@@ -1,9 +1,8 @@
 package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
-import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.controller.RMI.RMIClient;
 import it.polimi.myShelfie.controller.RMI.RMIServer;
-import it.polimi.myShelfie.model.Position;
+import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.JsonParser;
@@ -24,7 +23,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
@@ -37,6 +35,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private Response response;
     private boolean validRecieved = false;
     private View view;
+    private String connectionProtocol;
     private final List<PingObject> pongResponses = new ArrayList<>();
 
     //rmi server reference
@@ -47,7 +46,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     @Override
     public void run() {
-        String connectionProtocol = protocolHandler();
+        connectionProtocol = protocolHandler();
         switch (connectionProtocol){
             case "TCP":
                 try {
@@ -170,7 +169,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     }
     public void shutdown() {
         done = true;
-
+        if(connectionProtocol.equals("TCP")) {
             try {
                 in.close();
                 out.close();
@@ -181,7 +180,9 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
             } catch (Exception e) {
                 System.out.println(e.toString());
             }
-
+        }else{
+            System.exit(11);
+        }
 
     }
 

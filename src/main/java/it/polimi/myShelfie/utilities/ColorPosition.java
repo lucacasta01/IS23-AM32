@@ -1,6 +1,5 @@
 package it.polimi.myShelfie.utilities;
 
-import it.polimi.myShelfie.model.Position;
 import it.polimi.myShelfie.model.Tile;
 
 public class ColorPosition {

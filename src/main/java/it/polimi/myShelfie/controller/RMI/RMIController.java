@@ -2,7 +2,7 @@ package it.polimi.myShelfie.controller.RMI;
 
 import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.controller.ClientHandler;
-import it.polimi.myShelfie.model.Position;
+import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.beans.Action;
 
@@ -33,6 +33,7 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
 
     private void startServer() throws RemoteException {
         Registry registry = LocateRegistry.createRegistry(Constants.RMIPORT);
+
         try{
             registry.bind(Constants.RMINAME, this);
         }catch(Exception e){

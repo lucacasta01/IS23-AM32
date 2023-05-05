@@ -3,6 +3,7 @@ package it.polimi.myShelfie.model;
 import it.polimi.myShelfie.utilities.ColorPosition;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.JsonParser;
+import it.polimi.myShelfie.utilities.Position;
 
 import java.io.*;
 import java.util.ArrayList;

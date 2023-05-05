@@ -1,5 +1,8 @@
-package it.polimi.myShelfie.model;
-public class Position {
+package it.polimi.myShelfie.utilities;
+
+import java.io.Serializable;
+
+public class Position implements Serializable {
     private int row;
     private int column;
 
@@ -14,5 +17,10 @@ public class Position {
 
     public int getColumn() {
         return column;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

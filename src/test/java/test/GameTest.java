@@ -2,14 +2,13 @@ package test;
 
 import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
-import it.polimi.myShelfie.model.Position;
+import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.utilities.Utils;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;

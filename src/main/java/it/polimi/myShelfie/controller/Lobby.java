@@ -3,7 +3,7 @@ package it.polimi.myShelfie.controller;
 import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
-import it.polimi.myShelfie.model.Position;
+import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.model.cards.PersonalGoalCard;
 import it.polimi.myShelfie.model.cards.SharedGoalCard;
@@ -11,7 +11,6 @@ import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.View;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -95,7 +94,7 @@ public class Lobby implements Runnable{
                     lobbyPlayers.get(0).sendDeny("The chat is not active now");
                     actions.remove(0);
                 } else if (action.getActionType() == Action.ActionType.PICKTILES) {
-                    lobbyPlayers.get(0).sendDeny("Cannot pick tiles here, game not startedd");
+                    lobbyPlayers.get(0).sendDeny("Cannot pick tiles here, game not started");
                     actions.remove(0);
                 } else if (action.getActionType() == Action.ActionType.SELECTCOLUMN) {
                     lobbyPlayers.get(0).sendDeny("Cannot select column here, game not started");
@@ -333,7 +332,7 @@ public class Lobby implements Runnable{
     private List<Player> generatePlayers(){
         List<Player> toReturn = new ArrayList<>();
         for(ClientHandler p : lobbyPlayers){
-            Player player = new Player(p.getNickname(),p.getClientSocket().getLocalAddress().getHostAddress());
+            Player player = new Player(p.getNickname());
             player.setGoalCard(game.drawPersonalGoal());
             toReturn.add(player);
         }

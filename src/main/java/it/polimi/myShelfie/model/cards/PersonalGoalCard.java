@@ -1,12 +1,10 @@
 package it.polimi.myShelfie.model.cards;
 
-import it.polimi.myShelfie.model.Player;
-import it.polimi.myShelfie.model.Position;
+import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.model.Shelf;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.utilities.Constants;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PersonalGoalCard extends Card{

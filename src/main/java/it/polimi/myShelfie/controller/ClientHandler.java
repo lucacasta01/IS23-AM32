@@ -3,6 +3,7 @@ package it.polimi.myShelfie.controller;
 import com.google.gson.Gson;
 import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.controller.RMI.RMIClient;
+import it.polimi.myShelfie.controller.ping.ServerPingThread;
 import it.polimi.myShelfie.utilities.*;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.Response;
@@ -52,14 +53,16 @@ public class ClientHandler implements Runnable {
     }
 
     public void shutdown() {
-        try {
-            in.close();
-            out.close();
-            if (!clientSocket.isClosed()) {
-                clientSocket.close();
+        if(!isRMI) {
+            try {
+                in.close();
+                out.close();
+                if (!clientSocket.isClosed()) {
+                    clientSocket.close();
+                }
+            } catch (Exception e) {
+                System.out.println(e.toString());
             }
-        } catch (Exception e) {
-            System.out.println(e.toString());
         }
     }
 
@@ -109,7 +112,7 @@ public class ClientHandler implements Runnable {
                 System.err.println("Exception throws during stream creation: " + e.toString());
                 e.printStackTrace();
             }
-
+            new Thread(new ServerPingThread(this)).start();
         }
         gameLoop();
     }

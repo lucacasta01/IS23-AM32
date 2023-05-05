@@ -1,6 +1,6 @@
 package it.polimi.myShelfie.utilities.beans;
 
-import it.polimi.myShelfie.model.Position;
+import it.polimi.myShelfie.utilities.Position;
 
 import java.util.List;
 

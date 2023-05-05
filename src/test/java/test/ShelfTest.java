@@ -1,11 +1,8 @@
 package test;
 import static org.junit.jupiter.api.Assertions.*;
-import java.util.*;
-import it.polimi.myShelfie.model.Player;
-import it.polimi.myShelfie.model.Position;
+
 import it.polimi.myShelfie.model.Shelf;
 import it.polimi.myShelfie.model.Tile;
-import it.polimi.myShelfie.model.cards.PersonalGoalCard;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

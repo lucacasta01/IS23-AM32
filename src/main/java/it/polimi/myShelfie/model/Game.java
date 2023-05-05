@@ -134,7 +134,7 @@ public class Game implements Runnable{
         this.gameBoard = loadBoard(gameParameters.getBoard(),gameParameters.getTileHeap());
         oldGamePlayers = new ArrayList<>();
         for(int i=0;i<playersNumber;i++){
-            Player p = new Player(gameParameters.getUsernames().get(i),"fakeAddress");
+            Player p = new Player(gameParameters.getUsernames().get(i));
             p.setScore(gameParameters.getScore().get(i));
             p.setMyShelf(loadShelf(gameParameters.getShelf().get(i)));
             p.setGoalCard(personalDeck.get(gameParameters.getPersonalCards().get(i)-1));

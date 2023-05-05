@@ -2,7 +2,6 @@ package it.polimi.myShelfie.utilities;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import it.polimi.myShelfie.model.Position;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.GameParameters;
 import it.polimi.myShelfie.utilities.beans.Response;
