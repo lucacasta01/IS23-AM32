@@ -83,18 +83,18 @@ public class ClientHandler implements Runnable {
                 return new Action(Action.ActionType.VOID, null, null, null, null, null);
             }
         }else{
-
-            if(rmiActions==null||rmiActions.size()==0){
-                return new Action(Action.ActionType.VOID, null, null, null, null, null);
-            }
-            else if(rmiActions.size()>0){
+            if(rmiActions.size()==0){
                 synchronized (rmiActions){
-                    Action toReturn = rmiActions.get(0);
-                    rmiActions.remove(toReturn);
-                    return toReturn;
+                    try {
+                        rmiActions.wait();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
-            return new Action(Action.ActionType.VOID, null, null, null, null, null);
+            Action toReturn = rmiActions.get(0);
+            rmiActions.remove(0);
+            return toReturn;
         }
     }
 
@@ -109,40 +109,16 @@ public class ClientHandler implements Runnable {
                 System.err.println("Exception throws during stream creation: " + e.toString());
                 e.printStackTrace();
             }
-            tcpGameLoop();
-        }
-        else{ //RMI
-            sendInfoMessage("Please insert your username");
-            while(this.nickname.equals("/")){
-                synchronized (locker) {
-                    try {
-                        this.locker.wait();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-            sendInfoMessage("Username accepted");
-            System.out.println(nickname + " connected to the server");
-
-            sendMenu();
-
-            synchronized (locker){
-                try {
-                    locker.wait();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
 
         }
+        gameLoop();
     }
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
 
-    private void tcpGameLoop(){
+    private void gameLoop(){
         try {
             Action action;
             if(nickname.equals("/")){

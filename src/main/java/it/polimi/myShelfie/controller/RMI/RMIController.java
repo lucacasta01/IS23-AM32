@@ -50,6 +50,7 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
                 .toList().get(0);
         synchronized (ch.getRmiActions()) {
             ch.setRmiAction(new Action(Action.ActionType.CHAT, username, message, null, null, null));
+            ch.getRmiActions().notifyAll();
         }
     }
 
@@ -62,6 +63,7 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
                 .toList().get(0);
         synchronized (ch.getRmiActions()) {
             ch.setRmiAction(new Action(Action.ActionType.PICKTILES, username, null, null, chosenTiles, null));
+            ch.getRmiActions().notifyAll();
         }
     }
 
@@ -75,6 +77,7 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
 
         synchronized (ch.getRmiActions()) {
             ch.setRmiAction(new Action(Action.ActionType.SELECTCOLUMN, username, null, null, null, column));
+            ch.getRmiActions().notifyAll();
         }
     }
 
@@ -88,6 +91,7 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
 
         synchronized (ch.getRmiActions()) {
             ch.setRmiAction(new Action(Action.ActionType.ORDER, username, null, newOrder, null, null));
+            ch.getRmiActions().notifyAll();
         }
     }
 
@@ -102,6 +106,7 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
 
         synchronized (ch.getRmiActions()) {
             ch.setRmiAction(new Action(Action.ActionType.LOBBYKILL, username, null, null, null, null));
+            ch.getRmiActions().notifyAll();
         }
     }
 
@@ -115,6 +120,7 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
 
         synchronized (ch.getRmiActions()) {
             ch.setRmiAction(new Action(Action.ActionType.HELP, username, null, null, null, null));
+            ch.getRmiActions().notifyAll();
         }
     }
 
@@ -128,6 +134,7 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
 
         synchronized (ch.getRmiActions()) {
             ch.setRmiAction(new Action(Action.ActionType.INFO, username, null, message, null, null));
+            ch.getRmiActions().notifyAll();
         }
     }
 
@@ -141,6 +148,7 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
 
         synchronized (ch.getRmiActions()) {
             ch.setRmiAction(new Action(Action.ActionType.QUIT, username, null, null, null, null));
+            ch.getRmiActions().notifyAll();
         }
     }
 
@@ -163,9 +171,9 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
         if(server.isConnected(username)){
             return false;
         }
-        synchronized (ch.locker) {
-            ch.setNickname(username);
-            ch.locker.notifyAll();
+        synchronized (ch.getRmiActions()) {
+            ch.setRmiAction(new Action(Action.ActionType.INFO, username, null, username, null, null));
+            ch.getRmiActions().notifyAll();
         }
         return true;
     }

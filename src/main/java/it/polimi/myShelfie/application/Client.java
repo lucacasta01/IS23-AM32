@@ -31,7 +31,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private BufferedReader in;
     private PrintWriter out;
     private Socket client;
-    private String nickname;
+    private String nickname = "/";
     private boolean done;
     private boolean configurationDone = false;
     private Response response;
@@ -138,11 +138,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                 } catch (RemoteException | NotBoundException e) {
                     e.printStackTrace();
                 }
-
-                String nickname;
                 BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
-
-
                 try {
                     nickname = inReader.readLine();
                 } catch (IOException e) {
@@ -153,6 +149,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                         System.out.println("Nickname already use, retry:");
                         nickname = inReader.readLine();
                     }
+                    System.out.println("My nickname is: "+nickname);
                 }
                 catch (Exception e){
                     e.printStackTrace();
