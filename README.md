@@ -12,17 +12,17 @@ game [MyShelfie](https://www.craniocreations.it/prodotto/my-shelfie)
 
 ## Project state
 
-| Component              | State |
-|----------------------|-------|
-| Model                | 🟢   |
-| View                 | 🟡   |
-| Controller           | 🟢   |
+| Component            | State  |
+|----------------------|--------|
+| Model                | 🟢     |
+| View                 | 🟡     |
+| Controller           | 🟢     |
 
 | Advanced feature     | State |
 |----------------------|-------|
 | Multiple games       | 🟡    |
 | Game persistence     | 🟡    |
-| Player reconnection  | 🟡    |
+| Player reconnection  | 🔴    |
 | Chat room            | 🟡    |
 
 
