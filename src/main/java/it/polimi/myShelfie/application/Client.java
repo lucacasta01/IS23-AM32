@@ -88,10 +88,10 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                             System.out.println(">" + response.getChatMessage().getSender() + ": " + response.getChatMessage().getMessage());
                         } else if (response.getResponseType() == Response.ResponseType.VALID) {
                             validRecieved = true;
-                            if (response.getInfoMessage().equals(ANSI.GREEN+"Username accepted"+ANSI.RESET_COLOR)) {
+                            if (response.getInfoMessage().equals("Username accepted")) {
                                 nickname = response.getChatMessage().getSender();
                             }
-                            System.out.println(response.getInfoMessage());
+                            System.out.println(ANSI.GREEN + response.getInfoMessage() + ANSI.RESET_COLOR);
                         } else if (response.getResponseType() == Response.ResponseType.DENIED) {
                             System.out.println(response.getInfoMessage());
                         } else if (response.getResponseType() == Response.ResponseType.UPDATE) {

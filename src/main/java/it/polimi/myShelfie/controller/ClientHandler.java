@@ -363,17 +363,20 @@ public class ClientHandler implements Runnable {
                                     else if (action.getActionType() == Action.ActionType.PONG) {
                                         addPong();
                                     }
-                                    else if(action.getActionType() != Action.ActionType.QUIT) {
-                                        l.recieveAction(action);
-                                        l.actions.notifyAll();
-                                    }
-                                    else{
+                                    else if(action.getActionType() == Action.ActionType.QUIT){
                                         if(!isRMI){
                                             server.getConnectedClients().get(this).setElapsed();
+                                            server.getConnectedClients().remove(this);
+                                            System.out.println(ANSI.RED+nickname+" left the game"+ANSI.RESET_COLOR);
                                         }else{
                                             server.getConnectedClients().remove(this);
+                                            System.out.println(ANSI.RED+nickname+" left the game"+ANSI.RESET_COLOR);
                                         }
                                         server.killLobby(l.getLobbyUID());
+                                    }
+                                    else{
+                                        l.recieveAction(action);
+                                        l.actions.notifyAll();
                                     }
                                 }
                             }
@@ -522,7 +525,7 @@ public class ClientHandler implements Runnable {
         else {
             Gson gson = new Gson();
             try {
-                out.println(gson.toJson(new Response(Response.ResponseType.VALID, new Response.ChatMessage(this.nickname, ""), null, ANSI.GREEN+message+ANSI.RESET_COLOR)));
+                out.println(gson.toJson(new Response(Response.ResponseType.VALID, new Response.ChatMessage(this.nickname, ""), null, message)));
             } catch (Exception e) {
                 System.out.println("Error occurred while sending a message: " + e.toString());
                 e.printStackTrace();
