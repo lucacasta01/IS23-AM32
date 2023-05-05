@@ -3,6 +3,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.myShelfie.model.Shelf;
 import it.polimi.myShelfie.model.Tile;
+import it.polimi.myShelfie.model.cards.PersonalGoalCard;
+import it.polimi.myShelfie.utilities.Constants;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -45,6 +47,34 @@ public class ShelfTest {
             testShelf.insertTile(new Tile("test", Tile.Color.BLUE), 0);
         }
         System.out.println(testShelf.toString());
+    }
+
+
+    @Test
+    @DisplayName("getFinalPoints test")
+    void getFinalPointsTest(){
+        Shelf testShelf = new Shelf();
+        testShelf.initShelf();
+        assertEquals(0, testShelf.getColorClusterSizes().size());
+        for(int i=0; i<MAXROW; i++){
+            testShelf.insertTile(new Tile("test", Tile.Color.BLUE), 0);
+        }
+        for(int i=0; i<MAXROW; i++){
+            testShelf.insertTile(new Tile("test", Tile.Color.GREEN), 1);
+        }
+        for(int i=0; i<MAXROW; i++){
+            testShelf.insertTile(new Tile("test", Tile.Color.LIGHTBLUE), 2);
+        }
+        for(int i=0; i<MAXROW; i++){
+            testShelf.insertTile(new Tile("test", Tile.Color.PINK), 3);
+        }
+        for(int i=0; i<MAXROW; i++){
+            testShelf.insertTile(new Tile("test", Tile.Color.WHITE), 4);
+        }
+        System.out.println(testShelf.toString());
+        System.out.println(testShelf.getColorClusterSizes());
+        assertEquals(5, testShelf.getColorClusterSizes().size());
+        assertEquals(40, testShelf.getShelfScore());
     }
 }
 

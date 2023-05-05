@@ -2,8 +2,12 @@ package test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.*;
 import it.polimi.myShelfie.utilities.Position;
+
+import it.polimi.myShelfie.model.Player;
+import it.polimi.myShelfie.model.*;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.model.cards.PersonalGoalCard;
+import it.polimi.myShelfie.utilities.JsonParser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -29,4 +33,22 @@ public class PersonalGoalCardTest {
         assertEquals(pattern[0][0].getColor(), Tile.Color.BLUE);
         assertEquals(pattern[2][2].getColor(), Tile.Color.WHITE);
     }
+
+    @Test
+    @DisplayName("checkPattern test")
+    void checkPatternTest(){
+        PersonalGoalCard testCard = new PersonalGoalCard(fakePath);
+        Tile[][] pattern;
+        List<Tile.Color> colors = new ArrayList<>();
+        List<Position> positions = new ArrayList<>();
+        colors.add(Tile.Color.BLUE);
+        colors.add(Tile.Color.WHITE);
+        positions.add(new Position(0, 0));
+        positions.add(new Position(2, 2));
+        testCard.setPattern(positions, colors);
+        Player testPlayer = new Player("fakeName");
+        Tile[][] playerMatrix = testPlayer.getMyShelf().getTileMartrix();
+        assertEquals(testCard.checkPersonalGoal(testPlayer.getMyShelf()), 0);
+    }
+
 }

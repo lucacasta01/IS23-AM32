@@ -134,40 +134,67 @@ public class Shelf {
         return s.toString();
     }
 
-    /*
-    private Integer checkAdjacentTilesPoints(){
-        int adjacentTiles = 0;
-        Tile[][] toCheck = getTileMartrix();
-        for(int i = 0; i<Constants.SHELFROW; i++){
-            for(int j = 0; j<Constants.SHELFCOLUMN; j++){
-                adjacentTiles += checkAdjacentTiles(i,j,toCheck[i][j].getColor());
+    public List<Integer> getColorClusterSizes() {
+        Tile[][] matrix = getTileMartrix();
+        List<Integer> clusterSizes = new ArrayList<>();
+        boolean[][] visited = new boolean[Constants.SHELFROW][Constants.SHELFCOLUMN];
+
+        for (int i = 0; i < Constants.SHELFROW; i++) {
+            for (int j = 0; j < Constants.SHELFCOLUMN; j++) {
+                if (!visited[i][j]) {
+                    int clusterSize = depthFirstSearch(i, j, matrix, visited, matrix[i][j].getColor());
+                    if (clusterSize > 0) {
+                        clusterSizes.add(clusterSize);
+                    }
+                }
             }
         }
-        if(adjacentTiles <= 2){
+
+        return clusterSizes;
+    }
+
+    /**
+     * Method used to explore a matrix via depth first search, it's basically the same as exploring a tree
+     */
+    private int depthFirstSearch(int i, int j, Tile[][] matrix, boolean[][] visited, Tile.Color color) {
+        if (i < 0 || i >= matrix.length || j < 0 || j >= matrix[0].length) {
             return 0;
         }
-        switch(adjacentTiles){
-            case 3: return 2;
-            case 4: return 3;
-            case 5: return 5;
-            default: return 8;
+
+        if (visited[i][j] || matrix[i][j].getColor() != color || matrix[i][j].getColor() == Tile.Color.NULLTILE
+        || matrix[0][0].getColor() == Tile.Color.NULLTILE) {
+            return 0;
         }
+
+        visited[i][j] = true;
+
+        int size = 1;
+        size += depthFirstSearch(i - 1, j, matrix, visited, matrix[i][j].getColor());
+        size += depthFirstSearch(i + 1, j, matrix, visited, matrix[i][j].getColor());
+        size += depthFirstSearch(i, j - 1, matrix, visited, matrix[i][j].getColor());
+        size += depthFirstSearch(i, j + 1, matrix, visited, matrix[i][j].getColor());
+
+        return size;
     }
 
-    private Integer checkAdjacentTiles(int r, int c, Tile.Color color){
-        int adjacentsFound = 0;
-        Tile[][] myMatrix = getTileMartrix();
-        List<Tile> adjacentTiles = new ArrayList<>();
-        adjacentTiles.add(myMatrix[r][Math.min(0,c-1)]);
-        adjacentTiles.add(myMatrix[Math.min(r-1,0)][c]);
-        adjacentTiles.add(myMatrix[r][Math.min(Constants.SHELFCOLUMN,c+1)]);
-        adjacentTiles.add(myMatrix[Math.min(Constants.SHELFROW, r+1)][c]);
-        for(Tile t : adjacentTiles){
-            if(t.getColor() == color){
-                adjacentsFound += checkAdjacentTiles()
+    public int getShelfScore(){
+        List<Integer> clusterSizes = getColorClusterSizes();
+        int toReturn = 0;
+        for(int s : clusterSizes){
+            if(s > 2){
+                switch(s){
+                    case 3: toReturn += 2;
+                    break;
+                    case 4: toReturn += 3;
+                    break;
+                    case 5: toReturn += 5;
+                    break;
+                    default: toReturn += 8;
+                    break;
+                }
             }
         }
+        return toReturn;
     }
 
-     */
 }
