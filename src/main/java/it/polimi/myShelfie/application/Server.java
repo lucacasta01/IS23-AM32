@@ -31,14 +31,14 @@ public class Server extends UnicastRemoteObject implements Runnable{
     private ExecutorService pool;
     private ExecutorService lobbyPool;
     private ExecutorService pingPool;
-    private Map<ClientHandler, ServerPingThread> connectedClients;
+    private final Map<ClientHandler, ServerPingThread> connectedClients;
     private Map<String, String> userGame;
-    private List <Lobby> lobbyList;
+    private final List<Lobby> lobbyList;
 
     private Server() throws RemoteException {
+        connectedClients = new HashMap<>();
+        lobbyList = new ArrayList<>();
         try {
-            connectedClients = new HashMap<>();
-            lobbyList = new ArrayList<>();
             serverSocket = new ServerSocket(Constants.PORT);
             userGame = loadUserGame();
         }
@@ -65,9 +65,11 @@ public class Server extends UnicastRemoteObject implements Runnable{
         return lobbyList;
     }
 
-    public synchronized void addClientHandler(ClientHandler ch){
-        this.connectedClients.put(ch,null); //new rmi ping thread instead of null
-        pool.execute(ch);
+    public void addClientHandler(ClientHandler ch){
+        synchronized (this.connectedClients) {
+            this.connectedClients.put(ch, new ServerPingThread(ch)); //new rmi ping thread instead of null
+            pool.execute(ch);
+        }
     }
 
 
@@ -188,7 +190,7 @@ public class Server extends UnicastRemoteObject implements Runnable{
         return null;
     }
 
-    public synchronized Map<ClientHandler,ServerPingThread> getConnectedClients() {
+    public Map<ClientHandler,ServerPingThread> getConnectedClients() {
         return connectedClients;
     }
     public void executeClient(ClientHandler ch){
@@ -230,14 +232,15 @@ class TCPaccepter extends Thread {
         ServerSocket serverSocket = server.getServerSocket();
         while (!server.done) {
             try {
+                 Socket clientSocket = serverSocket.accept();
+                ClientHandler clientHandler;
                 synchronized (server.getConnectedClients()) {
-                    Socket clientSocket = serverSocket.accept();
                     System.out.println("Client Accepted, number of connected hosts: " + (server.getConnectedClients().size() + 1));
-                    ClientHandler clientHandler = new ClientHandler(clientSocket);
+                    clientHandler = new ClientHandler(clientSocket);
                     ServerPingThread pingThread = new ServerPingThread(clientHandler);
                     server.getConnectedClients().put(clientHandler, pingThread);
-                    server.executeClient(clientHandler);
                 }
+                server.executeClient(clientHandler);
             } catch (Exception e) {
                 System.err.println("Server side error " + e.toString());
                 e.printStackTrace();

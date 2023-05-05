@@ -2,6 +2,7 @@ package it.polimi.myShelfie.controller.RMI;
 
 import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.controller.ClientHandler;
+import it.polimi.myShelfie.controller.ping.ServerPingThread;
 import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.beans.Action;
@@ -11,7 +12,9 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RMIController extends UnicastRemoteObject implements RMIServer,Runnable{
     private final List<RMIClient> rmiClients;
@@ -162,13 +165,19 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
 
     @Override
     public boolean login(String username, RMIClient client) throws RemoteException {
-        ClientHandler ch = server.getConnectedClients()
+        ClientHandler ch;
+        Map<ClientHandler, ServerPingThread> myMap;
+        synchronized (server.getConnectedClients()) {
+            myMap = new HashMap<>(server.getConnectedClients());
+        }
+
+        ch = myMap
                 .keySet()
                 .stream()
+                .filter(ClientHandler::isRMI)
                 .filter(c -> c.getRmiClient().equals(client))
                 .toList()
                 .get(0);
-
         if(server.isConnected(username)){
             return false;
         }

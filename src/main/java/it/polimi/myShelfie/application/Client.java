@@ -149,7 +149,6 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                         System.out.println("Nickname already use, retry:");
                         nickname = inReader.readLine();
                     }
-                    System.out.println("My nickname is: "+nickname);
                 }
                 catch (Exception e){
                     e.printStackTrace();

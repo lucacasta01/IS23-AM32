@@ -413,6 +413,9 @@ public class ClientHandler implements Runnable {
     public String getColor() {
         return color;
     }
+    public boolean isRMI(){
+        return this.isRMI;
+    }
 
     public void setColor(String color) {
         this.color = color;
@@ -519,7 +522,7 @@ public class ClientHandler implements Runnable {
         else {
             Gson gson = new Gson();
             try {
-                out.println(gson.toJson(new Response(Response.ResponseType.VALID, new Response.ChatMessage(this.nickname, ""), null, message)));
+                out.println(gson.toJson(new Response(Response.ResponseType.VALID, new Response.ChatMessage(this.nickname, ""), null, ANSI.GREEN+message+ANSI.RESET_COLOR)));
             } catch (Exception e) {
                 System.out.println("Error occurred while sending a message: " + e.toString());
                 e.printStackTrace();
