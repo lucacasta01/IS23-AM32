@@ -20,6 +20,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -180,15 +181,13 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
             } catch (Exception e) {
                 System.out.println(e.toString());
             }
-        }else{
-            System.exit(11);
         }
-
     }
 
     public Thread pingThread() {
 
         return new Thread(() -> {
+            int failedPings = 0;
             int count = 1;
             while (true) {
                 try {
@@ -213,8 +212,12 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
 
                 if (pongResponses.get(0).isElapsed()) {
-                    System.out.println("Server offline: closing...");
-                    System.exit(1);
+                    failedPings++;
+                    System.out.println("Ping #"+count+" elapsed");
+                    if(failedPings>2){
+                        System.out.println("Server offline: closing...");
+                        System.exit(1);
+                    }
 
                 } else {
                     try {
@@ -517,7 +520,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         @Override
         public void run() {
             int time = 0;
-            while (isRunning() && time < Constants.PINGTHRESHOLD/Constants.PINGFACTOR) {
+            while (isRunning() && time < Constants.PINGTHRESHOLD) {
                 try {
                     Thread.sleep(Constants.PINGTHRESHOLD/Constants.PINGFACTOR);
                     time += Constants.PINGTHRESHOLD/Constants.PINGFACTOR;
