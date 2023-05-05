@@ -238,6 +238,10 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         });
     }
 
+    @Override
+    public void ping() throws RemoteException {
+
+    }
 
     public static void main(String[] args) throws RemoteException {
         Client client = new Client();

@@ -5,6 +5,8 @@ import it.polimi.myShelfie.controller.RMI.RMIController;
 import it.polimi.myShelfie.controller.ping.ServerPingThread;
 import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.controller.Lobby;
+import it.polimi.myShelfie.controller.ping.ServerRmiPingThread;
+import it.polimi.myShelfie.controller.ping.ServerTcpPingThread;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.beans.Action;
@@ -65,10 +67,11 @@ public class Server extends UnicastRemoteObject implements Runnable{
         return lobbyList;
     }
 
-    public void addClientHandler(ClientHandler ch){
+    public void addRmiClientHandler(ClientHandler ch){
         synchronized (this.connectedClients) {
-            this.connectedClients.put(ch, new ServerPingThread(ch)); //new rmi ping thread instead of null
+            this.connectedClients.put(ch, new ServerRmiPingThread(ch)); //new rmi ping thread instead of null
             pool.execute(ch);
+            pingPool.execute(connectedClients.get(ch));
         }
     }
 
@@ -237,7 +240,7 @@ class TCPaccepter extends Thread {
                 synchronized (server.getConnectedClients()) {
                     System.out.println("Client Accepted, number of connected hosts: " + (server.getConnectedClients().size() + 1));
                     clientHandler = new ClientHandler(clientSocket);
-                    ServerPingThread pingThread = new ServerPingThread(clientHandler);
+                    ServerPingThread pingThread = new ServerTcpPingThread(clientHandler);
                     server.getConnectedClients().put(clientHandler, pingThread);
                 }
                 server.executeClient(clientHandler);

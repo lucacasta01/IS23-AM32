@@ -160,7 +160,7 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
     public void addClient(RMIClient client) throws RemoteException {
         ClientHandler clientHandler = new ClientHandler();
         clientHandler.setRmiClient(client);
-        server.addClientHandler(clientHandler);
+        server.addRmiClientHandler(clientHandler);
     }
 
     @Override
@@ -186,5 +186,10 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
             ch.getRmiActions().notifyAll();
         }
         return true;
+    }
+
+    @Override
+    public void ping() throws RemoteException {
+
     }
 }

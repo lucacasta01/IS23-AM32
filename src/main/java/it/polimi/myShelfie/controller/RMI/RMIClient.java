@@ -11,4 +11,5 @@ public interface RMIClient extends Remote{
      void denied(String message) throws RemoteException;
      void infoMessage(String message) throws RemoteException;
      void remoteShutdown(String message) throws RemoteException;
+     void ping() throws RemoteException;
 }
