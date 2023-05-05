@@ -192,8 +192,10 @@ public class Server extends UnicastRemoteObject implements Runnable{
         return connectedClients;
     }
     public void executeClient(ClientHandler ch){
-            pool.execute(ch);
+        pool.execute(ch);
+        pingPool.execute(connectedClients.get(ch));
     }
+
     public boolean isConnected(String nickname){
         int count = 0;
         for(ClientHandler ch : connectedClients.keySet()){

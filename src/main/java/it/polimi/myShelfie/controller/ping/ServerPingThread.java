@@ -28,8 +28,16 @@ public class ServerPingThread extends Thread{
 
     @Override
     public void run() {
+        synchronized (ch.locker){
+            try {
+                ch.locker.wait();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
         while (!getElapsed()) {
             try {
+
                 ch.sendPing();
             } catch (IOException e) {
                 System.exit(10);
@@ -40,7 +48,7 @@ public class ServerPingThread extends Thread{
             swapElapsed.start();
 
 
-            while (ch.getPongResponses().size() == 0) {
+            if (ch.getPongResponses().size() == 0) {
                 synchronized (ch.getPongResponses()) {
                     try {
                         ch.getPongResponses().wait();

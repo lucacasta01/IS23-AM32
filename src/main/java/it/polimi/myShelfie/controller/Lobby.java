@@ -84,6 +84,7 @@ public class Lobby implements Runnable{
                     throw new RuntimeException(e);
                 }
                 Action action = actions.get(0);
+
                 if (action.getActionType() == Action.ActionType.INFO) {
                     if ((!action.getInfo().equals("2") && !action.getInfo().equals("3") && !action.getInfo().equals("4"))) {
                         lobbyPlayers.get(0).sendDeny("Invalid players number, please retry");
@@ -107,6 +108,8 @@ public class Lobby implements Runnable{
                     System.out.println("Lobby " + this.lobbyUID + " killed");
                     lobbyPlayers.get(0).sendShutdown();
                     close = true;
+                }else{
+                    actions.remove(0);
                 }
             }
             if(!close) {

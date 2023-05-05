@@ -108,11 +108,13 @@ public class ClientHandler implements Runnable {
             try {
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 out = new PrintWriter(clientSocket.getOutputStream(), true);
+                synchronized (locker){
+                    locker.notifyAll();
+                }
             } catch (Exception e) {
                 System.err.println("Exception throws during stream creation: " + e.toString());
                 e.printStackTrace();
             }
-            new Thread(new ServerPingThread(this)).start();
         }
         gameLoop();
     }
@@ -336,7 +338,9 @@ public class ClientHandler implements Runnable {
                         }
                         case "0" -> {
                             sendShutdown();
-                            server.getConnectedClients().get(this).setElapsed();
+                            if(!isRMI) {
+                                server.getConnectedClients().get(this).setElapsed();
+                            }
                             server.removeClient(this);
                             shutdown();
                             System.out.println(nickname + " disconnected");
@@ -364,7 +368,11 @@ public class ClientHandler implements Runnable {
                                         l.actions.notifyAll();
                                     }
                                     else{
-                                        server.getConnectedClients().get(this).setElapsed();
+                                        if(!isRMI){
+                                            server.getConnectedClients().get(this).setElapsed();
+                                        }else{
+                                            server.getConnectedClients().remove(this);
+                                        }
                                         server.killLobby(l.getLobbyUID());
                                     }
                                 }
