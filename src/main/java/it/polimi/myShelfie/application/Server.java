@@ -217,7 +217,6 @@ public class Server extends UnicastRemoteObject implements Runnable{
 
     public static void main(String[] args){
         Server server = Server.getInstance();
-        //server.createPingThread().start();
         server.run();
     }
 

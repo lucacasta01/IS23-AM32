@@ -59,12 +59,6 @@ public class Player {
     }
 
     /**
-     * Returns the player's ipAddress
-     *
-     * @return player's ip address (String)
-     */
-
-    /**
      * Returns the player's username
      *
      * @return player's username (String)

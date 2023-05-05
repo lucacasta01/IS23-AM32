@@ -13,7 +13,7 @@ public class Constants {
     public static final int RMIPORT = 6667;
     public static final String RMINAME = "RMIServer";
 
-    public static final String SERVER_IP = "127.0.0.1";
+    public static final String SERVER_IP = "192.168.43.33";
 
     public static final int PINGPERIOD = 1000;
     public static final int PINGTHRESHOLD = 4000;
