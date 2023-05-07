@@ -9,6 +9,8 @@ import it.polimi.myShelfie.controller.ping.ServerRmiPingThread;
 import it.polimi.myShelfie.controller.ping.ServerTcpPingThread;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.JsonParser;
+import it.polimi.myShelfie.utilities.PingObject;
+import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.Usergame;
 
@@ -36,6 +38,7 @@ public class Server extends UnicastRemoteObject implements Runnable{
     private final Map<ClientHandler, ServerPingThread> connectedClients;
     private Map<String, String> userGame;
     private final List<Lobby> lobbyList;
+    public boolean acceptOn = true;
 
     private Server() throws RemoteException {
         connectedClients = new HashMap<>();
@@ -96,14 +99,12 @@ public class Server extends UnicastRemoteObject implements Runnable{
         }
     }
 
-    private void shutdown(){
+    public void shutdown(){
+
         try{
             done = true;
             if(!instance.serverSocket.isClosed()){
                 serverSocket.close();
-            }
-            for(ClientHandler t : connectedClients.keySet()){
-                t.shutdown();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -127,6 +128,9 @@ public class Server extends UnicastRemoteObject implements Runnable{
 
         //Start tcp accepter
         new TCPaccepter().start();
+
+        //Start server inputHandler
+        new ServerInputHandler().start();
     }
 
     public void broadcastMessage(String message){
@@ -221,11 +225,16 @@ public class Server extends UnicastRemoteObject implements Runnable{
     public synchronized void runLobby(Lobby lobby){
         lobbyPool.execute(lobby);
     }
+    public void killTcpAccepter(){
+        this.acceptOn = false;
+    }
 
     public static void main(String[] args){
         Server server = Server.getInstance();
         server.run();
     }
+
+
 
 }
 class TCPaccepter extends Thread {
@@ -235,7 +244,7 @@ class TCPaccepter extends Thread {
         ServerSocket serverSocket = server.getServerSocket();
         while (!server.done) {
             try {
-                 Socket clientSocket = serverSocket.accept();
+                Socket clientSocket = serverSocket.accept();
                 ClientHandler clientHandler;
                 synchronized (server.getConnectedClients()) {
                     System.out.println("Client Accepted, number of connected hosts: " + (server.getConnectedClients().size() + 1));
@@ -244,10 +253,74 @@ class TCPaccepter extends Thread {
                     server.getConnectedClients().put(clientHandler, pingThread);
                 }
                 server.executeClient(clientHandler);
-            } catch (Exception e) {
+            } catch (SocketException s) {
+                System.out.println("\n"+s.getMessage());
+                if(s.getMessage().equals("Socket closed")){
+                    System.out.println("Socket is closed, quitting TCP accepter");
+                }else{
+                    s.printStackTrace();
+                }
+            }catch (Exception e){
                 System.err.println("Server side error " + e.toString());
                 e.printStackTrace();
             }
+        }
+        System.exit(12);
+    }
+}
+
+class ServerInputHandler extends Thread {
+    @Override
+    public void run() {
+        Server server = Server.getInstance();
+
+        String message;
+        BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
+        while (!server.done) {
+            try {
+                message = inReader.readLine();
+
+                if (message.equals("/quit")) {
+                    System.out.println("Quitting server...");
+                    //closes all the lobbys
+                    List<Lobby> lobbys;
+                    synchronized (server.getLobbyList()){
+                        lobbys = new ArrayList<>(server.getLobbyList());
+                    }
+                    for(Lobby l: lobbys){
+                        server.killLobby(l.getLobbyUID());
+                    }
+                    System.out.println("All the lobbys are killed");
+                    //closes all the clients
+                    Map<ClientHandler, ServerPingThread> clients;
+                    synchronized (server.getConnectedClients()){
+                        clients = new HashMap<>(server.getConnectedClients());
+                    }
+                    for(ClientHandler ch:clients.keySet()){
+                        ch.sendShutdown();
+                    }
+                    System.out.println("All the client sare killed");
+                    try{
+                        server.shutdown();
+                    }catch (Exception e){
+                        System.out.println("Error in server shutdown");
+                        e.printStackTrace();
+                    }
+
+                } else if(message.equals("/help")){
+                    StringBuilder help = new StringBuilder();
+                    help.append("***MY SHELFIE SERVER***\n");
+                    help.append(server.getConnectedClients().size()+" Connected clients\n");
+                    help.append(server.getLobbyList().size()+" started games\n");
+                    help.append("type /quit to exit from the server app\n");
+                    System.out.println(help.toString());
+                }else{
+                    System.out.println("*Wrong input message*");
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
         }
     }
 }
