@@ -13,8 +13,8 @@ public class SharedGoal10Card extends SharedGoalCard implements CheckSharedGoal 
     private Stack<Integer> pointsTokenStack;
     private List<Player> achievedBy;
 
-    public SharedGoal10Card(String imgPath) {
-        super(imgPath);
+    public SharedGoal10Card(String imgPath, int playerNumber) {
+        super(imgPath, playerNumber);
     }
 
     /**

@@ -9,8 +9,8 @@ public class SharedGoal3Card extends SharedGoalCard implements CheckSharedGoal {
     public boolean[][] flags;
     private int count_tiles=0;
 
-    public SharedGoal3Card(String imgPath) {
-        super(imgPath);
+    public SharedGoal3Card(String imgPath, int playerNumber) {
+        super(imgPath, playerNumber);
         flags = new boolean[Constants.SHELFROW][Constants.SHELFCOLUMN];
         initFlags();
     }

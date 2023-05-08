@@ -8,9 +8,9 @@ import java.util.*;
 
 public class SharedGoal7Card extends SharedGoalCard implements CheckSharedGoal {
 
-    public SharedGoal7Card(String imgPath) {
+    public SharedGoal7Card(String imgPath, int playerNumber) {
 
-        super(imgPath);
+        super(imgPath, playerNumber);
     }
 
     /**

@@ -11,8 +11,8 @@ public class SharedGoal2Card extends SharedGoalCard implements CheckSharedGoal {
 
     private Map<Tile.Color,Boolean> colorBooleanMap;
 
-    public SharedGoal2Card(String imgPath) {
-        super(imgPath);
+    public SharedGoal2Card(String imgPath, int playerNumber) {
+        super(imgPath, playerNumber);
         colorBooleanMap = new HashMap<>();
         colorBooleanMap.put(Tile.Color.BLUE, false);
         colorBooleanMap.put(Tile.Color.LIGHTBLUE, false);

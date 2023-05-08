@@ -1,6 +1,7 @@
 package test;
 
 
+import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Shelf;
 import it.polimi.myShelfie.model.Tile;
@@ -21,6 +22,7 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 1 test")
     public void CheckSharedGoal1test(){
+        int playerNumber = 2;
         Tile[][] testingShelfAchieved = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
@@ -65,7 +67,7 @@ public class SharedGoalsTests {
         Player p2 = new Player("player2");
         p2.setMyShelf(new Shelf(testingShelfNotAchieved));
 
-        SharedGoalCard card1 = new SharedGoal1Card("fakePath");
+        SharedGoalCard card1 = new SharedGoal1Card("fakePath", playerNumber);
 
         assertTrue(card1.checkPattern(p1));
         assertFalse(card1.checkPattern(p1));
@@ -76,7 +78,7 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 2 test")
     public void checkSharedGoal2test(){
-
+        int playerNumber = 2;
         Tile[][] testingShelfAchieved = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
@@ -97,9 +99,6 @@ public class SharedGoalsTests {
         testingShelfAchieved[3][4].setColor(Tile.Color.LIGHTBLUE);
         testingShelfAchieved[4][4].setColor(Tile.Color.WHITE);
         testingShelfAchieved[5][4].setColor(Tile.Color.GREEN);
-
-
-
         Tile[][] testingShelfNotAchieved = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
@@ -132,7 +131,7 @@ public class SharedGoalsTests {
         Player p2 = new Player("player2");
         p2.setMyShelf(new Shelf(testingShelfNotAchieved));
 
-        SharedGoalCard card2 = new SharedGoal2Card("fakePath");
+        SharedGoalCard card2 = new SharedGoal2Card("fakePath", playerNumber);
 
         assertTrue(card2.checkPattern(p1));
         assertFalse(card2.checkPattern(p2));
@@ -142,7 +141,7 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 3 test")
     public void checkSharedGoal3test(){
-
+        int playerNumber = 2;
         Tile[][] testingShelfAchieved = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
@@ -237,7 +236,7 @@ public class SharedGoalsTests {
         Player p2 = new Player("player2");
         p2.setMyShelf(new Shelf(testingShelfNotAchieved));
 
-        SharedGoalCard card3 = new SharedGoal3Card("fakePath");
+        SharedGoalCard card3 = new SharedGoal3Card("fakePath", playerNumber);
 
         assertTrue(card3.checkPattern(p1));
         assertFalse(card3.checkPattern(p1)); // p1 has already achieved the goal
@@ -247,8 +246,9 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 4 test")
     public void CheckSharedGoal4Test(){
+        int playerNumber = 2;
         Player p1 = new Player(fakeName);
-        SharedGoal4Card card = new SharedGoal4Card(fakePath);
+        SharedGoal4Card card = new SharedGoal4Card(fakePath, playerNumber);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
@@ -310,8 +310,9 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 5 test")
     public void CheckSharedGoal5Test(){
+        int playerNumber = 2;
         Player p1 = new Player(fakeName);
-        SharedGoal5Card card = new SharedGoal5Card(fakePath);
+        SharedGoal5Card card = new SharedGoal5Card(fakePath, playerNumber);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
@@ -322,7 +323,6 @@ public class SharedGoalsTests {
         p1.setMyShelf(new Shelf(testingShelf));
 
         assertFalse(card.checkPattern(p1));
-
 
         testingShelf[0][0] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[1][0] = new Tile(fakePath, Tile.Color.YELLOW);
@@ -378,8 +378,9 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 6 test")
     public void CheckSharedGoal6Test(){
+        int playerNumber = 2;
         Player p1 = new Player(fakeName);
-        SharedGoal6Card card = new SharedGoal6Card(fakePath);
+        SharedGoal6Card card = new SharedGoal6Card(fakePath, playerNumber);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
@@ -449,8 +450,9 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 7 test")
     public void checkSharedGoal7test(){
+        int playerNumber = 2;
         Player p1 = new Player(fakeName);
-        SharedGoal7Card testCard = new SharedGoal7Card(fakePath);
+        SharedGoal7Card testCard = new SharedGoal7Card(fakePath, playerNumber);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
@@ -528,8 +530,9 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 8 test")
     public void checkSharedGoal8test(){
+        int playerNumber = 2;
         Player p1 = new Player(fakeName);
-        SharedGoal8Card testCard = new SharedGoal8Card(fakePath);
+        SharedGoal8Card testCard = new SharedGoal8Card(fakePath, playerNumber);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
@@ -550,8 +553,9 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 9 test")
     public void checkSharedGoal9test(){
+        int playerNumber = 2;
         Player p1 = new Player(fakeName);
-        SharedGoal9Card testCard = new SharedGoal9Card(fakePath);
+        SharedGoal9Card testCard = new SharedGoal9Card(fakePath, playerNumber);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
@@ -574,8 +578,9 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 10 test")
     public void checkSharedGoal10test(){
+        int playerNumber = 2;
         Player p1 = new Player(fakeName);
-        SharedGoal10Card testCard = new SharedGoal10Card(fakePath);
+        SharedGoal10Card testCard = new SharedGoal10Card(fakePath, playerNumber);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
@@ -623,8 +628,9 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 11 test")
     public void checkSharedGoal11test(){
+        int playerNumber = 2;
         Player p1 = new Player(fakeName);
-        SharedGoal11Card testCard = new SharedGoal11Card(fakePath);
+        SharedGoal11Card testCard = new SharedGoal11Card(fakePath, playerNumber);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
@@ -721,8 +727,9 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 12 test")
     public void checkSharedGoal12test(){
+        int playerNumber = 2;
         Player p1 = new Player(fakeName);
-        SharedGoal12Card testCard = new SharedGoal12Card(fakePath);
+        SharedGoal12Card testCard = new SharedGoal12Card(fakePath, playerNumber);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
@@ -845,4 +852,23 @@ public class SharedGoalsTests {
         }
     }
 
-}
+
+
+    @Test
+    @DisplayName("checkTokenStack 9 test")
+    public void checkTokenStack() {
+        int playerNumber2 = 2;
+        int playerNumber3 = 3;
+        int playerNumber4 = 4;
+        Game game2 = new Game("shdgfhji", playerNumber2);
+        Game game3 = new Game("shdgfhji", playerNumber3);
+        Game game4 = new Game("shdgfhji", playerNumber4);
+
+        System.out.println("Game 2:\nsg1:"+game2.getSharedDeck().get(0).popPointToken()+" "+game2.getSharedDeck().get(0).popPointToken());
+        System.out.println("sg2: "+game2.getSharedDeck().get(1).popPointToken()+" "+game2.getSharedDeck().get(1).popPointToken());
+        System.out.println("Game 3:\nsg1:"+game3.getSharedDeck().get(0).popPointToken()+" "+game3.getSharedDeck().get(0).popPointToken()+" "+game3.getSharedDeck().get(0).popPointToken());
+        System.out.println("sg2: "+game3.getSharedDeck().get(1).popPointToken()+" "+game3.getSharedDeck().get(1).popPointToken()+" "+game3.getSharedDeck().get(1).popPointToken());
+        System.out.println("Game 4:\nsg1:"+game4.getSharedDeck().get(0).popPointToken()+" "+game4.getSharedDeck().get(0).popPointToken()+" "+game4.getSharedDeck().get(0).popPointToken()+" "+game4.getSharedDeck().get(0).popPointToken());
+        System.out.println("sg2: "+game4.getSharedDeck().get(1).popPointToken()+" "+game4.getSharedDeck().get(1).popPointToken()+" "+game4.getSharedDeck().get(1).popPointToken()+" "+game4.getSharedDeck().get(1).popPointToken());
+     }
+    }

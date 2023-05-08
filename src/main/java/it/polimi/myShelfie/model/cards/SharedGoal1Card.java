@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Stack;
 
 public class SharedGoal1Card extends SharedGoalCard implements CheckSharedGoal {
-    public SharedGoal1Card(String imgPath) {
-        super(imgPath);
+    public SharedGoal1Card(String imgPath, int playerNumber) {
+        super(imgPath, playerNumber);
     }
 
     /*

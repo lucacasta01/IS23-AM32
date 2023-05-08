@@ -9,12 +9,10 @@ import java.util.Stack;
 public class SharedGoalCard extends Card implements CheckSharedGoal{
     protected Stack<Integer> pointsTokenStack;
     protected List<Player> achievedBy;
-    public SharedGoalCard(String imgPath){
+    public SharedGoalCard(String imgPath, int playerNumber){
         super(imgPath);
         this.pointsTokenStack = new Stack<>();
-        pointsTokenStack.push(4);
-        pointsTokenStack.push(6);
-        pointsTokenStack.push(8);
+        initializeStack(playerNumber);
         this.achievedBy = new ArrayList<Player>();
     }
 
@@ -23,7 +21,25 @@ public class SharedGoalCard extends Card implements CheckSharedGoal{
      *
      * @return Value of point-token (if present), 0 otherwise
      */
-
+private void initializeStack(int playerNumber){
+    switch(playerNumber){
+        case 2:
+            this.pointsTokenStack.push(2);
+            this.pointsTokenStack.push(4);
+            break;
+        case 3:
+            this.pointsTokenStack.push(2);
+            this.pointsTokenStack.push(4);
+            this.pointsTokenStack.push(6);
+            break;
+        case 4:
+            this.pointsTokenStack.push(2);
+            this.pointsTokenStack.push(4);
+            this.pointsTokenStack.push(6);
+            this.pointsTokenStack.push(8);
+            break;
+    }
+}
     public Integer popPointToken(){
         int p=0;
         try{

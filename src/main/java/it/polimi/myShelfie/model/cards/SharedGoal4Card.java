@@ -11,8 +11,8 @@ import java.util.Stack;
 public class SharedGoal4Card extends SharedGoalCard implements CheckSharedGoal {
 
 
-    public SharedGoal4Card(String imgPath) {
-        super(imgPath);
+    public SharedGoal4Card(String imgPath, int playerNumber) {
+        super(imgPath,playerNumber);
     }
     /**
      * Returns true if the player passed by parameter has achieved the shared goal

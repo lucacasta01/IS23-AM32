@@ -13,8 +13,8 @@ class CheckSharedGoalTest {
     @Test
     @DisplayName("addPlayer method")
     void addPlayer(){
-
-        SharedGoalCard checkSharedGoal = new SharedGoal1Card(fakePath);
+        int playerNumber = 2;
+        SharedGoalCard checkSharedGoal = new SharedGoal1Card(fakePath, playerNumber);
         Player p1 = new Player(fakeName);
         Player p2 = new Player(fakeName);
         Player p3 = new Player(fakeName);
@@ -29,7 +29,8 @@ class CheckSharedGoalTest {
     @Test
     @DisplayName("isAchieved method")
     void isAchieved() {
-        SharedGoalCard checkSharedGoal = new SharedGoal1Card(fakePath);
+        int playerNumber = 2;
+        SharedGoalCard checkSharedGoal = new SharedGoal1Card(fakePath, playerNumber);
         Player p = new Player(fakeName);
         assertFalse(checkSharedGoal.isAchieved(p));
         checkSharedGoal.addPlayer(p);
@@ -39,7 +40,8 @@ class CheckSharedGoalTest {
     @Test
     @DisplayName("popPointToken method")
     void popPointToken(){
-        SharedGoalCard checkSharedGoal = new SharedGoal1Card(fakePath);
+        int playerNumber = 2;
+        SharedGoalCard checkSharedGoal = new SharedGoal1Card(fakePath, playerNumber);
         assertEquals(8, checkSharedGoal.popPointToken());
         assertEquals(6, checkSharedGoal.popPointToken());
         assertEquals(4, checkSharedGoal.popPointToken());
