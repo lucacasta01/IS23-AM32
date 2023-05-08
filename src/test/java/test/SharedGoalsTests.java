@@ -59,15 +59,16 @@ public class SharedGoalsTests {
         testingShelfNotAchieved[1][2].setColor(Tile.Color.BLUE);
 
 
-        Player p1 = new Player("player1","fakeAddress");
+        Player p1 = new Player("player1");
         p1.setMyShelf(new Shelf(testingShelfAchieved));
 
-        Player p2 = new Player("player2","fakeAddress");
+        Player p2 = new Player("player2");
         p2.setMyShelf(new Shelf(testingShelfNotAchieved));
 
         SharedGoalCard card1 = new SharedGoal1Card("fakePath");
 
         assertTrue(card1.checkPattern(p1));
+        assertFalse(card1.checkPattern(p1));
         assertFalse(card1.checkPattern(p2));
 
     }
@@ -125,10 +126,10 @@ public class SharedGoalsTests {
         testingShelfNotAchieved[2][2].setColor(Tile.Color.BLUE);
 
 
-        Player p1 = new Player("player1","fakeAddress");
+        Player p1 = new Player("player1");
         p1.setMyShelf(new Shelf(testingShelfAchieved));
 
-        Player p2 = new Player("player2","fakeAddress");
+        Player p2 = new Player("player2");
         p2.setMyShelf(new Shelf(testingShelfNotAchieved));
 
         SharedGoalCard card2 = new SharedGoal2Card("fakePath");
@@ -149,43 +150,42 @@ public class SharedGoalsTests {
             }
         }
 
-        testingShelfAchieved[0][0].setColor(Tile.Color.BLUE);
-        testingShelfAchieved[1][0].setColor(Tile.Color.BLUE);
-        testingShelfAchieved[2][0].setColor(Tile.Color.BLUE);
-        testingShelfAchieved[3][0].setColor(Tile.Color.BLUE);
-        testingShelfAchieved[4][0].setColor(Tile.Color.PINK);
-        testingShelfAchieved[5][0].setColor(Tile.Color.PINK);
+        //testingShelfAchieved[0][0].setColor(Tile.Color.);
+        //testingShelfAchieved[1][0].setColor(Tile.Color.);
+        //testingShelfAchieved[2][0].setColor(Tile.Color.);
+        //testingShelfAchieved[3][0].setColor(Tile.Color.);
+        testingShelfAchieved[4][0].setColor(Tile.Color.YELLOW);
+        testingShelfAchieved[5][0].setColor(Tile.Color.BLUE);
 
-        //testingShelfAchieved[0][1].setColor(Tile.Color.BLUE);
-        testingShelfAchieved[1][1].setColor(Tile.Color.PINK);
-        testingShelfAchieved[2][1].setColor(Tile.Color.BLUE);
-        testingShelfAchieved[3][1].setColor(Tile.Color.LIGHTBLUE);
-        testingShelfAchieved[4][1].setColor(Tile.Color.PINK);
-        testingShelfAchieved[5][1].setColor(Tile.Color.GREEN);
+        //testingShelfAchieved[0][1].setColor(Tile.Color.);
+        //testingShelfAchieved[1][1].setColor(Tile.Color.);
+        //testingShelfAchieved[2][1].setColor(Tile.Color.);
+        //testingShelfAchieved[3][1].setColor(Tile.Color.);
+        testingShelfAchieved[4][1].setColor(Tile.Color.BLUE);
+        testingShelfAchieved[5][1].setColor(Tile.Color.BLUE);
 
-        //testingShelfAchieved[0][2].setColor(Tile.Color.BLUE);
+        //testingShelfAchieved[0][2].setColor(Tile.Color.);
         testingShelfAchieved[1][2].setColor(Tile.Color.PINK);
-        testingShelfAchieved[2][2].setColor(Tile.Color.BLUE);
-        testingShelfAchieved[3][2].setColor(Tile.Color.LIGHTBLUE);
-        testingShelfAchieved[4][2].setColor(Tile.Color.PINK);
-        testingShelfAchieved[5][2].setColor(Tile.Color.LIGHTBLUE);
+        testingShelfAchieved[2][2].setColor(Tile.Color.PINK);
+        testingShelfAchieved[3][2].setColor(Tile.Color.GREEN);
+        testingShelfAchieved[4][2].setColor(Tile.Color.BLUE);
+        testingShelfAchieved[5][2].setColor(Tile.Color.WHITE);
 
-        //testingShelfAchieved[0][3].setColor(Tile.Color.YELLOW);
+        //testingShelfAchieved[0][3].setColor(Tile.Color.);
         testingShelfAchieved[1][3].setColor(Tile.Color.PINK);
-        testingShelfAchieved[2][3].setColor(Tile.Color.BLUE);
-        testingShelfAchieved[3][3].setColor(Tile.Color.LIGHTBLUE);
-        testingShelfAchieved[4][3].setColor(Tile.Color.PINK);
-        testingShelfAchieved[5][3].setColor(Tile.Color.GREEN);
+        testingShelfAchieved[2][3].setColor(Tile.Color.PINK);
+        testingShelfAchieved[3][3].setColor(Tile.Color.WHITE);
+        testingShelfAchieved[4][3].setColor(Tile.Color.WHITE);
+        testingShelfAchieved[5][3].setColor(Tile.Color.WHITE);
 
-        testingShelfAchieved[0][4].setColor(Tile.Color.PINK);
-        testingShelfAchieved[1][4].setColor(Tile.Color.PINK);
-        testingShelfAchieved[2][4].setColor(Tile.Color.PINK);
-        testingShelfAchieved[3][4].setColor(Tile.Color.LIGHTBLUE);
+        //testingShelfAchieved[0][4].setColor(Tile.Color.);
+        //testingShelfAchieved[1][4].setColor(Tile.Color.);
+        testingShelfAchieved[2][4].setColor(Tile.Color.GREEN);
+        testingShelfAchieved[3][4].setColor(Tile.Color.GREEN);
         testingShelfAchieved[4][4].setColor(Tile.Color.GREEN);
         testingShelfAchieved[5][4].setColor(Tile.Color.GREEN);
 
         //expected 4 groups
-
 
 
         Tile[][] testingShelfNotAchieved = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
@@ -195,58 +195,59 @@ public class SharedGoalsTests {
             }
         }
 
-        testingShelfNotAchieved[0][0].setColor(Tile.Color.BLUE);
-        testingShelfNotAchieved[1][0].setColor(Tile.Color.BLUE);
+        //testingShelfNotAchieved[0][0].setColor(Tile.Color.);
+        //testingShelfNotAchieved[1][0].setColor(Tile.Color.);
         testingShelfNotAchieved[2][0].setColor(Tile.Color.PINK);
-        testingShelfNotAchieved[3][0].setColor(Tile.Color.BLUE);
-        testingShelfNotAchieved[4][0].setColor(Tile.Color.PINK);
-        testingShelfNotAchieved[5][0].setColor(Tile.Color.PINK);
+        testingShelfNotAchieved[3][0].setColor(Tile.Color.PINK);
+        testingShelfNotAchieved[4][0].setColor(Tile.Color.BLUE);
+        testingShelfNotAchieved[5][0].setColor(Tile.Color.BLUE);
 
-        //testingShelfNotAchieved[0][1].setColor(Tile.Color.BLUE);
-        testingShelfNotAchieved[1][1].setColor(Tile.Color.PINK);
-        testingShelfNotAchieved[2][1].setColor(Tile.Color.BLUE);
+        //testingShelfNotAchieved[0][1].setColor(Tile.Color.);
+        testingShelfNotAchieved[1][1].setColor(Tile.Color.LIGHTBLUE);
+        testingShelfNotAchieved[2][1].setColor(Tile.Color.PINK);
         testingShelfNotAchieved[3][1].setColor(Tile.Color.LIGHTBLUE);
-        testingShelfNotAchieved[4][1].setColor(Tile.Color.PINK);
-        testingShelfNotAchieved[5][1].setColor(Tile.Color.GREEN);
+        testingShelfNotAchieved[4][1].setColor(Tile.Color.GREEN);
+        testingShelfNotAchieved[5][1].setColor(Tile.Color.BLUE);
 
-        //testingShelfNotAchieved[0][2].setColor(Tile.Color.BLUE);
-        testingShelfNotAchieved[1][2].setColor(Tile.Color.PINK);
-        testingShelfNotAchieved[2][2].setColor(Tile.Color.BLUE);
-        testingShelfNotAchieved[3][2].setColor(Tile.Color.LIGHTBLUE);
-        testingShelfNotAchieved[4][2].setColor(Tile.Color.PINK);
-        testingShelfNotAchieved[5][2].setColor(Tile.Color.LIGHTBLUE);
+        //testingShelfNotAchieved[0][2].setColor(Tile.Color.);
+        testingShelfNotAchieved[1][2].setColor(Tile.Color.WHITE);
+        testingShelfNotAchieved[2][2].setColor(Tile.Color.GREEN);
+        testingShelfNotAchieved[3][2].setColor(Tile.Color.GREEN);
+        testingShelfNotAchieved[4][2].setColor(Tile.Color.GREEN);
+        testingShelfNotAchieved[5][2].setColor(Tile.Color.BLUE);
 
-        //testingShelfNotAchieved[0][3].setColor(Tile.Color.YELLOW);
-        testingShelfNotAchieved[1][3].setColor(Tile.Color.PINK);
-        testingShelfNotAchieved[2][3].setColor(Tile.Color.BLUE);
-        testingShelfNotAchieved[3][3].setColor(Tile.Color.LIGHTBLUE);
-        testingShelfNotAchieved[4][3].setColor(Tile.Color.PINK);
-        testingShelfNotAchieved[5][3].setColor(Tile.Color.GREEN);
+        testingShelfNotAchieved[0][3].setColor(Tile.Color.WHITE);
+        testingShelfNotAchieved[1][3].setColor(Tile.Color.WHITE);
+        testingShelfNotAchieved[2][3].setColor(Tile.Color.YELLOW);
+        testingShelfNotAchieved[3][3].setColor(Tile.Color.YELLOW);
+        testingShelfNotAchieved[4][3].setColor(Tile.Color.YELLOW);
+        testingShelfNotAchieved[5][3].setColor(Tile.Color.YELLOW);
 
-        testingShelfNotAchieved[0][4].setColor(Tile.Color.PINK);
-        testingShelfNotAchieved[1][4].setColor(Tile.Color.PINK);
+        testingShelfNotAchieved[0][4].setColor(Tile.Color.WHITE);
+        testingShelfNotAchieved[1][4].setColor(Tile.Color.WHITE);
         testingShelfNotAchieved[2][4].setColor(Tile.Color.PINK);
-        testingShelfNotAchieved[3][4].setColor(Tile.Color.LIGHTBLUE);
-        testingShelfNotAchieved[4][4].setColor(Tile.Color.GREEN);
+        testingShelfNotAchieved[3][4].setColor(Tile.Color.PINK);
+        testingShelfNotAchieved[4][4].setColor(Tile.Color.PINK);
         testingShelfNotAchieved[5][4].setColor(Tile.Color.GREEN);
 
 
-        Player p1 = new Player("player1","fakeAddress");
+        Player p1 = new Player("player1");
         p1.setMyShelf(new Shelf(testingShelfAchieved));
 
-        Player p2 = new Player("player2","fakeAddress");
+        Player p2 = new Player("player2");
         p2.setMyShelf(new Shelf(testingShelfNotAchieved));
 
         SharedGoalCard card3 = new SharedGoal3Card("fakePath");
 
         assertTrue(card3.checkPattern(p1));
+        assertFalse(card3.checkPattern(p1)); // p1 has already achieved the goal
         assertFalse(card3.checkPattern(p2));
 
     }
     @Test
     @DisplayName("CheckSharedGoal 4 test")
     public void CheckSharedGoal4Test(){
-        Player p1 = new Player(fakeName, fakeIP);
+        Player p1 = new Player(fakeName);
         SharedGoal4Card card = new SharedGoal4Card(fakePath);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
@@ -281,7 +282,7 @@ public class SharedGoalsTests {
         assertTrue(card.checkPattern(p1));
 
         resetMatrix(testingShelf);
-        Player p2 = new Player(fakeName,fakeIP);
+        Player p2 = new Player(fakeName);
 
         testingShelf[0][0] = new Tile(fakePath, Tile.Color.GREEN);
         testingShelf[1][0] = new Tile(fakePath, Tile.Color.GREEN);
@@ -309,7 +310,7 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 5 test")
     public void CheckSharedGoal5Test(){
-        Player p1 = new Player(fakeName, fakeIP);
+        Player p1 = new Player(fakeName);
         SharedGoal5Card card = new SharedGoal5Card(fakePath);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
@@ -377,7 +378,7 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 6 test")
     public void CheckSharedGoal6Test(){
-        Player p1 = new Player(fakeName, fakeIP);
+        Player p1 = new Player(fakeName);
         SharedGoal6Card card = new SharedGoal6Card(fakePath);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
@@ -448,7 +449,7 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 7 test")
     public void checkSharedGoal7test(){
-        Player p1 = new Player(fakeName, fakeIP);
+        Player p1 = new Player(fakeName);
         SharedGoal7Card testCard = new SharedGoal7Card(fakePath);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
@@ -527,7 +528,7 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 8 test")
     public void checkSharedGoal8test(){
-        Player p1 = new Player(fakeName, fakeIP);
+        Player p1 = new Player(fakeName);
         SharedGoal8Card testCard = new SharedGoal8Card(fakePath);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
@@ -549,7 +550,7 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 9 test")
     public void checkSharedGoal9test(){
-        Player p1 = new Player(fakeName, fakeIP);
+        Player p1 = new Player(fakeName);
         SharedGoal9Card testCard = new SharedGoal9Card(fakePath);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
@@ -573,7 +574,7 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 10 test")
     public void checkSharedGoal10test(){
-        Player p1 = new Player(fakeName, fakeIP);
+        Player p1 = new Player(fakeName);
         SharedGoal10Card testCard = new SharedGoal10Card(fakePath);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
@@ -600,7 +601,7 @@ public class SharedGoalsTests {
 
         resetMatrix(testingShelf);
 
-        Player p2 = new Player(fakeName,fakeIP);
+        Player p2 = new Player(fakeName);
 
         testingShelf[0][0] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[0][2] = new Tile(fakePath, Tile.Color.PINK);
@@ -622,7 +623,7 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 11 test")
     public void checkSharedGoal11test(){
-        Player p1 = new Player(fakeName, fakeIP);
+        Player p1 = new Player(fakeName);
         SharedGoal11Card testCard = new SharedGoal11Card(fakePath);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
@@ -646,7 +647,7 @@ public class SharedGoalsTests {
 
         resetMatrix(testingShelf);
 
-        Player p2 = new Player(fakeName,fakeIP);
+        Player p2 = new Player(fakeName);
 
         testingShelf[1][0] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[2][1] = new Tile(fakePath, Tile.Color.BLUE);
@@ -659,7 +660,7 @@ public class SharedGoalsTests {
 
         resetMatrix(testingShelf);
 
-        Player p3 = new Player(fakeName,fakeIP);
+        Player p3 = new Player(fakeName);
 
         testingShelf[0][0] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[1][1] = new Tile(fakePath, Tile.Color.BLUE);
@@ -672,7 +673,7 @@ public class SharedGoalsTests {
 
         resetMatrix(testingShelf);
 
-        Player p4 = new Player(fakeName,fakeIP);
+        Player p4 = new Player(fakeName);
 
         testingShelf[1][0] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[2][1] = new Tile(fakePath, Tile.Color.BLUE);
@@ -683,7 +684,7 @@ public class SharedGoalsTests {
         p4.setMyShelf(new Shelf(testingShelf));
         assertFalse(testCard.checkPattern(p4));
 
-        Player p5 = new Player(fakeName,fakeIP);
+        Player p5 = new Player(fakeName);
 
         testingShelf[0][1] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[1][2] = new Tile(fakePath, Tile.Color.BLUE);
@@ -694,7 +695,7 @@ public class SharedGoalsTests {
         p5.setMyShelf(new Shelf(testingShelf));
         assertFalse(testCard.checkPattern(p5));
 
-        Player p6 = new Player(fakeName,fakeIP);
+        Player p6 = new Player(fakeName);
 
         testingShelf[0][4] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[1][3] = new Tile(fakePath, Tile.Color.BLUE);
@@ -705,7 +706,7 @@ public class SharedGoalsTests {
         p6.setMyShelf(new Shelf(testingShelf));
         assertTrue(testCard.checkPattern(p6));
 
-        Player p7 = new Player(fakeName,fakeIP);
+        Player p7 = new Player(fakeName);
 
         testingShelf[1][4] = new Tile(fakePath, Tile.Color.BLUE);
         testingShelf[2][3] = new Tile(fakePath, Tile.Color.BLUE);
@@ -720,7 +721,7 @@ public class SharedGoalsTests {
     @Test
     @DisplayName("CheckSharedGoal 12 test")
     public void checkSharedGoal12test(){
-        Player p1 = new Player(fakeName, fakeIP);
+        Player p1 = new Player(fakeName);
         SharedGoal12Card testCard = new SharedGoal12Card(fakePath);
         Tile[][] testingShelf = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
         for(int i=0;i<Constants.SHELFROW;i++){
@@ -754,8 +755,9 @@ public class SharedGoalsTests {
 
         p1.setMyShelf(new Shelf(testingShelf));
         assertTrue(testCard.checkPattern(p1));
+        assertFalse(testCard.checkPattern(p1)); // p1 has already achieved the goal
 
-        Player p2 = new Player(fakeName, fakeIP);
+        Player p2 = new Player(fakeName);
 
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
@@ -782,7 +784,7 @@ public class SharedGoalsTests {
         p2.setMyShelf(new Shelf(testingShelf));
         assertTrue(testCard.checkPattern(p2));
 
-        Player p3 = new Player(fakeName, fakeIP);
+        Player p3 = new Player(fakeName);
 
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
@@ -808,7 +810,7 @@ public class SharedGoalsTests {
         p3.setMyShelf(new Shelf(testingShelf));
         assertFalse(testCard.checkPattern(p3));
 
-        Player p4 = new Player(fakeName, fakeIP);
+        Player p4 = new Player(fakeName);
 
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){

@@ -17,7 +17,7 @@ public class SharedGoal12Card extends SharedGoalCard implements CheckSharedGoal 
 
     /**
      * Returns true if the player passed by parameter has achieved the shared goal
-     *
+     * adds the player to the achievedBy list if needed
      * @return Check result
      */
     public boolean checkPattern(Player p){
@@ -46,6 +46,7 @@ public class SharedGoal12Card extends SharedGoalCard implements CheckSharedGoal 
                 for(int j = 0; j < Constants.SHELFCOLUMN - 1; j++){
                     if (columnCount[j] != (columnCount[j + 1] + 1)) {return false;}
                 }
+            addPlayer(p);
             return true;
         }
         else if(columnCount[i] < columnCount[i+1]){
@@ -53,7 +54,9 @@ public class SharedGoal12Card extends SharedGoalCard implements CheckSharedGoal 
                 for(int j = 0; j< Constants.SHELFCOLUMN - 1; j++) {
                     if (columnCount[j] != columnCount[j + 1] - 1) {return false;}
                 }
+            addPlayer(p);
             return true;
+
         }
         else if(columnCount[i] == columnCount[i+1]){return false;}
 

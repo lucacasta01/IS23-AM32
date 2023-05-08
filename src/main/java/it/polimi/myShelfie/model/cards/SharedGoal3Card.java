@@ -4,13 +4,10 @@ import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.utilities.Constants;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-
 public class SharedGoal3Card extends SharedGoalCard implements CheckSharedGoal {
 
-    private boolean[][] flags;
+    public boolean[][] flags;
+    private int count_tiles=0;
 
     public SharedGoal3Card(String imgPath) {
         super(imgPath);
@@ -18,7 +15,7 @@ public class SharedGoal3Card extends SharedGoalCard implements CheckSharedGoal {
         initFlags();
     }
 
-    private void initFlags(){
+    public void initFlags(){
         for(int i=0;i<Constants.SHELFROW;i++){
             for(int j=0;j<Constants.SHELFCOLUMN;j++){
                 flags[i][j] = false;
@@ -27,80 +24,74 @@ public class SharedGoal3Card extends SharedGoalCard implements CheckSharedGoal {
     }
 
     /**
-     * Returns true if the player passed by parameter has achieved the shared goal
-     *
-     * @return Check result
-     */
-    public boolean checkPattern(Player p){
-        Tile[][] matrix = p.getMyShelf().getTileMartrix();
-        initFlags();
-        boolean trueFound = false;
-        int count = 0;
-
-        /*Vertical groups analysis
-            3 vertical groups per column (mutual exclusion)
-         */
-        for(int col=0; col < Constants.SHELFCOLUMN; col++){
-                for(int row = 0; row < Constants.SHELFROW - 3; row++){
-                    if(matrix[row][col].getColor() == Tile.Color.NULLTILE
-                    || matrix[row+1][col].getColor() == Tile.Color.NULLTILE
-                    || matrix[row+2][col].getColor() == Tile.Color.NULLTILE
-                    || matrix[row+3][col].getColor() == Tile.Color.NULLTILE){
-                        continue;
-                    }
-
-                    if(matrix[row][col].getColor() == matrix[row+1][col].getColor()
-                            && matrix[row+1][col].getColor() == matrix[row+2][col].getColor()
-                            && matrix[row+2][col].getColor() == matrix[row+3][col].getColor()
-                            && !flags[row][col]
-                            && !flags[row+1][col]
-                            && !flags[row+2][col]
-                            && !flags[row+3][col]){
-                        count++;
-                        for(int i=0;i<4;i++){
-                            flags[row+i][col] = true;
-                        }
-                        row = Constants.SHELFROW - 3;
-                    }
-                }
-        }
-
-        /*Horizontal groups analysis
-            2 horizontal groups per column (mutual exclusion)
-         */
-        for(int row=0; row < Constants.SHELFROW; row++){
-            for(int col = 0; col < Constants.SHELFCOLUMN - 3; col++){
-                if(matrix[row][col].getColor() == Tile.Color.NULLTILE
-                        || matrix[row][col+1].getColor() == Tile.Color.NULLTILE
-                        || matrix[row][col+2].getColor() == Tile.Color.NULLTILE
-                        || matrix[row][col+3].getColor() == Tile.Color.NULLTILE){
-                    continue;
-                }
-
-                if(matrix[row][col].getColor() == matrix[row][col+1].getColor()
-                        && matrix[row][col+1].getColor() == matrix[row][col+2].getColor()
-                        && matrix[row][col+2].getColor() == matrix[row][col+3].getColor()
-                        && !flags[row][col]
-                        && !flags[row][col+1]
-                        && !flags[row][col+2]
-                        && !flags[row][col+3]){
-                    count++;
-                    for(int i=0;i<4;i++){
-                        flags[row][col+i] = true;
-                    }
-                    row = Constants.SHELFCOLUMN - 2;
-                }
-            }
-        }
-
-        if(count>=4){
-            addPlayer(p);
-            return true;
-        }
-        else{
+    * Returns true if the player passed by parameter has achieved the shared goal
+    * adds the player to the achievedBy list if needed
+    * @return Check result
+    */
+    public boolean checkPattern(Player p) {
+        if(isAchieved(p)){
             return false;
         }
+        Tile[][] matrix = p.getMyShelf().getTileMartrix();
+        initFlags();
+        int tilesPerGroup = 4;
+        int numOfGroup = 4;
+        int count_groups = 0;
+
+        for(int row = Constants.SHELFROW-1; row >= 0; row--){
+            for(int column = 0; column < Constants.SHELFCOLUMN; column++){
+
+                if(!matrix[row][column].getColor().equals(Tile.Color.NULLTILE) || !flags[row][column]){
+                    flags[row][column]=true;
+                    if(countElem(row, column,count_tiles, flags, matrix)==tilesPerGroup) count_groups++;
+                    if(count_groups==numOfGroup){
+                        addPlayer(p);
+                        return true;
+                    }
+
+                }
+                count_tiles = 0;
+            }
+        }
+        return false;
     }
+
+    public int countElem(int row, int column,int count_tiles, boolean[][] flags, Tile[][] matrix) {
+
+        if(!matrix[row][column].getColor().equals(Tile.Color.NULLTILE) || !flags[row][column]) {
+
+
+            flags[row][column] = true;
+
+            //up
+            if(row!=0){
+                if (matrix[row][column].getColor().equals(matrix[row - 1][column].getColor()) && !flags[row-1][column]) {
+                    count_tiles += countElem(row -1, column, count_tiles, flags, matrix);
+                }
+            }
+            //down
+            if(row!=5){
+                if (matrix[row][column].getColor().equals(matrix[row + 1][column].getColor()) && !flags[row+1][column]) {
+                    count_tiles += countElem(row +1, column, count_tiles, flags, matrix);
+                }
+            }
+            //right
+            if(column!=4) {
+                if (matrix[row][column].getColor().equals(matrix[row][column + 1].getColor()) && !flags[row][column+1]) {
+                    count_tiles += countElem(row, column + 1, count_tiles, flags, matrix);
+                }
+            }
+            //left
+            if(column!=0) {
+                if (matrix[row][column].getColor().equals(matrix[row][column - 1].getColor()) && !flags[row][column-1]) {
+                    count_tiles += countElem(row, column - 1, count_tiles, flags, matrix);
+                }
+            }
+            return count_tiles+1;
+        }
+        return count_tiles;
+    }
+
     @Override
     public String toString() {
         return "Card 3";

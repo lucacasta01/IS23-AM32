@@ -15,9 +15,9 @@ class CheckSharedGoalTest {
     void addPlayer(){
 
         SharedGoalCard checkSharedGoal = new SharedGoal1Card(fakePath);
-        Player p1 = new Player(fakeName, fakeIP);
-        Player p2 = new Player(fakeName, fakeIP);
-        Player p3 = new Player(fakeName, fakeIP);
+        Player p1 = new Player(fakeName);
+        Player p2 = new Player(fakeName);
+        Player p3 = new Player(fakeName);
         checkSharedGoal.addPlayer(p1);
         assertTrue(checkSharedGoal.isAchieved(p1));
         checkSharedGoal.addPlayer(p2);
@@ -30,7 +30,7 @@ class CheckSharedGoalTest {
     @DisplayName("isAchieved method")
     void isAchieved() {
         SharedGoalCard checkSharedGoal = new SharedGoal1Card(fakePath);
-        Player p = new Player(fakeName, fakeIP);
+        Player p = new Player(fakeName);
         assertFalse(checkSharedGoal.isAchieved(p));
         checkSharedGoal.addPlayer(p);
         assertTrue(checkSharedGoal.isAchieved(p));

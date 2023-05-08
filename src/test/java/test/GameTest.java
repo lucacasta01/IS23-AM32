@@ -30,8 +30,8 @@ public class GameTest {
     @Test
     @DisplayName("Pick tiles test")
     public void pickTilesTest(){
-        Player p1 = new Player("pippo",fakeIP);
-        Player p2 = new Player("topolino",fakeIP);
+        Player p1 = new Player("pippo");
+        Player p2 = new Player("topolino");
 
         Game game = new Game("fakeUID",2);
         game.addPlayer(p1);
@@ -47,7 +47,7 @@ public class GameTest {
     @DisplayName("Tile insert test")
     public void tileInsertTest(){
         Game myGame = new Game("",2);
-        myGame.getPlayers().add(new Player(fakeName,fakeIP));
+        myGame.getPlayers().add(new Player(fakeName));
         List<Tile> tiles = new ArrayList<>();
         tiles.add(new Tile("", Tile.Color.BLUE));
         tiles.add(new Tile("", Tile.Color.GREEN));
@@ -59,9 +59,9 @@ public class GameTest {
     @Test
     @DisplayName("Winner check test")
     public void winnerCheckTest(){
-        Player p1 = new Player("luca", fakeIP);
-        Player p2 = new Player("albe", fakeIP);
-        Player p3 = new Player("matteo", fakeIP);
+        Player p1 = new Player("luca");
+        Player p2 = new Player("albe");
+        Player p3 = new Player("matteo");
         p1.setScore(2);
         p2.setScore(6);
         p3.setScore(6);
@@ -87,9 +87,9 @@ public class GameTest {
     @Test
     @DisplayName("Game saving test")
     public void gameSavingTest(){
-        Player p1 = new Player("pippo",fakeIP);
-        Player p2 = new Player("topolino",fakeIP);
-        Player p3 = new Player("pluto", fakeIP);
+        Player p1 = new Player("pippo");
+        Player p2 = new Player("topolino");
+        Player p3 = new Player("pluto");
 
         Game game = new Game("fakeUID",3);
         game.addPlayer(p1);
@@ -123,9 +123,9 @@ public class GameTest {
     @Test
     @DisplayName("Game loading test")
     public void gameLoadingTest(){
-        Player p1 = new Player("pippo",fakeIP);
-        Player p2 = new Player("topolino",fakeIP);
-        Player p3 = new Player("pluto", fakeIP);
+        Player p1 = new Player("pippo");
+        Player p2 = new Player("topolino");
+        Player p3 = new Player("pluto");
 
         Game game = new Game("fakeUID",3);
         game.addPlayer(p1);
