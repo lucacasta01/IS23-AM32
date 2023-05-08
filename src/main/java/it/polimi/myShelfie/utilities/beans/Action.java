@@ -1,9 +1,6 @@
 package it.polimi.myShelfie.utilities.beans;
-
 import it.polimi.myShelfie.utilities.Position;
-
 import java.util.List;
-
 public class Action {
     private ActionType actionType;
     private String nickname;

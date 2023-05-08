@@ -1,12 +1,10 @@
 package it.polimi.myShelfie.controller.RMI;
-
 import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.controller.ping.ServerPingThread;
 import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.beans.Action;
-
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -16,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 public class RMIController extends UnicastRemoteObject implements RMIServer,Runnable, Unreferenced {
     private final List<RMIClient> rmiClients;
     private final Server server;

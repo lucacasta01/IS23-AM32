@@ -1,9 +1,6 @@
 package it.polimi.myShelfie.utilities.beans;
-
-
 import java.util.ArrayList;
 import java.util.List;
-
 public class Usergame {
     private List<String> nicknames;
     private List<String> UIDs;

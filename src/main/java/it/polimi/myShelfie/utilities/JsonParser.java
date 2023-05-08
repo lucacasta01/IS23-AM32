@@ -1,5 +1,4 @@
 package it.polimi.myShelfie.utilities;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.myShelfie.utilities.beans.Action;
@@ -7,7 +6,6 @@ import it.polimi.myShelfie.utilities.beans.GameParameters;
 import it.polimi.myShelfie.utilities.beans.Response;
 import it.polimi.myShelfie.utilities.beans.Usergame;
 import org.apache.commons.io.IOUtils;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 public class JsonParser {
     /**
      * converts the json constraint file into a list of positions

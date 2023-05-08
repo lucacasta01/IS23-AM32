@@ -1,12 +1,9 @@
 package it.polimi.myShelfie.model.cards;
-
 import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.model.Shelf;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.utilities.Constants;
-
 import java.util.List;
-
 public class PersonalGoalCard extends Card{
     private final Tile[][] patternToMatch;
 

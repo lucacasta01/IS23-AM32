@@ -9,11 +9,8 @@ import it.polimi.myShelfie.controller.ping.ServerRmiPingThread;
 import it.polimi.myShelfie.controller.ping.ServerTcpPingThread;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.JsonParser;
-import it.polimi.myShelfie.utilities.PingObject;
-import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.Usergame;
-
 import java.io.*;
 import java.net.*;
 import java.nio.file.Path;
@@ -177,7 +174,6 @@ public class Server extends UnicastRemoteObject implements Runnable{
             while (iter.hasNext()) {
                 Lobby l = iter.next();
                 if (l.getLobbyUID().equals(UID)) {
-
                     synchronized (l.actions) {
                         l.actions.add(new Action(Action.ActionType.LOBBYKILL, "server", null, null, null, null));
                         l.actions.notifyAll();

@@ -1,7 +1,5 @@
 package it.polimi.myShelfie.utilities;
-
 import it.polimi.myShelfie.model.Tile;
-
 public class ColorPosition {
     private String color;
     private String imgpath;

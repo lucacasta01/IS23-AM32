@@ -1,11 +1,8 @@
 package it.polimi.myShelfie.model.cards;
-
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.utilities.Constants;
-
 import java.util.*;
-
 public class SharedGoal7Card extends SharedGoalCard implements CheckSharedGoal {
 
     public SharedGoal7Card(String imgPath, int playerNumber) {

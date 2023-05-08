@@ -1,5 +1,4 @@
 package it.polimi.myShelfie.utilities;
-
 public class Constants {
     //MODEL
     public static int SHELFROW = 6;

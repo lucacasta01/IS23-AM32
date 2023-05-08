@@ -1,15 +1,8 @@
 package it.polimi.myShelfie.model.cards;
-
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Shelf;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.utilities.Constants;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Stack;
-
 public class SharedGoal1Card extends SharedGoalCard implements CheckSharedGoal {
     public SharedGoal1Card(String imgPath, int playerNumber) {
         super(imgPath, playerNumber);

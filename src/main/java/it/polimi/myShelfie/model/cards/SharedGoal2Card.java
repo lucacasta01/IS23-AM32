@@ -1,12 +1,9 @@
 package it.polimi.myShelfie.model.cards;
-
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.utilities.Constants;
-
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 public class SharedGoal2Card extends SharedGoalCard implements CheckSharedGoal {
 
     private Map<Tile.Color,Boolean> colorBooleanMap;

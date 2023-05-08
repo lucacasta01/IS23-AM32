@@ -1,11 +1,5 @@
 package it.polimi.myShelfie.model;
-
-import it.polimi.myShelfie.model.cards.Card;
 import it.polimi.myShelfie.model.cards.PersonalGoalCard;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class Player {
 
     // private Shelf myShelf;

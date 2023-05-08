@@ -1,5 +1,4 @@
 package it.polimi.myShelfie.utilities.beans;
-
 public class Response {
     private ChatMessage chatMessage;
     private View view;

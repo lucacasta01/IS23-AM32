@@ -1,9 +1,6 @@
 package it.polimi.myShelfie.utilities;
-
 import it.polimi.myShelfie.application.Server;
-
 import java.util.Random;
-
 public class Utils {
     public static String UIDGenerator(){
         StringBuilder stringBuilder = new StringBuilder();

@@ -1,13 +1,10 @@
 package it.polimi.myShelfie.model.cards;
-
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.utilities.Constants;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-
 public class SharedGoal6Card extends SharedGoalCard implements CheckSharedGoal {
     private Stack<Integer> pointsTokenStack;
     private List<Player> achievedBy;

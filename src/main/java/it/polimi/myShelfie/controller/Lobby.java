@@ -10,7 +10,6 @@ import it.polimi.myShelfie.model.cards.SharedGoalCard;
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.View;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;

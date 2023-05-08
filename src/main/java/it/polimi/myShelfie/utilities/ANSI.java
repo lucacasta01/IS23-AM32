@@ -1,5 +1,4 @@
 package it.polimi.myShelfie.utilities;
-
 public class ANSI {
     public static final String RESET_COLOR = "\u001B[0m";
     public static final String BLACK = "\u001B[30m";

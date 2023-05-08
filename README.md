@@ -16,7 +16,7 @@ game [MyShelfie](https://www.craniocreations.it/prodotto/my-shelfie)
 |----------------------|--------|
 | Model                | 🟢     |
 | View                 | 🟡     |
-| Controller           | 🟢     |
+| Controller           | 🟡     |
 
 | Advanced feature     | State |
 |----------------------|-------|

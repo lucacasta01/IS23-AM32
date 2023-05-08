@@ -1,13 +1,9 @@
 package it.polimi.myShelfie.model;
-
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.ColorPosition;
 import it.polimi.myShelfie.utilities.Constants;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
 public class Shelf {
     private Tile[][] tileMatrix;
 

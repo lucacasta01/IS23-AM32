@@ -5,7 +5,6 @@ import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.model.cards.*;
 import it.polimi.myShelfie.utilities.*;
 import it.polimi.myShelfie.utilities.beans.GameParameters;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;

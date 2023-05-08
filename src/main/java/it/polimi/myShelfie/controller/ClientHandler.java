@@ -1,26 +1,18 @@
 package it.polimi.myShelfie.controller;
-
 import com.google.gson.Gson;
 import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.controller.RMI.RMIClient;
-import it.polimi.myShelfie.controller.ping.ServerPingThread;
 import it.polimi.myShelfie.utilities.*;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.Response;
 import it.polimi.myShelfie.utilities.beans.View;
-
-import javax.imageio.spi.ImageReaderWriterSpi;
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.rmi.Remote;
-import java.rmi.registry.Registry;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ClientHandler implements Runnable {
     private final Socket clientSocket;
@@ -63,7 +55,12 @@ public class ClientHandler implements Runnable {
             } catch (Exception e) {
                 System.out.println(e.toString());
             }
+        }else{
+            synchronized (server.getConnectedClients()) {
+                server.getConnectedClients().get(this).setKill(true);
+            }
         }
+        server.removeClient(this);
     }
 
     public List<Action> getRmiActions() {
@@ -141,9 +138,16 @@ public class ClientHandler implements Runnable {
                         sendDeny("Cannot select column here, game not started");
                     }
                     else if(action.getActionType() == Action.ActionType.QUIT){
-                        server.getConnectedClients().get(this).setElapsed();
-                        sendShutdown();
-                        shutdown();
+                        if(!isRMI) {
+                            server.getConnectedClients().get(this).setElapsed();
+                            sendShutdown();
+                            shutdown();
+                        }else{
+                            server.getConnectedClients().get(this).setKill(true);
+                            server.getConnectedClients().remove(this);
+                            sendShutdown();
+                            shutdown();
+                        }
                     }else if(action.getActionType() == Action.ActionType.PING){
                         sendPong(action.getInfo());
                     } else if (action.getActionType() == Action.ActionType.PONG) {
@@ -185,9 +189,14 @@ public class ClientHandler implements Runnable {
                             sendDeny("Cannot select column here, game not started");
                         }
                         else if(action.getActionType() == Action.ActionType.QUIT){
-                            server.getConnectedClients().get(this).setElapsed();
-                            sendShutdown();
-                            shutdown();
+                            if(!isRMI) {
+                                server.getConnectedClients().get(this).setElapsed();
+                                sendShutdown();
+                                shutdown();
+                            }else{
+                                sendShutdown();
+                                shutdown();
+                            }
                             System.out.println(nickname + " disconnected");
                         }else if(action.getActionType() == Action.ActionType.PING){
                             sendPong(action.getInfo());
@@ -307,8 +316,14 @@ public class ClientHandler implements Runnable {
                                         sendDeny("Cannot select column here, game not started");
                                     }
                                     else if(action.getActionType() == Action.ActionType.QUIT){
-                                        sendShutdown();
-                                        shutdown();
+                                        if(!isRMI) {
+                                            server.getConnectedClients().get(this).setElapsed();
+                                            sendShutdown();
+                                            shutdown();
+                                        }else{
+                                            sendShutdown();
+                                            shutdown();
+                                        }
                                     }else if(action.getActionType() == Action.ActionType.PING){;
                                         sendPong(action.getInfo());
                                     } else if (action.getActionType() == Action.ActionType.PONG){
@@ -337,13 +352,12 @@ public class ClientHandler implements Runnable {
 
                         }
                         case "0" -> {
-                            sendShutdown();
                             if(!isRMI) {
                                 server.getConnectedClients().get(this).setElapsed();
                             }
-                            server.removeClient(this);
-                            shutdown();
                             System.out.println(nickname + " disconnected");
+                            sendShutdown();
+                            shutdown();
                         }
                     }
 
@@ -353,32 +367,31 @@ public class ClientHandler implements Runnable {
                     synchronized (server.getLobbyList()){
                         lobbyList = new ArrayList<>(server.getLobbyList());
                     }
-                    for(Lobby l:lobbyList){
-                        for(ClientHandler ch: l.getLobbyPlayers()){
-                            if(ch.equals(this)){
-                                synchronized (l.actions){
-                                    if(action.getActionType()== Action.ActionType.PING){
-                                        sendPong(action.getInfo());
-                                    }
-                                    else if (action.getActionType() == Action.ActionType.PONG) {
-                                        addPong();
-                                    }
-                                    else if(action.getActionType() == Action.ActionType.QUIT){
-                                        if(!isRMI){
-                                            server.getConnectedClients().get(this).setElapsed();
-                                            server.getConnectedClients().remove(this);
-                                            System.out.println(ANSI.RED+nickname+" left the game"+ANSI.RESET_COLOR);
-                                        }else{
-                                            server.getConnectedClients().remove(this);
-                                            System.out.println(ANSI.RED+nickname+" left the game"+ANSI.RESET_COLOR);
-                                        }
-                                        server.killLobby(l.getLobbyUID());
-                                    }
-                                    else{
-                                        l.recieveAction(action);
-                                        l.actions.notifyAll();
-                                    }
+                    Lobby l = server.lobbyOf(this);
+
+                    if(l!=null){
+                        synchronized (l.actions){
+                            if(action.getActionType()== Action.ActionType.PING){
+                                sendPong(action.getInfo());
+                            }
+                            else if (action.getActionType() == Action.ActionType.PONG) {
+                                addPong();
+                            }
+                            else if(action.getActionType() == Action.ActionType.QUIT){
+                                if(!isRMI){
+                                    server.getConnectedClients().get(this).setElapsed();
+                                    server.getConnectedClients().remove(this);
+                                    System.out.println(ANSI.RED+nickname+" left the game"+ANSI.RESET_COLOR);
+                                }else{
+                                    server.getConnectedClients().remove(this);
+                                    l.getLobbyPlayers().remove(this);
+                                    System.out.println(ANSI.RED+nickname+" left the game"+ANSI.RESET_COLOR);
                                 }
+                                server.killLobby(l.getLobbyUID());
+                            }
+                            else{
+                                l.recieveAction(action);
+                                l.actions.notifyAll();
                             }
                         }
                     }

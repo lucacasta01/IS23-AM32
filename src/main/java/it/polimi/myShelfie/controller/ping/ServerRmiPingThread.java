@@ -1,23 +1,25 @@
 package it.polimi.myShelfie.controller.ping;
-
 import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.utilities.Constants;
-
-import java.net.InetAddress;
 import java.rmi.RemoteException;
-import java.rmi.server.RemoteServer;
-import java.rmi.server.ServerNotActiveException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ServerRmiPingThread extends ServerPingThread{
+    public final AtomicBoolean kill = new AtomicBoolean(false);
     public ServerRmiPingThread(ClientHandler ch) {
         super(ch);
     }
 
     @Override
+    public synchronized void setKill(boolean kill) {
+        this.kill.set(kill);
+    }
+
+    @Override
     public void run() {
+        kill.set(false);
         boolean pingFailed = false;
-        while(!pingFailed) {
+        while(!pingFailed&&!kill.get()) {
             try {
                 ch.getRmiClient().ping();
             } catch (RemoteException e) { //ping failed

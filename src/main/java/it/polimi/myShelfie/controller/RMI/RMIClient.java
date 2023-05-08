@@ -1,7 +1,5 @@
 package it.polimi.myShelfie.controller.RMI;
 import it.polimi.myShelfie.utilities.beans.View;
-import it.polimi.myShelfie.utilities.Position;
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 public interface RMIClient extends Remote{

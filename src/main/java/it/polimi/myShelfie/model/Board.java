@@ -1,17 +1,12 @@
 package it.polimi.myShelfie.model;
-
 import it.polimi.myShelfie.utilities.ColorPosition;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.Position;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-
-
 public class Board {
     private Tile[][] grid;
     private List<Tile> tileHeap;
