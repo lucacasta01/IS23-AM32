@@ -7,7 +7,7 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>myShlefie-AM32</name>
+  <name>myShelfie-AM32</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -25,6 +25,11 @@
       <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
+      <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-fxml</artifactId>
+          <version>11.0.1</version>
+      </dependency>
       <dependency>
           <groupId>org.openjfx</groupId>
           <artifactId>javafx-controls</artifactId>
