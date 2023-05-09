@@ -1,5 +1,6 @@
 package it.polimi.myShelfie.application.controller;
 
+import it.polimi.myShelfie.application.Client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
@@ -9,6 +10,7 @@ import javafx.scene.control.TextField;
 public class GUIController {
     String nickname;
     String connectionProtocol;
+
 
 
     @FXML
@@ -29,6 +31,7 @@ public class GUIController {
         }
         System.out.println("Nickname: "+nickname);
         System.out.println("Protocol: "+connectionProtocol);
+
     }
 
     public void newGameAction(ActionEvent actionEvent) {

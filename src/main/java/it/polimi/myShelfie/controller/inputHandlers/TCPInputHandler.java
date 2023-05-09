@@ -1,6 +1,9 @@
-package it.polimi.myShelfie.application;
+package it.polimi.myShelfie.controller.inputHandlers;
 
+import it.polimi.myShelfie.application.Client;
+import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.utilities.Position;
+import it.polimi.myShelfie.utilities.beans.Action;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,33 +12,29 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class RMIInputHandler extends Thread {
-    private Client client;
-    private final BufferedReader inReader;
+public class TCPInputHandler extends Thread{
+    private final Client client;
 
-    public RMIInputHandler(Client client) {
+    public TCPInputHandler(Client client){
         this.client = client;
-        inReader = new BufferedReader(new InputStreamReader(System.in));
     }
-     public void closeBufferedReader(){
-        try{
-            inReader.close();
-            System.out.println("BufferedReader closed");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-     }
 
+    @Override
     public void run() {
         String message;
+        BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
         while (!client.getDone()) {
             try {
                 message = inReader.readLine();
+
                 if (message.equals("/quit")) {
-                    client.getRmiServer().quit(client.getNickname());
-                    client.remoteShutdown("");
+                    Action a = new Action(Action.ActionType.QUIT, client.getNickname(), "", "", null, null);
+                    client.sendAction(a);
+                    inReader.close();
+                    client.shutdown();
                 } else if (message.startsWith("/chat")) {
-                    client.getRmiServer().chatMessage(client.getNickname(), message.substring(message.indexOf("/chat") + "/chat ".length()));
+                    Action a = new Action(Action.ActionType.CHAT, client.getNickname(), message.substring(message.indexOf("/chat") + "/chat ".length()), "", null, null);
+                    client.sendAction(a);
                 }
                 /*
                  * /collect x1,y1 (opt)x2,y2 (opt)x3,y3
@@ -57,7 +56,8 @@ public class RMIInputHandler extends Thread {
                             }
                         }
                         if (tilesSelected.size() != 0) {
-                            client.getRmiServer().pickTiles(client.getNickname(), tilesSelected);
+                            Action a = new Action(Action.ActionType.PICKTILES, client.getNickname(), "", "", tilesSelected, null);
+                            client.sendAction(a);
                         }
                     }
                 } else if (message.startsWith("/column")) {
@@ -67,8 +67,12 @@ public class RMIInputHandler extends Thread {
                     if (col < 0 || col > 5) {
                         System.out.println("Invalid column number");
                     } else {
-                        client.getRmiServer().selectColumn(client.getNickname(), col);
+                        Action a = new Action(Action.ActionType.SELECTCOLUMN, client.getNickname(), "", "", null, col);
+                        client.sendAction(a);
                     }
+                } else if (message.startsWith("/printboard")) {
+                    Action a = new Action(Action.ActionType.PRINTBOARD, client.getNickname(), "", null, null, null);
+                    client.sendAction(a);
                 } else if (message.startsWith("/order")) {
                     int index = "/order".length() + 1;
                     String substr = message.substring(index);
@@ -87,7 +91,8 @@ public class RMIInputHandler extends Thread {
                                 builder.append(" ");
                             }
                         }
-                        client.getRmiServer().order(client.getNickname(), builder.toString());
+                        Action a = new Action(Action.ActionType.ORDER, client.getNickname(), "", builder.toString(), null, null);
+                        client.sendAction(a);
                     } else if (!new HashSet<>(newOrder).containsAll(tiles)) {
                         System.out.println("You must chose the tiles you have collected");
                     } else {
@@ -95,17 +100,18 @@ public class RMIInputHandler extends Thread {
                     }
 
                 } else if (message.startsWith("/help")) {
-                    client.getRmiServer().help(client.getNickname());
+                    client.sendAction(new Action(Action.ActionType.HELP, client.getNickname(), null, null, null, null));
                 } else {
-                    client.getRmiServer().infoMessage(client.getNickname(), message);
+                    Action a = new Action(Action.ActionType.INFO, client.getNickname(), "", message, null, null);
+                    client.sendAction(a);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
 
         }
-        System.out.println("Quitting RMIinputHandler");
     }
+
 
 
     private boolean isColor(String s) {
