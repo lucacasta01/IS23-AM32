@@ -44,19 +44,21 @@ public class RMIInputHandler extends Thread {
                     int firstTile = "/collect ".length();
                     String substr = message.substring(firstTile);
                     String[] pos = substr.split(" ");
-                    List<Position> tilesSelected = new ArrayList<>();
-                    for (String s : pos) {
-                        //TODO: fixare se metto 5.9 invece di 5,9
-                        try{
-                            tilesSelected.add(new Position(Integer.parseInt(s.split(",")[0]) - 1, Integer.parseInt(s.split(",")[1]) - 1));
+                    if(pos.length<1||pos.length>3){
+                        System.err.println("Wrong syntax, try again");
+                    }else {
+                        List<Position> tilesSelected = new ArrayList<>();
+                        for (String s : pos) {
+                            try {
+                                tilesSelected.add(new Position(Integer.parseInt(s.split(",")[0]) - 1, Integer.parseInt(s.split(",")[1]) - 1));
+                            } catch (Exception e) {
+                                System.err.println("Wrong syntax, try again");
+                                tilesSelected.clear();
+                            }
                         }
-                        catch(Exception e){
-                            System.err.println("Wrong syntax, try again");
-                            tilesSelected.clear();
+                        if (tilesSelected.size() != 0) {
+                            client.getRmiServer().pickTiles(client.getNickname(), tilesSelected);
                         }
-                    }
-                    if(tilesSelected.size() != 0) {
-                        client.getRmiServer().pickTiles(client.getNickname(), tilesSelected);
                     }
                 } else if (message.startsWith("/column")) {
                     int index = "/column ".length();

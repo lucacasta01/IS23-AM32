@@ -239,6 +239,7 @@ public class ClientHandler implements Runnable {
                                 server.saveUserGame();
                             }
                             lobbyCreated = true;
+                            this.isPlaying=true;
                             server.runLobby(lobby);
                         }
                         case "2" -> {
@@ -262,6 +263,7 @@ public class ClientHandler implements Runnable {
                                 }
                                 System.out.println("New lobby created [" + lobby.getLobbyUID() + "]");
                                 lobbyCreated = true;
+                                this.isPlaying=true;
                                 server.runLobby(lobby);
                             }
                         }
@@ -281,6 +283,7 @@ public class ClientHandler implements Runnable {
                                     }
                                     flag = true;
                                     lobbyCreated = true;
+                                    this.isPlaying=false;
                                     l.acceptPlayer(this);
                                     break;
                                 }
@@ -336,6 +339,7 @@ public class ClientHandler implements Runnable {
                                 if (message.toUpperCase().equals("Y")) {
                                     lobby.broadcastMessage(nickname + " joined");
                                     System.out.println(nickname + " joined game " + lobby.getLobbyUID());
+                                    this.isPlaying=true;
                                     filteredLobbyList.get(0).acceptPlayer(this);
                                     lobbyCreated=true;
                                 } else {

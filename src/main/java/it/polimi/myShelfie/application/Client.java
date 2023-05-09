@@ -336,19 +336,22 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                         int firstTile = "/collect ".length();
                         String substr = message.substring(firstTile);
                         String[] pos = substr.split(" ");
-                        List<Position> tilesSelected = new ArrayList<>();
-                        for (String s : pos) {
-                            try {
-                                tilesSelected.add(new Position(Integer.parseInt(s.split(",")[0]) - 1, Integer.parseInt(s.split(",")[1]) - 1));
+                        if(pos.length<1||pos.length>3){
+                            System.err.println("Wrong syntax, try again");
+                        }else {
+                            List<Position> tilesSelected = new ArrayList<>();
+                            for (String s : pos) {
+                                try {
+                                    tilesSelected.add(new Position(Integer.parseInt(s.split(",")[0]) - 1, Integer.parseInt(s.split(",")[1]) - 1));
+                                } catch (Exception e) {
+                                    System.err.println("Wrong syntax, try again");
+                                    tilesSelected.clear();
+                                }
                             }
-                            catch(Exception e){
-                                System.err.println("Wrong syntax, try again");
-                                tilesSelected.clear();
+                            if (tilesSelected.size() != 0) {
+                                Action a = new Action(Action.ActionType.PICKTILES, nickname, "", "", tilesSelected, null);
+                                sendAction(a);
                             }
-                        }
-                        if(tilesSelected.size() != 0) {
-                            Action a = new Action(Action.ActionType.PICKTILES, nickname, "", "", tilesSelected, null);
-                            sendAction(a);
                         }
                     } else if (message.startsWith("/column")) {
                         int index = "/column ".length();

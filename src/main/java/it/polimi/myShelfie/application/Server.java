@@ -97,7 +97,6 @@ public class Server extends UnicastRemoteObject implements Runnable{
     }
 
     public void shutdown(){
-
         try{
             done = true;
             if(!instance.serverSocket.isClosed()){

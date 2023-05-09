@@ -1,5 +1,6 @@
 package it.polimi.myShelfie.controller.ping;
 import it.polimi.myShelfie.controller.ClientHandler;
+import it.polimi.myShelfie.controller.Lobby;
 import it.polimi.myShelfie.utilities.Constants;
 import java.rmi.RemoteException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -26,7 +27,9 @@ public class ServerRmiPingThread extends ServerPingThread{
                 pingFailed = true;
                 System.err.println("Ping failed for " + ch.getNickname() + "");
                 if (ch.isPlaying()) {
-                    server.killLobby(server.lobbyOf(ch).getLobbyUID());
+                    Lobby l =server.lobbyOf(ch);
+                    l.getLobbyPlayers().remove(ch);
+                    server.killLobby(l.getLobbyUID());
                     ch.shutdown();
                     server.removeClient(ch);
                 } else {
