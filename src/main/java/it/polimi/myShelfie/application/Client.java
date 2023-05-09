@@ -338,10 +338,18 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                         String[] pos = substr.split(" ");
                         List<Position> tilesSelected = new ArrayList<>();
                         for (String s : pos) {
-                            tilesSelected.add(new Position(Integer.parseInt(s.split(",")[0]) - 1, Integer.parseInt(s.split(",")[1]) - 1));
+                            try {
+                                tilesSelected.add(new Position(Integer.parseInt(s.split(",")[0]) - 1, Integer.parseInt(s.split(",")[1]) - 1));
+                            }
+                            catch(Exception e){
+                                System.err.println("Wrong syntax, try again");
+                                tilesSelected.clear();
+                            }
                         }
-                        Action a = new Action(Action.ActionType.PICKTILES, nickname, "", "", tilesSelected, null);
-                        sendAction(a);
+                        if(tilesSelected.size() != 0) {
+                            Action a = new Action(Action.ActionType.PICKTILES, nickname, "", "", tilesSelected, null);
+                            sendAction(a);
+                        }
                     } else if (message.startsWith("/column")) {
                         int index = "/column ".length();
                         String substr = message.substring(index);

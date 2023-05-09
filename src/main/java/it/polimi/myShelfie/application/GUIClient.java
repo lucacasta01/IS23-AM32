@@ -8,10 +8,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.nio.file.Paths;
+
 public class GUIClient extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-       Parent root = FXMLLoader.load(getClass().getResource("src/resources/Untitled.fxml"));
+       Parent root = FXMLLoader.load(Paths.get("src/resources/Untitled.fxml").toUri().toURL());
        stage.setTitle("My Shelfie");
        stage.setScene(new Scene(root));
        stage.show();

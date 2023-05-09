@@ -46,9 +46,18 @@ public class RMIInputHandler extends Thread {
                     String[] pos = substr.split(" ");
                     List<Position> tilesSelected = new ArrayList<>();
                     for (String s : pos) {
-                        tilesSelected.add(new Position(Integer.parseInt(s.split(",")[0]) - 1, Integer.parseInt(s.split(",")[1]) - 1));
+                        //TODO: fixare se metto 5.9 invece di 5,9
+                        try{
+                            tilesSelected.add(new Position(Integer.parseInt(s.split(",")[0]) - 1, Integer.parseInt(s.split(",")[1]) - 1));
+                        }
+                        catch(Exception e){
+                            System.err.println("Wrong syntax, try again");
+                            tilesSelected.clear();
+                        }
                     }
-                    client.getRmiServer().pickTiles(client.getNickname(), tilesSelected);
+                    if(tilesSelected.size() != 0) {
+                        client.getRmiServer().pickTiles(client.getNickname(), tilesSelected);
+                    }
                 } else if (message.startsWith("/column")) {
                     int index = "/column ".length();
                     String substr = message.substring(index);
