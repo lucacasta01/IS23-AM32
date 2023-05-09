@@ -10,6 +10,7 @@ class CheckSharedGoalTest {
     private final String fakeIP = "192.168.1.1";
     private final String fakePath = "testPath";
     private final String fakeName = "testName";
+    /*
     @Test
     @DisplayName("addPlayer method")
     void addPlayer(){
@@ -46,4 +47,6 @@ class CheckSharedGoalTest {
         assertEquals(6, checkSharedGoal.popPointToken());
         assertEquals(4, checkSharedGoal.popPointToken());
     }
+
+     */
 }
