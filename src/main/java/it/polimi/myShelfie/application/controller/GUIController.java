@@ -6,10 +6,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 
+import java.rmi.RemoteException;
+
 
 public class GUIController {
-    String nickname;
-    String connectionProtocol;
+    private String nickname;
+    private String connectionProtocol;
+    private Client client;
 
 
 
@@ -18,32 +21,24 @@ public class GUIController {
     @FXML
     TextField nicknameField;
 
-    public void doLogin(ActionEvent actionEvent) {
-        if(TCPrbtn.isSelected()){
+    public void doLogin(ActionEvent actionEvent) throws RemoteException {
+        if (TCPrbtn.isSelected()) {
             connectionProtocol = "TCP";
-        }
-        else if(RMIrbtn.isSelected()){
+        } else if (RMIrbtn.isSelected()) {
             connectionProtocol = "RMI";
         }
 
-        if(!nicknameField.getText().equals("")){
+        if (!nicknameField.getText().equals("")) {
             nickname = nicknameField.getText();
         }
-        System.out.println("Nickname: "+nickname);
-        System.out.println("Protocol: "+connectionProtocol);
+        System.out.println("Nickname: " + nickname);
+        System.out.println("Protocol: " + connectionProtocol);
 
-    }
+        client = new Client(true);
+        client.setConnectionProtocol(connectionProtocol);
+        client.run();
+        client.addGuiAction(nickname);
 
-    public void newGameAction(ActionEvent actionEvent) {
-    }
-
-    public void loadLastGameAction(ActionEvent actionEvent) {
-    }
-
-    public void randomGameAction(ActionEvent actionEvent) {
-    }
-
-    public void searchOldGameAction(ActionEvent actionEvent) {
     }
 
     public void doShutdown(ActionEvent actionEvent) {

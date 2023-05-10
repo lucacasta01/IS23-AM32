@@ -65,7 +65,7 @@
                <children>
                   <Button fx:id="loginBtn" blendMode="OVERLAY" mnemonicParsing="false" onAction="#doLogin" prefHeight="24.0" prefWidth="113.0" text="LOGIN" textAlignment="CENTER" textFill="#704601">
                      <font>
-                        <Font name="Algerian" size="27.0" />
+                        <Font name="Arial" size="24.0" />
                      </font>
                      <VBox.margin>
                         <Insets bottom="20.0" />

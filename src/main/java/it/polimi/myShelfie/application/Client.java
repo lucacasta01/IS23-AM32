@@ -39,17 +39,26 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private String connectionProtocol;
     private final List<PingObject> pongResponses = new ArrayList<>();
     private final RMIInputHandler RMIinputHandler;
+    private final TCPInputHandler TCPinputHandler;
 
     //rmi server reference
     private RMIServer rmiServer;
+    private boolean isGUI = false;
 
-    protected Client() throws RemoteException {
+
+
+    public Client(boolean GUI) throws RemoteException {
         RMIinputHandler  = new RMIInputHandler(this);
+        TCPinputHandler =  new TCPInputHandler(this,GUI);
+        isGUI = GUI;
     }
 
     @Override
     public void run() {
-        connectionProtocol = protocolHandler();
+        if(!isGUI) {
+            connectionProtocol = protocolHandler();
+        }
+
         switch (connectionProtocol){
             case "TCP":
                 try {
@@ -73,13 +82,14 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                     in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                     out = new PrintWriter(client.getOutputStream(), true);
 
-                    TCPInputHandler inHandler = new TCPInputHandler(this);
-                    inHandler.start();
+
+                    TCPinputHandler.start();
 
                     //PING THREAD
                     pingThread().start();
 
                     String inMessage;
+
 
                     while ((inMessage = in.readLine()) != null) {
                         Response response = recieveResponse(inMessage);
@@ -130,7 +140,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                         }
                     }
                 } catch (Exception e) {
-                    throw new RuntimeException();
+                    e.printStackTrace();
                 }
                 break;
             case "RMI":
@@ -169,6 +179,14 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     public RMIServer getRmiServer() {
         return rmiServer;
+    }
+
+    public String getConnectionProtocol() {
+        return connectionProtocol;
+    }
+
+    public void setConnectionProtocol(String connectionProtocol) {
+        this.connectionProtocol = connectionProtocol;
     }
 
     public boolean getDone(){
@@ -283,7 +301,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     }
 
     public static void main(String[] args) throws RemoteException {
-        Client client = new Client();
+        Client client = new Client(false);
         try {
             client.run();
         } catch (RuntimeException e) {
@@ -381,6 +399,10 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
             shutdown();
         }).start();
 
+    }
+
+    public void addGuiAction(String action){
+        TCPinputHandler.addGuiAction(action);
     }
 
     class SwapElapsed extends Thread {
