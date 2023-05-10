@@ -3,3 +3,9 @@
     -fx-background-repeat: no-repeat;
     -fx-background-size: 100% 100%;
 }
+
+#backgroundMenu{
+    -fx-background-image: url("graphics/misc/sfondo_parquet.jpg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 100% 100%;
+}
