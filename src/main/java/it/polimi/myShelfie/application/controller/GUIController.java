@@ -45,4 +45,8 @@ public class GUIController {
 
     public void searchOldGameAction(ActionEvent actionEvent) {
     }
+
+    public void doShutdown(ActionEvent actionEvent) {
+        System.exit(0);
+    }
 }

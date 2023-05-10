@@ -4,3 +4,7 @@
     -fx-background-size: 100% 100%;
 }
 
+#shutdownBtn{
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
