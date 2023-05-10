@@ -138,21 +138,17 @@ public class TCPInputHandler extends Thread{
                 s.equals("P") || s.equals("G") || s.equals("Y");
     }
 
-    private String getGuiAction() throws InterruptedException {
+    private synchronized String getGuiAction() throws InterruptedException {
         String message;
-        synchronized (inputGUI){
-            while(inputGUI.size()==0){
-                inputGUI.wait();
-            }
-            message = inputGUI.get(0);
-            inputGUI.remove(0);
+        while(inputGUI.size()==0){
+            this.wait();
         }
+        message = inputGUI.get(0);
+        inputGUI.remove(0);
         return message;
     }
-    public void addGuiAction(String action){
-        synchronized (inputGUI){
-            inputGUI.add(action);
-            inputGUI.notifyAll();
-        }
+    public synchronized void addGuiAction(String action){
+        inputGUI.add(action);
+        this.notifyAll();
     }
 }

@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
@@ -49,11 +50,16 @@
                   <Insets />
                </HBox.margin>
             </VBox>
-            <VBox alignment="BOTTOM_CENTER" prefHeight="212.0" prefWidth="190.0">
+            <VBox alignment="BOTTOM_LEFT" prefHeight="212.0" prefWidth="190.0">
                <children>
+                  <Label fx:id="nicknameDeniedLbl" text="Nickname already in use, retry" textFill="#d00000" visible="false">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
                   <TextField fx:id="nicknameField" blendMode="OVERLAY" prefHeight="36.0" prefWidth="304.0">
                      <font>
-                        <Font size="14.0" />
+                        <Font name="Arial" size="14.0" />
                      </font>
                      <VBox.margin>
                         <Insets bottom="25.0" />
