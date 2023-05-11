@@ -4,16 +4,10 @@ import it.polimi.myShelfie.application.Client;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 
-import java.io.IOException;
-import java.nio.file.Paths;
 
-
-public class WaitPlayers {
+public class WaitPlayersController {
     @FXML
     Label waitLabel;
     private Client client;

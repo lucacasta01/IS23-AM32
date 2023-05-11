@@ -48,7 +48,7 @@ public class GUILoginController {
         System.out.println("Protocol: " + connectionProtocol);
 
         client = Client.getInstance();
-        client.setGuiController(this);
+        client.setGuiLoginController(this);
         client.setNickname(nickname);
         client.setConnectionProtocol(connectionProtocol);
         client.setGUI(true);

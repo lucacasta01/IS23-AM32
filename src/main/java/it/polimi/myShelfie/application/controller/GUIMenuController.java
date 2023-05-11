@@ -39,15 +39,22 @@ public class GUIMenuController {
             }
         });
         Client client = Client.getInstance();
+
         client.addGuiAction("1");
     }
 
     public void randomGameAction(ActionEvent actionEvent) {
+        Client client = Client.getInstance();
+
     }
 
     public void restoreGameAction(ActionEvent actionEvent) {
+        Client client = Client.getInstance();
+
     }
 
     public void searchRestoredAction(ActionEvent actionEvent) {
+        Client client = Client.getInstance();
+
     }
 }

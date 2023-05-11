@@ -113,6 +113,7 @@ public class Lobby implements Runnable{
             }
             if(!close) {
                 playersNumber = Integer.parseInt(actions.get(0).getInfo());
+                lobbyPlayers.get(0).sendAccept("Number of players accepted");
                 actions.remove(0);
                 game = new Game(lobbyUID, playersNumber);
                 try {
@@ -377,7 +378,6 @@ public class Lobby implements Runnable{
         synchronized (lobbyPlayers) {
             while (getLobbySize() < getPlayersNumber()) {
                 lobbyPlayers.wait();
-
             }
         }
     }

@@ -1,6 +1,8 @@
 package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
 import it.polimi.myShelfie.application.controller.GUILoginController;
+import it.polimi.myShelfie.application.controller.GUIMenuController;
+import it.polimi.myShelfie.application.controller.banners.WaitPlayersController;
 import it.polimi.myShelfie.controller.RMI.RMIClient;
 import it.polimi.myShelfie.controller.RMI.RMIServer;
 import it.polimi.myShelfie.controller.inputHandlers.RMIInputHandler;
@@ -40,6 +42,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private final RMIInputHandler RMIinputHandler;
     private final TCPInputHandler TCPinputHandler;
     private GUILoginController guiLoginController;
+    private WaitPlayersController waitPlayersController = null;
 
     //rmi server reference
     private RMIServer rmiServer;
@@ -74,6 +77,10 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }else{
             RMIinputHandler.setGUI(GUI);
         }
+    }
+
+    public void setWaitPlayersController(WaitPlayersController waitPlayersController) {
+        this.waitPlayersController = waitPlayersController;
     }
 
     @Override
@@ -117,6 +124,13 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                             while ((inMessage = in.readLine()) != null) {
                                 Response response = recieveResponse(inMessage);
                                 if (response.getResponseType() == Response.ResponseType.INFO) {
+                                    if(response.getInfoMessage().startsWith("Waiting for players")||response.getInfoMessage().contains("joined the lobby")){
+                                        if(isGUI){
+                                            if(waitPlayersController!=null) {
+                                                waitPlayersController.updateLabel(response.getInfoMessage());
+                                            }
+                                        }
+                                    }
                                     System.out.println(response.getInfoMessage());
                                 } else if (response.getResponseType() == Response.ResponseType.CHATMESSAGE) {
                                     System.out.println(">" + response.getChatMessage().getSender() + ": " + response.getChatMessage().getMessage());
@@ -203,7 +217,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         return rmiServer;
     }
 
-    public void setGuiController(GUILoginController guiLoginController) {
+    public void setGuiLoginController(GUILoginController guiLoginController) {
         this.guiLoginController = guiLoginController;
     }
 
