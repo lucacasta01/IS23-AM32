@@ -1,6 +1,7 @@
 package it.polimi.myShelfie.application.controller;
 
 import it.polimi.myShelfie.application.Client;
+import it.polimi.myShelfie.application.controller.banners.WaitPlayersController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,6 +26,7 @@ public class GUIChoosePlayerController {
         stage = (Stage)((javafx.scene.Node)actionEvent.getSource()).getScene().getWindow();
         client = Client.getInstance();
         client.addGuiAction("2");
+        client.playerNumber = "2";
         FXMLLoader fxmlLoader = new FXMLLoader();
         try {
             fxmlLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
@@ -54,6 +56,7 @@ public class GUIChoosePlayerController {
         stage = (Stage)((javafx.scene.Node)actionEvent.getSource()).getScene().getWindow();
         client = Client.getInstance();
         client.addGuiAction("3");
+        client.playerNumber = "3";
         FXMLLoader fxmlLoader = new FXMLLoader();
         try {
             fxmlLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
@@ -83,6 +86,7 @@ public class GUIChoosePlayerController {
         stage = (Stage)((javafx.scene.Node)actionEvent.getSource()).getScene().getWindow();
         client = Client.getInstance();
         client.addGuiAction("4");
+        client.playerNumber = "4";
         FXMLLoader fxmlLoader = new FXMLLoader();
         try {
             fxmlLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());

@@ -43,6 +43,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private final TCPInputHandler TCPinputHandler;
     private GUILoginController guiLoginController;
     private WaitPlayersController waitPlayersController = null;
+    public String playerNumber;
 
     //rmi server reference
     private RMIServer rmiServer;
@@ -185,7 +186,6 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                         }
                         catch (Exception e){
                             //todo (when null or close exit)
-                            e.printStackTrace();
                         }
                     }).start();
 
@@ -417,7 +417,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     @Override
     public void valid(String message) throws RemoteException {
-        if(message.startsWith("Username")){
+        if(isGUI && message.startsWith("Username")){
             try {
                 guiLoginController.loginAccepted();
             }catch(Exception e){
