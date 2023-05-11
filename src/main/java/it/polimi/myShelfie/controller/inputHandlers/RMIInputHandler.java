@@ -77,6 +77,7 @@ public class RMIInputHandler extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        client.setNickname(nickname);
         while (!client.getDone()) {
             try {
                 if(!isGUI){

@@ -391,6 +391,7 @@ public class ClientHandler implements Runnable {
                                     l.getLobbyPlayers().remove(this);
                                     System.out.println(ANSI.RED+nickname+" left the game"+ANSI.RESET_COLOR);
                                 }
+                                l.notifyExit();
                                 server.killLobby(l.getLobbyUID());
                             }
                             else{

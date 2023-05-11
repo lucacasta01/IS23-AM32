@@ -28,6 +28,7 @@ public class Lobby implements Runnable{
     public final List<Action> actions = new ArrayList<>();
     private boolean isLastTurn = false;
     private Integer index = null;
+    private boolean close;
     /**
      * Create a lobby for a new game
      *
@@ -71,7 +72,7 @@ public class Lobby implements Runnable{
 
     @Override
     public void run(){
-        boolean close = false;
+        close = false;
         if(this.gameMode == GameMode.NEWGAME){
             lobbyPlayers.get(0).sendInfoMessage("Enter number of players: ");
             while(actions.size()==0) {
@@ -376,13 +377,30 @@ public class Lobby implements Runnable{
 
     private void waitForPlayers() throws InterruptedException {
         synchronized (lobbyPlayers) {
+            int oldSize = getLobbySize();
             while (getLobbySize() < getPlayersNumber()) {
-                lobbyPlayers.wait();
+                if(getLobbySize()>=oldSize){
+                    oldSize++;
+                    lobbyPlayers.wait();
+                }
+                else{
+                    for(ClientHandler ch : lobbyPlayers){
+                        ch.sendInfoMessage("Lobby is being killed...");
+                        ch.sendMenu();
+                    }
+                    close = true;
+                    break;
+                }
             }
         }
     }
 
 
+    public void notifyExit(){
+        synchronized (lobbyPlayers){
+            lobbyPlayers.notifyAll();
+        }
+    }
 
     public void clientError(ClientHandler ch){
         lobbyPlayers.remove(ch);

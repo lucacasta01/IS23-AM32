@@ -11,11 +11,19 @@ public class WaitPlayersController {
     @FXML
     Label waitLabel;
     private Client client;
+
+    @FXML
+    public void initialize() {
+        client = Client.getInstance();
+        client.setWaitPlayersController(this);
+        System.out.println("WaitPlayerController initialized");
+        waitLabel.setText("Waiting for players... (1/"+client.playerNumber+")");
+    }
     public void updateLabel(String label){
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-               waitLabel.setText(label);
+                waitLabel.setText(label);
             }
         });
     }

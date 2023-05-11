@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="backgroundMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="500.0" minWidth="800.0" prefHeight="884.0" prefWidth="1415.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myShelfie.application.controller.GUILoginController">
+   <children>
+      <HBox layoutX="450.0" layoutY="84.0" prefHeight="514.0" prefWidth="677.0" AnchorPane.bottomAnchor="185.0" AnchorPane.leftAnchor="369.0" AnchorPane.rightAnchor="369.0" AnchorPane.topAnchor="185.0">
+         <children>
+            <GridPane style="-fx-border-color: black;">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <ImageView fitHeight="30.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5" GridPane.rowIndex="5" />
+               </children>
+            </GridPane>
+         </children>
+      </HBox>
+      <VBox layoutX="7.0" layoutY="10.0" prefHeight="332.0" prefWidth="316.0" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="10.0">
+         <children>
+            <HBox prefHeight="96.0" prefWidth="365.0">
+               <children>
+                  <ImageView fitHeight="193.0" fitWidth="190.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@graphics/boards/bookshelf.png" />
+                     </image>
+                  </ImageView>
+                  <AnchorPane prefHeight="166.0" prefWidth="428.0">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                     <children>
+                        <ImageView fitHeight="166.0" fitWidth="110.0" pickOnBounds="true">
+                           <image>
+                              <Image url="@graphics/personalGoalCards/Personal_Goals1.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </HBox>
+            <AnchorPane>
+               <children>
+                  <Label text="Player #1">
+                     <font>
+                        <Font name="Arial" size="22.0" />
+                     </font>
+                  </Label>
+                  <Label layoutY="26.0" text="Score: ">
+                     <font>
+                        <Font name="System Bold Italic" size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </AnchorPane>
+         </children>
+      </VBox>
+      <VBox alignment="BOTTOM_LEFT" layoutX="2.0" layoutY="248.0" prefHeight="332.0" prefWidth="316.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="7.0">
+         <children>
+            <AnchorPane>
+               <children>
+                  <Label text="Player #2">
+                     <font>
+                        <Font name="Arial" size="22.0" />
+                     </font>
+                  </Label>
+                  <Label layoutY="26.0" text="Score: ">
+                     <font>
+                        <Font name="System Bold Italic" size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </AnchorPane>
+            <HBox alignment="BOTTOM_LEFT" prefHeight="96.0" prefWidth="365.0">
+               <children>
+                  <ImageView fitHeight="193.0" fitWidth="190.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@graphics/boards/bookshelf.png" />
+                     </image>
+                  </ImageView>
+                  <AnchorPane prefHeight="166.0" prefWidth="428.0">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                     <children>
+                        <ImageView fitHeight="166.0" fitWidth="110.0" pickOnBounds="true">
+                           <image>
+                              <Image url="@graphics/personalGoalCards/Personal_Goals1.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+               </children></HBox>
+         </children>
+      </VBox>
+      <VBox alignment="TOP_RIGHT" layoutX="1064.0" layoutY="87.0" prefHeight="332.0" prefWidth="316.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="7.0">
+         <children>
+            <HBox alignment="BOTTOM_LEFT" prefHeight="96.0" prefWidth="365.0">
+               <children>
+                  <AnchorPane prefHeight="166.0" prefWidth="428.0">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                     <children>
+                        <ImageView fitHeight="166.0" fitWidth="110.0" pickOnBounds="true">
+                           <image>
+                              <Image url="@graphics/personalGoalCards/Personal_Goals1.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+                  <ImageView fitHeight="193.0" fitWidth="190.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@graphics/boards/bookshelf.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </HBox>
+            <VBox alignment="TOP_RIGHT">
+               <children>
+                  <Label text="Player #2">
+                     <font>
+                        <Font name="Arial" size="22.0" />
+                     </font>
+                  </Label>
+                  <Label text="Score: ">
+                     <font>
+                        <Font name="System Bold Italic" size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets right="10.0" />
+               </VBox.margin>
+            </VBox>
+         </children>
+      </VBox>
+      <VBox alignment="BOTTOM_RIGHT" layoutX="1057.0" layoutY="528.0" prefHeight="332.0" prefWidth="316.0" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="10.0">
+         <children>
+            <VBox alignment="TOP_RIGHT">
+               <children>
+                  <Label text="Player #2">
+                     <font>
+                        <Font name="Arial" size="22.0" />
+                     </font>
+                  </Label>
+                  <Label text="Score: ">
+                     <font>
+                        <Font name="System Bold Italic" size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <HBox alignment="BOTTOM_LEFT" prefHeight="96.0" prefWidth="365.0">
+               <children>
+                  <AnchorPane prefHeight="166.0" prefWidth="428.0">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                     <children>
+                        <ImageView fitHeight="166.0" fitWidth="110.0" pickOnBounds="true">
+                           <image>
+                              <Image url="@graphics/personalGoalCards/Personal_Goals1.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+                  <ImageView fitHeight="193.0" fitWidth="190.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@graphics/boards/bookshelf.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

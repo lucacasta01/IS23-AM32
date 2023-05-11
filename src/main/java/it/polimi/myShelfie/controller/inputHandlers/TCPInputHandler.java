@@ -51,7 +51,9 @@ public class TCPInputHandler extends Thread{
                 if (message.equals("/quit")) {
                     Action a = new Action(Action.ActionType.QUIT, client.getNickname(), "", "", null, null);
                     client.sendAction(a);
-                    inReader.close();
+                    if (!isGUI){
+                        inReader.close();
+                    }
                     client.shutdown();
                 } else if (message.startsWith("/chat")) {
                     Action a = new Action(Action.ActionType.CHAT, client.getNickname(), message.substring(message.indexOf("/chat") + "/chat ".length()), "", null, null);
