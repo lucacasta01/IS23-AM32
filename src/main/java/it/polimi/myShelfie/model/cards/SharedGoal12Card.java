@@ -59,6 +59,6 @@ public class SharedGoal12Card extends SharedGoalCard implements CheckSharedGoal 
 
     @Override
     public String toString() {
-        return "Card 12";
+        return "Card 12: fill your shelf up to the diagonal";
     }
 }

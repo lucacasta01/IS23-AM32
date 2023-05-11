@@ -4,7 +4,6 @@ import it.polimi.myShelfie.controller.RMI.RMIClient;
 import it.polimi.myShelfie.controller.RMI.RMIServer;
 import it.polimi.myShelfie.controller.inputHandlers.RMIInputHandler;
 import it.polimi.myShelfie.controller.inputHandlers.TCPInputHandler;
-import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.JsonParser;
@@ -22,7 +21,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class Client extends UnicastRemoteObject implements Runnable,RMIClient {

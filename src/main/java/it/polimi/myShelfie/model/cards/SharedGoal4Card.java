@@ -50,6 +50,6 @@ public class SharedGoal4Card extends SharedGoalCard implements CheckSharedGoal {
 
     @Override
     public String toString() {
-        return "Card 4";
+        return "Card 4: You must have six 2x1 group of tiles that have the same color";
     }
 }

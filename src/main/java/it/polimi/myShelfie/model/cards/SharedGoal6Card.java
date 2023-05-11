@@ -70,6 +70,7 @@ public class SharedGoal6Card extends SharedGoalCard implements CheckSharedGoal {
 
     @Override
     public String toString() {
-        return "Card 6";
+        return "Card 6: You must have two full rows of your shelf made up with " +
+                "tiles of different color";
     }
 }

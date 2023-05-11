@@ -87,6 +87,7 @@ public class SharedGoal5Card extends SharedGoalCard implements CheckSharedGoal {
 
     @Override
     public String toString() {
-        return "Card 5";
+        return "Card 5: You must have 3 columns that have a maximum of three different colors" +
+                "in each one of them";
     }
 }

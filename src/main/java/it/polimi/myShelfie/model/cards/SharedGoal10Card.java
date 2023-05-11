@@ -42,6 +42,6 @@ public class SharedGoal10Card extends SharedGoalCard implements CheckSharedGoal 
     }
     @Override
     public String toString() {
-        return "Card 10";
+        return "Card 10: You must have an X shaped formation made with tiles of the same color";
     }
 }

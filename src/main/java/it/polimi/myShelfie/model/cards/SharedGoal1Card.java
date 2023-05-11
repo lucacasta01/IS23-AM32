@@ -76,6 +76,6 @@ public class SharedGoal1Card extends SharedGoalCard implements CheckSharedGoal {
 
     @Override
     public String toString() {
-        return "Card 1";
+        return "Card 1: Create two 2x2 groups of tiles that have the same color";
     }
 }

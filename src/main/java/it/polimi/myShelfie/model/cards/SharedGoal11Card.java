@@ -71,6 +71,7 @@ public class SharedGoal11Card extends SharedGoalCard implements CheckSharedGoal 
 
     @Override
     public String toString() {
-        return "Card 11";
+        return "Card 11: You must have a diagonal made up with tiles" +
+                "of the same color";
     }
 }
