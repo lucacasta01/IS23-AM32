@@ -55,6 +55,7 @@ public class SharedGoal7Card extends SharedGoalCard implements CheckSharedGoal {
 
     @Override
     public String toString() {
-        return "Card 7";
+        return "Card 7: You must have 4 rows that have a maximum" +
+                "of three different colors in them ";
     }
 }

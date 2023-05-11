@@ -30,6 +30,7 @@ public class SharedGoal8Card extends SharedGoalCard implements CheckSharedGoal {
 
     @Override
     public String toString() {
-        return "Card 8";
+        return "Card 8: your top-left, top-right, bottom-left and bottom-right tiles" +
+                "must have the same color";
     }
 }

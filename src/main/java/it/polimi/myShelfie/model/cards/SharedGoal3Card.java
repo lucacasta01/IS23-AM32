@@ -92,6 +92,7 @@ public class SharedGoal3Card extends SharedGoalCard implements CheckSharedGoal {
 
     @Override
     public String toString() {
-        return "Card 3";
+        return "Card 3: You must have 4 groups of tiles that meet this requirement:\n" +
+                "4 Tiles of the same color stacked on top of each other";
     }
 }

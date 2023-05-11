@@ -74,6 +74,7 @@ public class TCPInputHandler extends Thread{
                             } catch (Exception e) {
                                 System.err.println("Wrong syntax, try again");
                                 tilesSelected.clear();
+                                break;
                             }
                         }
                         if (tilesSelected.size() != 0) {

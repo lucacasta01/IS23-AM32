@@ -74,6 +74,7 @@ public class SharedGoal2Card extends SharedGoalCard implements CheckSharedGoal {
 
     @Override
     public String toString() {
-        return "Card 2";
+        return "Card 2: You must have two columns that meet this requirement\n" +
+                "All the tiles in this column must be of different color";
     }
 }
