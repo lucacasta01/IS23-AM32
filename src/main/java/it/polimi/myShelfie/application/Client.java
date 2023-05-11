@@ -1,11 +1,10 @@
 package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
-import it.polimi.myShelfie.application.controller.GUIController;
+import it.polimi.myShelfie.application.controller.GUILoginController;
 import it.polimi.myShelfie.controller.RMI.RMIClient;
 import it.polimi.myShelfie.controller.RMI.RMIServer;
 import it.polimi.myShelfie.controller.inputHandlers.RMIInputHandler;
 import it.polimi.myShelfie.controller.inputHandlers.TCPInputHandler;
-import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.Constants;
 import it.polimi.myShelfie.utilities.JsonParser;
@@ -23,13 +22,11 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 
 public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
+    private static Client instance;
     private BufferedReader in;
     private PrintWriter out;
     private Socket client;
@@ -42,7 +39,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private final List<PingObject> pongResponses = new ArrayList<>();
     private final RMIInputHandler RMIinputHandler;
     private final TCPInputHandler TCPinputHandler;
-    private GUIController guiController;
+    private GUILoginController guiLoginController;
 
     //rmi server reference
     private RMIServer rmiServer;
@@ -51,10 +48,32 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
 
 
-    public Client(boolean GUI) throws RemoteException {
+    private Client() throws RemoteException {
         RMIinputHandler  = new RMIInputHandler(this);
-        TCPinputHandler =  new TCPInputHandler(this,GUI);
+        TCPinputHandler =  new TCPInputHandler(this);
+        isGUI = false;
+    }
+
+    public static synchronized Client getInstance() {
+        if(instance == null){
+            try {
+                System.out.println("created new client");
+                instance = new Client();
+            }catch(RemoteException e){
+                e.printStackTrace();
+                //todo
+            }
+        }
+        return instance;
+    }
+
+    public void setGUI(boolean GUI) {
         isGUI = GUI;
+        if(connectionProtocol=="TCP"){
+            TCPinputHandler.setGUI(GUI);
+        }else{
+            RMIinputHandler.setGUI(GUI);
+        }
     }
 
     @Override
@@ -62,7 +81,6 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         if(!isGUI) {
             connectionProtocol = protocolHandler();
         }
-
         switch (connectionProtocol){
             case "TCP":
                 try {
@@ -109,12 +127,12 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                     }
                                     System.out.println(ANSI.GREEN + response.getInfoMessage() + ANSI.RESET_COLOR);
                                     if(isGUI){
-                                        guiController.loginAccepted();
+                                        guiLoginController.loginAccepted();
                                     }
                                 } else if (response.getResponseType() == Response.ResponseType.DENIED) {
                                     System.out.println(response.getInfoMessage());
                                     if(isGUI){
-                                        guiController.nicknameDenied();
+                                        guiLoginController.nicknameDenied();
                                     }
                                 } else if (response.getResponseType() == Response.ResponseType.UPDATE) {
                                     view = response.getView();
@@ -152,6 +170,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                             }
                         }
                         catch (Exception e){
+                            //todo (when null or close exit)
                             e.printStackTrace();
                         }
                     }).start();
@@ -171,20 +190,6 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                 BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
                 //PING THREAD
                 pingThread().start();
-                try {
-                    nickname = inReader.readLine();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                try {
-                    while (!rmiServer.login(nickname, this)){
-                        System.out.println("Nickname already use, retry:");
-                        nickname = inReader.readLine();
-                    }
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
 
                 RMIinputHandler.start();
 
@@ -198,8 +203,8 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         return rmiServer;
     }
 
-    public void setGuiController(GUIController guiController) {
-        this.guiController = guiController;
+    public void setGuiController(GUILoginController guiLoginController) {
+        this.guiLoginController = guiLoginController;
     }
 
     public String getConnectionProtocol() {
@@ -322,7 +327,8 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     }
 
     public static void main(String[] args) throws RemoteException {
-        Client client = new Client(false);
+        Client client = Client.getInstance();
+        client.setGUI(false);
         try {
             client.run();
         } catch (RuntimeException e) {
@@ -362,6 +368,9 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }
     }
 
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
     //RMIClient interface implementation
 
 
@@ -394,11 +403,25 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     @Override
     public void valid(String message) throws RemoteException {
+        if(message.startsWith("Username")){
+            try {
+                guiLoginController.loginAccepted();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
         System.out.println(ANSI.GREEN+message+ANSI.RESET_COLOR);
     }
 
     @Override
     public void denied(String message) throws RemoteException {
+        if(message.startsWith("Username")){
+            try {
+                guiLoginController.nicknameDenied();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
         System.err.println(message);
     }
 
@@ -423,7 +446,11 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     }
 
     public void addGuiAction(String action){
-        TCPinputHandler.addGuiAction(action);
+        if(connectionProtocol=="TCP") {
+            TCPinputHandler.addGuiAction(action);
+        }else{
+            RMIinputHandler.addGuiAction((action));
+        }
     }
 
     class SwapElapsed extends Thread {

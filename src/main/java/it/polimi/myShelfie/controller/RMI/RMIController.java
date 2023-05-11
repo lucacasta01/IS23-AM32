@@ -134,7 +134,7 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
                 .filter(c -> c.getNickname().equals(username))
                 .toList().get(0);
 
-        synchronized (ch.getRmiActions()) {
+        synchronized (ch.getRmiActions()){
             ch.setRmiAction(new Action(Action.ActionType.INFO, username, null, message, null, null));
             ch.getRmiActions().notifyAll();
         }

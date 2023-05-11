@@ -14,13 +14,16 @@ import java.util.List;
 
 public class TCPInputHandler extends Thread{
     private final Client client;
-    private final boolean isGUI;
+    private boolean isGUI;
     private final List<String> inputGUI;
 
-    public TCPInputHandler(Client client, boolean isGUI){
+    public TCPInputHandler(Client client){
         this.client = client;
-        this.isGUI = isGUI;
         inputGUI = new ArrayList<>();
+    }
+
+    public void setGUI(boolean GUI) {
+        isGUI = GUI;
     }
 
     @Override

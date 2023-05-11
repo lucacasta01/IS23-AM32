@@ -1,6 +1,7 @@
 package it.polimi.myShelfie.controller.inputHandlers;
 
 import it.polimi.myShelfie.application.Client;
+import it.polimi.myShelfie.controller.RMI.RMIServer;
 import it.polimi.myShelfie.utilities.Position;
 
 import java.io.BufferedReader;
@@ -13,10 +14,13 @@ import java.util.List;
 public class RMIInputHandler extends Thread {
     private Client client;
     private final BufferedReader inReader;
+    private final List<String> inputGUI;
+    private boolean isGUI;
 
     public RMIInputHandler(Client client) {
         this.client = client;
         inReader = new BufferedReader(new InputStreamReader(System.in));
+        inputGUI = new ArrayList<>();
     }
      public void closeBufferedReader(){
         try{
@@ -27,11 +31,60 @@ public class RMIInputHandler extends Thread {
         }
      }
 
+    public void setGUI(boolean GUI) {
+        isGUI = GUI;
+    }
+
+    private synchronized String getGuiAction() throws InterruptedException {
+        String message;
+        while(inputGUI.size()==0){
+            this.wait();
+        }
+        message = inputGUI.get(0);
+        inputGUI.remove(0);
+        return message;
+    }
+    public synchronized void addGuiAction(String action){
+        inputGUI.add(action);
+        this.notifyAll();
+    }
+
     public void run() {
         String message;
+        String nickname;
+        RMIServer rmiServer = client.getRmiServer();
+        try {
+            if(!isGUI){
+                nickname = inReader.readLine();
+            }else{
+                nickname = getGuiAction();
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            while (!rmiServer.login(nickname, client)) {
+                System.out.println("Nickname already use, retry:");
+                if(!isGUI) {
+                    nickname = inReader.readLine();
+                }else{
+                    nickname = getGuiAction();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         while (!client.getDone()) {
             try {
-                message = inReader.readLine();
+                if(!isGUI){
+                    message = inReader.readLine();
+                }else{
+                    message = getGuiAction();
+                }
+
                 if (message.equals("/quit")) {
                     client.getRmiServer().quit(client.getNickname());
                     client.remoteShutdown("");
@@ -102,6 +155,8 @@ public class RMIInputHandler extends Thread {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
 
         }

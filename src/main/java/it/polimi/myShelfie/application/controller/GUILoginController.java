@@ -1,7 +1,6 @@
 package it.polimi.myShelfie.application.controller;
 
 import it.polimi.myShelfie.application.Client;
-import it.polimi.myShelfie.utilities.beans.Response;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,17 +13,14 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
 
 
-public class GUIController {
+public class GUILoginController {
     private String nickname;
     private String connectionProtocol;
-    private Client client;
+    private Client client=null;
     private Stage stage;
 
 
@@ -51,9 +47,11 @@ public class GUIController {
         System.out.println("Nickname: " + nickname);
         System.out.println("Protocol: " + connectionProtocol);
 
-        client = new Client(true);
+        client = Client.getInstance();
         client.setGuiController(this);
+        client.setNickname(nickname);
         client.setConnectionProtocol(connectionProtocol);
+        client.setGUI(true);
         client.run();
         client.addGuiAction(nickname);
     }
@@ -78,6 +76,11 @@ public class GUIController {
     }
 
     public void doShutdown(ActionEvent actionEvent) {
-        System.exit(0);
+        client=Client.getInstance();
+        if(client==null) {
+            System.exit(0);
+        }else{
+            client.addGuiAction("/quit");
+        }
     }
 }
