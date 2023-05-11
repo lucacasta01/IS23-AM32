@@ -11,9 +11,10 @@ public class View implements Serializable {
     private List<String> sharedCards;
     private String personalCard;
     private String currentPlayer;
+    private List<String> players;
 
-    private Map<String, List<String>> GUIplayersAndShelves;
-    private Map<String, Integer> GUIplayersAndScoring;
+    private List<List<String>> GUIShelves;
+    private List<Integer> GUIScoring;
     private List<String> GUIboard;
     private List<String> GUIsharedCards;
     private String GUIpersonalCard;
@@ -21,8 +22,9 @@ public class View implements Serializable {
         this.shelves = new ArrayList<>();
         this.sharedCards = new ArrayList<>();
         this.GUIboard = new ArrayList<>();
-        this.GUIplayersAndShelves = new HashMap<>();
-        this.GUIplayersAndScoring = new HashMap<>();
+        this.GUIShelves = new ArrayList<>();
+        this.GUIScoring = new ArrayList<>();
+        this.players = new ArrayList<>();
         this.GUIsharedCards = new ArrayList<>();
     }
 
@@ -34,12 +36,20 @@ public class View implements Serializable {
         this.GUIpersonalCard = GUIpersonalCard;
     }
 
-    public void setGUIplayersAndShelves(Map<String, List<String>> GUIplayersAndShelves) {
-        this.GUIplayersAndShelves = GUIplayersAndShelves;
+    public List<String> getPlayers() {
+        return players;
     }
 
-    public void setGUIplayersAndScoring(Map<String, Integer> GUIplayersAndScoring) {
-        this.GUIplayersAndScoring = GUIplayersAndScoring;
+    public void setPlayers(List<String> players) {
+        this.players = players;
+    }
+
+    public void setGUIShelves(List<List<String>> shelves) {
+        this.GUIShelves = GUIShelves;
+    }
+
+    public void setGUIScoring(List<Integer> scoring) {
+        this.GUIScoring = GUIScoring;
     }
 
     public void setGUIboard(List<String> GUIboard) {
@@ -50,12 +60,12 @@ public class View implements Serializable {
         this.GUIsharedCards = GUIsharedCards;
     }
 
-    public Map<String, List<String>> getGUIplayersAndShelves() {
-        return GUIplayersAndShelves;
+    public List<List<String>> getGUIShelves() {
+        return GUIShelves;
     }
 
-    public Map<String, Integer> getGUIplayersAndScoring() {
-        return GUIplayersAndScoring;
+    public List<Integer> getGUIScoring() {
+        return GUIScoring;
     }
 
     public List<String> getGUIboard() {

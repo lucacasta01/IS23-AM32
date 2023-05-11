@@ -444,9 +444,10 @@ public class Lobby implements Runnable{
 
     public void broadcastUpdate(){
         View view = new View();
+        List<String> players = new ArrayList<>();
         List<String> GUIBoard = new ArrayList<>();
-        Map<String, List<String>> GUIPlayersAndShelves = new HashMap<>();
-        Map<String, Integer> GUIPlayersAndScore = new HashMap<>();
+        List<List<String>> GUIPlayersAndShelves = new ArrayList<>();
+        List<Integer> GUIPlayersAndScore = new ArrayList<>();
         List<String> GuiSharedCard = new ArrayList<>();
         ClientHandler client = lobbyPlayers.get(game.getCurrentPlayer());
         view.setCurrentPlayer(client.getColor()+game.getPlayers().get(game.getCurrentPlayer()).getUsername()+ANSI.RESET_COLOR);
@@ -462,17 +463,18 @@ public class Lobby implements Runnable{
         //GUI players, shelves and points
         for(Player p:game.getPlayers()){
             List<String> shelf = new ArrayList<>();
-            for(int i=0; i< Constants.BOARD_DIM; i++){
-                for(int j=0; j<Constants.BOARD_DIM; j++){
+            for(int i=0; i< Constants.SHELFROW; i++){
+                for(int j=0; j<Constants.SHELFCOLUMN; j++){
                     shelf.add(p.getMyShelf().getTileMartrix()[i][j].getImagePath());
                 }
             }
-            GUIPlayersAndShelves.put(p.getUsername(), shelf);
-            GUIPlayersAndScore.put(p.getUsername(), p.getScore());
-
+            GUIPlayersAndShelves.add(shelf);
+            GUIPlayersAndScore.add(p.getScore());
+            players.add(p.getUsername());
         }
-        view.setGUIplayersAndShelves(GUIPlayersAndShelves);
-        view.setGUIplayersAndScoring(GUIPlayersAndScore);
+        view.setGUIShelves(GUIPlayersAndShelves);
+        view.setGUIScoring(GUIPlayersAndScore);
+        view.setPlayers(players);
         //shared cards
         for(SharedGoalCard s:game.getSharedDeck()){
             GuiSharedCard.add(s.getImgPath());
