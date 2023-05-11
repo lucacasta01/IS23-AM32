@@ -1,5 +1,6 @@
 package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
+import it.polimi.myShelfie.application.controller.GUIController;
 import it.polimi.myShelfie.controller.RMI.RMIClient;
 import it.polimi.myShelfie.controller.RMI.RMIServer;
 import it.polimi.myShelfie.controller.inputHandlers.RMIInputHandler;
@@ -22,6 +23,8 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
@@ -31,23 +34,33 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private String nickname = "/";
     private boolean done;
     private boolean configurationDone = false;
-    private Response response;
     private boolean validRecieved = false;
     private View view;
     private String connectionProtocol;
     private final List<PingObject> pongResponses = new ArrayList<>();
     private final RMIInputHandler RMIinputHandler;
+    private final TCPInputHandler TCPinputHandler;
+    private GUIController guiController;
 
     //rmi server reference
     private RMIServer rmiServer;
+    private boolean isGUI = false;
+    private final List<Response> guiResponses = new ArrayList<>();
 
-    protected Client() throws RemoteException {
+
+
+    public Client(boolean GUI) throws RemoteException {
         RMIinputHandler  = new RMIInputHandler(this);
+        TCPinputHandler =  new TCPInputHandler(this,GUI);
+        isGUI = GUI;
     }
 
     @Override
     public void run() {
-        connectionProtocol = protocolHandler();
+        if(!isGUI) {
+            connectionProtocol = protocolHandler();
+        }
+
         switch (connectionProtocol){
             case "TCP":
                 try {
@@ -71,64 +84,78 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                     in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                     out = new PrintWriter(client.getOutputStream(), true);
 
-                    TCPInputHandler inHandler = new TCPInputHandler(this);
-                    inHandler.start();
+
+                    TCPinputHandler.start();
 
                     //PING THREAD
                     pingThread().start();
 
-                    String inMessage;
 
-                    while ((inMessage = in.readLine()) != null) {
-                        Response response = recieveResponse(inMessage);
-                        if (response.getResponseType() == Response.ResponseType.INFO) {
-                            System.out.println(response.getInfoMessage());
-                        } else if (response.getResponseType() == Response.ResponseType.CHATMESSAGE) {
-                            System.out.println(">" + response.getChatMessage().getSender() + ": " + response.getChatMessage().getMessage());
-                        } else if (response.getResponseType() == Response.ResponseType.VALID) {
-                            validRecieved = true;
-                            if (response.getInfoMessage().equals("Username accepted")) {
-                                nickname = response.getChatMessage().getSender();
-                            }
-                            System.out.println(ANSI.GREEN + response.getInfoMessage() + ANSI.RESET_COLOR);
-                        } else if (response.getResponseType() == Response.ResponseType.DENIED) {
-                            System.out.println(response.getInfoMessage());
-                        } else if (response.getResponseType() == Response.ResponseType.UPDATE) {
-                            view = response.getView();
-                            //shelves
-                            for (String s : view.getShelves()) {
-                                System.out.println(s + "\n");
-                            }
-                            //personal card
-                            System.out.println(ANSI.ITALIQUE + "Personal goal card:" + ANSI.RESET_STYLE);
-                            System.out.println(view.getPersonalCard());
+                    new Thread(()->{
+                        String inMessage;
+                        try{
+                            while ((inMessage = in.readLine()) != null) {
+                                Response response = recieveResponse(inMessage);
+                                if (response.getResponseType() == Response.ResponseType.INFO) {
+                                    System.out.println(response.getInfoMessage());
+                                } else if (response.getResponseType() == Response.ResponseType.CHATMESSAGE) {
+                                    System.out.println(">" + response.getChatMessage().getSender() + ": " + response.getChatMessage().getMessage());
+                                } else if (response.getResponseType() == Response.ResponseType.VALID) {
+                                    validRecieved = true;
+                                    if (response.getInfoMessage().equals("Username accepted")) {
+                                        nickname = response.getChatMessage().getSender();
+                                    }
+                                    System.out.println(ANSI.GREEN + response.getInfoMessage() + ANSI.RESET_COLOR);
+                                    if(isGUI){
+                                        guiController.loginAccepted();
+                                    }
+                                } else if (response.getResponseType() == Response.ResponseType.DENIED) {
+                                    System.out.println(response.getInfoMessage());
+                                    if(isGUI){
+                                        guiController.nicknameDenied();
+                                    }
+                                } else if (response.getResponseType() == Response.ResponseType.UPDATE) {
+                                    view = response.getView();
+                                    //shelves
+                                    for (String s : view.getShelves()) {
+                                        System.out.println(s + "\n");
+                                    }
+                                    //personal card
+                                    System.out.println(ANSI.ITALIQUE + "Personal goal card:" + ANSI.RESET_STYLE);
+                                    System.out.println(view.getPersonalCard());
 
-                            //shared cards
-                            for (int i = 0; i < view.getSharedCards().size(); i++) {
-                                System.out.println(ANSI.ITALIQUE + "Shared goal " + (i + 1) + ": " + ANSI.RESET_STYLE);
-                                System.out.println(view.getSharedCards().get(i) + "\n");
-                            }
-                            //board
-                            System.out.println(ANSI.ITALIQUE + "Board:" + ANSI.RESET_STYLE);
-                            System.out.println(view.getBoard() + "\n");
-                            //current player
-                            System.out.println(ANSI.ITALIQUE + "Turn of: " + ANSI.RESET_STYLE + view.getCurrentPlayer());
-                        } else if (response.getResponseType() == Response.ResponseType.PONG) {
-                            synchronized (pongResponses) {
-                                pongResponses.add(new PingObject(false));
-                                pongResponses.notifyAll();
-                            }
+                                    //shared cards
+                                    for (int i = 0; i < view.getSharedCards().size(); i++) {
+                                        System.out.println(ANSI.ITALIQUE + "Shared goal " + (i + 1) + ": " + ANSI.RESET_STYLE);
+                                        System.out.println(view.getSharedCards().get(i) + "\n");
+                                    }
+                                    //board
+                                    System.out.println(ANSI.ITALIQUE + "Board:" + ANSI.RESET_STYLE);
+                                    System.out.println(view.getBoard() + "\n");
+                                    //current player
+                                    System.out.println(ANSI.ITALIQUE + "Turn of: " + ANSI.RESET_STYLE + view.getCurrentPlayer());
+                                } else if (response.getResponseType() == Response.ResponseType.PONG) {
+                                    synchronized (pongResponses) {
+                                        pongResponses.add(new PingObject(false));
+                                        pongResponses.notifyAll();
+                                    }
 
-                        } else if (response.getResponseType() == Response.ResponseType.PING) {
-                            sendAction(new Action(Action.ActionType.PONG, nickname, null, null, null, null));
+                                } else if (response.getResponseType() == Response.ResponseType.PING) {
+                                    sendAction(new Action(Action.ActionType.PONG, nickname, null, null, null, null));
 
-                        } else if (response.getResponseType() == Response.ResponseType.SHUTDOWN) {
-                            System.out.println(response.getInfoMessage());
-                            shutdown();
+                                } else if (response.getResponseType() == Response.ResponseType.SHUTDOWN) {
+                                    System.out.println(response.getInfoMessage());
+                                    shutdown();
+                                }
+                            }
                         }
-                    }
+                        catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }).start();
+
                 } catch (Exception e) {
-                    throw new RuntimeException();
+                    e.printStackTrace();
                 }
                 break;
             case "RMI":
@@ -167,6 +194,18 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     public RMIServer getRmiServer() {
         return rmiServer;
+    }
+
+    public void setGuiController(GUIController guiController) {
+        this.guiController = guiController;
+    }
+
+    public String getConnectionProtocol() {
+        return connectionProtocol;
+    }
+
+    public void setConnectionProtocol(String connectionProtocol) {
+        this.connectionProtocol = connectionProtocol;
     }
 
     public boolean getDone(){
@@ -281,7 +320,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     }
 
     public static void main(String[] args) throws RemoteException {
-        Client client = new Client();
+        Client client = new Client(false);
         try {
             client.run();
         } catch (RuntimeException e) {
@@ -379,6 +418,10 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
             shutdown();
         }).start();
 
+    }
+
+    public void addGuiAction(String action){
+        TCPinputHandler.addGuiAction(action);
     }
 
     class SwapElapsed extends Thread {

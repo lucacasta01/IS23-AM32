@@ -14,18 +14,36 @@ import java.util.List;
 
 public class TCPInputHandler extends Thread{
     private final Client client;
+    private final boolean isGUI;
+    private final List<String> inputGUI;
 
-    public TCPInputHandler(Client client){
+    public TCPInputHandler(Client client, boolean isGUI){
         this.client = client;
+        this.isGUI = isGUI;
+        inputGUI = new ArrayList<>();
     }
 
     @Override
     public void run() {
         String message;
-        BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader inReader = null;
+
+
+        if(!isGUI){
+            inReader = new BufferedReader(new InputStreamReader(System.in));
+        }
+
         while (!client.getDone()) {
             try {
-                message = inReader.readLine();
+                if (!isGUI) {
+                    try {
+                        message = inReader.readLine();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    message = getGuiAction();
+                }
 
                 if (message.equals("/quit")) {
                     Action a = new Action(Action.ActionType.QUIT, client.getNickname(), "", "", null, null);
@@ -43,9 +61,9 @@ public class TCPInputHandler extends Thread{
                     int firstTile = "/collect ".length();
                     String substr = message.substring(firstTile);
                     String[] pos = substr.split(" ");
-                    if(pos.length<1||pos.length>3){
+                    if (pos.length < 1 || pos.length > 3) {
                         System.err.println("Wrong syntax, try again");
-                    }else {
+                    } else {
                         List<Position> tilesSelected = new ArrayList<>();
                         for (String s : pos) {
                             try {
@@ -106,10 +124,11 @@ public class TCPInputHandler extends Thread{
                     Action a = new Action(Action.ActionType.INFO, client.getNickname(), "", message, null, null);
                     client.sendAction(a);
                 }
-            } catch (IOException e) {
+            }catch (IOException e){
+                e.printStackTrace();
+            } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-
         }
     }
 
@@ -118,5 +137,19 @@ public class TCPInputHandler extends Thread{
     private boolean isColor(String s) {
         return s.equals("W") || s.equals("B") || s.equals("L") ||
                 s.equals("P") || s.equals("G") || s.equals("Y");
+    }
+
+    private synchronized String getGuiAction() throws InterruptedException {
+        String message;
+        while(inputGUI.size()==0){
+            this.wait();
+        }
+        message = inputGUI.get(0);
+        inputGUI.remove(0);
+        return message;
+    }
+    public synchronized void addGuiAction(String action){
+        inputGUI.add(action);
+        this.notifyAll();
     }
 }

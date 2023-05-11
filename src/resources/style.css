@@ -1,10 +1,11 @@
 #backgroundPane{
-    -fx-background-image: url("graphics/misc/sfondo_parquet.jpg");
+    -fx-background-image: url("graphics/misc/background_login.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 100% 100%;
 }
 
-#shutdownBtn{
-    -fx-border-color: transparent;
-    -fx-background-color: transparent;
+#backgroundMenu{
+    -fx-background-image: url("graphics/misc/sfondo_parquet.jpg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 100% 100%;
 }

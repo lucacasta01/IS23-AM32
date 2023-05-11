@@ -18,7 +18,8 @@ public class GUIClient extends Application {
        stage.setTitle("My Shelfie");
        stage.getIcons().add(new Image(Paths.get("src/resources/graphics/publisherMaterial/Icon.png").toUri().toURL().openStream()));
        stage.setScene(new Scene(root));
-       stage.setFullScreen(true);
+       stage.setMinWidth(820);
+       stage.setMinHeight(520);
        stage.show();
     }
 
