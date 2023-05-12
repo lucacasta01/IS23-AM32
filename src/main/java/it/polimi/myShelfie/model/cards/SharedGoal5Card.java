@@ -1,6 +1,6 @@
 package it.polimi.myShelfie.model.cards;
 import it.polimi.myShelfie.model.Player;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 public class SharedGoal5Card extends SharedGoalCard implements CheckSharedGoal {
 
 
@@ -19,8 +19,8 @@ public class SharedGoal5Card extends SharedGoalCard implements CheckSharedGoal {
            int numberOfColors = 0;
            int numberOfNulls = 0;
            boolean  g = false, b=false, lb=false, w=false, y=false, pi=false, n=false;
-            for(int col = 0; col< Constants.SHELFCOLUMN; col++){
-                for(int row=0; row<Constants.SHELFROW; row++){
+            for(int col = 0; col< Settings.SHELFCOLUMN; col++){
+                for(int row = 0; row< Settings.SHELFROW; row++){
                     switch (p.getMyShelf().getTileMartrix()[row][col].getColor()){
                         case BLUE:
                             b=true;

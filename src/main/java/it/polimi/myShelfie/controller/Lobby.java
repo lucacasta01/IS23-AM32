@@ -1,9 +1,10 @@
 package it.polimi.myShelfie.controller;
 
+import it.polimi.myShelfie.application.Client;
 import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.model.cards.PersonalGoalCard;
@@ -120,6 +121,7 @@ public class Lobby implements Runnable{
                 game = new Game(lobbyUID, playersNumber);
                 try {
                     broadcastMessage("Waiting for players..." + " " + "(" + getLobbySize() + "/" + getPlayersNumber() + ")");
+                    lobbyPlayers.get(0).notifyLobbyCreated(getPlayersNumber());
                     waitForPlayers();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
@@ -154,6 +156,7 @@ public class Lobby implements Runnable{
 
         if(!close){
             broadcastMessage("Starting new game");
+            notifyGameStarted();
             for (ClientHandler ch : lobbyPlayers) {
                 sendCommands(ch);
             }
@@ -334,6 +337,12 @@ public class Lobby implements Runnable{
 
     }
 
+    private void notifyGameStarted() {
+        for(ClientHandler ch : lobbyPlayers){
+            ch.notifyGameStarted();
+        }
+    }
+
     private List<Player> generatePlayers(){
         List<Player> toReturn = new ArrayList<>();
         for(ClientHandler p : lobbyPlayers){
@@ -424,12 +433,19 @@ public class Lobby implements Runnable{
         }
         synchronized (lobbyPlayers){
             lobbyPlayers.add(player);
-            broadcastMessage(player.getNickname()+" joined the lobby "+"("+getLobbySize()+"/"+getPlayersNumber()+")");
-            player.notifyGameJoined();
+            sendToOthers(player.getNickname()+" joined the lobby "+"("+getLobbySize()+"/"+getPlayersNumber()+")",player);
+            player.notifyLobbyJoined("("+getLobbySize()+"/"+getPlayersNumber()+")");
             lobbyPlayers.notifyAll();
         }
     }
 
+    public void sendToOthers(String message, ClientHandler mySelf){
+        for(ClientHandler t : lobbyPlayers){
+            if(!t.equals(mySelf)) {
+                t.sendInfoMessage(message);
+            }
+        }
+    }
     public void broadcastMessage(String message){
         for(ClientHandler t : lobbyPlayers){
             t.sendInfoMessage(message);
@@ -455,8 +471,8 @@ public class Lobby implements Runnable{
         List<String> toSend = new ArrayList<>();
         view.setBoard(this.game.getGameBoard().toString());
         //GUI board
-        for(int i=0; i< Constants.BOARD_DIM; i++){
-            for(int j=0; j<Constants.BOARD_DIM; j++){
+        for(int i = 0; i< Settings.BOARD_DIM; i++){
+            for(int j = 0; j< Settings.BOARD_DIM; j++){
                 GUIBoard.add(game.getGameBoard().getGrid()[i][j].getImagePath());
             }
         }
@@ -464,8 +480,8 @@ public class Lobby implements Runnable{
         //GUI players, shelves and points
         for(Player p:game.getPlayers()){
             List<String> shelf = new ArrayList<>();
-            for(int i=0; i< Constants.SHELFROW; i++){
-                for(int j=0; j<Constants.SHELFCOLUMN; j++){
+            for(int i = 0; i< Settings.SHELFROW; i++){
+                for(int j = 0; j< Settings.SHELFCOLUMN; j++){
                     shelf.add(p.getMyShelf().getTileMartrix()[i][j].getImagePath());
                 }
             }

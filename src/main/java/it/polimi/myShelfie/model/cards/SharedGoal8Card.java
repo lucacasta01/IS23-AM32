@@ -1,7 +1,7 @@
 package it.polimi.myShelfie.model.cards;
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Tile;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 public class SharedGoal8Card extends SharedGoalCard implements CheckSharedGoal {
 
 
@@ -19,9 +19,9 @@ public class SharedGoal8Card extends SharedGoalCard implements CheckSharedGoal {
             return false;
         }
         Tile[][] toCheck = p.getMyShelf().getTileMartrix();
-        if(toCheck[0][0].getColor() == toCheck[Constants.SHELFROW-1][0].getColor()
-                && toCheck[Constants.SHELFROW-1][Constants.SHELFCOLUMN-1].getColor() == toCheck[Constants.SHELFROW-1][0].getColor()
-                && toCheck[Constants.SHELFROW-1][0].getColor() == toCheck[0][Constants.SHELFCOLUMN-1].getColor()){
+        if(toCheck[0][0].getColor() == toCheck[Settings.SHELFROW-1][0].getColor()
+                && toCheck[Settings.SHELFROW-1][Settings.SHELFCOLUMN-1].getColor() == toCheck[Settings.SHELFROW-1][0].getColor()
+                && toCheck[Settings.SHELFROW-1][0].getColor() == toCheck[0][Settings.SHELFCOLUMN-1].getColor()){
             addPlayer(p);
             return true;
         }

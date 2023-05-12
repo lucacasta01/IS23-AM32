@@ -1,13 +1,13 @@
 package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
-import it.polimi.myShelfie.application.controller.GUILoginController;
-import it.polimi.myShelfie.application.controller.banners.WaitPlayersController;
+import it.polimi.myShelfie.application.GUIcontroller.LoginController;
+import it.polimi.myShelfie.application.GUIcontroller.banners.WaitPlayersController;
 import it.polimi.myShelfie.controller.RMI.RMIClient;
 import it.polimi.myShelfie.controller.RMI.RMIServer;
 import it.polimi.myShelfie.controller.inputHandlers.RMIInputHandler;
 import it.polimi.myShelfie.controller.inputHandlers.TCPInputHandler;
 import it.polimi.myShelfie.utilities.ANSI;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.PingObject;
 import it.polimi.myShelfie.utilities.beans.Action;
@@ -46,12 +46,12 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private final List<PingObject> pongResponses = new ArrayList<>();
     private final RMIInputHandler RMIinputHandler;
     private final TCPInputHandler TCPinputHandler;
-    private GUILoginController guiLoginController;
+    private LoginController loginController;
     private WaitPlayersController waitPlayersController = null;
-    public String playerNumber;
-    private String serverIP = Constants.SERVER_IP;
-    private int TCPPort = Constants.TCPPORT;
-    private int RMIPort = Constants.RMIPORT;
+    public String waitPlayerStatus;
+    private String serverIP = Settings.SERVER_IP;
+    private int TCPPort = Settings.TCPPORT;
+    private int RMIPort = Settings.RMIPORT;
 
     //rmi server reference
     private RMIServer rmiServer;
@@ -77,6 +77,10 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
             }
         }
         return instance;
+    }
+
+    public LoginController getLoginController() {
+        return loginController;
     }
 
     public String getServerIP() {
@@ -141,7 +145,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                             out.close();
                         }
                         if(isGUI) {
-                            guiLoginController.serverOffline();
+                            loginController.serverOffline();
                             close = true;
                         }
                     }
@@ -153,7 +157,9 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                         TCPinputHandler.start();
 
                         //PING THREAD
-                        pingThread().start();
+                        if(Settings.pingOn) {
+                            pingThread().start();
+                        }
 
 
                         new Thread(() -> {
@@ -162,12 +168,9 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                 while ((inMessage = in.readLine()) != null) {
                                     Response response = recieveResponse(inMessage);
                                     if (response.getResponseType() == Response.ResponseType.INFO) {
-                                        if (response.getInfoMessage().startsWith("Waiting for players") || response.getInfoMessage().contains("joined the lobby")) {
-                                            if (isGUI) {
-                                                if (waitPlayersController != null) {
-                                                    waitPlayersController.updateLabel(response.getInfoMessage());
-                                                }
-                                            }
+                                        if(response.getInfoMessage().contains("joined the lobby")){
+                                            waitPlayerStatus = response.getInfoMessage().substring(response.getInfoMessage().indexOf("("));
+                                            waitPlayersController.updateLabel("Waiting for players..."+waitPlayerStatus);
                                         }
                                         System.out.println(response.getInfoMessage());
                                     } else if (response.getResponseType() == Response.ResponseType.CHATMESSAGE) {
@@ -177,14 +180,18 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                     }else if(response.getResponseType()== Response.ResponseType.NICKNAME_ACCEPTED){
                                         nickname = response.getChatMessage().getSender();
                                         if (isGUI) {
-                                            guiLoginController.loginAccepted();
+                                            loginController.loginAccepted();
                                         }
                                     } else if (response.getResponseType() == Response.ResponseType.DENIED) {
                                         System.out.println(response.getInfoMessage());
 
                                     } else if(response.getResponseType()== Response.ResponseType.NICKNAME_DENIED){
                                         if (isGUI) {
-                                            guiLoginController.nicknameDenied();
+                                            loginController.nicknameDenied();
+                                        }
+                                    } else if (response.getResponseType() == Response.ResponseType.GAME_STARTED) {
+                                        if(isGUI) {
+                                            GUIClient.getInstance().switchToGame();
                                         }
                                     } else if (response.getResponseType() == Response.ResponseType.UPDATE) {
                                         view = response.getView();
@@ -218,22 +225,19 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                     } else if (response.getResponseType() == Response.ResponseType.SHUTDOWN) {
                                         System.out.println(response.getInfoMessage());
                                         shutdown();
-                                    }else if(response.getResponseType()== Response.ResponseType.LOBBYJOINED){
-                                        GUIClient guiClient = GUIClient.getInstance();
-                                        Stage stage = guiClient.getStage();
-                                        Platform.runLater(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Parent numbeofplayer = null;
-                                                try {
-                                                    numbeofplayer = FXMLLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
-                                                } catch (IOException e) {
-                                                    throw new RuntimeException(e);
-                                                }
-                                                stage.setScene(new Scene(numbeofplayer));
-
-                                            }
-                                        });
+                                    }else if(response.getResponseType()== Response.ResponseType.LOBBY_CREATED){
+                                        synchronized (this) {
+                                            waitPlayerStatus = "(1/" + response.getInfoMessage() + ")";
+                                        }
+                                        System.out.println("Lobby created");
+                                    }
+                                    else if(response.getResponseType() == Response.ResponseType.LOBBY_JOINED){
+                                        System.out.println("Lobby joined");
+                                        setWaitPlayerStatus(response.getInfoMessage());
+                                        System.out.println("Waiting for players..."+getWaitPlayerStatus());
+                                        if(isGUI) {
+                                            GUIClient.getInstance().switchToWaitingScene();
+                                        }
                                     }
                                 }
                             } catch (Exception e) {
@@ -265,12 +269,20 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }
     }
 
+    public synchronized String getWaitPlayerStatus() {
+        return waitPlayerStatus;
+    }
+
+    public void setWaitPlayerStatus(String waitPlayerStatus) {
+        this.waitPlayerStatus = waitPlayerStatus;
+    }
+
     public RMIServer getRmiServer() {
         return rmiServer;
     }
 
-    public void setGuiLoginController(GUILoginController guiLoginController) {
-        this.guiLoginController = guiLoginController;
+    public void setGuiLoginController(LoginController loginController) {
+        this.loginController = loginController;
     }
 
     public String getConnectionProtocol() {
@@ -290,7 +302,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     private void startRMIClient() throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(serverIP,RMIPort);
-        this.rmiServer = (RMIServer)registry.lookup(Constants.RMINAME);
+        this.rmiServer = (RMIServer)registry.lookup(Settings.RMINAME);
         rmiServer.addClient(this);
     }
     public void shutdown() {
@@ -358,7 +370,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                 pongResponses.remove(0);
                             }
                             try {
-                                Thread.sleep(Constants.PINGPERIOD);
+                                Thread.sleep(Settings.PINGPERIOD);
                             } catch (InterruptedException e) {
                                 throw new RuntimeException(e);
                             }
@@ -377,7 +389,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                             System.exit(1);
                         }
                         try {
-                            Thread.sleep(Constants.PINGPERIOD);
+                            Thread.sleep(Settings.PINGPERIOD);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -444,11 +456,27 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     public void nicknameAccepted() throws RemoteException {
         if(isGUI){
             try {
-                guiLoginController.loginAccepted();
+                loginController.loginAccepted();
             }catch(Exception e){
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void nicknameDenied() throws RemoteException {
+        if(isGUI){
+            try {
+                loginController.nicknameDenied();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void notifyGameStarted() throws RemoteException {
+        GUIClient.getInstance().switchToGame();
     }
 
     @Override
@@ -476,6 +504,12 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     @Override
     public void chatMessage(String sender, String message) throws RemoteException {
         System.out.println(">" + sender + ": " + message);
+    }
+
+    @Override
+    public void notifyLobbyCreated(String lobbySize) throws RemoteException {
+        waitPlayerStatus = "(1/"+lobbySize+")";
+        System.out.println("Lobby created");
     }
 
     @Override
@@ -510,7 +544,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     public void denied(String message) throws RemoteException {
         if(message.startsWith("Username")){
             try {
-                guiLoginController.nicknameDenied();
+                loginController.nicknameDenied();
             }catch(Exception e){
                 e.printStackTrace();
             }
@@ -561,10 +595,10 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         @Override
         public void run() {
             int time = 0;
-            while (isRunning() && time < Constants.PINGTHRESHOLD) {
+            while (isRunning() && time < Settings.PINGTHRESHOLD) {
                 try {
-                    Thread.sleep(Constants.PINGTHRESHOLD/Constants.PINGFACTOR);
-                    time += Constants.PINGTHRESHOLD/Constants.PINGFACTOR;
+                    Thread.sleep(Settings.PINGTHRESHOLD/ Settings.PINGFACTOR);
+                    time += Settings.PINGTHRESHOLD/ Settings.PINGFACTOR;
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

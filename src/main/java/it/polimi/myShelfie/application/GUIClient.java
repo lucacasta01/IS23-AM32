@@ -1,7 +1,7 @@
 package it.polimi.myShelfie.application;
 
-import it.polimi.myShelfie.application.controller.GUILoginController;
-import it.polimi.myShelfie.application.controller.banners.ErrorBannerController;
+import it.polimi.myShelfie.application.GUIcontroller.LoginController;
+import it.polimi.myShelfie.application.GUIcontroller.banners.ErrorBannerController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -11,9 +11,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Paths;
-import java.rmi.RemoteException;
 
 public class GUIClient extends Application {
     private static GUIClient instance;
@@ -36,7 +34,7 @@ public class GUIClient extends Application {
         this.stage = stage;
        FXMLLoader fxmlLoader = new FXMLLoader();
        Parent root = fxmlLoader.load(Paths.get("src/resources/loginPage.fxml").toUri().toURL());
-       GUILoginController guiLoginController = fxmlLoader.getController();
+       LoginController loginController = fxmlLoader.getController();
        //todo handle guiController methods from there, pass actions to a client
         new Thread(()->{
 
@@ -86,8 +84,39 @@ public class GUIClient extends Application {
         return stage;
     }
 
+
     public static void main(String[] args) {
         launch(args);
     }
 
+    public void switchToWaitingScene() {
+        Platform.runLater(()->{
+            Parent waitPlayers = null;
+            try {
+                waitPlayers = FXMLLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            stage.setMinWidth(300);
+            stage.setMinHeight(200);
+            stage.setWidth(300);
+            stage.setHeight(200);
+            stage.setScene(new Scene(waitPlayers));
+        });
+    }
+
+    public void switchToGame() {
+        Platform.runLater(()->{
+            Parent gamePanel = null;
+            try {
+                gamePanel = FXMLLoader.load(Paths.get("src/resources/gamePanel.fxml").toUri().toURL());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            stage.setMinWidth(820);
+            stage.setMinHeight(520);
+            stage.setScene(new Scene(gamePanel));
+            stage.setFullScreen(true);
+        });
+    }
 }

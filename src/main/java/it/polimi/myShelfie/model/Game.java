@@ -144,7 +144,7 @@ public class Game implements Runnable{
     }
 
     private Shelf loadShelf(List<ColorPosition> colorPositions){
-        Tile[][] tileMatrix = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
+        Tile[][] tileMatrix = new Tile[Settings.SHELFROW][Settings.SHELFCOLUMN];
         for(ColorPosition cp : colorPositions){
             tileMatrix[cp.getRow()][cp.getColumn()] = new Tile(cp.getImgpath(),cp.getTileColor());
         }
@@ -152,7 +152,7 @@ public class Game implements Runnable{
     }
 
     private Board loadBoard(List<ColorPosition> colorPositions, List<Tile> tileHeap){
-        Tile[][] tileMatrix = new Tile[Constants.BOARD_DIM][Constants.BOARD_DIM];
+        Tile[][] tileMatrix = new Tile[Settings.BOARD_DIM][Settings.BOARD_DIM];
         for(ColorPosition cp : colorPositions){
             tileMatrix[cp.getRow()][cp.getColumn()] = new Tile(cp.getImgpath(),cp.getTileColor());
         }

@@ -2,7 +2,7 @@ package it.polimi.myShelfie.model.cards;
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Shelf;
 import it.polimi.myShelfie.model.Tile;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 import java.util.List;
 import java.util.Stack;
 public class SharedGoal10Card extends SharedGoalCard implements CheckSharedGoal {
@@ -27,8 +27,8 @@ public class SharedGoal10Card extends SharedGoalCard implements CheckSharedGoal 
         Shelf playerShelf = p.getMyShelf();
         Tile[][] matrix = playerShelf.getTileMartrix();
 
-        for(int i = 0; i < Constants.SHELFROW - 2; i++){
-            for(int j = 0; j < Constants.SHELFCOLUMN - 2; j++){
+        for(int i = 0; i < Settings.SHELFROW - 2; i++){
+            for(int j = 0; j < Settings.SHELFCOLUMN - 2; j++){
                 if((matrix[i][j].getColor().equals(matrix[i][j+2].getColor())) && !(matrix[i][j].getColor().equals(Tile.Color.NULLTILE)) &&
                         (matrix[i][j].getColor().equals(matrix[i+1][j+1].getColor())) &&
                         (matrix[i][j].getColor().equals(matrix[i+2][j].getColor())) &&

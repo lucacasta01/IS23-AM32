@@ -22,10 +22,12 @@ public class Response {
         PING,
         PONG,
         SHUTDOWN,
-        LOBBYJOINED,
+        LOBBY_JOINED,
+        LOBBY_CREATED,
         NICKNAME_DENIED,
         NICKNAME_ACCEPTED,
-        GAME_NOT_FOUND
+        GAME_NOT_FOUND,
+        GAME_STARTED
     }
 
     public static class ChatMessage{

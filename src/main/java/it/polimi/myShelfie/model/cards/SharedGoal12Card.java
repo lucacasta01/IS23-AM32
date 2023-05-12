@@ -2,7 +2,7 @@ package it.polimi.myShelfie.model.cards;
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Shelf;
 import it.polimi.myShelfie.model.Tile;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 public class SharedGoal12Card extends SharedGoalCard implements CheckSharedGoal {
 
     public SharedGoal12Card(String imgPath, int playerNumber) {
@@ -22,30 +22,30 @@ public class SharedGoal12Card extends SharedGoalCard implements CheckSharedGoal 
         int columnCount[] = {0, 0, 0, 0, 0};
         final int minHigh = 5;
 
-        for(int i = 0; i< Constants.SHELFROW; i++) {
-            for (int j = 0; j < Constants.SHELFCOLUMN; j++) {
+        for(int i = 0; i< Settings.SHELFROW; i++) {
+            for (int j = 0; j < Settings.SHELFCOLUMN; j++) {
                 if(!(matrix[i][j].getColor().equals(Tile.Color.NULLTILE))){
                 columnCount[j]++;
                 }
             }
         }
 
-        for(int i = 0; i< Constants.SHELFCOLUMN; i++){
+        for(int i = 0; i< Settings.SHELFCOLUMN; i++){
             if(columnCount[i] == 0){return false;}
         }
 
         int i=0;
         if(columnCount[i] > columnCount[i+1]) {
             if(columnCount[i] < minHigh){return false;}
-                for(int j = 0; j < Constants.SHELFCOLUMN - 1; j++){
+                for(int j = 0; j < Settings.SHELFCOLUMN - 1; j++){
                     if (columnCount[j] != (columnCount[j + 1] + 1)) {return false;}
                 }
             addPlayer(p);
             return true;
         }
         else if(columnCount[i] < columnCount[i+1]){
-            if(columnCount[Constants.SHELFCOLUMN - 1] < minHigh){return false;}
-                for(int j = 0; j< Constants.SHELFCOLUMN - 1; j++) {
+            if(columnCount[Settings.SHELFCOLUMN - 1] < minHigh){return false;}
+                for(int j = 0; j< Settings.SHELFCOLUMN - 1; j++) {
                     if (columnCount[j] != columnCount[j + 1] - 1) {return false;}
                 }
             addPlayer(p);

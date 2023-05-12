@@ -1,12 +1,10 @@
-package it.polimi.myShelfie.application.controller;
+package it.polimi.myShelfie.application.GUIcontroller;
 
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
-import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition;
 import it.polimi.myShelfie.application.Client;
 import it.polimi.myShelfie.application.GUIClient;
-import it.polimi.myShelfie.application.controller.banners.ErrorBannerController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,26 +14,20 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
 
 
-public class GUILoginController {
+public class LoginController {
     private String nickname;
     private String connectionProtocol;
-    private Client client=null;
     private Stage stage;
 
 
@@ -100,17 +92,21 @@ public class GUILoginController {
         System.out.println("Nickname: " + nickname);
         System.out.println("Protocol: " + connectionProtocol);
 
-        client = Client.getInstance();
-        client.setGuiLoginController(this);
-        client.setNickname(nickname);
-        client.setConnectionProtocol(connectionProtocol);
-        client.setGUI(true);
-        client.run();
+        Client client = Client.getInstance();
+        if(client.getLoginController() == null) {
+            client.setGuiLoginController(this);
+            client.setNickname(nickname);
+            client.setConnectionProtocol(connectionProtocol);
+            client.setGUI(true);
+            client.run();
+        }
         client.addGuiAction(nickname);
     }
 
-    public void nicknameDenied(){
-        nicknameDeniedLbl.setVisible(true);
+    public void nicknameDenied() {
+        Platform.runLater(() -> {
+            nicknameDeniedLbl.setVisible(true);
+        });
     }
 
     public void loginAccepted() throws IOException {
@@ -137,29 +133,4 @@ public class GUILoginController {
         guiClient.showErrorBanner("Server is offline");
     }
 
-    /*
-    public void openConfigPanel(MouseEvent mouseEvent) {
-        HamburgerBasicCloseTransition transition = new HamburgerBasicCloseTransition(myHamburger);
-        transition.setRate(transition.getRate()*-1);
-        transition.play();
-
-
-
-        drawer.open();
-
-
-        if (GUIClient.getInstance().isConfigPanelOpen) {
-            System.out.println("drawer is opened");
-            drawer.close();
-            drawer.setVisible(false);
-            GUIClient.getInstance().isConfigPanelOpen = false;
-
-        } else {
-            System.out.println("drawer is closed");
-            drawer.setVisible(true);
-            drawer.open();
-            GUIClient.getInstance().isConfigPanelOpen = true;
-        }
-    }
-     */
 }

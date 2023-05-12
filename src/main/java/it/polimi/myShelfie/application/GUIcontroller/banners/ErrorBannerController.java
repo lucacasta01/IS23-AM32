@@ -1,11 +1,10 @@
-package it.polimi.myShelfie.application.controller.banners;
+package it.polimi.myShelfie.application.GUIcontroller.banners;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import java.awt.*;
 
 public class ErrorBannerController {
     @FXML

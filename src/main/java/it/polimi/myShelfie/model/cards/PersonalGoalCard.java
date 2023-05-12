@@ -2,7 +2,7 @@ package it.polimi.myShelfie.model.cards;
 import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.model.Shelf;
 import it.polimi.myShelfie.model.Tile;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 import java.util.List;
 public class PersonalGoalCard extends Card{
     private final Tile[][] patternToMatch;
@@ -10,9 +10,9 @@ public class PersonalGoalCard extends Card{
 
     public PersonalGoalCard(String imgPath) {
         super(imgPath);
-        this.patternToMatch = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
-        for(int i=0;i<Constants.SHELFROW;i++){
-            for(int j=0;j<Constants.SHELFCOLUMN;j++){
+        this.patternToMatch = new Tile[Settings.SHELFROW][Settings.SHELFCOLUMN];
+        for(int i = 0; i< Settings.SHELFROW; i++){
+            for(int j = 0; j< Settings.SHELFCOLUMN; j++){
                 patternToMatch[i][j] = new Tile("",Tile.Color.NULLTILE);
             }
         }
@@ -49,8 +49,8 @@ public class PersonalGoalCard extends Card{
 
 
     private boolean isNull(){
-        for(int i=0;i<Constants.SHELFROW;i++){
-            for(int j=0;j<Constants.SHELFCOLUMN;j++){
+        for(int i = 0; i< Settings.SHELFROW; i++){
+            for(int j = 0; j< Settings.SHELFCOLUMN; j++){
                 if(patternToMatch[i][j].getColor() != Tile.Color.NULLTILE)
                     return false;
             }
@@ -62,8 +62,8 @@ public class PersonalGoalCard extends Card{
         if(isNull()){return "";}
 
         StringBuilder s = new StringBuilder();
-        for(int i=0;i<Constants.SHELFROW;i++){
-            for(int j=0;j<Constants.SHELFCOLUMN;j++){
+        for(int i = 0; i< Settings.SHELFROW; i++){
+            for(int j = 0; j< Settings.SHELFCOLUMN; j++){
                 s.append(patternToMatch[i][j].toString()).append("\t");
             }
             s.append("\n");
@@ -93,8 +93,8 @@ public class PersonalGoalCard extends Card{
     public Integer checkPersonalGoal(Shelf s){
         Tile[][] toCheck = s.getTileMartrix();
         int score = 0;
-        for(int i = 0; i<Constants.SHELFROW; i++){
-            for(int j = 0; j<Constants.SHELFCOLUMN; j++){
+        for(int i = 0; i< Settings.SHELFROW; i++){
+            for(int j = 0; j< Settings.SHELFCOLUMN; j++){
                 if(patternToMatch[i][j].getColor() == toCheck[i][j].getColor() && patternToMatch[i][j].getColor() != Tile.Color.NULLTILE){
                     score ++;
                 }

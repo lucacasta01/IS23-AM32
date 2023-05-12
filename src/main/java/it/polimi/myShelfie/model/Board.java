@@ -1,6 +1,6 @@
 package it.polimi.myShelfie.model;
 import it.polimi.myShelfie.utilities.ColorPosition;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.Position;
 import java.io.*;
@@ -13,9 +13,9 @@ public class Board {
 
 
     public Board() {
-        this.grid = new Tile[Constants.BOARD_DIM][Constants.BOARD_DIM];
-        for(int i=0;i<Constants.BOARD_DIM;i++){
-            for(int j=0;j<Constants.BOARD_DIM;j++){
+        this.grid = new Tile[Settings.BOARD_DIM][Settings.BOARD_DIM];
+        for(int i = 0; i< Settings.BOARD_DIM; i++){
+            for(int j = 0; j< Settings.BOARD_DIM; j++){
                 this.grid[i][j] = null;
             }
         }
@@ -55,12 +55,12 @@ public class Board {
 
     public boolean needToRefill() {
         boolean check = true;
-        for (int i = 0; i < Constants.BOARD_DIM; i++) {
-            for (int j = 0; j < Constants.BOARD_DIM; j++) {
+        for (int i = 0; i < Settings.BOARD_DIM; i++) {
+            for (int j = 0; j < Settings.BOARD_DIM; j++) {
                 Tile toCheck = this.grid[i][j];
                 if (this.grid[i][j].getColor() != Tile.Color.NULLTILE) {
-                    if (((this.grid[Math.min(i + 1, Constants.BOARD_DIM-1)][j].getColor() != Tile.Color.NULLTILE) &&  this.grid[Math.min(i + 1, Constants.BOARD_DIM-1)][j] != toCheck) ||
-                            ((this.grid[i][Math.min(j + 1, Constants.BOARD_DIM-1)].getColor() != Tile.Color.NULLTILE) && this.grid[i][Math.min(j + 1, Constants.BOARD_DIM-1)] != toCheck) ||
+                    if (((this.grid[Math.min(i + 1, Settings.BOARD_DIM-1)][j].getColor() != Tile.Color.NULLTILE) &&  this.grid[Math.min(i + 1, Settings.BOARD_DIM-1)][j] != toCheck) ||
+                            ((this.grid[i][Math.min(j + 1, Settings.BOARD_DIM-1)].getColor() != Tile.Color.NULLTILE) && this.grid[i][Math.min(j + 1, Settings.BOARD_DIM-1)] != toCheck) ||
                             ((this.grid[Math.max(i - 1, 0)][j].getColor() != Tile.Color.NULLTILE) && this.grid[Math.max(i - 1, 0)][j] != toCheck) ||
                             (( this.grid[i][Math.max(j - 1, 0)].getColor() != Tile.Color.NULLTILE) && this.grid[i][Math.max(j - 1, 0)] != toCheck)) {
                         check = false;
@@ -84,8 +84,8 @@ public class Board {
         }
         Tile toCheck = this.grid[row][column];
         // might need to be modified
-        return  ((this.grid[Math.min(row + 1, Constants.BOARD_DIM)][column].getColor() == Tile.Color.NULLTILE) &&  this.grid[Math.min(row + 1, Constants.BOARD_DIM)][column] != toCheck) ||
-                ((this.grid[row][Math.min(column + 1, Constants.BOARD_DIM)].getColor() == Tile.Color.NULLTILE) && this.grid[row][Math.min(column + 1, Constants.BOARD_DIM)] != toCheck) ||
+        return  ((this.grid[Math.min(row + 1, Settings.BOARD_DIM)][column].getColor() == Tile.Color.NULLTILE) &&  this.grid[Math.min(row + 1, Settings.BOARD_DIM)][column] != toCheck) ||
+                ((this.grid[row][Math.min(column + 1, Settings.BOARD_DIM)].getColor() == Tile.Color.NULLTILE) && this.grid[row][Math.min(column + 1, Settings.BOARD_DIM)] != toCheck) ||
                 ((this.grid[Math.max(row - 1, 0)][column].getColor() == Tile.Color.NULLTILE) && this.grid[Math.max(row - 1, 0)][column] != toCheck) ||
                 (( this.grid[row][Math.max(column - 1, 0)].getColor() == Tile.Color.NULLTILE) && this.grid[row][Math.max(column - 1, 0)] != toCheck);
     }
@@ -95,7 +95,7 @@ public class Board {
      */
     private void initTileHeap(){
         this.tileHeap = new ArrayList<>();
-        for(int i=0;i<Constants.TILES_GROUP;i++){
+        for(int i = 0; i< Settings.TILES_GROUP; i++){
             if(i<8){
                 tileHeap.add(new Tile("graphics/itemTiles/Cornici1.3.png",Tile.Color.BLUE));
             }
@@ -106,7 +106,7 @@ public class Board {
                 tileHeap.add(new Tile("graphics/itemTiles/Cornici1.1.png",Tile.Color.BLUE));
             }
         }
-        for(int i=0;i<Constants.TILES_GROUP;i++){
+        for(int i = 0; i< Settings.TILES_GROUP; i++){
             if(i<8){
                 tileHeap.add(new Tile("graphics/itemTiles/Gatti1.2.png",Tile.Color.GREEN));
             }
@@ -117,7 +117,7 @@ public class Board {
                 tileHeap.add(new Tile("graphics/itemTiles/Gatti1.3.png",Tile.Color.GREEN));
             }
         }
-        for(int i=0;i<Constants.TILES_GROUP;i++){
+        for(int i = 0; i< Settings.TILES_GROUP; i++){
             if(i<8){
                 tileHeap.add(new Tile("graphics/itemTiles/Giochi1.2.png",Tile.Color.YELLOW));
             }
@@ -128,7 +128,7 @@ public class Board {
                 tileHeap.add(new Tile("graphics/itemTiles/Giochi1.1.png",Tile.Color.YELLOW));
             }
         }
-        for(int i=0;i<Constants.TILES_GROUP;i++){
+        for(int i = 0; i< Settings.TILES_GROUP; i++){
             if(i<8){
                 tileHeap.add(new Tile("graphics/itemTiles/Libri1.3.png",Tile.Color.WHITE));
             }
@@ -139,7 +139,7 @@ public class Board {
                 tileHeap.add(new Tile("graphics/itemTiles/Libri1.1.png",Tile.Color.WHITE));
             }
         }
-        for(int i=0;i<Constants.TILES_GROUP;i++){
+        for(int i = 0; i< Settings.TILES_GROUP; i++){
             if(i<8){
                 tileHeap.add(new Tile("graphics/itemTiles/Piante1.3.png",Tile.Color.PINK));
             }
@@ -150,7 +150,7 @@ public class Board {
                 tileHeap.add(new Tile("graphics/itemTiles/Piante1.1.png",Tile.Color.PINK));
             }
         }
-        for(int i=0;i<Constants.TILES_GROUP;i++){
+        for(int i = 0; i< Settings.TILES_GROUP; i++){
             if(i<8){
                 tileHeap.add(new Tile("graphics/itemTiles/Trofei1.1.png",Tile.Color.LIGHTBLUE));
             }
@@ -182,8 +182,8 @@ public class Board {
      * @param players is the game's number of players
      */
     public void initBoard(int players){
-    for(int i=0; i<Constants.BOARD_DIM; i++){
-        for(int j=0; j<Constants.BOARD_DIM; j++){
+    for(int i = 0; i< Settings.BOARD_DIM; i++){
+        for(int j = 0; j< Settings.BOARD_DIM; j++){
             if(this.grid[i][j]!=null&&this.grid[i][j].getColor()== Tile.Color.NULLTILE){
                 this.grid[i][j]=null;
             }
@@ -206,8 +206,8 @@ public class Board {
      * pick tiles from the heap and assign them to their relative place
      */
     private void setTileColors(){
-        for(int i=0;i<Constants.BOARD_DIM;i++){
-            for(int j=0;j<Constants.BOARD_DIM;j++){
+        for(int i = 0; i< Settings.BOARD_DIM; i++){
+            for(int j = 0; j< Settings.BOARD_DIM; j++){
                 if(grid[i][j] == null){
                     grid[i][j] = pickTile();
                 }
@@ -230,12 +230,12 @@ public class Board {
     public String toString(){
         StringBuilder s = new StringBuilder();
         s.append("\t");
-        for(int i=0;i<Constants.BOARD_DIM;i++)
+        for(int i = 0; i< Settings.BOARD_DIM; i++)
             s.append(i+1).append(" | ");
         s.append("\n");
-        for(int i=0;i<Constants.BOARD_DIM;i++){
+        for(int i = 0; i< Settings.BOARD_DIM; i++){
             s.append(i+1).append("\t");
-            for(int j=0;j<Constants.BOARD_DIM;j++){
+            for(int j = 0; j< Settings.BOARD_DIM; j++){
                 s.append(grid[i][j].toString()).append(" | ");
             }
             s.append("\n");
@@ -245,8 +245,8 @@ public class Board {
 
     public List<ColorPosition> toColorPosition(){
         List<ColorPosition> toReturn = new ArrayList<>();
-        for(int i=0;i<Constants.BOARD_DIM;i++){
-            for(int j=0;j<Constants.BOARD_DIM;j++){
+        for(int i = 0; i< Settings.BOARD_DIM; i++){
+            for(int j = 0; j< Settings.BOARD_DIM; j++){
                 toReturn.add(new ColorPosition(grid[i][j].toString(),grid[i][j].getImagePath(),i,j));
             }
         }

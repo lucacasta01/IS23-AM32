@@ -1,7 +1,7 @@
 package it.polimi.myShelfie.model.cards;
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Tile;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 public class SharedGoal2Card extends SharedGoalCard implements CheckSharedGoal {
@@ -35,18 +35,18 @@ public class SharedGoal2Card extends SharedGoalCard implements CheckSharedGoal {
         int count = 0;
         AtomicBoolean flag = new AtomicBoolean(true);
 
-        for (int col = 0; col < Constants.SHELFCOLUMN; col++) {
+        for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
             initMap();
-            for (int row = 0; row < Constants.SHELFROW; row++) {
+            for (int row = 0; row < Settings.SHELFROW; row++) {
                 if(matrix[row][col].getColor() == Tile.Color.NULLTILE){
-                    row = Constants.SHELFROW;
+                    row = Settings.SHELFROW;
                     continue;
                 }
                 if (!colorBooleanMap.get(matrix[row][col].getColor())){
                     colorBooleanMap.replace(matrix[row][col].getColor(),true);
                 }
                 else{
-                    row = Constants.SHELFROW;
+                    row = Settings.SHELFROW;
                 }
             }
             colorBooleanMap.forEach((key,value)->{

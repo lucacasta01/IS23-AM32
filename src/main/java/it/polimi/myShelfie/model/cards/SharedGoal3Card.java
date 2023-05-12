@@ -1,7 +1,7 @@
 package it.polimi.myShelfie.model.cards;
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Tile;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 public class SharedGoal3Card extends SharedGoalCard implements CheckSharedGoal {
 
     public boolean[][] flags;
@@ -9,13 +9,13 @@ public class SharedGoal3Card extends SharedGoalCard implements CheckSharedGoal {
 
     public SharedGoal3Card(String imgPath, int playerNumber) {
         super(imgPath, playerNumber);
-        flags = new boolean[Constants.SHELFROW][Constants.SHELFCOLUMN];
+        flags = new boolean[Settings.SHELFROW][Settings.SHELFCOLUMN];
         initFlags();
     }
 
     public void initFlags(){
-        for(int i=0;i<Constants.SHELFROW;i++){
-            for(int j=0;j<Constants.SHELFCOLUMN;j++){
+        for(int i = 0; i< Settings.SHELFROW; i++){
+            for(int j = 0; j< Settings.SHELFCOLUMN; j++){
                 flags[i][j] = false;
             }
         }
@@ -36,8 +36,8 @@ public class SharedGoal3Card extends SharedGoalCard implements CheckSharedGoal {
         int numOfGroup = 4;
         int count_groups = 0;
 
-        for(int row = Constants.SHELFROW-1; row >= 0; row--){
-            for(int column = 0; column < Constants.SHELFCOLUMN; column++){
+        for(int row = Settings.SHELFROW-1; row >= 0; row--){
+            for(int column = 0; column < Settings.SHELFCOLUMN; column++){
 
                 if(!matrix[row][column].getColor().equals(Tile.Color.NULLTILE) || !flags[row][column]){
                     flags[row][column]=true;

@@ -1,22 +1,17 @@
-package it.polimi.myShelfie.application.controller;
+package it.polimi.myShelfie.application.GUIcontroller;
 
 import it.polimi.myShelfie.application.Client;
-import it.polimi.myShelfie.application.controller.banners.WaitPlayersController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-public class GUIChoosePlayerController {
+public class ChoosePlayerController {
     Client client;
     Stage stage;
 
@@ -26,7 +21,7 @@ public class GUIChoosePlayerController {
         stage = (Stage)((javafx.scene.Node)actionEvent.getSource()).getScene().getWindow();
         client = Client.getInstance();
         client.addGuiAction("2");
-        client.playerNumber = "2";
+        client.setWaitPlayerStatus("(1/2)");
         FXMLLoader fxmlLoader = new FXMLLoader();
         try {
             fxmlLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
@@ -56,7 +51,7 @@ public class GUIChoosePlayerController {
         stage = (Stage)((javafx.scene.Node)actionEvent.getSource()).getScene().getWindow();
         client = Client.getInstance();
         client.addGuiAction("3");
-        client.playerNumber = "3";
+        client.setWaitPlayerStatus("(1/3)");
         FXMLLoader fxmlLoader = new FXMLLoader();
         try {
             fxmlLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
@@ -86,7 +81,7 @@ public class GUIChoosePlayerController {
         stage = (Stage)((javafx.scene.Node)actionEvent.getSource()).getScene().getWindow();
         client = Client.getInstance();
         client.addGuiAction("4");
-        client.playerNumber = "4";
+        client.setWaitPlayerStatus("(1/4)");
         FXMLLoader fxmlLoader = new FXMLLoader();
         try {
             fxmlLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());

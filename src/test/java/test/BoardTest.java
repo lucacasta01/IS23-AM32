@@ -3,7 +3,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.myShelfie.model.Board;
 import it.polimi.myShelfie.model.Tile;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,8 +14,8 @@ public class BoardTest {
         Board boardToRefill = new Board();
         Board boardNotToRefill = new Board();
 
-        for(int i=0;i< Constants.BOARD_DIM;i++){
-            for(int j=0;j<Constants.BOARD_DIM;j++){
+        for(int i = 0; i< Settings.BOARD_DIM; i++){
+            for(int j = 0; j< Settings.BOARD_DIM; j++){
                 boardToRefill.getGrid()[i][j] = new Tile("fakePath", Tile.Color.NULLTILE);
                 boardNotToRefill.getGrid()[i][j] = new Tile("fakePath", Tile.Color.NULLTILE);
             }

@@ -2,7 +2,7 @@ package it.polimi.myShelfie.model.cards;
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Shelf;
 import it.polimi.myShelfie.model.Tile;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 public class SharedGoal1Card extends SharedGoalCard implements CheckSharedGoal {
     public SharedGoal1Card(String imgPath, int playerNumber) {
         super(imgPath, playerNumber);
@@ -26,14 +26,14 @@ public class SharedGoal1Card extends SharedGoalCard implements CheckSharedGoal {
         Tile[][] matrix = playerShelf.getTileMartrix();
         int count = 0;
 
-        for(int i=0;i<Constants.SHELFROW-1;i++){
-            for(int j=0;j<Constants.SHELFCOLUMN-1;j++){
+        for(int i = 0; i< Settings.SHELFROW-1; i++){
+            for(int j = 0; j< Settings.SHELFCOLUMN-1; j++){
                 Tile[][] submatrix1 = {
                         {matrix[i][j],matrix[i][j+1]},
                         {matrix[i+1][j],matrix[i+1][j+1]}
                 };
-                for(int k = i; k < Constants.SHELFROW - 1; k++){
-                    for(int l = 0; l < Constants.SHELFCOLUMN - 1; l++){
+                for(int k = i; k < Settings.SHELFROW - 1; k++){
+                    for(int l = 0; l < Settings.SHELFCOLUMN - 1; l++){
                         if(k == i && l <= j){
                             continue;
                         }

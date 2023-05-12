@@ -1,7 +1,7 @@
 package it.polimi.myShelfie.model.cards;
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Tile;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 import java.util.*;
 public class SharedGoal7Card extends SharedGoalCard implements CheckSharedGoal {
 
@@ -22,8 +22,8 @@ public class SharedGoal7Card extends SharedGoalCard implements CheckSharedGoal {
         int properRows = 0;
         Tile[][] toCheck = p.getMyShelf().getTileMartrix();
         List<Tile.Color> colorList = new ArrayList<>();
-        for(int i = 0; i< Constants.SHELFROW; i++){
-            for(int j = 0; j<Constants.SHELFCOLUMN; j++){
+        for(int i = 0; i< Settings.SHELFROW; i++){
+            for(int j = 0; j< Settings.SHELFCOLUMN; j++){
                 if(!colorList.contains(toCheck[i][j].getColor()) && toCheck[i][j].getColor() != Tile.Color.NULLTILE && isRowFull(toCheck[i])){
                     colorList.add(toCheck[i][j].getColor());
                 }

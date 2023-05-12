@@ -1,6 +1,7 @@
-package it.polimi.myShelfie.application.controller.banners;
+package it.polimi.myShelfie.application.GUIcontroller.banners;
 
 import it.polimi.myShelfie.application.Client;
+import it.polimi.myShelfie.application.GUIClient;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,8 +17,9 @@ public class WaitPlayersController {
     public void initialize() {
         client = Client.getInstance();
         client.setWaitPlayersController(this);
-        System.out.println("WaitPlayerController initialized");
-        waitLabel.setText("Waiting for players... (1/"+client.playerNumber+")");
+        String label = "Waiting for players... " + client.getWaitPlayerStatus();
+        waitLabel.setVisible(true);
+        waitLabel.setText(label);
     }
     public void updateLabel(String label){
         Platform.runLater(new Runnable() {

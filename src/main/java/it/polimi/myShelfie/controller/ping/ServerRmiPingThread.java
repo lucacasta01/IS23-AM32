@@ -1,7 +1,7 @@
 package it.polimi.myShelfie.controller.ping;
 import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.controller.Lobby;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 import java.rmi.RemoteException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -48,7 +48,7 @@ public class ServerRmiPingThread extends ServerPingThread{
                 }
             }
             try {
-                Thread.sleep(Constants.PINGPERIOD);
+                Thread.sleep(Settings.PINGPERIOD);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -129,7 +129,7 @@ public class ClientHandler implements Runnable {
                 nickname = action.getInfo();
                 while(action.getActionType() != Action.ActionType.INFO || server.isConnected(nickname)) {
                     if(action.getActionType() == Action.ActionType.INFO) {
-                        sendDeny("Nickname " + nickname + " already used, retry:");
+                        notifyNicknameDeny();
                     }else if(action.getActionType()== Action.ActionType.CHAT){
                         sendDeny("The chat is not active now");
                     }else if(action.getActionType()== Action.ActionType.PICKTILES){
@@ -406,25 +406,6 @@ public class ClientHandler implements Runnable {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            /*if(server.getUserGame()!=null){
-                if(server.getUserGame().get(this.getNickname())!=null) {
-                    if (server.getUserGame().get(this.getNickname()).equals("-")) {
-                        server.getUserGame().remove(this.getNickname());
-                    }
-                }
-            }
-            synchronized (server.getUserGame()){
-                server.saveUserGame();
-            }
-            if(this.isPlaying()){
-                server.killLobby(server.lobbyOf(this).getLobbyUID());
-                this.shutdown();
-                server.removeClient(this);
-            }
-            else{
-                this.shutdown();
-                server.removeClient(this);
-            }*/
         }
     }
 
@@ -514,7 +495,49 @@ public class ClientHandler implements Runnable {
             }
         }
     }
-    public synchronized void notifyGameJoined(){
+
+    public synchronized void notifyNicknameDeny(){
+        if(isRMI){
+            try{
+                rmiClient.nicknameDenied();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            sendDeny("Nickname " + nickname + " already used, retry:");
+            Response r = new Response(Response.ResponseType.NICKNAME_DENIED, new Response.ChatMessage(nickname, ""), null, null);
+            Gson gson = new Gson();
+            try {
+                out.println(gson.toJson(r));
+            } catch (Exception e) {
+                System.out.println("Error occurred while sending a message: " + e.toString());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public synchronized void notifyLobbyCreated(int playersNumber) {
+        if(isRMI){
+            try{
+                rmiClient.notifyLobbyCreated(Integer.toString(playersNumber));
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Gson gson = new Gson();
+            try {
+                out.println(gson.toJson(new Response(Response.ResponseType.LOBBY_CREATED, null, null, Integer.toString(playersNumber))));
+            } catch (Exception e) {
+                System.out.println("Error occurred while sending a message: " + e.toString());
+                e.printStackTrace();
+            }
+        }
+    }
+    public synchronized void notifyLobbyJoined(String waitPlayerStatus){
         if(isRMI){
             try{
                 rmiClient.notifyGameJoined();
@@ -526,7 +549,27 @@ public class ClientHandler implements Runnable {
         else {
             Gson gson = new Gson();
             try {
-                out.println(gson.toJson(new Response(Response.ResponseType.LOBBYJOINED, null, null, null)));
+                out.println(gson.toJson(new Response(Response.ResponseType.LOBBY_JOINED, null, null, waitPlayerStatus)));
+            } catch (Exception e) {
+                System.out.println("Error occurred while sending a message: " + e.toString());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public synchronized void notifyGameStarted() {
+        if(isRMI){
+            try{
+                rmiClient.notifyGameStarted();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Gson gson = new Gson();
+            try {
+                out.println(gson.toJson(new Response(Response.ResponseType.GAME_STARTED, null, null, null)));
             } catch (Exception e) {
                 System.out.println("Error occurred while sending a message: " + e.toString());
                 e.printStackTrace();
@@ -659,4 +702,7 @@ public class ClientHandler implements Runnable {
     public synchronized void setRmiClient(RMIClient client){
         this.rmiClient = client;
     }
+
+
+
 }

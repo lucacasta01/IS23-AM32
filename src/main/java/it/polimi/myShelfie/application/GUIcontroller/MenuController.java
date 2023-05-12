@@ -1,4 +1,4 @@
-package it.polimi.myShelfie.application.controller;
+package it.polimi.myShelfie.application.GUIcontroller;
 
 import it.polimi.myShelfie.application.Client;
 import javafx.application.Platform;
@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-public class GUIMenuController {
+public class MenuController {
     private Stage stage;
 
     public void doShutdown(ActionEvent actionEvent) {

@@ -7,7 +7,7 @@ import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.controller.Lobby;
 import it.polimi.myShelfie.controller.ping.ServerRmiPingThread;
 import it.polimi.myShelfie.controller.ping.ServerTcpPingThread;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.Usergame;
@@ -41,7 +41,7 @@ public class Server extends UnicastRemoteObject implements Runnable{
         connectedClients = new HashMap<>();
         lobbyList = new ArrayList<>();
         try {
-            serverSocket = new ServerSocket(Constants.TCPPORT);
+            serverSocket = new ServerSocket(Settings.TCPPORT);
             userGame = loadUserGame();
         }
         catch(Exception e){
@@ -197,7 +197,9 @@ public class Server extends UnicastRemoteObject implements Runnable{
     }
     public void executeClient(ClientHandler ch){
         pool.execute(ch);
-        pingPool.execute(connectedClients.get(ch));
+        if(Settings.pingOn) {
+            pingPool.execute(connectedClients.get(ch));
+        }
     }
 
     public boolean isConnected(String nickname){

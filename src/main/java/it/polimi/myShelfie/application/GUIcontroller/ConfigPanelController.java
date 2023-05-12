@@ -1,13 +1,10 @@
-package it.polimi.myShelfie.application.controller;
+package it.polimi.myShelfie.application.GUIcontroller;
 
 import it.polimi.myShelfie.application.Client;
-import it.polimi.myShelfie.utilities.Constants;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.text.Text;
 
 import java.util.regex.Pattern;
 

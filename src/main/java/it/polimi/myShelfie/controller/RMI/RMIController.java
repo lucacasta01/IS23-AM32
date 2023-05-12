@@ -3,7 +3,7 @@ import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.controller.ping.ServerPingThread;
 import it.polimi.myShelfie.utilities.Position;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 import it.polimi.myShelfie.utilities.beans.Action;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -33,10 +33,10 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
     }
 
     private void startServer() throws RemoteException {
-        Registry registry = LocateRegistry.createRegistry(Constants.RMIPORT);
+        Registry registry = LocateRegistry.createRegistry(Settings.RMIPORT);
 
         try{
-            registry.bind(Constants.RMINAME, this);
+            registry.bind(Settings.RMINAME, this);
         }catch(Exception e){
             e.printStackTrace();
         }

@@ -1,6 +1,6 @@
 package it.polimi.myShelfie.controller.ping;
 import it.polimi.myShelfie.controller.ClientHandler;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 import it.polimi.myShelfie.utilities.PingObject;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -46,7 +46,7 @@ public class ServerTcpPingThread extends ServerPingThread{
             swapElapsed.start();
 
 
-            if (ch.getPongResponses().size() == 0) {
+            while (ch.getPongResponses().size() == 0) {
                 synchronized (ch.getPongResponses()) {
                     try {
                         ch.getPongResponses().wait();
@@ -61,7 +61,9 @@ public class ServerTcpPingThread extends ServerPingThread{
                 System.err.println("Ping failed for " + ch.getNickname() + "");
 
                 if (ch.isPlaying()) {
-                    server.killLobby(server.lobbyOf(ch).getLobbyUID());
+                    if(server.lobbyOf(ch)!=null) {
+                        server.killLobby(server.lobbyOf(ch).getLobbyUID());
+                    }
                     ch.shutdown();
                     server.removeClient(ch);
                 } else {
@@ -80,7 +82,7 @@ public class ServerTcpPingThread extends ServerPingThread{
                     ch.getPongResponses().remove(0);
                 }
                 try {
-                    Thread.sleep(Constants.PINGPERIOD);
+                    Thread.sleep(Settings.PINGPERIOD);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -118,10 +120,10 @@ public class ServerTcpPingThread extends ServerPingThread{
         @Override
         public void run() {
             int time = 0;
-            while (isRunning() && time < Constants.PINGTHRESHOLD) {
+            while (isRunning() && time < Settings.PINGTHRESHOLD) {
                 try {
-                    Thread.sleep(Constants.PINGTHRESHOLD/Constants.PINGFACTOR);
-                    time += Constants.PINGTHRESHOLD/Constants.PINGFACTOR;
+                    Thread.sleep(Settings.PINGTHRESHOLD/ Settings.PINGFACTOR);
+                    time += Settings.PINGTHRESHOLD/ Settings.PINGFACTOR;
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

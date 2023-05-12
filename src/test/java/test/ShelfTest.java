@@ -3,8 +3,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.myShelfie.model.Shelf;
 import it.polimi.myShelfie.model.Tile;
-import it.polimi.myShelfie.model.cards.PersonalGoalCard;
-import it.polimi.myShelfie.utilities.Constants;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

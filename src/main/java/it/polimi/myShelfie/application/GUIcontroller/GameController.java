@@ -1,9 +1,9 @@
-package it.polimi.myShelfie.application.controller;
+package it.polimi.myShelfie.application.GUIcontroller;
 
 import it.polimi.myShelfie.application.Client;
 import javafx.event.ActionEvent;
 
-public class GUIGameController {
+public class GameController {
 
     public void doShutdown(ActionEvent actionEvent) {
         Client client = Client.getInstance();

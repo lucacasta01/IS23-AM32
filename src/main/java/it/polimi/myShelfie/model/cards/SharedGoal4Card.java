@@ -2,7 +2,7 @@ package it.polimi.myShelfie.model.cards;
 
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Tile;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 public class SharedGoal4Card extends SharedGoalCard implements CheckSharedGoal {
 
 
@@ -20,16 +20,16 @@ public class SharedGoal4Card extends SharedGoalCard implements CheckSharedGoal {
         int numberOfRowPairs = 0;
         Tile[][] grid = p.getMyShelf().getTileMartrix();
         if(!isAchieved(p)){
-            for(int col = 0; col< Constants.SHELFCOLUMN; col++){
-                for(int row = 0; row<Constants.SHELFROW-1; row++){
+            for(int col = 0; col< Settings.SHELFCOLUMN; col++){
+                for(int row = 0; row< Settings.SHELFROW-1; row++){
                     if((grid[row][col].getColor()==grid[row+1][col].getColor())&&(grid[row][col].getColor()!=Tile.Color.NULLTILE)){
                         row++;
                         numberOfColPairs++;
                     }
                 }
             }
-            for(int row = 0; row < Constants.SHELFROW; row++){
-                for(int col = 0; col<Constants.SHELFCOLUMN-1; col++){
+            for(int row = 0; row < Settings.SHELFROW; row++){
+                for(int col = 0; col< Settings.SHELFCOLUMN-1; col++){
                     if((grid[row][col].getColor()==grid[row][col+1].getColor())&&(grid[row][col].getColor()!=Tile.Color.NULLTILE)){
                         col++;
                         numberOfRowPairs++;

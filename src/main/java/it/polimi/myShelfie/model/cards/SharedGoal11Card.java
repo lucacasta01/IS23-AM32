@@ -1,7 +1,7 @@
 package it.polimi.myShelfie.model.cards;
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Tile;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 public class SharedGoal11Card extends SharedGoalCard implements CheckSharedGoal {
 
     public SharedGoal11Card(String imgPath, int playerNumber) {
@@ -20,7 +20,7 @@ public class SharedGoal11Card extends SharedGoalCard implements CheckSharedGoal 
         int countEquals = 0;
         final int threshold = 4;
 
-        for(int i = 0; i < Constants.SHELFROW - 2; i++){
+        for(int i = 0; i < Settings.SHELFROW - 2; i++){
             if(matrix[i][i].getColor().equals(matrix[i+1][i+1].getColor()) && !(matrix[i][i].getColor().equals(Tile.Color.NULLTILE))){
                 countEquals++;
             }
@@ -32,7 +32,7 @@ public class SharedGoal11Card extends SharedGoalCard implements CheckSharedGoal 
 
 
         countEquals=0;
-        for(int i = 0; i < Constants.SHELFROW - 2; i++) {
+        for(int i = 0; i < Settings.SHELFROW - 2; i++) {
             if (matrix[i+1][i].getColor().equals(matrix[i + 2][i + 1].getColor()) && !(matrix[i+1][i].getColor().equals(Tile.Color.NULLTILE))){
                 countEquals++;
             }
@@ -44,7 +44,7 @@ public class SharedGoal11Card extends SharedGoalCard implements CheckSharedGoal 
 
         int j=0;
         countEquals=0;
-        for(int i = Constants.SHELFROW - 2; i > 0; i--){
+        for(int i = Settings.SHELFROW - 2; i > 0; i--){
             if (matrix[i][j].getColor().equals(matrix[i-1][j+1].getColor()) && !(matrix[i][j].getColor().equals(Tile.Color.NULLTILE))){
             countEquals++;
             }
@@ -56,7 +56,7 @@ public class SharedGoal11Card extends SharedGoalCard implements CheckSharedGoal 
 
         int k=0;
         countEquals=0;
-        for(int i = Constants.SHELFROW - 1 ; i > 1; i--){
+        for(int i = Settings.SHELFROW - 1; i > 1; i--){
             if (matrix[i][k].getColor().equals(matrix[i-1][k+1].getColor()) && !(matrix[i][k].getColor().equals(Tile.Color.NULLTILE))){
                 countEquals++;
             }

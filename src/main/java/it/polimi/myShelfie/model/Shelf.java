@@ -1,14 +1,14 @@
 package it.polimi.myShelfie.model;
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.ColorPosition;
-import it.polimi.myShelfie.utilities.Constants;
+import it.polimi.myShelfie.utilities.Settings;
 import java.util.ArrayList;
 import java.util.List;
 public class Shelf {
     private Tile[][] tileMatrix;
 
     public Shelf() {
-        this.tileMatrix = new Tile[Constants.SHELFROW][Constants.SHELFCOLUMN];
+        this.tileMatrix = new Tile[Settings.SHELFROW][Settings.SHELFCOLUMN];
         initShelf();
     }
 
@@ -19,8 +19,8 @@ public class Shelf {
      * initialize the shelf with NULLTILE type tiles
      */
     public void initShelf(){
-        for(int i = 0; i<Constants.SHELFROW; i++){
-            for(int j = 0; j<Constants.SHELFCOLUMN; j++){
+        for(int i = 0; i< Settings.SHELFROW; i++){
+            for(int j = 0; j< Settings.SHELFCOLUMN; j++){
                 this.tileMatrix[i][j] = new Tile("test", Tile.Color.NULLTILE);
             }
         }
@@ -29,8 +29,8 @@ public class Shelf {
      * @return a copy of this object Tile[6][5] tileMatrix
      */
     public Tile[][] getTileMartrix() {
-        Tile[][] toReturn = new Tile[Constants.SHELFROW][];
-        for(int i=0;i<Constants.SHELFROW;i++){
+        Tile[][] toReturn = new Tile[Settings.SHELFROW][];
+        for(int i = 0; i< Settings.SHELFROW; i++){
             toReturn[i] = this.tileMatrix[i].clone();
         }
         return toReturn;
@@ -41,8 +41,8 @@ public class Shelf {
      * @return true if is full, false otherwise
      */
     public boolean checkIsFull(){
-        for(int i=0; i<Constants.SHELFROW; i++){
-            for(int j=0; j<Constants.SHELFCOLUMN; j++){
+        for(int i = 0; i< Settings.SHELFROW; i++){
+            for(int j = 0; j< Settings.SHELFCOLUMN; j++){
                 if(tileMatrix[i][j].getColor()==Tile.Color.NULLTILE){
                     return false;
                 }
@@ -59,7 +59,7 @@ public class Shelf {
      */
     public int freeTiles(int column){
         int free = 0;
-        for(int i=0; i<Constants.SHELFROW; i++){
+        for(int i = 0; i< Settings.SHELFROW; i++){
             if(this.tileMatrix[i][column].getColor()!=Tile.Color.NULLTILE){
                 return free;
             }else{
@@ -75,8 +75,8 @@ public class Shelf {
      */
     public int maxInsert(){
         int act = 0, max = 0;
-        for(int i = 0; i<Constants.SHELFCOLUMN; i++){
-            for(int j=0; j<Constants.SHELFROW; j++){
+        for(int i = 0; i< Settings.SHELFCOLUMN; i++){
+            for(int j = 0; j< Settings.SHELFROW; j++){
                 if(tileMatrix[j][i].getColor()==Tile.Color.NULLTILE){
                     act++;
                 }
@@ -93,7 +93,7 @@ public class Shelf {
      * insert the given tile in the first free position from the bottom in the given column
      */
     public void insertTile(Tile t, int column) {
-        for (int i = Constants.SHELFROW - 1; i >= 0; i--) {
+        for (int i = Settings.SHELFROW - 1; i >= 0; i--) {
             if (tileMatrix[i][column].getColor() == Tile.Color.NULLTILE) {
                 tileMatrix[i][column] = t;
                 return;
@@ -103,8 +103,8 @@ public class Shelf {
 
     public List<ColorPosition> toColorPosition(){
         List<ColorPosition> toReturn = new ArrayList<>();
-        for(int i=0;i<Constants.SHELFROW;i++){
-            for(int j=0;j<Constants.SHELFCOLUMN;j++){
+        for(int i = 0; i< Settings.SHELFROW; i++){
+            for(int j = 0; j< Settings.SHELFCOLUMN; j++){
                 toReturn.add(new ColorPosition(tileMatrix[i][j].toString(),tileMatrix[i][j].getImagePath(),i,j));
             }
         }
@@ -115,14 +115,14 @@ public class Shelf {
     @Override
     public String toString(){
         StringBuilder s = new StringBuilder();
-        for(int i=0;i<Constants.SHELFROW;i++){
-            for(int j=0;j<Constants.SHELFCOLUMN;j++){
+        for(int i = 0; i< Settings.SHELFROW; i++){
+            for(int j = 0; j< Settings.SHELFCOLUMN; j++){
                 s.append(tileMatrix[i][j].toString()).append("\t");
             }
             s.append("\n");
         }
         s.append(ANSI.ITALIQUE).append(ANSI.BOLD);
-        for(int i=0;i<Constants.SHELFCOLUMN;i++){
+        for(int i = 0; i< Settings.SHELFCOLUMN; i++){
             s.append(i+1).append("\t");
         }
         s.append(ANSI.RESET_STYLE);
@@ -133,10 +133,10 @@ public class Shelf {
     public List<Integer> getColorClusterSizes() {
         Tile[][] matrix = getTileMartrix();
         List<Integer> clusterSizes = new ArrayList<>();
-        boolean[][] visited = new boolean[Constants.SHELFROW][Constants.SHELFCOLUMN];
+        boolean[][] visited = new boolean[Settings.SHELFROW][Settings.SHELFCOLUMN];
 
-        for (int i = 0; i < Constants.SHELFROW; i++) {
-            for (int j = 0; j < Constants.SHELFCOLUMN; j++) {
+        for (int i = 0; i < Settings.SHELFROW; i++) {
+            for (int j = 0; j < Settings.SHELFCOLUMN; j++) {
                 if (!visited[i][j]) {
                     int clusterSize = depthFirstSearch(i, j, matrix, visited, matrix[i][j].getColor());
                     if (clusterSize > 0) {

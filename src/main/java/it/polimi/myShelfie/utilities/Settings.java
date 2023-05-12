@@ -1,5 +1,5 @@
 package it.polimi.myShelfie.utilities;
-public class Constants {
+public class Settings {
     //MODEL
     public static int SHELFROW = 6;
 
@@ -14,8 +14,9 @@ public class Constants {
 
     public static final String SERVER_IP = "localhost";
 
-    public static final int PINGPERIOD = 1000;
+    public static final int PINGPERIOD = 3000;
     public static final int PINGTHRESHOLD = 4000;
     public static final int PINGFACTOR = 40;
+    public static final boolean pingOn = false;
 
 }
