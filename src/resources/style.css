@@ -25,3 +25,7 @@
 #bannerLabel{
     -fx-text-fill: #c22f25;
 }
+
+#backgroundConfigPanel{
+    -fx-background-color: #F0DBAC;
+}

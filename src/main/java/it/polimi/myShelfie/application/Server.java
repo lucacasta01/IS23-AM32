@@ -41,7 +41,7 @@ public class Server extends UnicastRemoteObject implements Runnable{
         connectedClients = new HashMap<>();
         lobbyList = new ArrayList<>();
         try {
-            serverSocket = new ServerSocket(Constants.PORT);
+            serverSocket = new ServerSocket(Constants.TCPPORT);
             userGame = loadUserGame();
         }
         catch(Exception e){

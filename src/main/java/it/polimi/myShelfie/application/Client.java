@@ -1,7 +1,6 @@
 package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
 import it.polimi.myShelfie.application.controller.GUILoginController;
-import it.polimi.myShelfie.application.controller.GUIMenuController;
 import it.polimi.myShelfie.application.controller.banners.WaitPlayersController;
 import it.polimi.myShelfie.controller.RMI.RMIClient;
 import it.polimi.myShelfie.controller.RMI.RMIServer;
@@ -44,6 +43,9 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private GUILoginController guiLoginController;
     private WaitPlayersController waitPlayersController = null;
     public String playerNumber;
+    private String serverIP = Constants.SERVER_IP;
+    private int TCPPort = Constants.TCPPORT;
+    private int RMIPort = Constants.RMIPORT;
 
     //rmi server reference
     private RMIServer rmiServer;
@@ -71,6 +73,30 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         return instance;
     }
 
+    public String getServerIP() {
+        return serverIP;
+    }
+
+    public int getTCPPort() {
+        return TCPPort;
+    }
+
+    public int getRMIPort() {
+        return RMIPort;
+    }
+
+    public void setServerIP(String serverIP) {
+        this.serverIP = serverIP;
+    }
+
+    public void setTCPPort(int TCPPort) {
+        this.TCPPort = TCPPort;
+    }
+
+    public void setRMIPort(int RMIPort) {
+        this.RMIPort = RMIPort;
+    }
+
     public void setGUI(boolean GUI) {
         isGUI = GUI;
         if(connectionProtocol=="TCP"){
@@ -94,7 +120,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
             case "TCP":
                 try {
                     try {
-                        client = new Socket(Constants.SERVER_IP, Constants.PORT);
+                        client = new Socket(serverIP, TCPPort);
 
                     } catch (ConnectException connectException) {
                         System.out.println("Server not found");
@@ -241,7 +267,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     }
 
     private void startRMIClient() throws RemoteException, NotBoundException {
-        Registry registry = LocateRegistry.getRegistry(Constants.SERVER_IP,Constants.RMIPORT);
+        Registry registry = LocateRegistry.getRegistry(serverIP,RMIPort);
         this.rmiServer = (RMIServer)registry.lookup(Constants.RMINAME);
         rmiServer.addClient(this);
     }

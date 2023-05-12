@@ -7,7 +7,7 @@ public class Constants {
     public static int BOARD_DIM = 9;
     public static int TILES_GROUP = 22;
 
-    public static final int PORT = 10768;
+    public static final int TCPPORT = 10768;
     //RMI
     public static final int RMIPORT = 6667;
     public static final String RMINAME = "RMIServer";

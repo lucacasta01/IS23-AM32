@@ -17,6 +17,7 @@ import java.rmi.RemoteException;
 
 public class GUIClient extends Application {
     private static GUIClient instance;
+    public boolean isConfigPanelOpen;
     public static synchronized GUIClient getInstance() {
         if(instance == null){
             System.out.println("created new client");
