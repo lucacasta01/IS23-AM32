@@ -91,7 +91,7 @@
          <children>
             <AnchorPane>
                <children>
-                  <Label text="Player #2">
+                  <Label text="Player #3">
                      <font>
                         <Font name="Arial" size="22.0" />
                      </font>
@@ -174,7 +174,7 @@
          <children>
             <VBox alignment="TOP_RIGHT">
                <children>
-                  <Label text="Player #2">
+                  <Label text="Player #4">
                      <font>
                         <Font name="Arial" size="22.0" />
                      </font>

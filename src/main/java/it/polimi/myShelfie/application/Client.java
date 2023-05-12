@@ -86,6 +86,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     @Override
     public void run() {
+        boolean close = false;
         if(!isGUI) {
             connectionProtocol = protocolHandler();
         }
@@ -107,88 +108,91 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                         if (out != null) {
                             out.close();
                         }
-                        throw new RuntimeException();
+                        if(isGUI) {
+                            guiLoginController.serverOffline();
+                            close = true;
+                        }
                     }
-                    in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                    out = new PrintWriter(client.getOutputStream(), true);
+                    if(!close) {
+                        in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                        out = new PrintWriter(client.getOutputStream(), true);
 
 
-                    TCPinputHandler.start();
+                        TCPinputHandler.start();
 
-                    //PING THREAD
-                    pingThread().start();
+                        //PING THREAD
+                        pingThread().start();
 
 
-                    new Thread(()->{
-                        String inMessage;
-                        try{
-                            while ((inMessage = in.readLine()) != null) {
-                                Response response = recieveResponse(inMessage);
-                                if (response.getResponseType() == Response.ResponseType.INFO) {
-                                    if(response.getInfoMessage().startsWith("Waiting for players")||response.getInfoMessage().contains("joined the lobby")){
-                                        if(isGUI){
-                                            if(waitPlayersController!=null) {
-                                                waitPlayersController.updateLabel(response.getInfoMessage());
+                        new Thread(() -> {
+                            String inMessage;
+                            try {
+                                while ((inMessage = in.readLine()) != null) {
+                                    Response response = recieveResponse(inMessage);
+                                    if (response.getResponseType() == Response.ResponseType.INFO) {
+                                        if (response.getInfoMessage().startsWith("Waiting for players") || response.getInfoMessage().contains("joined the lobby")) {
+                                            if (isGUI) {
+                                                if (waitPlayersController != null) {
+                                                    waitPlayersController.updateLabel(response.getInfoMessage());
+                                                }
                                             }
                                         }
-                                    }
-                                    System.out.println(response.getInfoMessage());
-                                } else if (response.getResponseType() == Response.ResponseType.CHATMESSAGE) {
-                                    System.out.println(">" + response.getChatMessage().getSender() + ": " + response.getChatMessage().getMessage());
-                                } else if (response.getResponseType() == Response.ResponseType.VALID) {
-                                    validRecieved = true;
-                                    if (response.getInfoMessage().equals("Username accepted")) {
-                                        nickname = response.getChatMessage().getSender();
-                                    }
-                                    System.out.println(ANSI.GREEN + response.getInfoMessage() + ANSI.RESET_COLOR);
-                                    if(isGUI){
-                                        guiLoginController.loginAccepted();
-                                    }
-                                } else if (response.getResponseType() == Response.ResponseType.DENIED) {
-                                    System.out.println(response.getInfoMessage());
-                                    if(isGUI){
-                                        guiLoginController.nicknameDenied();
-                                    }
-                                } else if (response.getResponseType() == Response.ResponseType.UPDATE) {
-                                    view = response.getView();
-                                    //shelves
-                                    for (String s : view.getShelves()) {
-                                        System.out.println(s + "\n");
-                                    }
-                                    //personal card
-                                    System.out.println(ANSI.ITALIQUE + "Personal goal card:" + ANSI.RESET_STYLE);
-                                    System.out.println(view.getPersonalCard());
+                                        System.out.println(response.getInfoMessage());
+                                    } else if (response.getResponseType() == Response.ResponseType.CHATMESSAGE) {
+                                        System.out.println(">" + response.getChatMessage().getSender() + ": " + response.getChatMessage().getMessage());
+                                    } else if (response.getResponseType() == Response.ResponseType.VALID) {
+                                        validRecieved = true;
+                                        if (response.getInfoMessage().equals("Username accepted")) {
+                                            nickname = response.getChatMessage().getSender();
+                                        }
+                                        System.out.println(ANSI.GREEN + response.getInfoMessage() + ANSI.RESET_COLOR);
+                                        if (isGUI) {
+                                            guiLoginController.loginAccepted();
+                                        }
+                                    } else if (response.getResponseType() == Response.ResponseType.DENIED) {
+                                        System.out.println(response.getInfoMessage());
+                                        if (isGUI) {
+                                            guiLoginController.nicknameDenied();
+                                        }
+                                    } else if (response.getResponseType() == Response.ResponseType.UPDATE) {
+                                        view = response.getView();
+                                        //shelves
+                                        for (String s : view.getShelves()) {
+                                            System.out.println(s + "\n");
+                                        }
+                                        //personal card
+                                        System.out.println(ANSI.ITALIQUE + "Personal goal card:" + ANSI.RESET_STYLE);
+                                        System.out.println(view.getPersonalCard());
 
-                                    //shared cards
-                                    for (int i = 0; i < view.getSharedCards().size(); i++) {
-                                        System.out.println(ANSI.ITALIQUE + "Shared goal " + (i + 1) + ": " + ANSI.RESET_STYLE);
-                                        System.out.println(view.getSharedCards().get(i) + "\n");
-                                    }
-                                    //board
-                                    System.out.println(ANSI.ITALIQUE + "Board:" + ANSI.RESET_STYLE);
-                                    System.out.println(view.getBoard() + "\n");
-                                    //current player
-                                    System.out.println(ANSI.ITALIQUE + "Turn of: " + ANSI.RESET_STYLE + view.getCurrentPlayer());
-                                } else if (response.getResponseType() == Response.ResponseType.PONG) {
-                                    synchronized (pongResponses) {
-                                        pongResponses.add(new PingObject(false));
-                                        pongResponses.notifyAll();
-                                    }
+                                        //shared cards
+                                        for (int i = 0; i < view.getSharedCards().size(); i++) {
+                                            System.out.println(ANSI.ITALIQUE + "Shared goal " + (i + 1) + ": " + ANSI.RESET_STYLE);
+                                            System.out.println(view.getSharedCards().get(i) + "\n");
+                                        }
+                                        //board
+                                        System.out.println(ANSI.ITALIQUE + "Board:" + ANSI.RESET_STYLE);
+                                        System.out.println(view.getBoard() + "\n");
+                                        //current player
+                                        System.out.println(ANSI.ITALIQUE + "Turn of: " + ANSI.RESET_STYLE + view.getCurrentPlayer());
+                                    } else if (response.getResponseType() == Response.ResponseType.PONG) {
+                                        synchronized (pongResponses) {
+                                            pongResponses.add(new PingObject(false));
+                                            pongResponses.notifyAll();
+                                        }
 
-                                } else if (response.getResponseType() == Response.ResponseType.PING) {
-                                    sendAction(new Action(Action.ActionType.PONG, nickname, null, null, null, null));
+                                    } else if (response.getResponseType() == Response.ResponseType.PING) {
+                                        sendAction(new Action(Action.ActionType.PONG, nickname, null, null, null, null));
 
-                                } else if (response.getResponseType() == Response.ResponseType.SHUTDOWN) {
-                                    System.out.println(response.getInfoMessage());
-                                    shutdown();
+                                    } else if (response.getResponseType() == Response.ResponseType.SHUTDOWN) {
+                                        System.out.println(response.getInfoMessage());
+                                        shutdown();
+                                    }
                                 }
+                            } catch (Exception e) {
+                                //todo (when null or close exit)
                             }
-                        }
-                        catch (Exception e){
-                            //todo (when null or close exit)
-                        }
-                    }).start();
-
+                        }).start();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

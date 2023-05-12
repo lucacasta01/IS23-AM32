@@ -1,6 +1,8 @@
 package it.polimi.myShelfie.application.controller;
 
 import it.polimi.myShelfie.application.Client;
+import it.polimi.myShelfie.application.GUIClient;
+import it.polimi.myShelfie.application.controller.banners.ErrorBannerController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,9 +12,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
 
@@ -76,11 +80,11 @@ public class GUILoginController {
     }
 
     public void doShutdown(ActionEvent actionEvent) {
-        client=Client.getInstance();
-        if(client==null) {
-            System.exit(0);
-        }else{
-            client.addGuiAction("/quit");
-        }
+        System.exit(0);
+    }
+
+    public void serverOffline() throws IOException {
+        GUIClient guiClient = GUIClient.getInstance();
+        guiClient.showErrorBanner("Server is offline");
     }
 }
