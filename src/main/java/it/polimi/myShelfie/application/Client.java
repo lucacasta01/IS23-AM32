@@ -13,10 +13,17 @@ import it.polimi.myShelfie.utilities.PingObject;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.Response;
 import it.polimi.myShelfie.utilities.beans.View;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.io.*;
+import java.nio.file.Paths;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -34,7 +41,6 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private String nickname = "/";
     private boolean done;
     private boolean configurationDone = false;
-    private boolean validRecieved = false;
     private View view;
     private String connectionProtocol;
     private final List<PingObject> pongResponses = new ArrayList<>();
@@ -167,16 +173,16 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                     } else if (response.getResponseType() == Response.ResponseType.CHATMESSAGE) {
                                         System.out.println(">" + response.getChatMessage().getSender() + ": " + response.getChatMessage().getMessage());
                                     } else if (response.getResponseType() == Response.ResponseType.VALID) {
-                                        validRecieved = true;
-                                        if (response.getInfoMessage().equals("Username accepted")) {
-                                            nickname = response.getChatMessage().getSender();
-                                        }
                                         System.out.println(ANSI.GREEN + response.getInfoMessage() + ANSI.RESET_COLOR);
+                                    }else if(response.getResponseType()== Response.ResponseType.NICKNAME_ACCEPTED){
+                                        nickname = response.getChatMessage().getSender();
                                         if (isGUI) {
                                             guiLoginController.loginAccepted();
                                         }
                                     } else if (response.getResponseType() == Response.ResponseType.DENIED) {
                                         System.out.println(response.getInfoMessage());
+
+                                    } else if(response.getResponseType()== Response.ResponseType.NICKNAME_DENIED){
                                         if (isGUI) {
                                             guiLoginController.nicknameDenied();
                                         }
@@ -212,6 +218,22 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                     } else if (response.getResponseType() == Response.ResponseType.SHUTDOWN) {
                                         System.out.println(response.getInfoMessage());
                                         shutdown();
+                                    }else if(response.getResponseType()== Response.ResponseType.LOBBYJOINED){
+                                        GUIClient guiClient = GUIClient.getInstance();
+                                        Stage stage = guiClient.getStage();
+                                        Platform.runLater(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Parent numbeofplayer = null;
+                                                try {
+                                                    numbeofplayer = FXMLLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
+                                                } catch (IOException e) {
+                                                    throw new RuntimeException(e);
+                                                }
+                                                stage.setScene(new Scene(numbeofplayer));
+
+                                            }
+                                        });
                                     }
                                 }
                             } catch (Exception e) {
@@ -419,6 +441,17 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
 
     @Override
+    public void nicknameAccepted() throws RemoteException {
+        if(isGUI){
+            try {
+                guiLoginController.loginAccepted();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
     public void update(View view) throws RemoteException {
         //shelves
         for (String s : view.getShelves()) {
@@ -446,14 +479,30 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     }
 
     @Override
-    public void valid(String message) throws RemoteException {
-        if(isGUI && message.startsWith("Username")){
-            try {
-                guiLoginController.loginAccepted();
-            }catch(Exception e){
-                e.printStackTrace();
+    public void notifyGameJoined() throws RemoteException {
+        GUIClient guiClient = GUIClient.getInstance();
+        Stage stage = guiClient.getStage();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Parent numbeofplayer = null;
+                try {
+                    numbeofplayer = FXMLLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                stage.setMinWidth(300);
+                stage.setMinHeight(150);
+                stage.setWidth(300);
+                stage.setHeight(150);
+                stage.setScene(new Scene(numbeofplayer));
             }
-        }
+        });
+
+    }
+
+    @Override
+    public void valid(String message) throws RemoteException {
         System.out.println(ANSI.GREEN+message+ANSI.RESET_COLOR);
     }
 
@@ -473,6 +522,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     public void infoMessage(String message) throws RemoteException {
         System.out.println(message);
     }
+
 
 
     @Override

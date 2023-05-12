@@ -21,7 +21,11 @@ public class Response {
         INFO,
         PING,
         PONG,
-        SHUTDOWN
+        SHUTDOWN,
+        LOBBYJOINED,
+        NICKNAME_DENIED,
+        NICKNAME_ACCEPTED,
+        GAME_NOT_FOUND
     }
 
     public static class ChatMessage{

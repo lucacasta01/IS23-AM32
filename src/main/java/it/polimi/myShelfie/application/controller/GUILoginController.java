@@ -67,7 +67,7 @@ public class GUILoginController {
         }
         drawer.setSidePane(configPanel);
         drawer.setVisible(false);
-        GUIClient.getInstance().isConfigPanelOpen = false;
+
 
 
         //hamburger transition

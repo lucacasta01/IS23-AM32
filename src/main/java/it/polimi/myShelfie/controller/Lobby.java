@@ -425,6 +425,7 @@ public class Lobby implements Runnable{
         synchronized (lobbyPlayers){
             lobbyPlayers.add(player);
             broadcastMessage(player.getNickname()+" joined the lobby "+"("+getLobbySize()+"/"+getPlayersNumber()+")");
+            player.notifyGameJoined();
             lobbyPlayers.notifyAll();
         }
     }

@@ -17,7 +17,7 @@ import java.rmi.RemoteException;
 
 public class GUIClient extends Application {
     private static GUIClient instance;
-    public boolean isConfigPanelOpen;
+    private static Stage stage;
     public static synchronized GUIClient getInstance() {
         if(instance == null){
             System.out.println("created new client");
@@ -33,6 +33,7 @@ public class GUIClient extends Application {
     }
     @Override
     public void start(Stage stage) throws Exception {
+        this.stage = stage;
        FXMLLoader fxmlLoader = new FXMLLoader();
        Parent root = fxmlLoader.load(Paths.get("src/resources/loginPage.fxml").toUri().toURL());
        GUILoginController guiLoginController = fxmlLoader.getController();
@@ -79,6 +80,10 @@ public class GUIClient extends Application {
                 bannerStage.show();
             }
         });
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 
     public static void main(String[] args) {

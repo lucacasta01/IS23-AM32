@@ -44,7 +44,11 @@ public class GUIMenuController {
     }
 
     public void randomGameAction(ActionEvent actionEvent) {
+        stage = (Stage)((javafx.scene.Node)actionEvent.getSource()).getScene().getWindow();
         Client client = Client.getInstance();
+        client.addGuiAction("3");
+    }
+    public void acceptRandomGame(Stage stage){
 
     }
 

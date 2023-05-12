@@ -165,6 +165,7 @@ public class ClientHandler implements Runnable {
                     }
                 }
                 sendAccept("Username accepted");
+                notifyNicknameAccept();
                 System.out.println(nickname + " connected to the server");
             }
 
@@ -487,6 +488,45 @@ public class ClientHandler implements Runnable {
             Gson gson = new Gson();
             try {
                 out.println(gson.toJson(r));
+            } catch (Exception e) {
+                System.out.println("Error occurred while sending a message: " + e.toString());
+                e.printStackTrace();
+            }
+        }
+    }
+    public synchronized void notifyNicknameAccept(){
+        if(isRMI){
+            try{
+                rmiClient.nicknameAccepted();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Response r = new Response(Response.ResponseType.NICKNAME_ACCEPTED, new Response.ChatMessage(nickname, ""), null, null);
+            Gson gson = new Gson();
+            try {
+                out.println(gson.toJson(r));
+            } catch (Exception e) {
+                System.out.println("Error occurred while sending a message: " + e.toString());
+                e.printStackTrace();
+            }
+        }
+    }
+    public synchronized void notifyGameJoined(){
+        if(isRMI){
+            try{
+                rmiClient.notifyGameJoined();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Gson gson = new Gson();
+            try {
+                out.println(gson.toJson(new Response(Response.ResponseType.LOBBYJOINED, null, null, null)));
             } catch (Exception e) {
                 System.out.println("Error occurred while sending a message: " + e.toString());
                 e.printStackTrace();
