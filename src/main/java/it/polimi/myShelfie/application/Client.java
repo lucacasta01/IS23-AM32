@@ -238,6 +238,10 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                         if(isGUI) {
                                             GUIClient.getInstance().switchToWaitingScene();
                                         }
+                                    }else if(response.getResponseType()== Response.ResponseType.DENY_LOAD_GAME){
+                                        GUIClient.getInstance().showDenyBan();
+                                    } else if(response.getResponseType()== Response.ResponseType.ACCEPT_LOAD_GAME){
+                                        GUIClient.getInstance().switchToWaitingScene();
                                     }
                                 }
                             } catch (Exception e) {
@@ -557,7 +561,15 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         System.out.println(message);
     }
 
+    @Override
+    public void denyLoadGame() throws RemoteException {
+        GUIClient.getInstance().showDenyBan();
+    }
 
+    @Override
+    public void acceptLoadGame() throws RemoteException {
+        GUIClient.getInstance().switchToWaitingScene();
+    }
 
     @Override
     public void remoteShutdown(String message) throws RemoteException {

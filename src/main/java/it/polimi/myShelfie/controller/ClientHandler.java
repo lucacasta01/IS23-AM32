@@ -253,9 +253,11 @@ public class ClientHandler implements Runnable {
 
                             if (!userGame.containsKey(nickname) || userGame.get(nickname).equals("-")) {
                                 sendDeny("No game was found");
+                                denyLoadGame();
                                 sendMenu();
                             } else if(server.getLobbyList().stream().filter(lobby -> lobby.getLobbyUID().equals(userGame.get(nickname))).toList().size()>0){
                                 sendDeny("Another client started this game, retry to connect...");
+                                denyLoadGame();
                                 sendMenu();
                             } else {
                                 Lobby lobby = new Lobby(this, userGame.get(nickname));
@@ -407,6 +409,27 @@ public class ClientHandler implements Runnable {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public synchronized void denyLoadGame() {
+        if(isRMI){
+            try{
+                rmiClient.denyLoadGame();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Response r = new Response(Response.ResponseType.DENY_LOAD_GAME, null, null, null);
+            Gson gson = new Gson();
+            try {
+                out.println(gson.toJson(r));
+            } catch (Exception e) {
+                System.out.println("Error occurred while sending a message: " + e.toString());
+                e.printStackTrace();
+            }
         }
     }
 
@@ -705,5 +728,18 @@ public class ClientHandler implements Runnable {
     }
 
 
-
+    public void acceptLoadGame() {
+        if(isRMI){
+            try{
+                rmiClient.acceptLoadGame();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Gson gson = new Gson();
+            out.println(gson.toJson(new Response(Response.ResponseType.ACCEPT_LOAD_GAME, null, null, null)));
+        }
+    }
 }

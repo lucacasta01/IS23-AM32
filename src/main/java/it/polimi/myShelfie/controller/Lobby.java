@@ -133,6 +133,9 @@ public class Lobby implements Runnable{
             try{
                 game = new Game(lobbyUID);
                 playersNumber = game.getOldGamePlayers().size();
+                for(ClientHandler ch:lobbyPlayers){
+                    ch.acceptLoadGame();
+                }
                 try {
                     broadcastMessage("Waiting for players..." + " " + "(" + getLobbySize() + "/" + getPlayersNumber() + ")");
                     waitForPlayers();
@@ -142,6 +145,9 @@ public class Lobby implements Runnable{
                 game.setPlayers(game.getOldGamePlayers());
             }catch(Exception e){
                 broadcastMessage("No configuration file found...");
+                for(ClientHandler ch : lobbyPlayers){
+                    ch.denyLoadGame();
+                }
                 Server.getInstance().getLobbyList().remove(this);
                 Server.getInstance().removeClient(lobbyPlayers.get(0));
                 String oldUID = this.lobbyUID;

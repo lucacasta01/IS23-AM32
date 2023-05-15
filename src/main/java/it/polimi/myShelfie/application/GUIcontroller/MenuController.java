@@ -48,12 +48,13 @@ public class MenuController {
         Client client = Client.getInstance();
         client.addGuiAction("3");
     }
-    public void acceptRandomGame(Stage stage){
+    public void oldGameFound(){
 
     }
 
     public void restoreGameAction(ActionEvent actionEvent) {
         Client client = Client.getInstance();
+        client.addGuiAction("2");
 
     }
 

@@ -27,7 +27,9 @@ public class Response {
         NICKNAME_DENIED,
         NICKNAME_ACCEPTED,
         GAME_NOT_FOUND,
-        GAME_STARTED
+        GAME_STARTED,
+        DENY_LOAD_GAME,
+        ACCEPT_LOAD_GAME
     }
 
     public static class ChatMessage{

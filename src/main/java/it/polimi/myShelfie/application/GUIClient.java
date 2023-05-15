@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Paths;
 
 public class GUIClient extends Application {
@@ -117,6 +118,30 @@ public class GUIClient extends Application {
             stage.setMinHeight(520);
             stage.setScene(new Scene(gamePanel));
             stage.setFullScreen(true);
+        });
+    }
+
+    public void showDenyBan() {
+        Platform.runLater(()->{
+            System.out.println("Show deny ban");
+            Parent denyPanel = null;
+            FXMLLoader loader = null;
+            try {
+                loader = new FXMLLoader(Paths.get("src/resources/errorBanner.fxml").toUri().toURL());
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+
+            try {
+                denyPanel =(Parent) loader.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            ErrorBannerController controller = loader.getController();
+            controller.setLabel("NO OLD GAME FOUND");
+            Stage ban = new Stage();
+            ban.setScene(new Scene(denyPanel));
+            ban.show();
         });
     }
 }

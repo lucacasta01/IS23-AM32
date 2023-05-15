@@ -15,4 +15,8 @@ public interface RMIClient extends Remote{
      void notifyGameJoined()throws RemoteException;
      void ping() throws RemoteException;
      void notifyGameStarted() throws RemoteException;
+
+    void denyLoadGame() throws RemoteException;
+
+     void acceptLoadGame() throws RemoteException;
 }
