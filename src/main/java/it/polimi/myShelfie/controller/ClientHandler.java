@@ -658,6 +658,26 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    public synchronized void notifyNewJoin(String waitStatus) {
+        if(isRMI){
+            try{
+                rmiClient.notifyNewJoin();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Gson gson = new Gson();
+            try {
+                out.println(gson.toJson(new Response(Response.ResponseType.SOMEONE_JOINED_LOBBY, null, null, waitStatus)));
+            } catch (Exception e) {
+                System.out.println("Error occurred while sending a message: " + e.toString());
+                e.printStackTrace();
+            }
+        }
+    }
+
     public synchronized void sendPing() throws IOException{
         Gson gson = new Gson();
         out.println(gson.toJson(new Response(Response.ResponseType.PING, null,null, "ping")));

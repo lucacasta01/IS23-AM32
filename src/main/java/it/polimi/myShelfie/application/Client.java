@@ -31,6 +31,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
@@ -168,10 +169,6 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                 while ((inMessage = in.readLine()) != null) {
                                     Response response = recieveResponse(inMessage);
                                     if (response.getResponseType() == Response.ResponseType.INFO) {
-                                        if(response.getInfoMessage().contains("joined the lobby")){
-                                            waitPlayerStatus = response.getInfoMessage().substring(response.getInfoMessage().indexOf("("));
-                                            waitPlayersController.updateLabel("Waiting for players..."+waitPlayerStatus);
-                                        }
                                         System.out.println(response.getInfoMessage());
                                     } else if (response.getResponseType() == Response.ResponseType.CHATMESSAGE) {
                                         System.out.println(">" + response.getChatMessage().getSender() + ": " + response.getChatMessage().getMessage());
@@ -213,23 +210,26 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                         System.out.println(view.getBoard() + "\n");
                                         //current player
                                         System.out.println(ANSI.ITALIQUE + "Turn of: " + ANSI.RESET_STYLE + view.getCurrentPlayer());
-                                    } else if (response.getResponseType() == Response.ResponseType.PONG) {
+                                    }
+                                    else if (response.getResponseType() == Response.ResponseType.PONG) {
                                         synchronized (pongResponses) {
                                             pongResponses.add(new PingObject(false));
                                             pongResponses.notifyAll();
                                         }
 
-                                    } else if (response.getResponseType() == Response.ResponseType.PING) {
+                                    }
+                                    else if (response.getResponseType() == Response.ResponseType.PING) {
                                         sendAction(new Action(Action.ActionType.PONG, nickname, null, null, null, null));
 
-                                    } else if (response.getResponseType() == Response.ResponseType.SHUTDOWN) {
+                                    }
+                                    else if (response.getResponseType() == Response.ResponseType.SHUTDOWN) {
                                         System.out.println(response.getInfoMessage());
                                         shutdown();
-                                    }else if(response.getResponseType()== Response.ResponseType.LOBBY_CREATED){
+                                    }
+                                    else if(response.getResponseType()== Response.ResponseType.LOBBY_CREATED){
                                         synchronized (this) {
                                             waitPlayerStatus = "(1/" + response.getInfoMessage() + ")";
                                         }
-                                        System.out.println("Lobby created");
                                     }
                                     else if(response.getResponseType() == Response.ResponseType.LOBBY_JOINED){
                                         System.out.println("Lobby joined");
@@ -238,9 +238,17 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                         if(isGUI) {
                                             GUIClient.getInstance().switchToWaitingScene();
                                         }
-                                    }else if(response.getResponseType()== Response.ResponseType.DENY_LOAD_GAME){
+                                    }
+                                    else if(response.getResponseType() == Response.ResponseType.SOMEONE_JOINED_LOBBY){
+                                        if(isGUI) {
+                                            waitPlayerStatus = response.getInfoMessage();
+                                            waitPlayersController.updateLabel("Waiting for players..." + waitPlayerStatus);
+                                        }
+                                    }
+                                    else if(response.getResponseType()== Response.ResponseType.DENY_LOAD_GAME){
                                         GUIClient.getInstance().showDenyBan();
-                                    } else if(response.getResponseType()== Response.ResponseType.ACCEPT_LOAD_GAME){
+                                    }
+                                    else if(response.getResponseType()== Response.ResponseType.ACCEPT_LOAD_GAME){
                                         GUIClient.getInstance().switchToWaitingScene();
                                     }
                                 }
@@ -480,7 +488,9 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     @Override
     public void notifyGameStarted() throws RemoteException {
-        GUIClient.getInstance().switchToGame();
+        if(isGUI) {
+            GUIClient.getInstance().switchToGame();
+        }
     }
 
     @Override
@@ -518,25 +528,26 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     @Override
     public void notifyGameJoined() throws RemoteException {
-        GUIClient guiClient = GUIClient.getInstance();
-        Stage stage = guiClient.getStage();
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                Parent numbeofplayer = null;
-                try {
-                    numbeofplayer = FXMLLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+        if(isGUI) {
+            GUIClient guiClient = GUIClient.getInstance();
+            Stage stage = guiClient.getStage();
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    Parent numbeofplayer = null;
+                    try {
+                        numbeofplayer = FXMLLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    stage.setMinWidth(300);
+                    stage.setMinHeight(150);
+                    stage.setWidth(300);
+                    stage.setHeight(150);
+                    stage.setScene(new Scene(numbeofplayer));
                 }
-                stage.setMinWidth(300);
-                stage.setMinHeight(150);
-                stage.setWidth(300);
-                stage.setHeight(150);
-                stage.setScene(new Scene(numbeofplayer));
-            }
-        });
-
+            });
+        }
     }
 
     @Override
@@ -585,8 +596,13 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     }
 
+    @Override
+    public void notifyNewJoin() throws RemoteException {
+        //todo
+    }
+
     public void addGuiAction(String action){
-        if(connectionProtocol=="TCP") {
+        if(Objects.equals(connectionProtocol, "TCP")) {
             TCPinputHandler.addGuiAction(action);
         }else{
             RMIinputHandler.addGuiAction((action));

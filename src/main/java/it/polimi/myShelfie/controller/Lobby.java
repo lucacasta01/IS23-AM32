@@ -1,6 +1,5 @@
 package it.polimi.myShelfie.controller;
 
-import it.polimi.myShelfie.application.Client;
 import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
@@ -439,19 +438,19 @@ public class Lobby implements Runnable{
         }
         synchronized (lobbyPlayers){
             lobbyPlayers.add(player);
-            sendToOthers(player.getNickname()+" joined the lobby "+"("+getLobbySize()+"/"+getPlayersNumber()+")",player);
+            broadcastMessage(player.getNickname()+" joined the lobby "+"("+getLobbySize()+"/"+getPlayersNumber()+")");
+            notifyNewJoin(); //notify other players that someone else just joined the lobby
             player.notifyLobbyJoined("("+getLobbySize()+"/"+getPlayersNumber()+")");
             lobbyPlayers.notifyAll();
         }
     }
 
-    public void sendToOthers(String message, ClientHandler mySelf){
+    public void notifyNewJoin(){
         for(ClientHandler t : lobbyPlayers){
-            if(!t.equals(mySelf)) {
-                t.sendInfoMessage(message);
-            }
+            t.notifyNewJoin("("+getLobbySize()+"/"+getPlayersNumber()+")");
         }
     }
+
     public void broadcastMessage(String message){
         for(ClientHandler t : lobbyPlayers){
             t.sendInfoMessage(message);
