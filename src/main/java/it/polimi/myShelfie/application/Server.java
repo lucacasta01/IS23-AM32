@@ -212,7 +212,7 @@ public class Server extends UnicastRemoteObject implements Runnable{
             }
         }
 
-        return count>1;
+        return count>0;
     }
 
     public ServerSocket getServerSocket() {

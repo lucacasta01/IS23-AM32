@@ -126,7 +126,7 @@ public class ClientHandler implements Runnable {
             if(nickname.equals("/")){
                 sendInfoMessage("Please insert your username");
                 action = getAction();
-                nickname = action.getInfo();
+                String nickname = action.getInfo();
                 while(action.getActionType() != Action.ActionType.INFO || server.isConnected(nickname)) {
                     if(action.getActionType() == Action.ActionType.INFO) {
                         notifyNicknameDeny();
@@ -164,6 +164,7 @@ public class ClientHandler implements Runnable {
                         server.getUserGame().put(nickname, "-");
                     }
                 }
+                this.nickname = nickname;
                 sendAccept("Username accepted");
                 notifyNicknameAccept();
                 System.out.println(nickname + " connected to the server");

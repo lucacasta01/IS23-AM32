@@ -50,6 +50,7 @@ public class LoginController {
     HBox bannerContainer;
 
     public void initialize() {
+        Client.getInstance();
         VBox configPanel = null;
         try {
             configPanel = FXMLLoader.load(Paths.get("src/resources/configPanel.fxml").toUri().toURL());
@@ -104,8 +105,12 @@ public class LoginController {
     }
 
     public void nicknameDenied() {
-        Platform.runLater(() -> {
-            nicknameDeniedLbl.setVisible(true);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run(){
+                nicknameDeniedLbl.setVisible(true);
+            }
+
         });
     }
 

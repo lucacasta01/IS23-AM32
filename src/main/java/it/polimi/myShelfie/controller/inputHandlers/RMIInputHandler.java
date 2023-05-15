@@ -60,19 +60,20 @@ public class RMIInputHandler extends Thread {
                 nickname = getGuiAction();
             }
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
         try {
-            while (!rmiServer.login(nickname, client)) {
+            boolean connected = rmiServer.login(nickname, client);
+            while (!connected) {
                 System.out.println("Nickname already use, retry:");
+                client.nicknameDenied();
                 if(!isGUI) {
                     nickname = inReader.readLine();
                 }else{
                     nickname = getGuiAction();
                 }
+                connected = rmiServer.login(nickname, client);
             }
         } catch (Exception e) {
             e.printStackTrace();
