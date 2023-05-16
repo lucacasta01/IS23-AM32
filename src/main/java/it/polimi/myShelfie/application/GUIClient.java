@@ -120,15 +120,16 @@ public class GUIClient extends Application {
 
     public void switchToGame() {
         Platform.runLater(()->{
-            Parent gamePanel = null;
+            Parent gameParent = null;
             try {
-                gamePanel = FXMLLoader.load(Paths.get("src/resources/gamePanel.fxml").toUri().toURL());
+                gameParent = FXMLLoader.load(Paths.get("src/resources/gamePanel.fxml").toUri().toURL());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+
             stage.setMinWidth(820);
             stage.setMinHeight(520);
-            stage.setScene(new Scene(gamePanel));
+            stage.setScene(new Scene(gameParent));
             stage.setFullScreen(true);
         });
     }
