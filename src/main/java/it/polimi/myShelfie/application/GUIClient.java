@@ -35,11 +35,8 @@ public class GUIClient extends Application {
         this.stage = stage;
        FXMLLoader fxmlLoader = new FXMLLoader();
        Parent root = fxmlLoader.load(Paths.get("src/resources/loginPage.fxml").toUri().toURL());
-       LoginController loginController = fxmlLoader.getController();
-       //todo handle guiController methods from there, pass actions to a client
-        new Thread(()->{
+      
 
-        }).start();
 
        stage.setTitle("My Shelfie");
        stage.getIcons().add(new Image(Paths.get("src/resources/graphics/publisherMaterial/Icon.png").toUri().toURL().openStream()));
