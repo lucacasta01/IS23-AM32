@@ -104,10 +104,11 @@ public class LoginController {
         client.addGuiAction(nickname);
     }
 
-    public void nicknameDenied() {
+    public void nicknameDenied(String message) {
         Platform.runLater(new Runnable() {
             @Override
             public void run(){
+                nicknameDeniedLbl.setText(message);
                 nicknameDeniedLbl.setVisible(true);
             }
 

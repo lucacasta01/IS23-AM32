@@ -4,7 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 public interface RMIClient extends Remote{
      void nicknameAccepted() throws RemoteException;
-     void nicknameDenied() throws RemoteException;
+     void nicknameDenied(String message) throws RemoteException;
      void update(View view) throws RemoteException;
      void chatMessage(String sender, String message) throws RemoteException;
      void valid(String message) throws RemoteException;

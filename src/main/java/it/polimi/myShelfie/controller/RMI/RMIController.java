@@ -4,6 +4,7 @@ import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.controller.ping.ServerPingThread;
 import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.Settings;
+import it.polimi.myShelfie.utilities.Utils;
 import it.polimi.myShelfie.utilities.beans.Action;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -176,6 +177,9 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
 
     @Override
     public boolean login(String username, RMIClient client) throws RemoteException {
+        if(!Utils.checkNicknameFormat(username)){
+            return false;
+        }
         ClientHandler ch;
         Map<ClientHandler, ServerPingThread> myMap;
         synchronized (server.getConnectedClients()) {

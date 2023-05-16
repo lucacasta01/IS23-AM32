@@ -21,4 +21,8 @@ public class Utils {
 
         return stringBuilder.toString();
     }
+
+    public static boolean checkNicknameFormat(String nickname){
+        return !nickname.contains(" ") && !nickname.equals("\n") && !nickname.equals("/");
+    }
 }
