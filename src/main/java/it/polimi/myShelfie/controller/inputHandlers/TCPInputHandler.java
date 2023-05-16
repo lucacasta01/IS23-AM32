@@ -59,6 +59,11 @@ public class TCPInputHandler extends Thread{
                     Action a = new Action(Action.ActionType.CHAT, client.getNickname(), message.substring(message.indexOf("/chat") + "/chat ".length()), "", null, null);
                     client.sendAction(a);
                 }
+                else if(message.startsWith("/pvt-")){
+                    // code that handles private messages
+                    Action a = new Action(Action.ActionType.PRIVATEMESSAGE, client.getNickname(), message.substring("/pvt- ".length() -1 ), "", null, null);
+                    client.sendAction(a);
+                }
                 /*
                  * /collect x1,y1 (opt)x2,y2 (opt)x3,y3
                  */

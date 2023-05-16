@@ -480,6 +480,7 @@ public class ClientHandler implements Runnable {
     }
 
     public synchronized void sendChatMessage(String message, String sender){
+        System.out.println("Sending message");
         if(isRMI){
             try{
                 rmiClient.chatMessage(sender,message);
@@ -499,6 +500,7 @@ public class ClientHandler implements Runnable {
             }
         }
     }
+    
     public synchronized void notifyNicknameAccept(){
         if(isRMI){
             try{

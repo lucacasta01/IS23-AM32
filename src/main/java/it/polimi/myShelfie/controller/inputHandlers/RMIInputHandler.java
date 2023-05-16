@@ -93,6 +93,9 @@ public class RMIInputHandler extends Thread {
                 } else if (message.startsWith("/chat")) {
                     client.getRmiServer().chatMessage(client.getNickname(), message.substring(message.indexOf("/chat") + "/chat ".length()));
                 }
+                else if(message.startsWith("/pvt-")){
+                    client.getRmiServer().privateMessage(client.getNickname(), message.substring(message.indexOf("pvt-") + "pvt-".length()));
+                }
                 /*
                  * /collect x1,y1 (opt)x2,y2 (opt)x3,y3
                  */

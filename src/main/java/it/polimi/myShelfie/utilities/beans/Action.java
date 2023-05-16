@@ -78,6 +78,7 @@ public class Action {
     public enum ActionType{
         UPDATE,
         CHAT,
+        PRIVATEMESSAGE,
         PICKTILES,
         SELECTCOLUMN,
         INFO,

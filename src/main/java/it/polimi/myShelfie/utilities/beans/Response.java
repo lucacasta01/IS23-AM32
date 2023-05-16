@@ -16,6 +16,7 @@ public class Response {
 
         UPDATE,
         CHATMESSAGE,
+        PRIVATEMESSAGE,
         VALID,
         DENIED,
         INFO,

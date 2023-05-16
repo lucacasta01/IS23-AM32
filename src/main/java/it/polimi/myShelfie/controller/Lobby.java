@@ -13,6 +13,7 @@ import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.View;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Array;
 import java.util.*;
 
 public class Lobby implements Runnable{
@@ -191,7 +192,12 @@ public class Lobby implements Runnable{
                         } else if (a.getActionType() == Action.ActionType.CHAT) {
                             sendChat(ANSI.BOLD + ch.getColor() + nickname + ANSI.RESET_COLOR + ANSI.RESET_STYLE, ANSI.ITALIQUE + a.getChatMessage() + ANSI.RESET_STYLE);
                             iter.remove();
-                        } else if (a.getActionType() == Action.ActionType.PICKTILES) {
+                        }
+                        else if (a.getActionType() == Action.ActionType.PRIVATEMESSAGE){
+                            sendPrivateMessage(ANSI.BOLD + ch.getColor() + nickname + ANSI.RESET_COLOR + ANSI.RESET_STYLE, ANSI.ITALIQUE + a.getChatMessage() + ANSI.RESET_STYLE);
+                            iter.remove();
+                        }
+                        else if (a.getActionType() == Action.ActionType.PICKTILES) {
                             if (game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)) {
                                 List<Position> tiles = a.getChosenTiles();
                                 collectedTiles = game.collectTiles(tiles);
@@ -456,6 +462,22 @@ public class Lobby implements Runnable{
             t.sendInfoMessage(message);
         }
     }
+    public void sendPrivateMessage(String sender, String message){
+        String receiver = message.substring(0, message.indexOf(" "));
+        String[] stringArray = message.split(" ");
+        List<String> stringLists = new ArrayList<>(Arrays.stream(stringArray).toList());
+        stringLists.remove(0);
+        StringBuilder stringBuilder = new StringBuilder();
+        for(String s : stringLists){
+            stringBuilder.append(s+ " ");
+        }
+        for(ClientHandler t : lobbyPlayers){
+            if((ANSI.ITALIQUE+t.getNickname()).equals(receiver)){
+                t.sendChatMessage(stringBuilder.toString(), sender);
+            }
+        }
+    }
+
     public void sendChat(String sender, String message){
         for(ClientHandler ch : lobbyPlayers){
             if(!(ANSI.BOLD+ch.getColor()+ch.getNickname()+ANSI.RESET_COLOR+ANSI.RESET_STYLE).equals(sender)){

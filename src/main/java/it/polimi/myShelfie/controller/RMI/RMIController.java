@@ -57,6 +57,19 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
     }
 
     @Override
+    public void privateMessage(String username, String message) throws RemoteException {
+        ClientHandler ch = server.getConnectedClients()
+                .keySet()
+                .stream()
+                .filter(c -> c.getNickname().equals(username))
+                .toList().get(0);
+        synchronized (ch.getRmiActions()) {
+            ch.setRmiAction(new Action(Action.ActionType.PRIVATEMESSAGE, username, message, null, null, null));
+            ch.getRmiActions().notify();
+        }
+    }
+
+    @Override
     public void pickTiles(String username, List<Position> chosenTiles) throws RemoteException {
         ClientHandler ch = server.getConnectedClients()
                 .keySet()
