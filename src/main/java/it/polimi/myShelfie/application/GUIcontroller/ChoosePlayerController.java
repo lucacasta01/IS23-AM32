@@ -112,7 +112,7 @@ public class ChoosePlayerController {
         if(client==null) {
             System.exit(0);
         }else{
-            client.addGuiAction("/quit");
+            client.addGuiAction("/menu");
         }
     }
 }

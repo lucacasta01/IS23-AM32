@@ -156,7 +156,9 @@ public class RMIInputHandler extends Thread {
 
                 } else if (message.startsWith("/help")) {
                     client.getRmiServer().help(client.getNickname());
-                } else {
+                }else if(message.startsWith("/menu")){
+                    client.getRmiServer().requestMenu(client.getNickname());
+                }else {
                     client.getRmiServer().infoMessage(client.getNickname(), message);
                 }
             } catch (IOException e) {

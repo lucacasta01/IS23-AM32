@@ -397,8 +397,14 @@ public class ClientHandler implements Runnable {
                                 }
                                 l.notifyExit();
                                 server.killLobby(l.getLobbyUID());
-                            }
-                            else{
+                            }else if(action.getActionType()== Action.ActionType.REQUEST_MENU){
+                                isPlaying=false;
+                                l.setEndWaitingPlayers();
+                                lobbyCreated=false;
+                                synchronized (server.getLobbyList()) {
+                                    server.getLobbyList().remove(server.lobbyOf(this));
+                                }
+                            }else{
                                 l.recieveAction(action);
                                 l.actions.notifyAll();
                             }
@@ -738,11 +744,18 @@ public class ClientHandler implements Runnable {
         sendInfoMessage(string.toString());
     }
     public void sendMenu(){
-        sendInfoMessage("\n(1) New Game");
-        sendInfoMessage("(2) Load last game");
-        sendInfoMessage("(3) Join random game");
-        sendInfoMessage("(4) Search for started saved game");
-        sendInfoMessage("(0) Exit\n");
+        if(isRMI){
+            try{
+                rmiClient.returnToMenu();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Gson gson = new Gson();
+            out.println(gson.toJson(new Response(Response.ResponseType.RETURN_TO_MENU, null, null, null)));
+        }
     }
 
     public synchronized void setRmiClient(RMIClient client){

@@ -1,7 +1,6 @@
 package it.polimi.myShelfie.controller.inputHandlers;
 
 import it.polimi.myShelfie.application.Client;
-import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.beans.Action;
 
@@ -130,6 +129,8 @@ public class TCPInputHandler extends Thread{
 
                 } else if (message.startsWith("/help")) {
                     client.sendAction(new Action(Action.ActionType.HELP, client.getNickname(), null, null, null, null));
+                }else if(message.startsWith("/menu")){
+                    client.sendAction(new Action(Action.ActionType.REQUEST_MENU, client.getNickname(), null, null, null, null));
                 } else {
                     Action a = new Action(Action.ActionType.INFO, client.getNickname(), "", message, null, null);
                     client.sendAction(a);

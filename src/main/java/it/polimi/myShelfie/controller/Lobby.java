@@ -13,8 +13,8 @@ import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.View;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Array;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Lobby implements Runnable{
     private final List<ClientHandler> lobbyPlayers;
@@ -31,6 +31,7 @@ public class Lobby implements Runnable{
     private boolean isLastTurn = false;
     private Integer index = null;
     private boolean close;
+    private final AtomicBoolean endWaitingPlayers = new AtomicBoolean(false);
     /**
      * Create a lobby for a new game
      *
@@ -110,6 +111,9 @@ public class Lobby implements Runnable{
                     System.out.println("Lobby " + this.lobbyUID + " killed");
                     lobbyPlayers.get(0).sendShutdown();
                     close = true;
+                }else if(action.getActionType()== Action.ActionType.REQUEST_MENU){
+                    close=true;
+                    lobbyPlayers.get(0).sendMenu();
                 }else{
                     actions.remove(0);
                 }
@@ -399,7 +403,7 @@ public class Lobby implements Runnable{
     private void waitForPlayers() throws InterruptedException {
         synchronized (lobbyPlayers) {
             int oldSize = getLobbySize();
-            while (getLobbySize() < getPlayersNumber()) {
+            while (getLobbySize() < getPlayersNumber()&&!endWaitingPlayers.get()) {
                 if(getLobbySize()>=oldSize){
                     oldSize++;
                     lobbyPlayers.wait();
@@ -412,6 +416,13 @@ public class Lobby implements Runnable{
                     close = true;
                     break;
                 }
+            }
+            if(endWaitingPlayers.get()){
+                for(ClientHandler ch:lobbyPlayers){
+                    ch.sendMenu();
+                    ch.setPlaying(false);
+                }
+                close=true;
             }
         }
     }
@@ -428,6 +439,13 @@ public class Lobby implements Runnable{
         ch.setPlaying(false);
         broadcastMessage(ch.getNickname() + " connection lost");
         broadcastMessage("Game is closing...");
+    }
+
+    public void setEndWaitingPlayers(){
+        synchronized (lobbyPlayers){
+            endWaitingPlayers.set(true);
+            lobbyPlayers.notifyAll();
+        }
     }
 
     public boolean isOpen() {

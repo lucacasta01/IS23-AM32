@@ -200,6 +200,20 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
     }
 
     @Override
+    public void requestMenu(String username) throws RemoteException {
+        ClientHandler ch = server.getConnectedClients()
+                .keySet()
+                .stream()
+                .filter(c -> c.getNickname().equals(username))
+                .toList().get(0);
+
+        synchronized (ch.getRmiActions()) {
+            ch.setRmiAction(new Action(Action.ActionType.REQUEST_MENU, username, null, null, null, null));
+            ch.getRmiActions().notifyAll();
+        }
+    }
+
+    @Override
     public void ping() throws RemoteException {
 
     }

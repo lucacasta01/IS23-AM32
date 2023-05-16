@@ -89,6 +89,7 @@ public class Action {
         ORDER,
         LOBBYKILL,
         HELP,
-        VOID
+        VOID,
+        REQUEST_MENU
     }
 }

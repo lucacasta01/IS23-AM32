@@ -250,6 +250,16 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                     }
                                     else if(response.getResponseType()== Response.ResponseType.ACCEPT_LOAD_GAME){
                                         GUIClient.getInstance().switchToWaitingScene();
+                                    }else if(response.getResponseType()== Response.ResponseType.RETURN_TO_MENU){
+                                        if(isGUI){
+                                            GUIClient.getInstance().switchToMenu();
+                                        }else{
+                                            System.out.println("\n(1) New Game");
+                                            System.out.println("(2) Load last game");
+                                            System.out.println("(3) Join random game");
+                                            System.out.println("(4) Search for started saved game");
+                                            System.out.println("(0) Exit\n");
+                                        }
                                     }
                                 }
                             } catch (Exception e) {
@@ -599,6 +609,19 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     @Override
     public void notifyNewJoin() throws RemoteException {
         //todo
+    }
+
+    @Override
+    public void returnToMenu() throws RemoteException {
+        if(isGUI) {
+            GUIClient.getInstance().switchToMenu();
+        }else{
+            System.out.println("\n(1) New Game");
+            System.out.println("(2) Load last game");
+            System.out.println("(3) Join random game");
+            System.out.println("(4) Search for started saved game");
+            System.out.println("(0) Exit\n");
+        }
     }
 
     public void addGuiAction(String action){

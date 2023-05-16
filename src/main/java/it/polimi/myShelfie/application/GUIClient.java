@@ -105,6 +105,21 @@ public class GUIClient extends Application {
             stage.setScene(new Scene(waitPlayers));
         });
     }
+    public void switchToMenu() {
+        Platform.runLater(()->{
+            Parent menu = null;
+            try {
+                menu = FXMLLoader.load(Paths.get("src/resources/menuPage.fxml").toUri().toURL());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            stage.setMinWidth(820);
+            stage.setMinHeight(520);
+            stage.setWidth(820);
+            stage.setHeight(520);
+            stage.setScene(new Scene(menu));
+        });
+    }
 
     public void switchToGame() {
         Platform.runLater(()->{
