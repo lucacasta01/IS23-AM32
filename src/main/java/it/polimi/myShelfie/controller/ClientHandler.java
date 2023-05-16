@@ -127,9 +127,15 @@ public class ClientHandler implements Runnable {
                 sendInfoMessage("Please insert your username");
                 action = getAction();
                 String nickname = action.getInfo();
-                while(action.getActionType() != Action.ActionType.INFO || server.isConnected(nickname)) {
+                while(action.getActionType() != Action.ActionType.INFO || server.isConnected(nickname) || !Utils.checkNicknameFormat(nickname)) {
                     if(action.getActionType() == Action.ActionType.INFO) {
-                        notifyNicknameDeny();
+                        if(!Utils.checkNicknameFormat(nickname)){
+                            notifyNicknameDeny("Invalid nickname");
+                        }
+                        else if(server.isConnected(nickname)){
+                            notifyNicknameDeny("Nickname already used");
+                        }
+
                     }else if(action.getActionType()== Action.ActionType.CHAT){
                         sendDeny("The chat is not active now");
                     }else if(action.getActionType()== Action.ActionType.PICKTILES){
@@ -528,18 +534,18 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public synchronized void notifyNicknameDeny(){
+    public synchronized void notifyNicknameDeny(String message){
         if(isRMI){
             try{
-                rmiClient.nicknameDenied();
+                rmiClient.nicknameDenied(message);
             }
             catch (Exception e){
                 e.printStackTrace();
             }
         }
         else {
-            sendDeny("Nickname " + nickname + " already used, retry:");
-            Response r = new Response(Response.ResponseType.NICKNAME_DENIED, new Response.ChatMessage(nickname, ""), null, null);
+            sendDeny(message);
+            Response r = new Response(Response.ResponseType.NICKNAME_DENIED, new Response.ChatMessage(nickname, ""), null, message);
             Gson gson = new Gson();
             try {
                 out.println(gson.toJson(r));

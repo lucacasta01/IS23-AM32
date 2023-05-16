@@ -184,7 +184,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
                                     } else if(response.getResponseType()== Response.ResponseType.NICKNAME_DENIED){
                                         if (isGUI) {
-                                            loginController.nicknameDenied();
+                                            loginController.nicknameDenied(response.getInfoMessage());
                                         }
                                     } else if (response.getResponseType() == Response.ResponseType.GAME_STARTED) {
                                         if(isGUI) {
@@ -486,13 +486,16 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     }
 
     @Override
-    public void nicknameDenied() throws RemoteException {
+    public void nicknameDenied(String message) throws RemoteException {
         if(isGUI){
             try {
-                loginController.nicknameDenied();
+                loginController.nicknameDenied(message);
             }catch(Exception e){
                 e.printStackTrace();
             }
+        }
+        else{
+            System.err.println(message);
         }
     }
 
@@ -569,7 +572,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     public void denied(String message) throws RemoteException {
         if(message.startsWith("Username")){
             try {
-                loginController.nicknameDenied();
+                loginController.nicknameDenied(message);
             }catch(Exception e){
                 e.printStackTrace();
             }

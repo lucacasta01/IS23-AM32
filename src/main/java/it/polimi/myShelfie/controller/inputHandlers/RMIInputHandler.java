@@ -3,6 +3,7 @@ package it.polimi.myShelfie.controller.inputHandlers;
 import it.polimi.myShelfie.application.Client;
 import it.polimi.myShelfie.controller.RMI.RMIServer;
 import it.polimi.myShelfie.utilities.Position;
+import it.polimi.myShelfie.utilities.Utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -66,8 +67,12 @@ public class RMIInputHandler extends Thread {
         try {
             boolean connected = rmiServer.login(nickname, client);
             while (!connected) {
-                System.out.println("Nickname already use, retry:");
-                client.nicknameDenied();
+                if(!Utils.checkNicknameFormat(nickname)) {
+                    client.nicknameDenied("Invalid nickname");
+                }
+                else{
+                    client.nicknameDenied("Nickname already use, retry:");
+                }
                 if(!isGUI) {
                     nickname = inReader.readLine();
                 }else{
