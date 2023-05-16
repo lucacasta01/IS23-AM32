@@ -159,4 +159,16 @@ public class GUIClient extends Application {
             ban.show();
         });
     }
+
+    public void switchToPlayerNumber() {
+        Platform.runLater(()->{
+            Parent numberPanel = null;
+            try {
+                numberPanel = FXMLLoader.load(Paths.get("src/resources/chosePlayerNumber.fxml").toUri().toURL());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            stage.setScene(new Scene(numberPanel));
+        });
+    }
 }

@@ -1,6 +1,7 @@
 package it.polimi.myShelfie.application.GUIcontroller;
 
 import it.polimi.myShelfie.application.Client;
+import it.polimi.myShelfie.application.GUIClient;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -24,42 +25,24 @@ public class MenuController {
     }
 
     public void newGameAction(ActionEvent actionEvent) {
-        stage = (Stage)((javafx.scene.Node)actionEvent.getSource()).getScene().getWindow();
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                Parent numbeofplayer = null;
-                try {
-                    numbeofplayer = FXMLLoader.load(Paths.get("src/resources/chosePlayerNumber.fxml").toUri().toURL());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                stage.setScene(new Scene(numbeofplayer));
-
-            }
-        });
-        Client client = Client.getInstance();
-
-        client.addGuiAction("1");
+        GUIClient.getInstance().switchToPlayerNumber();
+        Client.getInstance().addGuiAction("1");
     }
 
     public void randomGameAction(ActionEvent actionEvent) {
-        stage = (Stage)((javafx.scene.Node)actionEvent.getSource()).getScene().getWindow();
-        Client client = Client.getInstance();
-        client.addGuiAction("3");
+        Client.getInstance().addGuiAction("3");
     }
     public void oldGameFound(){
 
     }
 
     public void restoreGameAction(ActionEvent actionEvent) {
-        Client client = Client.getInstance();
-        client.addGuiAction("2");
-
+        Client.getInstance().addGuiAction("2");
+        //todo
     }
 
     public void searchRestoredAction(ActionEvent actionEvent) {
-        Client client = Client.getInstance();
-
+        Client.getInstance().addGuiAction("4");
+        //todo
     }
 }
