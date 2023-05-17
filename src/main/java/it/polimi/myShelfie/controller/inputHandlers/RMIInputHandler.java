@@ -81,7 +81,7 @@ public class RMIInputHandler extends Thread {
                 connected = rmiServer.login(nickname, client);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //thread ends execution doing nothing
         }
         client.setNickname(nickname);
         while (!client.getDone()) {

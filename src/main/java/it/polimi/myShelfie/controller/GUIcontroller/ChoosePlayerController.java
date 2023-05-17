@@ -1,6 +1,7 @@
 package it.polimi.myShelfie.controller.GUIcontroller;
 
 import it.polimi.myShelfie.application.Client;
+import it.polimi.myShelfie.application.GUIClient;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -19,7 +21,12 @@ public class ChoosePlayerController {
     Stage stage;
 
 
+    @FXML
+    AnchorPane backgroundPlayerChoose;
 
+    public void initialize(){
+        GUIClient.getInstance().getStage().setWidth(GUIClient.getInstance().getStage().getWidth()+1);
+    }
     public void twoPlayersChoice(ActionEvent actionEvent) {
         stage = (Stage)((javafx.scene.Node)actionEvent.getSource()).getScene().getWindow();
         client = Client.getInstance();

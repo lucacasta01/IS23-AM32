@@ -315,6 +315,16 @@ public class Lobby implements Runnable{
                             iter.remove();
                             ended = true;
                         }
+                        else if(a.getActionType() == Action.ActionType.REQUEST_MENU){
+                            game.saveGame();
+                            for (ClientHandler client : lobbyPlayers) {
+                                client.sendInfoMessage("Lobby is being killed");
+                                client.setPlaying(false);
+                                client.sendMenu();
+                            }
+                            iter.remove();
+                            ended = true;
+                        }
                         else if (a.getActionType() == Action.ActionType.HELP) {
                             sendCommands(ch);
                             iter.remove();
@@ -463,15 +473,17 @@ public class Lobby implements Runnable{
         synchronized (lobbyPlayers){
             lobbyPlayers.add(player);
             broadcastMessage(player.getNickname()+" joined the lobby "+"("+getLobbySize()+"/"+getPlayersNumber()+")");
-            notifyNewJoin(); //notify other players that someone else just joined the lobby
+            notifyNewJoin(player); //notify other players that someone else just joined the lobby
             player.notifyLobbyJoined("("+getLobbySize()+"/"+getPlayersNumber()+")");
             lobbyPlayers.notifyAll();
         }
     }
 
-    public void notifyNewJoin(){
+    public void notifyNewJoin(ClientHandler player){
         for(ClientHandler t : lobbyPlayers){
-            t.notifyNewJoin("("+getLobbySize()+"/"+getPlayersNumber()+")");
+            if(!t.equals(player)) {
+                t.notifyNewJoin("(" + getLobbySize() + "/" + getPlayersNumber() + ")");
+            }
         }
     }
 

@@ -131,8 +131,6 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                 try {
                     try {
                         client = new Socket(serverIP, TCPPort);
-
-
                     } catch (ConnectException connectException) {
                         System.out.println("Server not found");
                         if (in != null) {
@@ -147,6 +145,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                         }
                         if (isGUI) {
                             loginController.serverOffline();
+                            loginController = null;
                         }
                         close = true;
                     }
@@ -281,15 +280,25 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                     startRMIClient();
                 } catch (RemoteException | NotBoundException e) {
                     System.err.println("Server not found");
-                    System.out.println("Closing...");
-                    System.exit(1);
+                    if (isGUI) {
+                        try {
+                            loginController.serverOffline();
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        loginController = null;
+                        close = true;
+                    }
                 }
-                BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
-                //PING THREAD
-                pingThread().start();
+                if(!close) {
+                    BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
+                    //PING THREAD
+                    if (Settings.pingOn) {
+                        pingThread().start();
+                    }
 
-                RMIinputHandler.start();
-
+                    RMIinputHandler.start();
+                }
                 break;
             default:
                 System.exit(11);
@@ -441,21 +450,21 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
             System.out.println("Closing");
             System.exit(0);
         }
-
+        System.exit(0);
     }
     private String protocolHandler(){
             String message;
             BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
             System.out.println("Choose your protocol [TCP/RMI]");
             try {
-                message= inReader.readLine();
+                message= inReader.readLine().toUpperCase();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            while(!message.toUpperCase().equals("RMI")&&!message.toUpperCase().equals("TCP")){
+            while(!message.equalsIgnoreCase("RMI")&&!message.equalsIgnoreCase("TCP")){
                 System.out.println("Type the right key...");
                 try {
-                    message= inReader.readLine();
+                    message= inReader.readLine().toUpperCase();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

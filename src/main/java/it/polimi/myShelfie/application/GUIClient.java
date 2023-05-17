@@ -6,12 +6,15 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 public class GUIClient extends Application {
     private static GUIClient instance;
@@ -212,6 +215,30 @@ public class GUIClient extends Application {
             Stage ban = new Stage();
             ban.setScene(new Scene(denyPanel));
             ban.show();
+        });
+    }
+
+    public void showBackToMenu() {
+        Platform.runLater(()->{
+            Parent choice = null;
+            try {
+                choice = FXMLLoader.load(Paths.get("src/resources/confirmExit.fxml").toUri().toURL());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Stage banStage = new Stage();
+            banStage.setTitle("Back to menu");
+            try {
+                banStage.getIcons().add(new Image(Paths.get("src/resources/graphics/publisherMaterial/Icon.png").toUri().toURL().openStream()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            banStage.setMinWidth(300);
+            banStage.setMinHeight(200);
+            banStage.setWidth(300);
+            banStage.setHeight(200);
+            banStage.setScene(new Scene(choice));
+            banStage.show();
         });
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.myShelfie.controller.GUIcontroller;
 
 import it.polimi.myShelfie.application.GUIClient;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -28,5 +29,9 @@ public class GamePanelController {
 
         boardGrid.prefWidth(boardPane.widthProperty().get());
         boardGrid.prefHeight(boardPane.heightProperty().get());
+    }
+
+    public void quit(ActionEvent actionEvent) {
+        GUIClient.getInstance().showBackToMenu();
     }
 }

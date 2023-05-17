@@ -407,6 +407,8 @@ public class ClientHandler implements Runnable {
                                 l.notifyExit();
                                 server.killLobby(l.getLobbyUID());
                             }else if(action.getActionType()== Action.ActionType.REQUEST_MENU){
+                                l.recieveAction(action);
+                                l.actions.notifyAll();
                                 isPlaying=false;
                                 l.setEndWaitingPlayers();
                                 lobbyCreated=false;
