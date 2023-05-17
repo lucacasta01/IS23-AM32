@@ -32,7 +32,9 @@ public class Response {
         DENY_LOAD_GAME,
         SOMEONE_JOINED_LOBBY,
         ACCEPT_LOAD_GAME,
-        RETURN_TO_MENU
+        RETURN_TO_MENU,
+        FOUND_OLD_GAME,
+        OLD_GAME_NOT_FOUND
     }
 
     public static class ChatMessage{

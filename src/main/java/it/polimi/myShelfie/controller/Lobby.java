@@ -599,7 +599,7 @@ public class Lobby implements Runnable{
         }
     }
     public synchronized void recieveAction(Action a){
-        actions.add(a);
+        actions. add(a);
     }
 
     private ClientHandler clientHandlerOf(String nickname){

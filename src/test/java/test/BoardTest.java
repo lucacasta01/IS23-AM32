@@ -6,14 +6,12 @@ import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.utilities.Settings;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 public class BoardTest {
     @Test
     @DisplayName("needToRefill test")
     void needToRefillTest(){
         Board boardToRefill = new Board();
         Board boardNotToRefill = new Board();
-
         for(int i = 0; i< Settings.BOARD_DIM; i++){
             for(int j = 0; j< Settings.BOARD_DIM; j++){
                 boardToRefill.getGrid()[i][j] = new Tile("fakePath", Tile.Color.NULLTILE);

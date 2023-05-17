@@ -69,7 +69,7 @@ public class Server extends UnicastRemoteObject implements Runnable{
 
     public void addRmiClientHandler(ClientHandler ch){
         synchronized (this.connectedClients) {
-            this.connectedClients.put(ch, new ServerRmiPingThread(ch)); //new rmi ping thread instead of null
+            this.connectedClients.put(ch, new ServerRmiPingThread(ch));
             pool.execute(ch);
             pingPool.execute(connectedClients.get(ch));
         }

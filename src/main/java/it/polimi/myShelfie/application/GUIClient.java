@@ -1,15 +1,14 @@
 package it.polimi.myShelfie.application;
 
-import it.polimi.myShelfie.application.GUIcontroller.LoginController;
-import it.polimi.myShelfie.application.GUIcontroller.banners.ErrorBannerController;
+import it.polimi.myShelfie.controller.GUIcontroller.banners.ErrorBannerController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Paths;
@@ -35,9 +34,6 @@ public class GUIClient extends Application {
         this.stage = stage;
        FXMLLoader fxmlLoader = new FXMLLoader();
        Parent root = fxmlLoader.load(Paths.get("src/resources/loginPage.fxml").toUri().toURL());
-      
-
-
        stage.setTitle("My Shelfie");
        stage.getIcons().add(new Image(Paths.get("src/resources/graphics/publisherMaterial/Icon.png").toUri().toURL().openStream()));
        stage.setScene(new Scene(root));
@@ -72,6 +68,7 @@ public class GUIClient extends Application {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+                Screen.getPrimary().getBounds().getHeight();
                 bannerStage.setResizable(false);
                 bannerStage.show();
             }
@@ -85,6 +82,31 @@ public class GUIClient extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public void showOldGameChoice(){
+        System.out.println("Show old game choice");
+        Platform.runLater(()->{
+            Parent choice = null;
+            try {
+                choice = FXMLLoader.load(Paths.get("src/resources/oldGameJoinChoice.fxml").toUri().toURL());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Stage banStage = new Stage();
+            banStage.setTitle("My Shelfie");
+            try {
+                banStage.getIcons().add(new Image(Paths.get("src/resources/graphics/publisherMaterial/Icon.png").toUri().toURL().openStream()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            banStage.setMinWidth(300);
+            banStage.setMinHeight(200);
+            banStage.setWidth(300);
+            banStage.setHeight(200);
+            banStage.setScene(new Scene(choice));
+            banStage.show();
+        });
     }
 
     public void switchToWaitingScene() {
@@ -167,6 +189,29 @@ public class GUIClient extends Application {
                 throw new RuntimeException(e);
             }
             stage.setScene(new Scene(numberPanel));
+        });
+    }
+
+    public void showOldGameNotFound() {
+        Platform.runLater(()->{
+            Parent denyPanel = null;
+            FXMLLoader loader = null;
+            try {
+                loader = new FXMLLoader(Paths.get("src/resources/errorBanner.fxml").toUri().toURL());
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+
+            try {
+                denyPanel =(Parent) loader.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            ErrorBannerController controller = loader.getController();
+            controller.setLabel("NO STARTED OLD GAME FOUND");
+            Stage ban = new Stage();
+            ban.setScene(new Scene(denyPanel));
+            ban.show();
         });
     }
 }

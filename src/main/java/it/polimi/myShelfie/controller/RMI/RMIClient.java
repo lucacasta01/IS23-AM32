@@ -23,4 +23,8 @@ public interface RMIClient extends Remote{
     void notifyNewJoin() throws RemoteException;
 
     void returnToMenu() throws RemoteException;
+
+    void foundOldGame() throws RemoteException;
+
+    void oldGameNotFound() throws  RemoteException;
 }

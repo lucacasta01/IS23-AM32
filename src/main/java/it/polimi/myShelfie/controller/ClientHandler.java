@@ -314,6 +314,7 @@ public class ClientHandler implements Runnable {
                                 Lobby lobby = filteredLobbyList.get(0);
                                 sendInfoMessage("Game " + lobby.getLobbyUID() + " started by " + lobby.getLobbyPlayers().get(0).nickname);
                                 sendInfoMessage("Would you like to join? [y/n]");
+                                oldGameFound();
                                 System.out.println("Saved game for " + nickname + " found");
 
                                 action = getAction();
@@ -361,6 +362,7 @@ public class ClientHandler implements Runnable {
                                 }
                             } else {
                                 sendInfoMessage("No lobby was found.");
+                                oldGameNotFound();
                                 sendMenu();
                             }
 
@@ -397,6 +399,7 @@ public class ClientHandler implements Runnable {
                                     server.getConnectedClients().remove(this);
                                     System.out.println(ANSI.RED+nickname+" left the game"+ANSI.RESET_COLOR);
                                 }else{
+                                    server.getConnectedClients().get(this).setKill(true);
                                     server.getConnectedClients().remove(this);
                                     l.getLobbyPlayers().remove(this);
                                     System.out.println(ANSI.RED+nickname+" left the game"+ANSI.RESET_COLOR);
@@ -421,6 +424,48 @@ public class ClientHandler implements Runnable {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void oldGameNotFound() {
+        if(isRMI){
+            try{
+                rmiClient.oldGameNotFound();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Response r = new Response(Response.ResponseType.OLD_GAME_NOT_FOUND, null, null, null);
+            Gson gson = new Gson();
+            try {
+                out.println(gson.toJson(r));
+            } catch (Exception e) {
+                System.out.println("Error occurred while sending a message: " + e.toString());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private synchronized void oldGameFound() {
+        if(isRMI){
+            try{
+                rmiClient.foundOldGame();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Response r = new Response(Response.ResponseType.FOUND_OLD_GAME, null, null, null);
+            Gson gson = new Gson();
+            try {
+                out.println(gson.toJson(r));
+            } catch (Exception e) {
+                System.out.println("Error occurred while sending a message: " + e.toString());
+                e.printStackTrace();
+            }
         }
     }
 

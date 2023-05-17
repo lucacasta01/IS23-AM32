@@ -25,35 +25,27 @@ public class Action {
     public String getNickname() {
         return nickname;
     }
-
     public String getChatMessage() {
         return chatMessage;
     }
-
     public List<Position> getChosenTiles() {
         return chosenTiles;
     }
-
     public Integer getChosenColumn() {
         return chosenColumn;
     }
-
     public String getInfo() {
         return info;
     }
-
     public void setChatMessage(String chatMessage) {
         this.chatMessage = chatMessage;
     }
-
     public void setInfo(String info) {
         this.info = info;
     }
-
     public void setActionType(ActionType actionType) {
         this.actionType = actionType;
     }
-
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
@@ -66,15 +58,12 @@ public class Action {
             this.info = string;
         }
     }
-
     public void setChosenTiles(List<Position> chosenTiles) {
         this.chosenTiles = chosenTiles;
     }
-
     public void setChosenColumn(Integer chosenColumn) {
         this.chosenColumn = chosenColumn;
     }
-
     public enum ActionType{
         UPDATE,
         CHAT,
