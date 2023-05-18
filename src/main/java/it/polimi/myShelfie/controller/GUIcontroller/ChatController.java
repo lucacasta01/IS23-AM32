@@ -26,7 +26,9 @@ public class ChatController {
         View view = Client.getInstance().getView();
         messageToCombo.getItems().add("Broadcast");
         for (String p : view.getPlayers()) {
-            messageToCombo.getItems().add(p);
+            if(!p.equals(Client.getInstance().getNickname())) {
+                messageToCombo.getItems().add(p);
+            }
         }
         messageToCombo.getSelectionModel().selectFirst();
     }
