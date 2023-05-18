@@ -277,7 +277,7 @@ class ServerInputHandler extends Thread {
             try {
                 message = inReader.readLine();
 
-                if (message.equals("/quit")) {
+                if (message.equals("/q")) {
                     System.out.println("Quitting server...");
                     //closes all the lobbys
                     List<Lobby> lobbys;
@@ -304,12 +304,12 @@ class ServerInputHandler extends Thread {
                         e.printStackTrace();
                     }
 
-                } else if(message.equals("/help")){
+                } else if(message.equals("/h")){
                     StringBuilder help = new StringBuilder();
                     help.append("***MY SHELFIE SERVER***\n");
                     help.append(server.getConnectedClients().size()+" Connected clients\n");
                     help.append(server.getLobbyList().size()+" started games\n");
-                    help.append("type /quit to exit from the server app\n");
+                    help.append("type /q to exit from the server app\n");
                     System.out.println(help.toString());
                 }else{
                     System.out.println("*Wrong input message*");

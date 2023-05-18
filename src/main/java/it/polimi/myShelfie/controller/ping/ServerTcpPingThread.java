@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
+//todo seems broken
+
 public class ServerTcpPingThread extends ServerPingThread{
 
     private final AtomicBoolean elapsed;
@@ -35,17 +37,12 @@ public class ServerTcpPingThread extends ServerPingThread{
         }
         while (!getElapsed()) {
             try {
-
                 ch.sendPing();
             } catch (IOException e) {
                 System.exit(10);
             }
-
-
             SwapElapsed swapElapsed = new SwapElapsed(ch);
             swapElapsed.start();
-
-
             while (ch.getPongResponses().size() == 0) {
                 synchronized (ch.getPongResponses()) {
                     try {

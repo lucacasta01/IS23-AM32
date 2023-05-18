@@ -17,5 +17,5 @@ public class Settings {
     public static final int PINGPERIOD = 3000;
     public static final int PINGTHRESHOLD = 4000;
     public static final int PINGFACTOR = 40;
-    public static final boolean pingOn = false;
+    public static final boolean pingOn = true;
 }

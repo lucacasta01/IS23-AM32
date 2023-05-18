@@ -34,7 +34,7 @@ public class ChoosePlayerController {
         client.setWaitPlayerStatus("(1/2)");
         FXMLLoader fxmlLoader = new FXMLLoader();
         try {
-            fxmlLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
+            fxmlLoader.load(Paths.get("src/resources/waitPlayerBanner.fxml").toUri().toURL());
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -44,7 +44,7 @@ public class ChoosePlayerController {
             public void run() {
                 Parent waitPlayers = null;
                 try {
-                    waitPlayers = FXMLLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
+                    waitPlayers = FXMLLoader.load(Paths.get("src/resources/waitPlayerBanner.fxml").toUri().toURL());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -64,7 +64,7 @@ public class ChoosePlayerController {
         client.setWaitPlayerStatus("(1/3)");
         FXMLLoader fxmlLoader = new FXMLLoader();
         try {
-            fxmlLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
+            fxmlLoader.load(Paths.get("src/resources/waitPlayerBanner.fxml").toUri().toURL());
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -74,7 +74,7 @@ public class ChoosePlayerController {
             public void run() {
                 Parent waitPlayers = null;
                 try {
-                    waitPlayers = FXMLLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
+                    waitPlayers = FXMLLoader.load(Paths.get("src/resources/waitPlayerBanner.fxml").toUri().toURL());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -94,7 +94,7 @@ public class ChoosePlayerController {
         client.setWaitPlayerStatus("(1/4)");
         FXMLLoader fxmlLoader = new FXMLLoader();
         try {
-            fxmlLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
+            fxmlLoader.load(Paths.get("src/resources/waitPlayerBanner.fxml").toUri().toURL());
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -104,7 +104,7 @@ public class ChoosePlayerController {
             public void run() {
                 Parent waitPlayers = null;
                 try {
-                    waitPlayers = FXMLLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
+                    waitPlayers = FXMLLoader.load(Paths.get("src/resources/waitPlayerBanner.fxml").toUri().toURL());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

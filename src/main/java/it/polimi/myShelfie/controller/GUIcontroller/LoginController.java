@@ -29,10 +29,6 @@ public class LoginController {
     private String nickname;
     private String connectionProtocol;
     private Stage stage;
-
-
-
-
     @FXML
     RadioButton TCPrbtn, RMIrbtn;
     @FXML
@@ -121,7 +117,7 @@ public class LoginController {
             public void run() {
                 Parent menuPage = null;
                 try {
-                    menuPage = FXMLLoader.load(Paths.get("src/resources/menuPage.fxml").toUri().toURL());
+                    menuPage = FXMLLoader.load(Paths.get("src/resources/menuPanel.fxml").toUri().toURL());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

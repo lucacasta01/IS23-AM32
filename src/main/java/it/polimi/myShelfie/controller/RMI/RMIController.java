@@ -161,7 +161,7 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
                 .stream()
                 .filter(c -> c.getNickname().equals(username))
                 .toList().get(0);
-
+            //todo chech quit from menu GUI (maybe works)
         synchronized (ch.getRmiActions()) {
             ch.setRmiAction(new Action(Action.ActionType.QUIT, username, null, null, null, null));
             ch.getRmiActions().notifyAll();

@@ -3,6 +3,7 @@ package it.polimi.myShelfie.controller.GUIcontroller;
 import it.polimi.myShelfie.application.GUIClient;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -16,6 +17,7 @@ import java.awt.*;
 import java.io.File;
 
 public class GamePanelController {
+
     @FXML
     ImageView boardImg;
 

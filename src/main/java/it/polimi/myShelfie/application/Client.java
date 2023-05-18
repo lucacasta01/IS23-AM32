@@ -56,7 +56,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private RMIServer rmiServer;
     private boolean isGUI = false;
     private final List<Response> guiResponses = new ArrayList<>();
-
+    private boolean notConnected = false;
 
 
     private Client() throws RemoteException {
@@ -120,7 +120,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     }
 
     @Override
-    public void run() {
+    public void run() throws RuntimeException{
         boolean close = false;
         if (!isGUI) {
             connectionProtocol = protocolHandler();
@@ -148,6 +148,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                             loginController = null;
                         }
                         close = true;
+                        notConnected = true;
                     }
                     if (!close) {
                         in = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -158,7 +159,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
                         //PING THREAD
                         if (Settings.pingOn) {
-                            pingThread().start();
+                            //pingThread().start();
                         }
 
 
@@ -289,6 +290,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                         loginController = null;
                         close = true;
                     }
+                    notConnected = true;
                 }
                 if(!close) {
                     BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
@@ -436,21 +438,18 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         });
     }
 
-    @Override
-    public void ping() throws RemoteException {
-
-    }
-
     public static void main(String[] args) throws RemoteException {
         Client client = Client.getInstance();
         client.setGUI(false);
         try {
             client.run();
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             System.out.println("Closing");
             System.exit(0);
         }
-        System.exit(0);
+        if(!client.isGUI&& client.notConnected){
+            System.exit(0);
+        }
     }
     private String protocolHandler(){
             String message;
@@ -499,7 +498,10 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
             }
         }
     }
+    @Override
+    public void ping() throws RemoteException {
 
+    }
     @Override
     public void nicknameDenied(String message) throws RemoteException {
         if(isGUI){
@@ -564,7 +566,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                 public void run() {
                     Parent numbeofplayer = null;
                     try {
-                        numbeofplayer = FXMLLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
+                        numbeofplayer = FXMLLoader.load(Paths.get("src/resources/waitPlayerBanner.fxml").toUri().toURL());
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }

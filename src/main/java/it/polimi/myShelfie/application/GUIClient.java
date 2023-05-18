@@ -36,7 +36,7 @@ public class GUIClient extends Application {
     public void start(Stage stage) throws Exception {
         this.stage = stage;
        FXMLLoader fxmlLoader = new FXMLLoader();
-       Parent root = fxmlLoader.load(Paths.get("src/resources/loginPage.fxml").toUri().toURL());
+       Parent root = fxmlLoader.load(Paths.get("src/resources/loginPanel.fxml").toUri().toURL());
        stage.setTitle("My Shelfie");
        stage.getIcons().add(new Image(Paths.get("src/resources/graphics/publisherMaterial/Icon.png").toUri().toURL().openStream()));
        stage.setScene(new Scene(root));
@@ -92,7 +92,7 @@ public class GUIClient extends Application {
         Platform.runLater(()->{
             Parent choice = null;
             try {
-                choice = FXMLLoader.load(Paths.get("src/resources/oldGameJoinChoice.fxml").toUri().toURL());
+                choice = FXMLLoader.load(Paths.get("src/resources/oldGameJoinBanner.fxml").toUri().toURL());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -116,7 +116,7 @@ public class GUIClient extends Application {
         Platform.runLater(()->{
             Parent waitPlayers = null;
             try {
-                waitPlayers = FXMLLoader.load(Paths.get("src/resources/waitPlayerBan.fxml").toUri().toURL());
+                waitPlayers = FXMLLoader.load(Paths.get("src/resources/waitPlayerBanner.fxml").toUri().toURL());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -131,7 +131,7 @@ public class GUIClient extends Application {
         Platform.runLater(()->{
             Parent menu = null;
             try {
-                menu = FXMLLoader.load(Paths.get("src/resources/menuPage.fxml").toUri().toURL());
+                menu = FXMLLoader.load(Paths.get("src/resources/menuPanel.fxml").toUri().toURL());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -222,14 +222,14 @@ public class GUIClient extends Application {
         Platform.runLater(()->{
             Parent choice = null;
             try {
-                choice = FXMLLoader.load(Paths.get("src/resources/confirmExit.fxml").toUri().toURL());
+                choice = FXMLLoader.load(Paths.get("src/resources/confirmExitBanner.fxml").toUri().toURL());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
             Stage banStage = new Stage();
             banStage.setTitle("Back to menu");
             try {
-                banStage.getIcons().add(new Image(Paths.get("src/resources/graphics/publisherMaterial/Icon.png").toUri().toURL().openStream()));
+                banStage.getIcons().add(new Image(Paths.get("src/resources/graphics/icons/alert.png").toUri().toURL().openStream()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -237,6 +237,7 @@ public class GUIClient extends Application {
             banStage.setMinHeight(200);
             banStage.setWidth(300);
             banStage.setHeight(200);
+            banStage.setFullScreen(false);
             banStage.setScene(new Scene(choice));
             banStage.show();
         });
