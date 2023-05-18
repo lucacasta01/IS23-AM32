@@ -121,7 +121,7 @@ public class Shelf {
             }
             s.append("\n");
         }
-        s.append(ANSI.ITALIQUE).append(ANSI.BOLD);
+        s.append(ANSI.ITALIC).append(ANSI.BOLD);
         for(int i = 0; i< Settings.SHELFCOLUMN; i++){
             s.append(i+1).append("\t");
         }

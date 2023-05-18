@@ -6,15 +6,12 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Paths;
-import java.util.Optional;
 
 public class GUIClient extends Application {
     private static GUIClient instance;
@@ -152,14 +149,14 @@ public class GUIClient extends Application {
                 throw new RuntimeException(e);
             }
 
-            stage.setMinWidth(820);
-            stage.setMinHeight(520);
+            stage.setMinWidth(1100);
+            stage.setMinHeight(600);
             stage.setScene(new Scene(gameParent));
             stage.setFullScreen(true);
         });
     }
 
-    public void showDenyBan() {
+    public void showDenyDialog(String errorMessage) {
         Platform.runLater(()->{
             System.out.println("Show deny ban");
             Parent denyPanel = null;
@@ -176,8 +173,14 @@ public class GUIClient extends Application {
                 throw new RuntimeException(e);
             }
             ErrorBannerController controller = loader.getController();
-            controller.setLabel("NO OLD GAME FOUND");
+            controller.setLabel(errorMessage);
             Stage ban = new Stage();
+            ban.setTitle("Warning!");
+            try {
+                ban.getIcons().add(new Image(Paths.get("src/resources/graphics/icons/alert.png").toUri().toURL().openStream()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             ban.setScene(new Scene(denyPanel));
             ban.show();
         });
@@ -195,28 +198,6 @@ public class GUIClient extends Application {
         });
     }
 
-    public void showOldGameNotFound() {
-        Platform.runLater(()->{
-            Parent denyPanel = null;
-            FXMLLoader loader = null;
-            try {
-                loader = new FXMLLoader(Paths.get("src/resources/errorBanner.fxml").toUri().toURL());
-            } catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            }
-
-            try {
-                denyPanel =(Parent) loader.load();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            ErrorBannerController controller = loader.getController();
-            controller.setLabel("NO STARTED OLD GAME FOUND");
-            Stage ban = new Stage();
-            ban.setScene(new Scene(denyPanel));
-            ban.show();
-        });
-    }
 
     public void showBackToMenu() {
         Platform.runLater(()->{

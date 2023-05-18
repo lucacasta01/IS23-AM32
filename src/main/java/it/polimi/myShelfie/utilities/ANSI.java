@@ -10,10 +10,8 @@ public class ANSI {
     public static final String CYAN = "\u001B[36m";
     public static final String WHITE = "\u001B[37m";
 
-    public static final String ITALIQUE = "\033[3m";
+    public static final String ITALIC = "\033[3m";
     public static final String BOLD = "\033[1m";
-    public static final String BOLD_BLUE = "\033[1;34m";
     public static final String RESET_STYLE = "\033[0m";
 
-    public static final String CLEAR = "\033[2J";
 }

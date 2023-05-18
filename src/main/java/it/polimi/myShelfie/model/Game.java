@@ -455,7 +455,7 @@ public class Game implements Runnable{
 
         StringBuilder rank = new StringBuilder();
         rank.append(ANSI.BOLD).append("\t\t\t*** GAME RANK ***\n").append(ANSI.RESET_STYLE).append("\n");
-        rank.append(ANSI.ITALIQUE).append("Position\t\tUsername\t\tScore\n");
+        rank.append(ANSI.ITALIC).append("Position\t\tUsername\t\tScore\n");
         int pos = 1;
         for(int i=0;i<sortedPlayers.size();i++){
             if(i==0){

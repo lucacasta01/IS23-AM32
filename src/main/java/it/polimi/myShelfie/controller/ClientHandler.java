@@ -300,6 +300,7 @@ public class ClientHandler implements Runnable {
                             }
                             if (!flag) {
                                 sendInfoMessage("No game available. You should create a new one");
+                                denyRandomGame();
                                 sendMenu();
                             }
                         }
@@ -429,6 +430,27 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    private void denyRandomGame() {
+        if(isRMI){
+            try{
+                rmiClient.denyRandomGame();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Response r = new Response(Response.ResponseType.RANDOM_GAME_NOT_FOUND, null, null, null);
+            Gson gson = new Gson();
+            try {
+                out.println(gson.toJson(r));
+            } catch (Exception e) {
+                System.out.println("Error occurred while sending a message: " + e.toString());
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void oldGameNotFound() {
         if(isRMI){
             try{
@@ -538,18 +560,17 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public synchronized void sendChatMessage(String message, String sender){
-        System.out.println("Sending message");
+    public synchronized void sendChatMessage(Response.ChatMessage chatMessage){
         if(isRMI){
             try{
-                rmiClient.chatMessage(sender,message);
+                rmiClient.chatMessage(chatMessage);
             }
             catch (Exception e){
                 e.printStackTrace();
             }
         }
         else {
-            Response r = new Response(Response.ResponseType.CHATMESSAGE, new Response.ChatMessage(sender, message), null, null);
+            Response r = new Response(Response.ResponseType.CHATMESSAGE, chatMessage, null, null);
             Gson gson = new Gson();
             try {
                 out.println(gson.toJson(r));
@@ -570,7 +591,7 @@ public class ClientHandler implements Runnable {
             }
         }
         else {
-            Response r = new Response(Response.ResponseType.NICKNAME_ACCEPTED, new Response.ChatMessage(nickname, ""), null, null);
+            Response r = new Response(Response.ResponseType.NICKNAME_ACCEPTED, new Response.ChatMessage(nickname, "",""), null, null);
             Gson gson = new Gson();
             try {
                 out.println(gson.toJson(r));
@@ -592,7 +613,7 @@ public class ClientHandler implements Runnable {
         }
         else {
             sendDeny(message);
-            Response r = new Response(Response.ResponseType.NICKNAME_DENIED, new Response.ChatMessage(nickname, ""), null, message);
+            Response r = new Response(Response.ResponseType.NICKNAME_DENIED, new Response.ChatMessage(nickname, "",""), null, message);
             Gson gson = new Gson();
             try {
                 out.println(gson.toJson(r));
@@ -711,7 +732,7 @@ public class ClientHandler implements Runnable {
         else {
             Gson gson = new Gson();
             try {
-                out.println(gson.toJson(new Response(Response.ResponseType.VALID, new Response.ChatMessage(this.nickname, ""), null, message)));
+                out.println(gson.toJson(new Response(Response.ResponseType.VALID, new Response.ChatMessage(this.nickname, "",""), null, message)));
             } catch (Exception e) {
                 System.out.println("Error occurred while sending a message: " + e.toString());
                 e.printStackTrace();
@@ -787,7 +808,7 @@ public class ClientHandler implements Runnable {
     public synchronized void sendHelpMessage(){
 
         StringBuilder string = new StringBuilder();
-        string.append("\t\t\t\t\t\t"+ ANSI.BOLD+ANSI.ITALIQUE+"****** MY SHELFIE ******"+ANSI.RESET_STYLE+"\n\n");
+        string.append("\t\t\t\t\t\t"+ ANSI.BOLD+ANSI.ITALIC +"****** MY SHELFIE ******"+ANSI.RESET_STYLE+"\n\n");
         string.append(ANSI.BOLD+"Command\t\t\tArguments\t\t\t\tNotes"+ANSI.RESET_STYLE+"\n");
         string.append("/chat\t\t\ttext message\t\t\tuse it to send a chat message to other players\n");
         string.append("/collect\t\tr1,c1 (r2,c2) (r3,c3)\t\tgame command to collect tiles from the board\n");

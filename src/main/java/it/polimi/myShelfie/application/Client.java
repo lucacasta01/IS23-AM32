@@ -1,5 +1,6 @@
 package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
+import it.polimi.myShelfie.controller.GUIcontroller.ChatController;
 import it.polimi.myShelfie.controller.GUIcontroller.LoginController;
 import it.polimi.myShelfie.controller.GUIcontroller.banners.WaitPlayersController;
 import it.polimi.myShelfie.controller.RMI.RMIClient;
@@ -48,6 +49,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private final TCPInputHandler TCPinputHandler;
     private LoginController loginController;
     private WaitPlayersController waitPlayersController = null;
+    private ChatController chatController;
     public String waitPlayerStatus;
     private String serverIP = Settings.SERVER_IP;
     private int TCPPort = Settings.TCPPORT;
@@ -80,6 +82,14 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     public LoginController getLoginController() {
         return loginController;
+    }
+
+    public ChatController getChatController() {
+        return chatController;
+    }
+
+    public void setChatController(ChatController chatController) {
+        this.chatController = chatController;
     }
 
     public String getServerIP() {
@@ -171,7 +181,11 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                     if (response.getResponseType() == Response.ResponseType.INFO) {
                                         System.out.println(response.getInfoMessage());
                                     } else if (response.getResponseType() == Response.ResponseType.CHATMESSAGE) {
-                                        System.out.println(">" + response.getChatMessage().getSender() + ": " + response.getChatMessage().getMessage());
+                                        String sender = ANSI.BOLD + response.getChatMessage().getSenderColor() +response.getChatMessage().getSender() + ANSI.RESET_COLOR + ANSI.RESET_STYLE;
+                                        System.out.println(">" + sender + ": " + response.getChatMessage().getMessage());
+                                        if(isGUI){
+                                            chatController.addMessage(response.getChatMessage());
+                                        }
                                     } else if (response.getResponseType() == Response.ResponseType.VALID) {
                                         System.out.println(ANSI.GREEN + response.getInfoMessage() + ANSI.RESET_COLOR);
                                     } else if (response.getResponseType() == Response.ResponseType.NICKNAME_ACCEPTED) {
@@ -197,19 +211,19 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                             System.out.println(s + "\n");
                                         }
                                         //personal card
-                                        System.out.println(ANSI.ITALIQUE + "Personal goal card:" + ANSI.RESET_STYLE);
+                                        System.out.println(ANSI.ITALIC + "Personal goal card:" + ANSI.RESET_STYLE);
                                         System.out.println(view.getPersonalCard());
 
                                         //shared cards
                                         for (int i = 0; i < view.getSharedCards().size(); i++) {
-                                            System.out.println(ANSI.ITALIQUE + "Shared goal " + (i + 1) + ": " + ANSI.RESET_STYLE);
+                                            System.out.println(ANSI.ITALIC + "Shared goal " + (i + 1) + ": " + ANSI.RESET_STYLE);
                                             System.out.println(view.getSharedCards().get(i) + "\n");
                                         }
                                         //board
-                                        System.out.println(ANSI.ITALIQUE + "Board:" + ANSI.RESET_STYLE);
+                                        System.out.println(ANSI.ITALIC + "Board:" + ANSI.RESET_STYLE);
                                         System.out.println(view.getBoard() + "\n");
                                         //current player
-                                        System.out.println(ANSI.ITALIQUE + "Turn of: " + ANSI.RESET_STYLE + view.getCurrentPlayer());
+                                        System.out.println(ANSI.ITALIC + "Turn of: " + ANSI.RESET_STYLE + view.getCurrentPlayer());
                                     } else if (response.getResponseType() == Response.ResponseType.PONG) {
                                         synchronized (pongResponses) {
                                             pongResponses.add(new PingObject(false));
@@ -240,8 +254,10 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                         }
                                     } else if (response.getResponseType() == Response.ResponseType.DENY_LOAD_GAME) {
                                         if (isGUI) {
-                                            GUIClient.getInstance().showDenyBan();
+                                            GUIClient.getInstance().showDenyDialog("NO OLD GAME FOUND");
                                         }
+                                    } else if (response.getResponseType() == Response.ResponseType.RANDOM_GAME_NOT_FOUND) {
+                                        GUIClient.getInstance().showDenyDialog("No game available\nYou should create a new one".toUpperCase());
                                     } else if (response.getResponseType() == Response.ResponseType.ACCEPT_LOAD_GAME) {
                                         if (isGUI) {
                                             GUIClient.getInstance().switchToWaitingScene();
@@ -262,7 +278,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                         }
                                     } else if (response.getResponseType() == Response.ResponseType.OLD_GAME_NOT_FOUND) {
                                         if (isGUI) {
-                                            GUIClient.getInstance().showOldGameNotFound();
+                                            GUIClient.getInstance().showDenyDialog("NO STARTED OLD GAME FOUND");
                                         }
                                     }
                                 }
@@ -530,24 +546,25 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
             System.out.println(s + "\n");
         }
         //personal card
-        System.out.println(ANSI.ITALIQUE + "Personal goal card:" + ANSI.RESET_STYLE);
+        System.out.println(ANSI.ITALIC + "Personal goal card:" + ANSI.RESET_STYLE);
         System.out.println(view.getPersonalCard());
 
         //shared cards
         for (int i = 0; i < view.getSharedCards().size(); i++) {
-            System.out.println(ANSI.ITALIQUE + "Shared goal " + (i + 1) + ": " + ANSI.RESET_STYLE);
+            System.out.println(ANSI.ITALIC + "Shared goal " + (i + 1) + ": " + ANSI.RESET_STYLE);
             System.out.println(view.getSharedCards().get(i) + "\n");
         }
         //board
-        System.out.println(ANSI.ITALIQUE + "Board:" + ANSI.RESET_STYLE);
+        System.out.println(ANSI.ITALIC + "Board:" + ANSI.RESET_STYLE);
         System.out.println(view.getBoard() + "\n");
         //current player
-        System.out.println(ANSI.ITALIQUE + "Turn of: " + ANSI.RESET_STYLE + view.getCurrentPlayer());
+        System.out.println(ANSI.ITALIC + "Turn of: " + ANSI.RESET_STYLE + view.getCurrentPlayer());
     }
 
     @Override
-    public void chatMessage(String sender, String message) throws RemoteException {
-        System.out.println(">" + sender + ": " + message);
+    public void chatMessage(Response.ChatMessage chatMessage) throws RemoteException {
+        String sender = ANSI.BOLD + chatMessage.getSenderColor() +chatMessage.getSender() + ANSI.RESET_COLOR + ANSI.RESET_STYLE;
+        System.out.println(">" + sender + ": " + chatMessage.getMessage());
     }
 
     @Override
@@ -605,7 +622,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     @Override
     public void denyLoadGame() throws RemoteException {
         if(isGUI) {
-            GUIClient.getInstance().showDenyBan();
+            GUIClient.getInstance().showDenyDialog("NO OLD GAME FOUND");
         }
     }
 
@@ -657,7 +674,12 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     @Override
     public void oldGameNotFound() throws RemoteException {
-        GUIClient.getInstance().showOldGameNotFound();
+        GUIClient.getInstance().showDenyDialog("NO STARTED OLD GAME FOUND");
+    }
+
+    @Override
+    public void denyRandomGame() throws RemoteException {
+        GUIClient.getInstance().showDenyDialog("No game available\nYou should create a new one".toUpperCase());
     }
 
     public void addGuiAction(String action){
@@ -666,6 +688,10 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }else{
             RMIinputHandler.addGuiAction((action));
         }
+    }
+
+    public View getView() {
+        return view;
     }
 
     class SwapElapsed extends Thread {

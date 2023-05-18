@@ -10,6 +10,7 @@ import it.polimi.myShelfie.model.cards.PersonalGoalCard;
 import it.polimi.myShelfie.model.cards.SharedGoalCard;
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.beans.Action;
+import it.polimi.myShelfie.utilities.beans.Response;
 import it.polimi.myShelfie.utilities.beans.View;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -194,11 +195,11 @@ public class Lobby implements Runnable{
                             System.out.println("Info from:" + nickname + " " + a.getInfo());
                             iter.remove();
                         } else if (a.getActionType() == Action.ActionType.CHAT) {
-                            sendChat(ANSI.BOLD + ch.getColor() + nickname + ANSI.RESET_COLOR + ANSI.RESET_STYLE, ANSI.ITALIQUE + a.getChatMessage() + ANSI.RESET_STYLE);
+                            sendChat(new Response.ChatMessage(a.getNickname(),a.getChatMessage(),ch.getColor()));
                             iter.remove();
                         }
                         else if (a.getActionType() == Action.ActionType.PRIVATEMESSAGE){
-                            sendPrivateMessage(ANSI.BOLD + ch.getColor() + nickname + ANSI.RESET_COLOR + ANSI.RESET_STYLE, ANSI.ITALIQUE + a.getChatMessage() + ANSI.RESET_STYLE);
+                            sendPrivateMessage(nickname,a.getChatMessage());
                             iter.remove();
                         }
                         else if (a.getActionType() == Action.ActionType.PICKTILES) {
@@ -502,17 +503,15 @@ public class Lobby implements Runnable{
             stringBuilder.append(s+ " ");
         }
         for(ClientHandler t : lobbyPlayers){
-            if((ANSI.ITALIQUE+t.getNickname()).equals(receiver)){
-                t.sendChatMessage(stringBuilder.toString(), sender);
+            if(t.getNickname().equals(receiver)){
+                t.sendChatMessage(new Response.ChatMessage(sender,stringBuilder.toString(),clientHandlerOf(sender).getColor()));
             }
         }
     }
 
-    public void sendChat(String sender, String message){
+    public void sendChat(Response.ChatMessage chatMessage){
         for(ClientHandler ch : lobbyPlayers){
-            if(!(ANSI.BOLD+ch.getColor()+ch.getNickname()+ANSI.RESET_COLOR+ANSI.RESET_STYLE).equals(sender)){
-                ch.sendChatMessage(message, sender);
-            }
+            ch.sendChatMessage(chatMessage);
         }
     }
 

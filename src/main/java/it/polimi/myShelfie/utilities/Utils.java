@@ -1,5 +1,8 @@
 package it.polimi.myShelfie.utilities;
 import it.polimi.myShelfie.application.Server;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 public class Utils {
     public static String UIDGenerator(){
@@ -24,5 +27,26 @@ public class Utils {
 
     public static boolean checkNicknameFormat(String nickname){
         return !nickname.contains(" ") && !nickname.equals("\n") && !nickname.equals("/");
+    }
+
+    public static String removeANSI(String s){
+        List<String> ansiList = new ArrayList<>();
+        ansiList.add(ANSI.BLUE);
+        ansiList.add(ANSI.PURPLE);
+        ansiList.add(ANSI.GREEN);
+        ansiList.add(ANSI.YELLOW);
+        ansiList.add(ANSI.ITALIC);
+        ansiList.add(ANSI.BOLD);
+        ansiList.add(ANSI.RESET_STYLE);
+        ansiList.add(ANSI.RESET_COLOR);
+        ansiList.add(ANSI.RED);
+
+        for(String ansi : ansiList){
+            if(s.contains(ansi)) {
+                s = s.replaceAll(ansi, "");
+            }
+        }
+
+        return s;
     }
 }

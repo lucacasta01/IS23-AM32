@@ -39,11 +39,6 @@ public class LoginController {
     JFXHamburger myHamburger;
     @FXML
     JFXDrawer drawer;
-    @FXML
-    ImageView bannerImg;
-
-    @FXML
-    HBox bannerContainer;
 
     public void initialize() {
         Client.getInstance();

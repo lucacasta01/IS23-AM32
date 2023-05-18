@@ -29,3 +29,7 @@
 #backgroundConfigPanel{
     -fx-background-color: #F0DBAC;
 }
+
+#chatPanel{
+    -fx-background-color: #c26744;
+}
