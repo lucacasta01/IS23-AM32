@@ -169,7 +169,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
                         //PING THREAD
                         if (Settings.pingOn) {
-                            //pingThread().start();
+                            pingThread().start();
                         }
 
 

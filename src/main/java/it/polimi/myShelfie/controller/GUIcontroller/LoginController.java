@@ -20,6 +20,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
@@ -129,5 +131,6 @@ public class LoginController {
         GUIClient guiClient = GUIClient.getInstance();
         guiClient.showErrorBanner("Server is offline");
     }
+
 
 }

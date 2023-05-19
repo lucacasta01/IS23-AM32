@@ -563,6 +563,7 @@ public class ClientHandler implements Runnable {
     public synchronized void sendChatMessage(Response.ChatMessage chatMessage){
         if(isRMI){
             try{
+                //todo handling auto-send rmi
                 rmiClient.chatMessage(chatMessage);
             }
             catch (Exception e){

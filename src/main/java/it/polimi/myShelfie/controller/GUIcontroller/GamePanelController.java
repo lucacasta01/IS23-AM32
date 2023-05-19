@@ -35,12 +35,15 @@ public class GamePanelController {
 
     @FXML
     Button openChatBtn;
-    public void initialize() {
-        boardImg.fitWidthProperty().bind(boardPane.widthProperty());
-        boardImg.fitHeightProperty().bind(boardPane.heightProperty());
+    @FXML
+    ImageView imageView00;
 
-        boardGrid.prefWidth(boardPane.widthProperty().get());
-        boardGrid.prefHeight(boardPane.heightProperty().get());
+    public void initialize() {
+        //boardImg.fitWidthProperty().bind(boardPane.widthProperty());
+        //boardImg.fitHeightProperty().bind(boardPane.heightProperty());
+
+        //boardGrid.prefWidth(boardPane.widthProperty().get());
+        //boardGrid.prefHeight(boardPane.heightProperty().get());
 
         //initializing chatroom panel
         VBox chatPanel = null;
@@ -53,7 +56,7 @@ public class GamePanelController {
 
         chatDrawer.setSidePane(chatPanel);
         chatDrawer.setVisible(false);
-
+        
     }
 
     public void quit(ActionEvent actionEvent) {
@@ -67,6 +70,17 @@ public class GamePanelController {
         }else{
             chatDrawer.open();
             chatDrawer.setVisible(true);
+        }
+    }
+
+    public void openRules(ActionEvent actionEvent) {
+        if (Desktop.isDesktopSupported()) {
+            try {
+                File myFile = new File("src/resources/MyShelfie_Rulebook_ITA.pdf");
+                Desktop.getDesktop().open(myFile);
+            } catch (IOException ex) {
+                // no application registered for PDFs
+            }
         }
     }
 }

@@ -149,8 +149,10 @@ public class GUIClient extends Application {
                 throw new RuntimeException(e);
             }
 
-            stage.setMinWidth(1100);
-            stage.setMinHeight(600);
+            stage.setMinWidth(1440);
+            stage.setMinHeight(850);
+            stage.setHeight(850);
+            stage.setWidth(1440);
             stage.setScene(new Scene(gameParent));
             stage.setFullScreen(true);
         });
