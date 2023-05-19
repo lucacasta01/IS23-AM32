@@ -47,7 +47,6 @@ public class Lobby implements Runnable{
         this.lobbyUID = lobbyUID;
         this.playersNumber = playersNumber;
         this.gameMode = GameMode.NEWGAME;
-        this.isOpen = true;
         this.colors = new Stack<>();
         colors.push(ANSI.PURPLE);
         colors.push(ANSI.GREEN);
@@ -125,6 +124,7 @@ public class Lobby implements Runnable{
                 actions.remove(0);
                 game = new Game(lobbyUID, playersNumber);
                 try {
+                    this.isOpen = true;
                     broadcastMessage("Waiting for players..." + " " + "(" + getLobbySize() + "/" + getPlayersNumber() + ")");
                     lobbyPlayers.get(0).notifyLobbyCreated(getPlayersNumber());
                     waitForPlayers();
@@ -167,13 +167,13 @@ public class Lobby implements Runnable{
 
         if(!close){
             broadcastMessage("Starting new game");
-            notifyGameStarted();
             for (ClientHandler ch : lobbyPlayers) {
                 sendCommands(ch);
             }
             this.isOpen = false;
 
             game.saveGame();
+            notifyGameStarted();
             broadcastUpdate();
             while (!ended) {
                 while (actions.size() == 0) {
@@ -519,12 +519,17 @@ public class Lobby implements Runnable{
         View view = new View();
         List<String> players = new ArrayList<>();
         List<String> GUIBoard = new ArrayList<>();
-        List<List<String>> GUIPlayersAndShelves = new ArrayList<>();
-        List<Integer> GUIPlayersAndScore = new ArrayList<>();
+        List<List<String>> GUIShelves = new ArrayList<>();
+        List<Integer> GUIScores = new ArrayList<>();
         List<String> GuiSharedCard = new ArrayList<>();
+        List<String> shelves = new ArrayList<>();
         ClientHandler client = lobbyPlayers.get(game.getCurrentPlayer());
-        view.setCurrentPlayer(client.getColor()+game.getPlayers().get(game.getCurrentPlayer()).getUsername()+ANSI.RESET_COLOR);
-        List<String> toSend = new ArrayList<>();
+
+
+        view.setANSIcolor(client.getColor());
+        view.setCurrentPlayer(game.getPlayers().get(game.getCurrentPlayer()).getUsername());
+
+        //TUI board
         view.setBoard(this.game.getGameBoard().toString());
         //GUI board
         for(int i = 0; i< Settings.BOARD_DIM; i++){
@@ -533,37 +538,41 @@ public class Lobby implements Runnable{
             }
         }
         view.setGUIboard(GUIBoard);
+
         //GUI players, shelves and points
         for(Player p:game.getPlayers()){
-            List<String> shelf = new ArrayList<>();
+            List<String> pShelf = new ArrayList<>();
             for(int i = 0; i< Settings.SHELFROW; i++){
                 for(int j = 0; j< Settings.SHELFCOLUMN; j++){
-                    shelf.add(p.getMyShelf().getTileMartrix()[i][j].getImagePath());
+                    pShelf.add(p.getMyShelf().getTileMartrix()[i][j].getImagePath());
                 }
             }
-            GUIPlayersAndShelves.add(shelf);
-            GUIPlayersAndScore.add(p.getScore());
+            GUIShelves.add(pShelf);
+            GUIScores.add(p.getScore());
             players.add(p.getUsername());
         }
-        view.setGUIShelves(GUIPlayersAndShelves);
-        view.setGUIScoring(GUIPlayersAndScore);
+        view.setGUIShelves(GUIShelves);
+        view.setGUIScoring(GUIScores);
         view.setPlayers(players);
         //shared cards
         for(SharedGoalCard s:game.getSharedDeck()){
             GuiSharedCard.add(s.getImgPath());
         }
         view.setGUIsharedCards(GuiSharedCard);
+
+        //TUI shelves
         synchronized (game.getPlayers()) {
             for (Player p : game.getPlayers()) {
-                toSend.add(clientHandlerOf(p.getUsername()).getColor() + p.getUsername() + ANSI.RESET_COLOR + ": " + p.getScore() + " points\n" + p.getMyShelf().toString());
+                shelves.add(clientHandlerOf(p.getUsername()).getColor() + p.getUsername() + ANSI.RESET_COLOR + ": " + p.getScore() + " points\n" + p.getMyShelf().toString());
             }
         }
-        view.setShelves(toSend);
-        List<String> toAdd = new ArrayList<>();
+        view.setShelves(shelves);
+
+        List<String> sharedCards = new ArrayList<>();
         for(SharedGoalCard c: game.getSharedDeck()){
-            toAdd.add(c.toString());
+            sharedCards.add(c.toString());
         }
-        view.setSharedCards(toAdd);
+        view.setSharedCards(sharedCards);
 
         for(ClientHandler ch:lobbyPlayers){
             view.setPersonalCard(game.chToPlayer(ch).getMyGoalCard().toString());

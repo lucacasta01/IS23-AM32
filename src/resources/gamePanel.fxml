@@ -39,6 +39,9 @@
                <HBox.margin>
                   <Insets right="200.0" />
                </HBox.margin>
+               <font>
+                  <Font size="14.0" />
+               </font>
             </Button>
          </children>
          <opaqueInsets>
@@ -72,23 +75,22 @@
       </VBox>
       <VBox alignment="BOTTOM_LEFT" layoutX="2.0" layoutY="248.0" prefHeight="485.0" prefWidth="397.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="7.0">
          <children>
-            <AnchorPane>
-               <children>
-                  <Label text="Player #3">
-                     <font>
-                        <Font name="Arial" size="22.0" />
-                     </font>
-                  </Label>
-                  <Label layoutY="26.0" text="Score: ">
-                     <font>
-                        <Font name="System Bold Italic" size="20.0" />
-                     </font>
-                  </Label>
-               </children>
+            <Label fx:id="curPlayerLbl" text="Player #1">
+               <font>
+                  <Font name="Arial" size="22.0" />
+               </font>
                <VBox.margin>
-                  <Insets left="10.0" />
+                  <Insets left="20.0" />
                </VBox.margin>
-            </AnchorPane>
+            </Label>
+            <Label fx:id="curPlScoreLbl" text="Score: ">
+               <font>
+                  <Font name="System Bold Italic" size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="20.0" />
+               </VBox.margin>
+            </Label>
             <HBox alignment="CENTER" prefHeight="241.0" prefWidth="385.0">
                <children>
                   <ImageView fitHeight="395.0" fitWidth="285.0" pickOnBounds="true" preserveRatio="true">
@@ -105,11 +107,108 @@
             </HBox>
          </children>
       </VBox>
-      <VBox layoutX="498.0" layoutY="2.0" prefHeight="836.0" prefWidth="783.0" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="498.0" AnchorPane.topAnchor="2.0">
+      <VBox fx:id="otherPlBox" alignment="CENTER_RIGHT" layoutX="1064.0" layoutY="87.0" prefHeight="870.0" prefWidth="195.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0">
+         <children>
+            <VBox fx:id="player2Box" alignment="CENTER_RIGHT" prefHeight="199.0" prefWidth="145.0">
+               <children>
+                  <VBox alignment="TOP_RIGHT">
+                     <children>
+                        <Label fx:id="player2Lbl" text="Player #2">
+                           <font>
+                              <Font name="Arial" size="18.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets right="15.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label fx:id="pl2ScoreLbl" text="Score: ">
+                           <font>
+                              <Font name="System Bold Italic" size="16.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets right="15.0" />
+                           </VBox.margin>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <ImageView fitHeight="190.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@graphics/boards/bookshelf.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </VBox>
+            <VBox fx:id="player3Box" alignment="CENTER_RIGHT">
+               <children>
+                  <VBox alignment="TOP_RIGHT">
+                     <children>
+                        <Label fx:id="player3Lbl" text="Player #3">
+                           <font>
+                              <Font name="Arial" size="18.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets right="15.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label fx:id="pl3ScoreLbl" text="Score: ">
+                           <font>
+                              <Font name="System Bold Italic" size="16.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets right="15.0" />
+                           </VBox.margin>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <ImageView fitHeight="190.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@graphics/boards/bookshelf.png" />
+                     </image>
+                  </ImageView>
+               </children>
+               <VBox.margin>
+                  <Insets top="50.0" />
+               </VBox.margin>
+            </VBox>
+            <VBox fx:id="player4Box" alignment="CENTER_RIGHT">
+               <children>
+                  <VBox alignment="TOP_RIGHT">
+                     <children>
+                        <Label fx:id="player4Lbl" text="Player #4">
+                           <font>
+                              <Font name="Arial" size="18.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets right="15.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label fx:id="pl4ScoreLbl" text="Score: ">
+                           <font>
+                              <Font name="System Bold Italic" size="16.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets right="15.0" />
+                           </VBox.margin>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <ImageView fitHeight="190.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@graphics/boards/bookshelf.png" />
+                     </image>
+                  </ImageView>
+               </children>
+               <VBox.margin>
+                  <Insets top="50.0" />
+               </VBox.margin>
+            </VBox>
+         </children>
+      </VBox>
+      <VBox alignment="CENTER" layoutX="498.0" layoutY="2.0" prefHeight="836.0" prefWidth="783.0" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="498.0" AnchorPane.topAnchor="2.0">
          <children>
             <StackPane>
                <children>
-                  <HBox fillHeight="false" prefHeight="809.0" prefWidth="737.0">
+                  <HBox alignment="CENTER" fillHeight="false" prefHeight="809.0" prefWidth="737.0">
                      <children>
                         <ImageView fx:id="boardImg" fitHeight="713.0" fitWidth="685.0" pickOnBounds="true">
                            <image>
@@ -118,10 +217,10 @@
                         </ImageView>
                      </children>
                      <StackPane.margin>
-                        <Insets top="30.0" />
+                        <Insets />
                      </StackPane.margin>
                   </HBox>
-                  <HBox fillHeight="false" prefHeight="727.0" prefWidth="754.0">
+                  <HBox alignment="CENTER" fillHeight="false" prefHeight="824.0" prefWidth="755.0">
                      <children>
                         <GridPane fx:id="boardGrid" gridLinesVisible="true" prefHeight="648.0" prefWidth="622.0">
                           <columnConstraints>
@@ -232,102 +331,14 @@
                         </GridPane>
                      </children>
                      <StackPane.margin>
-                        <Insets left="28.0" top="62.0" />
+                        <Insets />
                      </StackPane.margin>
+                     <padding>
+                        <Insets right="6.0" top="1.0" />
+                     </padding>
                   </HBox>
                </children>
             </StackPane>
-         </children>
-      </VBox>
-      <VBox alignment="CENTER_RIGHT" layoutX="1064.0" layoutY="87.0" prefHeight="879.0" prefWidth="241.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0">
-         <children>
-            <HBox alignment="CENTER_RIGHT" prefHeight="103.0" prefWidth="46.0">
-               <children>
-                  <VBox alignment="TOP_RIGHT">
-                     <children>
-                        <Label text="Player #4">
-                           <font>
-                              <Font name="Arial" size="18.0" />
-                           </font>
-                        </Label>
-                        <Label text="Score: ">
-                           <font>
-                              <Font name="System Bold Italic" size="16.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </VBox>
-                  <ImageView fitHeight="190.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@graphics/boards/bookshelf.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets bottom="30.0" />
-                     </HBox.margin>
-                  </ImageView>
-               </children>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <VBox.margin>
-                  <Insets right="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox alignment="CENTER_RIGHT" prefHeight="96.0" prefWidth="365.0">
-               <children>
-                  <VBox alignment="TOP_RIGHT">
-                     <children>
-                        <Label text="Player #2">
-                           <font>
-                              <Font name="Arial" size="18.0" />
-                           </font>
-                        </Label>
-                        <Label text="Score: ">
-                           <font>
-                              <Font name="System Bold Italic" size="16.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </VBox>
-                  <ImageView fitHeight="190.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@graphics/boards/bookshelf.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets bottom="30.0" />
-                     </HBox.margin>
-                  </ImageView>
-               </children>
-               <VBox.margin>
-                  <Insets right="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox alignment="CENTER_RIGHT" prefHeight="96.0" prefWidth="365.0">
-               <children>
-                  <VBox alignment="TOP_RIGHT">
-                     <children>
-                        <Label text="Player #1">
-                           <font>
-                              <Font name="Arial" size="18.0" />
-                           </font>
-                        </Label>
-                        <Label text="Score: ">
-                           <font>
-                              <Font name="System Bold Italic" size="16.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </VBox>
-                  <ImageView fitHeight="190.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@graphics/boards/bookshelf.png" />
-                     </image>
-                  </ImageView>
-               </children>
-               <VBox.margin>
-                  <Insets right="10.0" />
-               </VBox.margin>
-            </HBox>
          </children>
       </VBox>
       <HBox alignment="BOTTOM_CENTER" layoutX="182.0" layoutY="289.0" prefHeight="400.0" prefWidth="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">

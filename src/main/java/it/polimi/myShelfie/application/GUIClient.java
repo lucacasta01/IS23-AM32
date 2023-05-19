@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 
 public class GUIClient extends Application {
     private static GUIClient instance;
-    private static Stage stage;
+    private Stage stage;
     public static synchronized GUIClient getInstance() {
         if(instance == null){
             System.out.println("created new client");
@@ -32,14 +32,14 @@ public class GUIClient extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
-       FXMLLoader fxmlLoader = new FXMLLoader();
-       Parent root = fxmlLoader.load(Paths.get("src/resources/loginPanel.fxml").toUri().toURL());
-       stage.setTitle("My Shelfie");
-       stage.getIcons().add(new Image(Paths.get("src/resources/graphics/publisherMaterial/Icon.png").toUri().toURL().openStream()));
-       stage.setScene(new Scene(root));
-       stage.setMinWidth(820);
-       stage.setMinHeight(520);
-       stage.show();
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        Parent root = fxmlLoader.load(Paths.get("src/resources/loginPanel.fxml").toUri().toURL());
+        stage.setTitle("My Shelfie");
+        stage.getIcons().add(new Image(Paths.get("src/resources/graphics/publisherMaterial/Icon.png").toUri().toURL().openStream()));
+        stage.setScene(new Scene(root));
+        stage.setMinWidth(820);
+        stage.setMinHeight(520);
+        stage.show();
     }
 
     public void showErrorBanner(String errorLabel){

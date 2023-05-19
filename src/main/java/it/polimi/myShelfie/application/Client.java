@@ -1,6 +1,7 @@
 package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
 import it.polimi.myShelfie.controller.GUIcontroller.ChatController;
+import it.polimi.myShelfie.controller.GUIcontroller.GamePanelController;
 import it.polimi.myShelfie.controller.GUIcontroller.LoginController;
 import it.polimi.myShelfie.controller.GUIcontroller.banners.WaitPlayersController;
 import it.polimi.myShelfie.controller.RMI.RMIClient;
@@ -59,6 +60,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private boolean isGUI = false;
     private final List<Response> guiResponses = new ArrayList<>();
     private boolean notConnected = false;
+    private GamePanelController gamePanelController = null;
 
 
     private Client() throws RemoteException {
@@ -206,6 +208,17 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                         }
                                     } else if (response.getResponseType() == Response.ResponseType.UPDATE) {
                                         view = response.getView();
+
+                                        if(isGUI){
+                                            while(gamePanelController == null){
+                                                synchronized (this){
+                                                    wait();
+                                                }
+                                            }
+                                            gamePanelController.updateView();
+                                        }
+
+                                        //printing console view
                                         //shelves
                                         for (String s : view.getShelves()) {
                                             System.out.println(s + "\n");
@@ -692,6 +705,15 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     public View getView() {
         return view;
+    }
+
+    public synchronized void setGamePanelController(GamePanelController gamePanelController) {
+        this.gamePanelController = gamePanelController;
+        this.notifyAll();
+    }
+
+    public GamePanelController getGamePanelController() {
+        return gamePanelController;
     }
 
     class SwapElapsed extends Thread {

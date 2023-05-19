@@ -1,51 +1,100 @@
 package it.polimi.myShelfie.controller.GUIcontroller;
 
 import com.jfoenix.controls.JFXDrawer;
+import it.polimi.myShelfie.application.Client;
 import it.polimi.myShelfie.application.GUIClient;
+import it.polimi.myShelfie.utilities.beans.View;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 
-import java.awt.*;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GamePanelController {
-
-    @FXML
-    ImageView boardImg;
-
-    @FXML
-    AnchorPane boardPane;
     @FXML
     GridPane boardGrid;
     @FXML
     JFXDrawer chatDrawer;
-
     @FXML
-    Button openChatBtn;
+    Label curPlayerLbl, player2Lbl, player3Lbl, player4Lbl;
     @FXML
-    ImageView imageView00;
+    Label curPlScoreLbl, pl2ScoreLbl, pl3ScoreLbl, pl4ScoreLbl;
+    @FXML
+    VBox player2Box, player3Box, player4Box;
 
     public void initialize() {
-        //boardImg.fitWidthProperty().bind(boardPane.widthProperty());
-        //boardImg.fitHeightProperty().bind(boardPane.heightProperty());
+        initializeChatPanel();
+        Client.getInstance().setGamePanelController(this);
+        //updateView();
+    }
 
-        //boardGrid.prefWidth(boardPane.widthProperty().get());
-        //boardGrid.prefHeight(boardPane.heightProperty().get());
+    public void updateView() {
+        View view = Client.getInstance().getView();
+        String curNickname = Client.getInstance().getNickname();
 
-        //initializing chatroom panel
+        int playersNumber = view.getPlayers().size();
+        int curPlayerIndex = view.getPlayers().indexOf(curNickname);
+        List<String> otherPlayers = new ArrayList<>(view.getPlayers());
+        List<Integer> otherScores = new ArrayList<>(view.getGUIScoring());
+
+        otherPlayers.remove(curPlayerIndex);
+        otherScores.remove(curPlayerIndex);
+
+        //current player update
+        Platform.runLater(()->{
+            curPlayerLbl.setText(curNickname);
+            curPlScoreLbl.setText("Score: "+view.getGUIScoring().get(view.getPlayers().indexOf(curNickname)).toString());
+        });
+
+
+
+        //other players update
+        if(playersNumber == 2) {
+            Platform.runLater(()->{
+                player3Box.setVisible(false);
+                player4Box.setVisible(false);
+
+                player2Lbl.setText(otherPlayers.get(0));
+                pl2ScoreLbl.setText("Score: "+otherScores.get(0));
+            });
+        }
+        else if(playersNumber == 3){
+            Platform.runLater(()->{
+                player4Box.setVisible(false);
+
+                player2Lbl.setText(otherPlayers.get(0));
+                pl2ScoreLbl.setText("Score: "+otherScores.get(0));
+
+                player3Lbl.setText(otherPlayers.get(1));
+                pl3ScoreLbl.setText("Score: "+otherScores.get(1));
+            });
+        }
+        else{
+            Platform.runLater(()->{
+                player2Lbl.setText(otherPlayers.get(0));
+                pl2ScoreLbl.setText("Score: "+otherScores.get(0));
+
+                player3Lbl.setText(otherPlayers.get(1));
+                pl2ScoreLbl.setText("Score: "+otherScores.get(1));
+
+                player3Lbl.setText(otherPlayers.get(2));
+                pl2ScoreLbl.setText("Score: "+otherScores.get(2));
+            });
+        }
+
+        System.out.println("GUI VIEW UPDATED");
+    }
+
+    private void initializeChatPanel() {
         VBox chatPanel = null;
         try {
             chatPanel = FXMLLoader.load(Paths.get("src/resources/chatPanel.fxml").toUri().toURL());
@@ -53,10 +102,8 @@ public class GamePanelController {
         catch (IOException e){
             e.printStackTrace();
         }
-
         chatDrawer.setSidePane(chatPanel);
         chatDrawer.setVisible(false);
-        
     }
 
     public void quit(ActionEvent actionEvent) {

@@ -12,12 +12,12 @@ public class View implements Serializable {
     private String personalCard;
     private String currentPlayer;
     private List<String> players;
-
     private List<List<String>> GUIShelves;
     private List<Integer> GUIScoring;
     private List<String> GUIboard;
     private List<String> GUIsharedCards;
     private String GUIpersonalCard;
+    private String ANSIcolor;
     public View() {
         this.shelves = new ArrayList<>();
         this.sharedCards = new ArrayList<>();
@@ -44,11 +44,11 @@ public class View implements Serializable {
         this.players = players;
     }
 
-    public void setGUIShelves(List<List<String>> shelves) {
+    public void setGUIShelves(List<List<String>> GUIShelves) {
         this.GUIShelves = GUIShelves;
     }
 
-    public void setGUIScoring(List<Integer> scoring) {
+    public void setGUIScoring(List<Integer> GUIScoring) {
         this.GUIScoring = GUIScoring;
     }
 
@@ -117,5 +117,13 @@ public class View implements Serializable {
     }
     public void addShelf(String Shelf){
         this.shelves.add(Shelf);
+    }
+
+    public void setANSIcolor(String ANSIcolor) {
+        this.ANSIcolor = ANSIcolor;
+    }
+
+    public String getANSIcolor() {
+        return ANSIcolor;
     }
 }
