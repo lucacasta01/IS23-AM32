@@ -103,11 +103,9 @@ public class GamePanelController {
                     int i = 0;
                     for (int row = 0; row < Settings.BOARD_DIM; row++) {
                         for (int col = 0; col < Settings.BOARD_DIM; col++) {
-                            //System.out.println("creating tile image: "+view.getGUIboard().get(i)+"\n");
                             Node n = getTileImgView(row, col, boardGrid);
                             if (n != null) {
                                 if (!view.getGUIboard().get(i).contains("transparent.png")) {
-                                    System.out.println("image url: " + view.getGUIboard().get(i));
                                     Image image = new Image(Paths.get(view.getGUIboard().get(i)).toUri().toString());
                                     ImageView im = (ImageView) n;
                                     im.setImage(image);
@@ -123,14 +121,13 @@ public class GamePanelController {
         //personal goal update
         personalGoal.setImage(new Image(Paths.get(view.getGUIpersonalCard()).toUri().toString()));
         personalGoal.setVisible(true);
-        //todo
 
         //common goals update
         sharedGoal1.setImage(new Image(Paths.get(view.getGUIsharedCards().get(0)).toUri().toString()));
         sharedGoal2.setImage(new Image(Paths.get(view.getGUIsharedCards().get(1)).toUri().toString()));
         sharedGoal1.setVisible(true);
         sharedGoal2.setVisible(true);
-        //todo
+
 
 
         System.out.println("GUI VIEW UPDATED");
@@ -142,11 +139,9 @@ public class GamePanelController {
             r=GridPane.getRowIndex(n);
             c=GridPane.getColumnIndex(n);
             if(r==null||c==null){
-                System.out.println("null children");
                 return null;
             }else{
                 if(r==row && c==column){
-                    System.out.println("not null children, row "+row+" column "+column);
                     return n;
                 }
             }

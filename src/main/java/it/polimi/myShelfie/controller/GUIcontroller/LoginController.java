@@ -54,6 +54,13 @@ public class LoginController {
         drawer.setSidePane(configPanel);
         drawer.setVisible(false);
 
+        GUIClient.getInstance().getStage().setWidth(GUIClient.getInstance().getStage().getWidth() + 1);
+        GUIClient.getInstance().getStage().centerOnScreen();
+        GUIClient.getInstance().getStage().setOnCloseRequest(e -> {
+            GUIClient.getInstance().getStage().close();
+            System.exit(0);
+        });
+
 
 
         //hamburger transition
