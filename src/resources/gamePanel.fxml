@@ -86,11 +86,43 @@
             </Label>
             <HBox alignment="CENTER" prefHeight="241.0" prefWidth="385.0">
                <children>
-                  <ImageView fitHeight="395.0" fitWidth="285.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@graphics/boards/bookshelf.png" />
-                     </image>
-                  </ImageView>
+                  <StackPane prefHeight="582.0" prefWidth="511.0">
+                     <children>
+                        <HBox alignment="TOP_CENTER" fillHeight="false" prefHeight="172.0" prefWidth="184.0">
+                           <children>
+                              <GridPane gridLinesVisible="true" prefHeight="233.0" prefWidth="226.0">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="68.41149139404297" minWidth="10.0" prefWidth="46.5" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="88.87808990478516" minWidth="10.0" prefWidth="45.234474182128906" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="75.76553344726562" minWidth="10.0" prefWidth="46.67234802246094" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="68.75617980957031" minWidth="10.0" prefWidth="46.70574951171875" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="10.0" prefWidth="44.29425048828125" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints maxHeight="37.23443603515625" minHeight="10.0" prefHeight="35.822998046875" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="44.586181640625" minHeight="10.0" prefHeight="39.0286865234375" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="51.76324462890625" minHeight="10.0" prefHeight="42.1746826171875" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="66.70343017578125" minHeight="10.0" prefHeight="36.70574951171875" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="55.7010498046875" minHeight="10.0" prefHeight="41.5" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="46.93792724609375" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <HBox.margin>
+                                    <Insets top="19.0" />
+                                 </HBox.margin>
+                              </GridPane>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="209.0" prefWidth="285.0">
+                           <children>
+                              <ImageView fitHeight="395.0" fitWidth="285.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@graphics/boards/bookshelf_orth.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                     </children>
+                  </StackPane>
                   <ImageView fx:id="personalGoal" fitHeight="255.0" fitWidth="154.0" pickOnBounds="true">
                      <image>
                         <Image url="@graphics/personalGoalCards/Personal_Goals1.png" />
@@ -124,11 +156,43 @@
                         </Label>
                      </children>
                   </VBox>
-                  <ImageView fitHeight="190.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@graphics/boards/bookshelf.png" />
-                     </image>
-                  </ImageView>
+                  <StackPane>
+                     <children>
+                        <HBox alignment="TOP_RIGHT" fillHeight="false" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <GridPane prefHeight="123.0" prefWidth="120.0">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <HBox.margin>
+                                    <Insets right="15.0" top="10.0" />
+                                 </HBox.margin>
+                              </GridPane>
+                           </children>
+                        </HBox>
+                        <HBox alignment="TOP_RIGHT">
+                           <children>
+                              <ImageView fitHeight="190.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@graphics/boards/bookshelf_orth.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                     </children>
+                  </StackPane>
                </children>
             </VBox>
             <VBox fx:id="player3Box" alignment="CENTER_RIGHT">
@@ -153,11 +217,43 @@
                         </Label>
                      </children>
                   </VBox>
-                  <ImageView fitHeight="190.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@graphics/boards/bookshelf.png" />
-                     </image>
-                  </ImageView>
+                  <StackPane>
+                     <children>
+                        <HBox alignment="TOP_RIGHT" fillHeight="false" prefHeight="100.0" prefWidth="200.0" StackPane.alignment="TOP_RIGHT">
+                           <children>
+                              <GridPane prefHeight="124.0" prefWidth="120.0">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <HBox.margin>
+                                    <Insets right="15.0" top="10.0" />
+                                 </HBox.margin>
+                              </GridPane>
+                           </children>
+                        </HBox>
+                        <HBox alignment="TOP_RIGHT">
+                           <children>
+                              <ImageView fitHeight="190.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@graphics/boards/bookshelf_orth.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                     </children>
+                  </StackPane>
                </children>
                <VBox.margin>
                   <Insets top="50.0" />
@@ -185,11 +281,43 @@
                         </Label>
                      </children>
                   </VBox>
-                  <ImageView fitHeight="190.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@graphics/boards/bookshelf.png" />
-                     </image>
-                  </ImageView>
+                  <StackPane>
+                     <children>
+                        <HBox alignment="TOP_RIGHT" fillHeight="false" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <GridPane prefHeight="124.0" prefWidth="121.0">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <HBox.margin>
+                                    <Insets right="15.0" top="10.0" />
+                                 </HBox.margin>
+                              </GridPane>
+                           </children>
+                        </HBox>
+                        <HBox alignment="TOP_RIGHT">
+                           <children>
+                              <ImageView fitHeight="190.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@graphics/boards/bookshelf_orth.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                     </children>
+                  </StackPane>
                </children>
                <VBox.margin>
                   <Insets top="50.0" />
@@ -336,7 +464,7 @@
       </VBox>
       <HBox alignment="BOTTOM_CENTER" layoutX="182.0" layoutY="289.0" prefHeight="400.0" prefWidth="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <JFXDrawer fx:id="chatDrawer" direction="BOTTOM" prefHeight="400.0" prefWidth="500.0" />
+            <JFXDrawer fx:id="chatDrawer" direction="BOTTOM" prefHeight="400.0" prefWidth="500.0" visible="false" />
          </children>
       </HBox>
    </children>
