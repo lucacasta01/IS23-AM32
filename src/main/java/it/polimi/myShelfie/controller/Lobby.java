@@ -109,7 +109,9 @@ public class Lobby implements Runnable{
                     Server.getInstance().getUserGame().remove(lobbyPlayers.get(0).getNickname());
                     Server.getInstance().saveUserGame();
                     System.out.println("Lobby " + this.lobbyUID + " killed");
-                    lobbyPlayers.get(0).sendShutdown();
+                    if(lobbyPlayers.get(0).isRMI()) {
+                        lobbyPlayers.get(0).sendShutdown();
+                    }
                     close = true;
                 }else if(action.getActionType()== Action.ActionType.REQUEST_MENU){
                     close=true;
@@ -119,7 +121,12 @@ public class Lobby implements Runnable{
                 }
             }
             if(!close) {
-                playersNumber = Integer.parseInt(actions.get(0).getInfo());
+                try {
+                    playersNumber = Integer.parseInt(actions.get(0).getInfo());
+                }catch (Exception e){
+                    System.out.println("caught this exception");
+                    e.printStackTrace();
+                }
                 lobbyPlayers.get(0).sendAccept("Number of players accepted");
                 actions.remove(0);
                 game = new Game(lobbyUID, playersNumber);
@@ -171,7 +178,6 @@ public class Lobby implements Runnable{
                 sendCommands(ch);
             }
             this.isOpen = false;
-
             game.saveGame();
             notifyGameStarted();
             broadcastUpdate();

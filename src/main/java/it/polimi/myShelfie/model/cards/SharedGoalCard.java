@@ -73,7 +73,7 @@ private void initializeStack(int playerNumber){
 
     public Integer getIndex(){
         String[] strings = imgPath.split("/");
-        String myString = strings[2];
+        String myString = strings[4];
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(myString.charAt(0));
         if(myString.charAt(1) != '.'){

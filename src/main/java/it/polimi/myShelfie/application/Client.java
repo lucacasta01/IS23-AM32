@@ -169,7 +169,8 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
                         TCPinputHandler.start();
 
-                        //PING THREAD
+                        //PI
+                        // NG THREAD
                         if (Settings.pingOn) {
                             pingThread().start();
                         }
@@ -208,7 +209,6 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                         }
                                     } else if (response.getResponseType() == Response.ResponseType.UPDATE) {
                                         view = response.getView();
-
                                         if(isGUI){
                                             while(gamePanelController == null){
                                                 synchronized (this){
@@ -375,20 +375,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     }
     public void shutdown() {
         done = true;
-        if(connectionProtocol.equals("TCP")) {
-            try {
-                in.close();
-                out.close();
-                if (!client.isClosed()){
-                    client.close();
-                }
-                System.exit(0);
-            } catch (Exception e) {
-                System.out.println(e.toString());
-            }
-        }else{
-            System.exit(0);
-        }
+        System.exit(0);
     }
 
     public Thread pingThread() {

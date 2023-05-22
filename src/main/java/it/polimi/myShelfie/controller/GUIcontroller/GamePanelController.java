@@ -3,18 +3,23 @@ package it.polimi.myShelfie.controller.GUIcontroller;
 import com.jfoenix.controls.JFXDrawer;
 import it.polimi.myShelfie.application.Client;
 import it.polimi.myShelfie.application.GUIClient;
+import it.polimi.myShelfie.utilities.Settings;
 import it.polimi.myShelfie.utilities.beans.View;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +35,8 @@ public class GamePanelController {
     Label curPlScoreLbl, pl2ScoreLbl, pl3ScoreLbl, pl4ScoreLbl;
     @FXML
     VBox player2Box, player3Box, player4Box;
+    @FXML
+    ImageView sharedGoal1, sharedGoal2, personalGoal;
 
     public void initialize() {
         initializeChatPanel();
@@ -90,8 +97,61 @@ public class GamePanelController {
                 pl2ScoreLbl.setText("Score: "+otherScores.get(2));
             });
         }
+        //board update
+
+        Platform.runLater(()-> {
+                    int i = 0;
+                    for (int row = 0; row < Settings.BOARD_DIM; row++) {
+                        for (int col = 0; col < Settings.BOARD_DIM; col++) {
+                            //System.out.println("creating tile image: "+view.getGUIboard().get(i)+"\n");
+                            Node n = getTileImgView(row, col, boardGrid);
+                            if (n != null) {
+                                if (!view.getGUIboard().get(i).contains("transparent.png")) {
+                                    System.out.println("image url: " + view.getGUIboard().get(i));
+                                    Image image = new Image(Paths.get(view.getGUIboard().get(i)).toUri().toString());
+                                    ImageView im = (ImageView) n;
+                                    im.setImage(image);
+                                    im.setVisible(true);
+                                }
+                                i++;
+                            }
+                        }
+                    }
+                    boardGrid.setVisible(true);
+                });
+
+        //personal goal update
+        personalGoal.setImage(new Image(Paths.get(view.getGUIpersonalCard()).toUri().toString()));
+        personalGoal.setVisible(true);
+        //todo
+
+        //common goals update
+        sharedGoal1.setImage(new Image(Paths.get(view.getGUIsharedCards().get(0)).toUri().toString()));
+        sharedGoal2.setImage(new Image(Paths.get(view.getGUIsharedCards().get(1)).toUri().toString()));
+        sharedGoal1.setVisible(true);
+        sharedGoal2.setVisible(true);
+        //todo
+
 
         System.out.println("GUI VIEW UPDATED");
+    }
+
+    private Node getTileImgView(int row, int column, GridPane grid){
+        for(Node n: grid.getChildren()){
+            Integer r, c;
+            r=GridPane.getRowIndex(n);
+            c=GridPane.getColumnIndex(n);
+            if(r==null||c==null){
+                System.out.println("null children");
+                return null;
+            }else{
+                if(r==row && c==column){
+                    System.out.println("not null children, row "+row+" column "+column);
+                    return n;
+                }
+            }
+        }
+        return null;
     }
 
     private void initializeChatPanel() {

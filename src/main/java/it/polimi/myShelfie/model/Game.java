@@ -187,7 +187,7 @@ public class Game implements Runnable{
             colors.add(c.getTileColor());
             positions.add(new Position(c.getRow(),c.getColumn()));
         }
-        PersonalGoalCard myCard = new PersonalGoalCard("graphics/personalGoalCards/Personal_Goals" + n + ".png");
+        PersonalGoalCard myCard = new PersonalGoalCard("src/resources/graphics/personalGoalCards/Personal_Goals" + n + ".png");
         myCard.setPattern(positions,colors);
         return myCard;
     }
@@ -196,18 +196,18 @@ public class Game implements Runnable{
         sharedDeck = new ArrayList<>();
         Random rnd = new Random();
         SharedGoalCard[] sharedGoalCards = new SharedGoalCard[12];
-        sharedGoalCards[0] = new SharedGoal1Card("graphics/commonGoalCards/1.jpg", playerNumber);
-        sharedGoalCards[1] = new SharedGoal2Card("graphics/commonGoalCards/2.jpg", playerNumber);
-        sharedGoalCards[2] = new SharedGoal3Card("graphics/commonGoalCards/3.jpg", playerNumber);
-        sharedGoalCards[3] = new SharedGoal4Card("graphics/commonGoalCards/4.jpg", playerNumber);
-        sharedGoalCards[4] = new SharedGoal5Card("graphics/commonGoalCards/5.jpg", playerNumber);
-        sharedGoalCards[5] = new SharedGoal6Card("graphics/commonGoalCards/6.jpg", playerNumber);
-        sharedGoalCards[6] = new SharedGoal7Card("graphics/commonGoalCards/7.jpg", playerNumber);
-        sharedGoalCards[7] = new SharedGoal8Card("graphics/commonGoalCards/8.jpg", playerNumber);
-        sharedGoalCards[8] = new SharedGoal9Card("graphics/commonGoalCards/9.jpg", playerNumber);
-        sharedGoalCards[9] = new SharedGoal10Card("graphics/commonGoalCards/10.jpg", playerNumber);
-        sharedGoalCards[10] = new SharedGoal11Card("graphics/commonGoalCards/11.jpg", playerNumber);
-        sharedGoalCards[11] = new SharedGoal12Card("graphics/commonGoalCards/12.jpg", playerNumber);
+        sharedGoalCards[0] = new SharedGoal1Card("src/resources/graphics/commonGoalCards/1.jpg", playerNumber);
+        sharedGoalCards[1] = new SharedGoal2Card("src/resources/graphics/commonGoalCards/2.jpg", playerNumber);
+        sharedGoalCards[2] = new SharedGoal3Card("src/resources/graphics/commonGoalCards/3.jpg", playerNumber);
+        sharedGoalCards[3] = new SharedGoal4Card("src/resources/graphics/commonGoalCards/4.jpg", playerNumber);
+        sharedGoalCards[4] = new SharedGoal5Card("src/resources/graphics/commonGoalCards/5.jpg", playerNumber);
+        sharedGoalCards[5] = new SharedGoal6Card("src/resources/graphics/commonGoalCards/6.jpg", playerNumber);
+        sharedGoalCards[6] = new SharedGoal7Card("src/resources/graphics/commonGoalCards/7.jpg", playerNumber);
+        sharedGoalCards[7] = new SharedGoal8Card("src/resources/graphics/commonGoalCards/8.jpg", playerNumber);
+        sharedGoalCards[8] = new SharedGoal9Card("src/resources/graphics/commonGoalCards/9.jpg", playerNumber);
+        sharedGoalCards[9] = new SharedGoal10Card("src/resources/graphics/commonGoalCards/10.jpg", playerNumber);
+        sharedGoalCards[10] = new SharedGoal11Card("src/resources/graphics/commonGoalCards/11.jpg", playerNumber);
+        sharedGoalCards[11] = new SharedGoal12Card("src/resources/graphics/commonGoalCards/12.jpg", playerNumber);
 
         int card1 = rnd.nextInt(0,11);
         int card2 = rnd.nextInt(0,11);
@@ -221,18 +221,18 @@ public class Game implements Runnable{
     private void initializeSharedDeck(int card1, int card2, int playerNumber){
         sharedDeck = new ArrayList<>();
         SharedGoalCard[] sharedGoalCards = new SharedGoalCard[12];
-        sharedGoalCards[0] = new SharedGoal1Card("graphics/commonGoalCards/1.jpg", playerNumber);
-        sharedGoalCards[1] = new SharedGoal2Card("graphics/commonGoalCards/2.jpg", playerNumber);
-        sharedGoalCards[2] = new SharedGoal3Card("graphics/commonGoalCards/3.jpg", playerNumber);
-        sharedGoalCards[3] = new SharedGoal4Card("graphics/commonGoalCards/4.jpg", playerNumber);
-        sharedGoalCards[4] = new SharedGoal5Card("graphics/commonGoalCards/5.jpg", playerNumber);
-        sharedGoalCards[5] = new SharedGoal6Card("graphics/commonGoalCards/6.jpg", playerNumber);
-        sharedGoalCards[6] = new SharedGoal7Card("graphics/commonGoalCards/7.jpg", playerNumber);
-        sharedGoalCards[7] = new SharedGoal8Card("graphics/commonGoalCards/8.jpg", playerNumber);
-        sharedGoalCards[8] = new SharedGoal9Card("graphics/commonGoalCards/9.jpg", playerNumber);
-        sharedGoalCards[9] = new SharedGoal10Card("graphics/commonGoalCards/10.jpg", playerNumber);
-        sharedGoalCards[10] = new SharedGoal11Card("graphics/commonGoalCards/11.jpg", playerNumber);
-        sharedGoalCards[11] = new SharedGoal12Card("graphics/commonGoalCards/12.jpg", playerNumber);
+        sharedGoalCards[0] = new SharedGoal1Card("src/resources/graphics/commonGoalCards/1.jpg", playerNumber);
+        sharedGoalCards[1] = new SharedGoal2Card("src/resources/graphics/commonGoalCards/2.jpg", playerNumber);
+        sharedGoalCards[2] = new SharedGoal3Card("src/resources/graphics/commonGoalCards/3.jpg", playerNumber);
+        sharedGoalCards[3] = new SharedGoal4Card("src/resources/graphics/commonGoalCards/4.jpg", playerNumber);
+        sharedGoalCards[4] = new SharedGoal5Card("src/resources/graphics/commonGoalCards/5.jpg", playerNumber);
+        sharedGoalCards[5] = new SharedGoal6Card("src/resources/graphics/commonGoalCards/6.jpg", playerNumber);
+        sharedGoalCards[6] = new SharedGoal7Card("src/resources/graphics/commonGoalCards/7.jpg", playerNumber);
+        sharedGoalCards[7] = new SharedGoal8Card("src/resources/graphics/commonGoalCards/8.jpg", playerNumber);
+        sharedGoalCards[8] = new SharedGoal9Card("src/resources/graphics/commonGoalCards/9.jpg", playerNumber);
+        sharedGoalCards[9] = new SharedGoal10Card("src/resources/graphics/commonGoalCards/10.jpg", playerNumber);
+        sharedGoalCards[10] = new SharedGoal11Card("src/resources/graphics/commonGoalCards/11.jpg", playerNumber);
+        sharedGoalCards[11] = new SharedGoal12Card("src/resources/graphics/commonGoalCards/12.jpg", playerNumber);
 
         sharedDeck.add(sharedGoalCards[card1-1]);
         sharedDeck.add(sharedGoalCards[card2-1]);
@@ -293,7 +293,7 @@ public class Game implements Runnable{
     public PersonalGoalCard drawPersonalGoal(){
         int upperBound = this.personalDeck.size();
         Random rand = new Random();
-        PersonalGoalCard toReturn = new PersonalGoalCard("emptycard");
+        PersonalGoalCard toReturn = new PersonalGoalCard("src/resources/");
         try {
             int myRand = rand.nextInt(upperBound);
             toReturn = this.personalDeck.get(myRand);
@@ -347,7 +347,7 @@ public class Game implements Runnable{
             Tile t = currentGrid[pos.getRow()][pos.getColumn()];
             toReturn.add(new Tile(t.getImagePath(), t.getColor()));
             t.setColor(Tile.Color.NULLTILE);
-            t.setImagePath("graphics/itemTiles/Transparent.png");
+            t.setImagePath("src/resources/graphics/itemTiles/transparent.png");
             return toReturn;
         }else{
             return null;
@@ -367,9 +367,9 @@ public class Game implements Runnable{
             toReturn.add(new Tile(t1.getImagePath(), t1.getColor()));
             toReturn.add(new Tile(t2.getImagePath(), t2.getColor()));
             t1.setColor(Tile.Color.NULLTILE);
-            t1.setImagePath("graphics/itemTiles/Transparent.png");
+            t1.setImagePath("src/resources/graphics/itemTiles/transparent.png");
             t2.setColor(Tile.Color.NULLTILE);
-            t2.setImagePath("graphics/itemTiles/Transparent.png");
+            t2.setImagePath("src/resources/graphics/itemTiles/transparent.png");
             return toReturn;
         }else{
             return null;
@@ -391,11 +391,11 @@ public class Game implements Runnable{
             toReturn.add(new Tile(t2.getImagePath(), t2.getColor()));
             toReturn.add(new Tile(t3.getImagePath(), t3.getColor()));
             t1.setColor(Tile.Color.NULLTILE);
-            t1.setImagePath("graphics/itemTiles/Transparent.png");
+            t1.setImagePath("src/resources/graphics/itemTiles/transparent.png");
             t2.setColor(Tile.Color.NULLTILE);
-            t2.setImagePath("graphics/itemTiles/Transparent.png");
+            t2.setImagePath("src/resources/graphics/itemTiles/transparent.png");
             t3.setColor(Tile.Color.NULLTILE);
-            t3.setImagePath("graphics/itemTiles/Transparent.png");
+            t3.setImagePath("src/resources/graphics/itemTiles/transparent.png");
             return toReturn;
         }else{
             return null;

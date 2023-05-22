@@ -73,7 +73,7 @@ public class PersonalGoalCard extends Card{
 
     public Integer getIndex(){
         String[] strings = imgPath.split("/");
-        String myString = strings[2];
+        String myString = strings[4];
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(myString.charAt(14));
         if(myString.charAt(15) != '.'){
@@ -84,7 +84,8 @@ public class PersonalGoalCard extends Card{
             toReturn = Integer.parseInt(stringBuilder.toString());
         }
         catch (Exception e){
-            System.out.println(e.toString());
+            System.out.println("caught this exceprion");
+            e.printStackTrace();
         }
 
         return toReturn;
