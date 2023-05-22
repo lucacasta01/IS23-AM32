@@ -26,6 +26,11 @@ public class ChoosePlayerController {
 
     public void initialize(){
         GUIClient.getInstance().getStage().setWidth(GUIClient.getInstance().getStage().getWidth()+1);
+        GUIClient.getInstance().getStage().centerOnScreen();
+        GUIClient.getInstance().getStage().setOnCloseRequest(e -> {
+            GUIClient.getInstance().getStage().close();
+            Client.getInstance().addGuiAction("/quit");
+        });
     }
     public void twoPlayersChoice(ActionEvent actionEvent) {
         stage = (Stage)((javafx.scene.Node)actionEvent.getSource()).getScene().getWindow();

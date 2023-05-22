@@ -41,7 +41,7 @@ public class SharedGoal3Card extends SharedGoalCard implements CheckSharedGoal {
 
                 if(!matrix[row][column].getColor().equals(Tile.Color.NULLTILE) || !flags[row][column]){
                     flags[row][column]=true;
-                    if(countElem(row, column,count_tiles, flags, matrix)==tilesPerGroup) count_groups++;
+                    if(counter(row, column,count_tiles, flags, matrix)==tilesPerGroup) count_groups++;
                     if(count_groups==numOfGroup){
                         addPlayer(p);
                         return true;
@@ -54,7 +54,7 @@ public class SharedGoal3Card extends SharedGoalCard implements CheckSharedGoal {
         return false;
     }
 
-    public int countElem(int row, int column,int count_tiles, boolean[][] flags, Tile[][] matrix) {
+    public int counter(int row, int column,int count_tiles, boolean[][] flags, Tile[][] matrix) {
 
         if(!matrix[row][column].getColor().equals(Tile.Color.NULLTILE) || !flags[row][column]) {
 
@@ -64,25 +64,25 @@ public class SharedGoal3Card extends SharedGoalCard implements CheckSharedGoal {
             //up
             if(row!=0){
                 if (matrix[row][column].getColor().equals(matrix[row - 1][column].getColor()) && !flags[row-1][column]) {
-                    count_tiles += countElem(row -1, column, count_tiles, flags, matrix);
+                    count_tiles += counter(row -1, column, count_tiles, flags, matrix);
                 }
             }
             //down
             if(row!=5){
                 if (matrix[row][column].getColor().equals(matrix[row + 1][column].getColor()) && !flags[row+1][column]) {
-                    count_tiles += countElem(row +1, column, count_tiles, flags, matrix);
+                    count_tiles += counter(row +1, column, count_tiles, flags, matrix);
                 }
             }
             //right
             if(column!=4) {
                 if (matrix[row][column].getColor().equals(matrix[row][column + 1].getColor()) && !flags[row][column+1]) {
-                    count_tiles += countElem(row, column + 1, count_tiles, flags, matrix);
+                    count_tiles += counter(row, column + 1, count_tiles, flags, matrix);
                 }
             }
             //left
             if(column!=0) {
                 if (matrix[row][column].getColor().equals(matrix[row][column - 1].getColor()) && !flags[row][column-1]) {
-                    count_tiles += countElem(row, column - 1, count_tiles, flags, matrix);
+                    count_tiles += counter(row, column - 1, count_tiles, flags, matrix);
                 }
             }
             return count_tiles+1;
