@@ -1,6 +1,10 @@
 package it.polimi.myShelfie.application;
 
+import it.polimi.myShelfie.controller.GUIcontroller.ChatController;
+import it.polimi.myShelfie.controller.GUIcontroller.GamePanelController;
 import it.polimi.myShelfie.controller.GUIcontroller.banners.ErrorBannerController;
+import it.polimi.myShelfie.utilities.beans.ChatMessage;
+import it.polimi.myShelfie.utilities.beans.Response;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -156,6 +160,10 @@ public class GUIClient extends Application {
             stage.setScene(new Scene(gameParent));
             stage.setFullScreen(true);
         });
+    }
+    public void addMyChatMessage(String message){
+        ChatController chatController = Client.getInstance().getChatController();
+        chatController.addMessage(new ChatMessage(Client.getInstance().getNickname(), message, null));
     }
 
     public void showDenyDialog(String errorMessage) {

@@ -4,6 +4,7 @@ import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.controller.RMI.RMIClient;
 import it.polimi.myShelfie.utilities.*;
 import it.polimi.myShelfie.utilities.beans.Action;
+import it.polimi.myShelfie.utilities.beans.ChatMessage;
 import it.polimi.myShelfie.utilities.beans.Response;
 import it.polimi.myShelfie.utilities.beans.View;
 import java.io.*;
@@ -560,7 +561,7 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public synchronized void sendChatMessage(Response.ChatMessage chatMessage){
+    public synchronized void sendChatMessage(ChatMessage chatMessage){
         if(isRMI){
             try{
                 //todo handling auto-send rmi
@@ -592,7 +593,7 @@ public class ClientHandler implements Runnable {
             }
         }
         else {
-            Response r = new Response(Response.ResponseType.NICKNAME_ACCEPTED, new Response.ChatMessage(nickname, "",""), null, null);
+            Response r = new Response(Response.ResponseType.NICKNAME_ACCEPTED, new ChatMessage(nickname, "",""), null, null);
             Gson gson = new Gson();
             try {
                 out.println(gson.toJson(r));
@@ -614,7 +615,7 @@ public class ClientHandler implements Runnable {
         }
         else {
             sendDeny(message);
-            Response r = new Response(Response.ResponseType.NICKNAME_DENIED, new Response.ChatMessage(nickname, "",""), null, message);
+            Response r = new Response(Response.ResponseType.NICKNAME_DENIED, new ChatMessage(nickname, "",""), null, message);
             Gson gson = new Gson();
             try {
                 out.println(gson.toJson(r));
@@ -733,7 +734,7 @@ public class ClientHandler implements Runnable {
         else {
             Gson gson = new Gson();
             try {
-                out.println(gson.toJson(new Response(Response.ResponseType.VALID, new Response.ChatMessage(this.nickname, "",""), null, message)));
+                out.println(gson.toJson(new Response(Response.ResponseType.VALID, new ChatMessage(this.nickname, "",""), null, message)));
             } catch (Exception e) {
                 System.out.println("Error occurred while sending a message: " + e.toString());
                 e.printStackTrace();

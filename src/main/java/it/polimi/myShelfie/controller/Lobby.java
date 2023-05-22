@@ -10,6 +10,7 @@ import it.polimi.myShelfie.model.cards.PersonalGoalCard;
 import it.polimi.myShelfie.model.cards.SharedGoalCard;
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.beans.Action;
+import it.polimi.myShelfie.utilities.beans.ChatMessage;
 import it.polimi.myShelfie.utilities.beans.Response;
 import it.polimi.myShelfie.utilities.beans.View;
 import java.nio.file.Path;
@@ -201,7 +202,7 @@ public class Lobby implements Runnable{
                             System.out.println("Info from:" + nickname + " " + a.getInfo());
                             iter.remove();
                         } else if (a.getActionType() == Action.ActionType.CHAT) {
-                            sendChat(new Response.ChatMessage(a.getNickname(),a.getChatMessage(),ch.getColor()));
+                            sendChat(new ChatMessage(a.getNickname(),a.getChatMessage(),ch.getColor()));
                             iter.remove();
                         }
                         else if (a.getActionType() == Action.ActionType.PRIVATEMESSAGE){
@@ -510,14 +511,16 @@ public class Lobby implements Runnable{
         }
         for(ClientHandler t : lobbyPlayers){
             if(t.getNickname().equals(receiver)){
-                t.sendChatMessage(new Response.ChatMessage(sender,stringBuilder.toString(),clientHandlerOf(sender).getColor()));
+                t.sendChatMessage(new ChatMessage(sender,stringBuilder.toString(),clientHandlerOf(sender).getColor()));
             }
         }
     }
 
-    public void sendChat(Response.ChatMessage chatMessage){
+    public void sendChat(ChatMessage chatMessage){
         for(ClientHandler ch : lobbyPlayers){
-            ch.sendChatMessage(chatMessage);
+            if(!ch.getNickname().equals(chatMessage.getSender())) {
+                ch.sendChatMessage(chatMessage);
+            }
         }
     }
 

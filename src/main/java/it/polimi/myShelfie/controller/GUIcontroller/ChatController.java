@@ -3,6 +3,7 @@ package it.polimi.myShelfie.controller.GUIcontroller;
 import it.polimi.myShelfie.application.Client;
 import it.polimi.myShelfie.application.GUIClient;
 import it.polimi.myShelfie.utilities.Utils;
+import it.polimi.myShelfie.utilities.beans.ChatMessage;
 import it.polimi.myShelfie.utilities.beans.Response;
 import it.polimi.myShelfie.utilities.beans.View;
 import javafx.event.ActionEvent;
@@ -46,7 +47,7 @@ public class ChatController {
         }
     }
 
-    public void addMessage(Response.ChatMessage chatMessage) {
+    public void addMessage(ChatMessage chatMessage) {
         chatTxt.appendText(Utils.removeANSI(chatMessage.getSender())+": "+Utils.removeANSI(chatMessage.getMessage())+"\n");
     }
 }

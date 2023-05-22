@@ -1,6 +1,7 @@
 package it.polimi.myShelfie.controller.inputHandlers;
 
 import it.polimi.myShelfie.application.Client;
+import it.polimi.myShelfie.application.GUIClient;
 import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.beans.Action;
 
@@ -56,6 +57,7 @@ public class TCPInputHandler extends Thread{
                     client.shutdown();
                 } else if (message.startsWith("/chat")) {
                     Action a = new Action(Action.ActionType.CHAT, client.getNickname(), message.substring(message.indexOf("/chat") + "/chat ".length()), "", null, null);
+                    GUIClient.getInstance().addMyChatMessage(message.substring(message.indexOf("/chat") + "/chat ".length()));
                     client.sendAction(a);
                 }
                 else if(message.startsWith("/pvt-")){

@@ -1,6 +1,7 @@
 package it.polimi.myShelfie.controller.inputHandlers;
 
 import it.polimi.myShelfie.application.Client;
+import it.polimi.myShelfie.application.GUIClient;
 import it.polimi.myShelfie.controller.RMI.RMIServer;
 import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.Utils;
@@ -97,6 +98,7 @@ public class RMIInputHandler extends Thread {
                     client.remoteShutdown("");
                 } else if (message.startsWith("/chat")) {
                     client.getRmiServer().chatMessage(client.getNickname(), message.substring(message.indexOf("/chat") + "/chat ".length()));
+                    GUIClient.getInstance().addMyChatMessage(message.substring(message.indexOf("/chat") + "/chat ".length()));
                 }
                 else if(message.startsWith("/pvt-")){
                     client.getRmiServer().privateMessage(client.getNickname(), message.substring(message.indexOf("pvt-") + "pvt-".length()));

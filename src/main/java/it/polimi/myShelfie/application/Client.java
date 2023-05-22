@@ -15,6 +15,7 @@ import it.polimi.myShelfie.utilities.PingObject;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.Response;
 import it.polimi.myShelfie.utilities.beans.View;
+import it.polimi.myShelfie.utilities.beans.ChatMessage;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -579,9 +580,12 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     }
 
     @Override
-    public void chatMessage(Response.ChatMessage chatMessage) throws RemoteException {
+    public void chatMessage(ChatMessage chatMessage) throws RemoteException {
         String sender = ANSI.BOLD + chatMessage.getSenderColor() +chatMessage.getSender() + ANSI.RESET_COLOR + ANSI.RESET_STYLE;
         System.out.println(">" + sender + ": " + chatMessage.getMessage());
+        if(isGUI){
+            Client.getInstance().getChatController().addMessage(chatMessage);
+        }
     }
 
     @Override
