@@ -25,12 +25,15 @@ public class ChatController {
         Client.getInstance().setChatController(this);
         View view = Client.getInstance().getView();
         messageToCombo.getItems().add("Broadcast");
-        for (String p : view.getPlayers()) {
-            if(!p.equals(Client.getInstance().getNickname())) {
-                messageToCombo.getItems().add(p);
+        if(view!=null) {
+            for (String p : view.getPlayers()) {
+                if (!p.equals(Client.getInstance().getNickname())) {
+                    messageToCombo.getItems().add(p);
+                }
             }
+            messageToCombo.getSelectionModel().selectFirst();
         }
-        messageToCombo.getSelectionModel().selectFirst();
+
     }
     public void sendMessage(ActionEvent actionEvent) {
         if(messageTxt.getText().length()>0){

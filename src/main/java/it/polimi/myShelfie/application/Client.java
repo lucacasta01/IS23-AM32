@@ -541,6 +541,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     @Override
     public void update(View view) throws RemoteException {
+        Client.getInstance().view=view;
         //shelves
         for (String s : view.getShelves()) {
             System.out.println(s + "\n");
@@ -559,6 +560,22 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         System.out.println(view.getBoard() + "\n");
         //current player
         System.out.println(ANSI.ITALIC + "Turn of: " + ANSI.RESET_STYLE + view.getCurrentPlayer());
+        if(isGUI){
+            System.out.println("GUI view update");
+            while(gamePanelController == null){
+                System.out.println("gamePanelController is null");
+                synchronized (this){
+                    try{
+                        wait();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+            System.out.println("Updating view finally...");
+            gamePanelController.updateView();
+        }
     }
 
     @Override
