@@ -26,7 +26,7 @@ import java.util.List;
 
 public class GamePanelController {
     @FXML
-    GridPane boardGrid, myShelfGrid;
+    GridPane boardGrid, myShelfGrid, otherShelfGrid1, otherShelfGrid2, otherShelfGrid3;
     @FXML
     JFXDrawer chatDrawer;
     @FXML
@@ -72,6 +72,25 @@ public class GamePanelController {
 
                 player2Lbl.setText(otherPlayers.get(0));
                 pl2ScoreLbl.setText("Score: "+otherScores.get(0));
+                //print other player shelf
+                int i = 0;
+                for (int row = 0; row < Settings.SHELFROW; row++) {
+                    for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
+                        Node n = getTileImgView(row, col, otherShelfGrid1);
+                        if (n != null) {
+                            if (!view.getOthersGUIShelves().get(0).get(i).contains("transparent.png")) {
+                                System.out.println("putting not transparent tile, row: "+row+" column: "+col);
+                                Image image = new Image(Paths.get(view.getOthersGUIShelves().get(0).get(i)).toUri().toString());
+                                ImageView im = (ImageView) n;
+                                im.setImage(image);
+                                im.setVisible(true);
+                            }
+                            i++;
+                        }
+                    }
+                }
+                otherShelfGrid1.setVisible(true);
+
             });
         }
         else if(playersNumber == 3){
@@ -83,6 +102,63 @@ public class GamePanelController {
 
                 player3Lbl.setText(otherPlayers.get(1));
                 pl3ScoreLbl.setText("Score: "+otherScores.get(1));
+                //print first other player shelf
+                int i = 0;
+                for (int row = 0; row < Settings.SHELFROW; row++) {
+                    for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
+                        Node n = getTileImgView(row, col, otherShelfGrid1);
+                        if (n != null) {
+                            if (!view.getOthersGUIShelves().get(0).get(i).contains("transparent.png")) {
+                                System.out.println("putting not transparent tile, row: "+row+" column: "+col);
+                                Image image = new Image(Paths.get(view.getOthersGUIShelves().get(0).get(i)).toUri().toString());
+                                ImageView im = (ImageView) n;
+                                im.setImage(image);
+                                im.setVisible(true);
+                            }
+                            i++;
+                        }
+                    }
+                }
+                otherShelfGrid1.setVisible(true);
+
+                //print second other player shelf
+                i = 0;
+                for (int row = 0; row < Settings.SHELFROW; row++) {
+                    for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
+                        Node n = getTileImgView(row, col, otherShelfGrid2);
+                        if (n != null) {
+                            if (!view.getOthersGUIShelves().get(1).get(i).contains("transparent.png")) {
+                                System.out.println("putting not transparent tile, row: "+row+" column: "+col);
+                                Image image = new Image(Paths.get(view.getOthersGUIShelves().get(1).get(i)).toUri().toString());
+                                ImageView im = (ImageView) n;
+                                im.setImage(image);
+                                im.setVisible(true);
+                            }
+                            i++;
+                        }
+                    }
+                }
+                otherShelfGrid2.setVisible(true);
+
+                //print third other player shelf
+                i = 0;
+                for (int row = 0; row < Settings.SHELFROW; row++) {
+                    for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
+                        Node n = getTileImgView(row, col, otherShelfGrid3);
+                        if (n != null) {
+                            if (!view.getOthersGUIShelves().get(2).get(i).contains("transparent.png")) {
+                                System.out.println("putting not transparent tile, row: "+row+" column: "+col);
+                                Image image = new Image(Paths.get(view.getOthersGUIShelves().get(2).get(i)).toUri().toString());
+                                ImageView im = (ImageView) n;
+                                im.setImage(image);
+                                im.setVisible(true);
+                            }
+                            i++;
+                        }
+                    }
+                }
+                otherShelfGrid3.setVisible(true);
+
             });
         }
         else{
@@ -95,6 +171,7 @@ public class GamePanelController {
 
                 player3Lbl.setText(otherPlayers.get(2));
                 pl2ScoreLbl.setText("Score: "+otherScores.get(2));
+                //print other player shelf
             });
         }
         //board update
