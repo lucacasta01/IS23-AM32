@@ -62,8 +62,8 @@ public class TCPInputHandler extends Thread{
                     client.sendAction(a);
                 }
                 else if(message.startsWith("/pvt-")){
-                    List<String> splittedMessage = Arrays.stream(message.split(" ")).toList();
-                    if(splittedMessage.stream().filter(s -> !s.equals(" ")).toList().size() > 1) {
+                    List<String> splitMessage = Arrays.stream(message.split(" ")).toList();
+                    if(splitMessage.stream().filter(s -> !s.equals(" ")).toList().size() > 1) {
                         Action a = new Action(Action.ActionType.PRIVATEMESSAGE, client.getNickname(), message.substring("/pvt- ".length() - 1), "", null, null);
                         client.sendAction(a);
                     }
