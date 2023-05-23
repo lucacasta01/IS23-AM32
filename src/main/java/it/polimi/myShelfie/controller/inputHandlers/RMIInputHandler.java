@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -98,10 +99,18 @@ public class RMIInputHandler extends Thread {
                     client.remoteShutdown("");
                 } else if (message.startsWith("/chat")) {
                     client.getRmiServer().chatMessage(client.getNickname(), message.substring(message.indexOf("/chat") + "/chat ".length()));
-                    GUIClient.getInstance().addMyChatMessage(message.substring(message.indexOf("/chat") + "/chat ".length()));
+                    if(client.isGUI()){
+                        GUIClient.getInstance().addMyChatMessage(message.substring(message.indexOf("/chat") + "/chat ".length()));
+                    }
                 }
                 else if(message.startsWith("/pvt-")){
-                    client.getRmiServer().privateMessage(client.getNickname(), message.substring(message.indexOf("pvt-") + "pvt-".length()));
+                    List<String> splittedMessage = Arrays.stream(message.split(" ")).toList();
+                    if(splittedMessage.stream().filter(s -> !s.equals(" ")).toList().size() > 1) {
+                        client.getRmiServer().privateMessage(client.getNickname(), message.substring(message.indexOf("pvt-") + "pvt-".length()));
+                        if (client.isGUI()) {
+                            GUIClient.getInstance().addMyChatMessage(message.substring(message.indexOf("/pvt-") + "/pvt- ".length()));
+                        }
+                    }
                 }
                 /*
                  * /collect x1,y1 (opt)x2,y2 (opt)x3,y3

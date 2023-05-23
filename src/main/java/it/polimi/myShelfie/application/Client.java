@@ -100,6 +100,8 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         return serverIP;
     }
 
+    public boolean isGUI(){return isGUI;};
+
     public int getTCPPort() {
         return TCPPort;
     }
