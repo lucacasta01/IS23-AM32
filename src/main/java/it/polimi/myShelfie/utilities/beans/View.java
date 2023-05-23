@@ -1,9 +1,7 @@
 package it.polimi.myShelfie.utilities.beans;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class View implements Serializable {
     private String board;
@@ -12,7 +10,8 @@ public class View implements Serializable {
     private String personalCard;
     private String currentPlayer;
     private List<String> players;
-    private List<List<String>> GUIShelves;
+    private List<List<String>> othersGUIShelves;
+    private List<String> myShelf;
     private List<Integer> GUIScoring;
     private List<String> GUIboard;
     private List<String> GUIsharedCards;
@@ -22,10 +21,25 @@ public class View implements Serializable {
         this.shelves = new ArrayList<>();
         this.sharedCards = new ArrayList<>();
         this.GUIboard = new ArrayList<>();
-        this.GUIShelves = new ArrayList<>();
+        this.othersGUIShelves = new ArrayList<>();
         this.GUIScoring = new ArrayList<>();
         this.players = new ArrayList<>();
         this.GUIsharedCards = new ArrayList<>();
+        this.myShelf = new ArrayList<>();
+    }
+
+    public List<List<String>> getOthersGUIShelves() {
+        return othersGUIShelves;
+    }
+
+    public List<String> getMyShelf() {
+        return myShelf;
+    }
+
+
+
+    public void setMyShelf(List<String> myShelf) {
+        this.myShelf = myShelf;
     }
 
     public String getGUIpersonalCard() {
@@ -44,8 +58,8 @@ public class View implements Serializable {
         this.players = players;
     }
 
-    public void setGUIShelves(List<List<String>> GUIShelves) {
-        this.GUIShelves = GUIShelves;
+    public void setOthersGUIShelves(List<List<String>> GUIShelves) {
+        this.othersGUIShelves = GUIShelves;
     }
 
     public void setGUIScoring(List<Integer> GUIScoring) {
@@ -61,7 +75,7 @@ public class View implements Serializable {
     }
 
     public List<List<String>> getGUIShelves() {
-        return GUIShelves;
+        return othersGUIShelves;
     }
 
     public List<Integer> getGUIScoring() {

@@ -26,7 +26,7 @@ import java.util.List;
 
 public class GamePanelController {
     @FXML
-    GridPane boardGrid;
+    GridPane boardGrid, myShelfGrid;
     @FXML
     JFXDrawer chatDrawer;
     @FXML
@@ -119,17 +119,40 @@ public class GamePanelController {
                 });
 
         //personal goal update
-        personalGoal.setImage(new Image(Paths.get(view.getGUIpersonalCard()).toUri().toString()));
-        personalGoal.setVisible(true);
+        Platform.runLater(()->{
+            personalGoal.setImage(new Image(Paths.get(view.getGUIpersonalCard()).toUri().toString()));
+            personalGoal.setVisible(true);
+        });
+
 
         //common goals update
-        sharedGoal1.setImage(new Image(Paths.get(view.getGUIsharedCards().get(0)).toUri().toString()));
-        sharedGoal2.setImage(new Image(Paths.get(view.getGUIsharedCards().get(1)).toUri().toString()));
-        sharedGoal1.setVisible(true);
-        sharedGoal2.setVisible(true);
+        Platform.runLater(()->{
+            sharedGoal1.setImage(new Image(Paths.get(view.getGUIsharedCards().get(0)).toUri().toString()));
+            sharedGoal2.setImage(new Image(Paths.get(view.getGUIsharedCards().get(1)).toUri().toString()));
+            sharedGoal1.setVisible(true);
+            sharedGoal2.setVisible(true);
+        });
 
-
-
+        //myShelf update
+        Platform.runLater(()->{
+            int i = 0;
+            for (int row = 0; row < Settings.SHELFROW; row++) {
+                for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
+                    Node n = getTileImgView(row, col, myShelfGrid);
+                    if (n != null) {
+                        if (!view.getMyShelf().get(i).contains("transparent.png")) {
+                            System.out.println("putting not transparent tile, row: "+row+" column: "+col);
+                            Image image = new Image(Paths.get(view.getMyShelf().get(i)).toUri().toString());
+                            ImageView im = (ImageView) n;
+                            im.setImage(image);
+                            im.setVisible(true);
+                        }
+                        i++;
+                    }
+                }
+            }
+            myShelfGrid.setVisible(true);
+        });
         System.out.println("GUI VIEW UPDATED");
     }
 

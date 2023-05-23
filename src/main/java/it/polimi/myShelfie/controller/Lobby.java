@@ -11,7 +11,6 @@ import it.polimi.myShelfie.model.cards.SharedGoalCard;
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.ChatMessage;
-import it.polimi.myShelfie.utilities.beans.Response;
 import it.polimi.myShelfie.utilities.beans.View;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -528,7 +527,8 @@ public class Lobby implements Runnable{
         View view = new View();
         List<String> players = new ArrayList<>();
         List<String> GUIBoard = new ArrayList<>();
-        List<List<String>> GUIShelves = new ArrayList<>();
+        List<List<String>> othersGUIShelves = new ArrayList<>();
+        List<String> myShelf = new ArrayList<>();
         List<Integer> GUIScores = new ArrayList<>();
         List<String> GuiSharedCard = new ArrayList<>();
         List<String> shelves = new ArrayList<>();
@@ -549,20 +549,7 @@ public class Lobby implements Runnable{
         view.setGUIboard(GUIBoard);
 
         //GUI players, shelves and points
-        for(Player p:game.getPlayers()){
-            List<String> pShelf = new ArrayList<>();
-            for(int i = 0; i< Settings.SHELFROW; i++){
-                for(int j = 0; j< Settings.SHELFCOLUMN; j++){
-                    pShelf.add(p.getMyShelf().getTileMartrix()[i][j].getImagePath());
-                }
-            }
-            GUIShelves.add(pShelf);
-            GUIScores.add(p.getScore());
-            players.add(p.getUsername());
-        }
-        view.setGUIShelves(GUIShelves);
-        view.setGUIScoring(GUIScores);
-        view.setPlayers(players);
+
         //shared cards
         for(SharedGoalCard s:game.getSharedDeck()){
             GuiSharedCard.add(s.getImgPath());
@@ -584,9 +571,36 @@ public class Lobby implements Runnable{
         view.setSharedCards(sharedCards);
 
         for(ClientHandler ch:lobbyPlayers){
+            for(Player p:game.getPlayers()){
+                if(!p.getUsername().equals(ch.getNickname())) {
+                    List<String> pShelf = new ArrayList<>();
+                    for (int i = 0; i < Settings.SHELFROW; i++) {
+                        for (int j = 0; j < Settings.SHELFCOLUMN; j++) {
+                            pShelf.add(p.getMyShelf().getTileMartrix()[i][j].getImagePath());
+                        }
+                    }
+                    othersGUIShelves.add(pShelf);
+                }else{
+                    for (int i = 0; i < Settings.SHELFROW; i++) {
+                        for (int j = 0; j < Settings.SHELFCOLUMN; j++) {
+                            myShelf.add(p.getMyShelf().getTileMartrix()[i][j].getImagePath());
+                        }
+                    }
+                }
+                GUIScores.add(p.getScore());
+                players.add(p.getUsername());
+            }
+            view.setMyShelf(myShelf);
+            view.setOthersGUIShelves(othersGUIShelves);
+            view.setGUIScoring(GUIScores);
+            view.setPlayers(players);
             view.setPersonalCard(game.chToPlayer(ch).getMyGoalCard().toString());
             view.setGUIpersonalCard(game.chToPlayer(ch).getMyGoalCard().getImgPath());
             ch.sendView(view);
+            myShelf.clear();
+            othersGUIShelves.clear();
+            players.clear();
+            GUIScores.clear();
         }
     }
     private void endTurnChecks(ClientHandler ch){
