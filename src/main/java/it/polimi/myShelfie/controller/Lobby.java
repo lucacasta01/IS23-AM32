@@ -66,8 +66,8 @@ public class Lobby implements Runnable{
         lobbyHost.setPlaying(true);
         this.lobbyUID = lobbyUID;
         this.gameMode = GameMode.SAVEDGAME;
-        this.isOpen = false;
         this.colors = new Stack<>();
+        this.isOpen = false;
         colors.push(ANSI.PURPLE);
         colors.push(ANSI.GREEN);
         colors.push(ANSI.YELLOW);
@@ -150,6 +150,7 @@ public class Lobby implements Runnable{
                 }
                 try {
                     broadcastMessage("Waiting for players..." + " " + "(" + getLobbySize() + "/" + getPlayersNumber() + ")");
+                    lobbyPlayers.get(0).notifyLobbyCreated(getPlayersNumber());
                     waitForPlayers();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
@@ -660,22 +661,3 @@ public class Lobby implements Runnable{
         SAVEDGAME
     }
 }
-
-
-/*
-*           while (in != null && (message = in.readLine()) != null) {
-                if (message.startsWith("/quit")) {
-                    server.removeClient(this);
-                    server.getUserGame().remove(nickname);
-                    shutdown();
-                    System.out.println(nickname+" disconnected");
-                    server.broadcastMessage(nickname+" disconnected");
-                    break;
-                } else {
-                    Server.getInstance().broadcastMessage(nickname + ": " + message);
-                }
-            }*/
-
-/*
-
- */

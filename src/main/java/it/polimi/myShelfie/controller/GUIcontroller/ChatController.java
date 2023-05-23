@@ -44,6 +44,7 @@ public class ChatController {
             else{
                 Client.getInstance().addGuiAction("/pvt-"+ messageToCombo.getValue() + " " + messageTxt.getText());
             }
+            messageTxt.setText("");
         }
     }
 

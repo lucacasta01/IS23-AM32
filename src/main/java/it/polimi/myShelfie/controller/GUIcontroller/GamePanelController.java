@@ -7,13 +7,17 @@ import it.polimi.myShelfie.utilities.Settings;
 import it.polimi.myShelfie.utilities.beans.View;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.awt.Desktop;
@@ -22,9 +26,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class GamePanelController {
+public class GamePanelController{
     @FXML
     GridPane boardGrid, myShelfGrid, otherShelfGrid1, otherShelfGrid2, otherShelfGrid3;
     @FXML
@@ -37,11 +43,39 @@ public class GamePanelController {
     VBox player2Box, player3Box, player4Box;
     @FXML
     ImageView sharedGoal1, sharedGoal2, personalGoal;
+    @FXML
+    HBox collectedTilesBox;
+    @FXML
+    Button col1Btn, col2Btn, col3Btn, col4Btn, col5Btn, colRstBtn;
+    Button[] colBtns;
+    List<String> collectedTiles = new ArrayList<>();
+
 
     public void initialize() {
         initializeChatPanel();
+        colBtns  = new Button[]{col1Btn,col2Btn,col3Btn,col4Btn,col5Btn,colRstBtn};
         Client.getInstance().setGamePanelController(this);
-        //updateView();
+        addGridEvent();
+        setColBtnsEnabled(false);
+    }
+
+    private void setColBtnsEnabled(boolean value){
+        for (Button colBtn : colBtns) {
+            colBtn.setDisable(!value);
+        }
+    }
+
+    private void addGridEvent() {
+        boardGrid.getChildren().forEach(item -> {
+            item.setOnMouseClicked(event -> {
+                int row, column;
+                Node clickedNode = event.getPickResult().getIntersectedNode();
+                row = GridPane.getRowIndex(clickedNode);
+                column = GridPane.getColumnIndex(clickedNode);
+                collectedTiles.add("("+row+","+column   +")");
+                setColBtnsEnabled(true);
+            });
+        });
     }
 
     public void updateView() {
@@ -53,12 +87,14 @@ public class GamePanelController {
         List<String> otherPlayers = new ArrayList<>(view.getPlayers());
         List<Integer> otherScores = new ArrayList<>(view.getGUIScoring());
 
+
         otherPlayers.remove(curPlayerIndex);
         otherScores.remove(curPlayerIndex);
 
-        //current player update
+        //current player update & turn handling
         Platform.runLater(()->{
             curPlayerLbl.setText(curNickname);
+            handleTurn(view,curNickname,curPlayerLbl);
             curPlScoreLbl.setText("Score: "+view.getGUIScoring().get(view.getPlayers().indexOf(curNickname)).toString());
         });
 
@@ -71,8 +107,10 @@ public class GamePanelController {
                 player4Box.setVisible(false);
 
                 player2Lbl.setText(otherPlayers.get(0));
+                handleTurn(view,otherPlayers.get(0),player2Lbl);
                 pl2ScoreLbl.setText("Score: "+otherScores.get(0));
-                //print other player shelf
+
+                //update other player shelf
                 int i = 0;
                 for (int row = 0; row < Settings.SHELFROW; row++) {
                     for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
@@ -98,11 +136,14 @@ public class GamePanelController {
                 player4Box.setVisible(false);
 
                 player2Lbl.setText(otherPlayers.get(0));
+                handleTurn(view,otherPlayers.get(0),player2Lbl);
                 pl2ScoreLbl.setText("Score: "+otherScores.get(0));
 
                 player3Lbl.setText(otherPlayers.get(1));
+                handleTurn(view,otherPlayers.get(1),player3Lbl);
                 pl3ScoreLbl.setText("Score: "+otherScores.get(1));
-                //print first other player shelf
+
+                //update first other player shelf
                 int i = 0;
                 for (int row = 0; row < Settings.SHELFROW; row++) {
                     for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
@@ -121,7 +162,7 @@ public class GamePanelController {
                 }
                 otherShelfGrid1.setVisible(true);
 
-                //print second other player shelf
+                //update second other player shelf
                 i = 0;
                 for (int row = 0; row < Settings.SHELFROW; row++) {
                     for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
@@ -140,7 +181,61 @@ public class GamePanelController {
                 }
                 otherShelfGrid2.setVisible(true);
 
-                //print third other player shelf
+            });
+        }
+        else{
+            Platform.runLater(()->{
+                player2Lbl.setText(otherPlayers.get(0));
+                handleTurn(view,otherPlayers.get(0),player2Lbl);
+                pl2ScoreLbl.setText("Score: "+otherScores.get(0));
+
+                player3Lbl.setText(otherPlayers.get(1));
+                handleTurn(view,otherPlayers.get(1),player3Lbl);
+                pl2ScoreLbl.setText("Score: "+otherScores.get(1));
+
+                player3Lbl.setText(otherPlayers.get(2));
+                handleTurn(view,otherPlayers.get(2),player3Lbl);
+                pl2ScoreLbl.setText("Score: "+otherScores.get(3));
+
+                //update first other player shelf
+                int i = 0;
+                for (int row = 0; row < Settings.SHELFROW; row++) {
+                    for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
+                        Node n = getTileImgView(row, col, otherShelfGrid1);
+                        if (n != null) {
+                            if (!view.getOthersGUIShelves().get(0).get(i).contains("transparent.png")) {
+                                System.out.println("putting not transparent tile, row: "+row+" column: "+col);
+                                Image image = new Image(Paths.get(view.getOthersGUIShelves().get(0).get(i)).toUri().toString());
+                                ImageView im = (ImageView) n;
+                                im.setImage(image);
+                                im.setVisible(true);
+                            }
+                            i++;
+                        }
+                    }
+                }
+                otherShelfGrid1.setVisible(true);
+
+                //update second other player shelf
+                i = 0;
+                for (int row = 0; row < Settings.SHELFROW; row++) {
+                    for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
+                        Node n = getTileImgView(row, col, otherShelfGrid2);
+                        if (n != null) {
+                            if (!view.getOthersGUIShelves().get(1).get(i).contains("transparent.png")) {
+                                System.out.println("putting not transparent tile, row: "+row+" column: "+col);
+                                Image image = new Image(Paths.get(view.getOthersGUIShelves().get(1).get(i)).toUri().toString());
+                                ImageView im = (ImageView) n;
+                                im.setImage(image);
+                                im.setVisible(true);
+                            }
+                            i++;
+                        }
+                    }
+                }
+                otherShelfGrid2.setVisible(true);
+
+                //update third other player shelf
                 i = 0;
                 for (int row = 0; row < Settings.SHELFROW; row++) {
                     for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
@@ -158,20 +253,6 @@ public class GamePanelController {
                     }
                 }
                 otherShelfGrid3.setVisible(true);
-
-            });
-        }
-        else{
-            Platform.runLater(()->{
-                player2Lbl.setText(otherPlayers.get(0));
-                pl2ScoreLbl.setText("Score: "+otherScores.get(0));
-
-                player3Lbl.setText(otherPlayers.get(1));
-                pl2ScoreLbl.setText("Score: "+otherScores.get(1));
-
-                player3Lbl.setText(otherPlayers.get(2));
-                pl2ScoreLbl.setText("Score: "+otherScores.get(2));
-                //print other player shelf
             });
         }
         //board update
@@ -233,6 +314,12 @@ public class GamePanelController {
         System.out.println("GUI VIEW UPDATED");
     }
 
+    private void handleTurn(View v, String nickname, Label l){
+        if(v.getCurrentPlayer().equals(nickname)){
+            l.setText(l.getText()+" (your turn)");
+        }
+    }
+
     private Node getTileImgView(int row, int column, GridPane grid){
         for(Node n: grid.getChildren()){
             Integer r, c;
@@ -284,5 +371,26 @@ public class GamePanelController {
                 // no application registered for PDFs
             }
         }
+    }
+
+    public void insertCol1(ActionEvent actionEvent) {
+    }
+
+    public void insertCol2(ActionEvent actionEvent) {
+    }
+
+    public void insertCol3(ActionEvent actionEvent) {
+    }
+
+    public void insertCol4(ActionEvent actionEvent) {
+    }
+
+    public void insertCol5(ActionEvent actionEvent) {
+    }
+
+    public void resetCollectedTiles(ActionEvent actionEvent) {
+        setColBtnsEnabled(false);
+        collectedTiles.clear();
+        System.out.println("Collected tiles reset");
     }
 }

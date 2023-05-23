@@ -282,6 +282,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                     } else if (response.getResponseType() == Response.ResponseType.RETURN_TO_MENU) {
                                         if (isGUI) {
                                             GUIClient.getInstance().switchToMenu();
+                                            gamePanelController = null;
                                         } else {
                                             System.out.println("\n(1) New Game");
                                             System.out.println("(2) Load last game");
@@ -320,6 +321,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
+
                         loginController = null;
                         close = true;
                     }

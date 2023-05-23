@@ -381,10 +381,6 @@ public class ClientHandler implements Runnable {
 
 
                 }else{
-                    List<Lobby> lobbyList;
-                    synchronized (server.getLobbyList()){
-                        lobbyList = new ArrayList<>(server.getLobbyList());
-                    }
                     Lobby l = server.lobbyOf(this);
 
                     if(l!=null){
