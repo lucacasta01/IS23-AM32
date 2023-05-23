@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -61,9 +62,11 @@ public class TCPInputHandler extends Thread{
                     client.sendAction(a);
                 }
                 else if(message.startsWith("/pvt-")){
-                    // code that handles private messages
-                    Action a = new Action(Action.ActionType.PRIVATEMESSAGE, client.getNickname(), message.substring("/pvt- ".length() -1 ), "", null, null);
-                    client.sendAction(a);
+                    List<String> splittedMessage = Arrays.stream(message.split(" ")).toList();
+                    if(splittedMessage.stream().filter(s -> !s.equals(" ")).toList().size() > 1) {
+                        Action a = new Action(Action.ActionType.PRIVATEMESSAGE, client.getNickname(), message.substring("/pvt- ".length() - 1), "", null, null);
+                        client.sendAction(a);
+                    }
                 }
                 /*
                  * /collect x1,y1 (opt)x2,y2 (opt)x3,y3
