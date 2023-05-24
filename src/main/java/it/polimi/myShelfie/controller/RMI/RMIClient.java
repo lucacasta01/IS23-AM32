@@ -31,4 +31,6 @@ public interface RMIClient extends Remote{
     void oldGameNotFound() throws  RemoteException;
 
     void denyRandomGame() throws RemoteException;
+
+    void acceptCollect() throws RemoteException;
 }

@@ -7,7 +7,6 @@ import it.polimi.myShelfie.utilities.Settings;
 import it.polimi.myShelfie.utilities.beans.View;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -17,20 +16,14 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GamePanelController{
     @FXML
@@ -48,23 +41,24 @@ public class GamePanelController{
     @FXML
     HBox collectedTilesBox;
     @FXML
-    Button col1Btn, col2Btn, col3Btn, col4Btn, col5Btn, collectRstBtn;
-    Button[] colBtns;
-    List<Image> collectedTiles = new ArrayList<>();
+    Button collectRstBtn;
+
+    @FXML
+    VBox col1Box, col2Box, col3Box, col4Box, col5Box;
+    final List<ImageView> collectedTiles = new ArrayList<>();
+    int column = -1;
 
 
     public void initialize() {
         initializeChatPanel();
-        colBtns  = new Button[]{col1Btn,col2Btn,col3Btn,col4Btn,col5Btn,collectRstBtn};
         Client.getInstance().setGamePanelController(this);
         addGridEvent();
-        setColBtnsEnabled(false);
+        setResetEnabled(false);
     }
 
-    private void setColBtnsEnabled(boolean value){
-        for (Button colBtn : colBtns) {
-            colBtn.setDisable(!value);
-        }
+    private void setResetEnabled(boolean value){
+        collectRstBtn.setDisable(!value);
+
     }
 
     private void addGridEvent() {
@@ -73,13 +67,45 @@ public class GamePanelController{
                 if(collectedTiles.size()<3&&isMyTurn()) {
                     Node clickedNode = event.getPickResult().getIntersectedNode();
                     ImageView im = (ImageView) clickedNode;
-                    clickedNode.setVisible(false);
-                    collectedTiles.add(im.getImage());
-                    printCollectedTiles();
-                    setColBtnsEnabled(true);
+                    if(isCatchable(im,GridPane.getRowIndex(clickedNode),GridPane.getColumnIndex(clickedNode))) {
+                        clickedNode.setVisible(false);
+                        collectedTiles.add(im);
+                        printCollectedTiles();
+                        setResetEnabled(true);
+                    }
+                    else{
+                        GUIClient.getInstance().showDenyDialog("You can't pick this tile!");
+                    }
                 }
             });
         });
+    }
+
+    private boolean isCatchable(ImageView tile, int row, int column) {
+        if (tile.getImage().getUrl().contains("transparent.png")) {
+            return false;
+        }
+        for(ImageView imv : collectedTiles){
+            if(row != GridPane.getRowIndex(imv) && column != GridPane.getColumnIndex(imv)) {
+                return false;
+            }
+        }
+
+        Boolean[][] grid = new Boolean[Settings.BOARD_DIM][Settings.BOARD_DIM];
+        for(int i=0;i<Settings.BOARD_DIM;i++){
+            for(int j=0;j<Settings.BOARD_DIM;j++){
+                grid[i][j] = !((ImageView) Objects.requireNonNull(getTileImgView(i, j, boardGrid))).getImage().getUrl().contains("transparent.png");
+            }
+        }
+
+        return  ((!grid[Math.min(row + 1, Settings.BOARD_DIM)][column]) &&  !tilesMatch(Math.min(row + 1, Settings.BOARD_DIM), column, row, column)) ||
+                ((!grid[row][Math.min(column + 1, Settings.BOARD_DIM)]) && !tilesMatch(row,Math.min(column + 1, Settings.BOARD_DIM),row,column)) ||
+                ((!grid[Math.max(row - 1, 0)][column]) && !tilesMatch(Math.max(row - 1, 0),column, row, column)) ||
+                ((!grid[row][Math.max(column - 1, 0)]) && !tilesMatch(row,Math.max(column - 1, 0),row , column));
+    }
+
+    private boolean tilesMatch(int x1, int y1, int x2, int y2){
+        return (x1 == x2) && (y1 == y2);
     }
 
     private boolean isMyTurn() {
@@ -88,8 +114,8 @@ public class GamePanelController{
 
     private void printCollectedTiles() {
         collectedTilesBox.getChildren().clear();
-        for(Image im: collectedTiles){
-            ImageView imv = new ImageView(im);
+        for(ImageView im: collectedTiles){
+            ImageView imv = new ImageView(im.getImage());
             imv.setFitHeight(69);
             imv.setFitWidth(69);
             HBox.setMargin(imv, new Insets(0,0,0,5));
@@ -109,6 +135,8 @@ public class GamePanelController{
 
         otherPlayers.remove(curPlayerIndex);
         otherScores.remove(curPlayerIndex);
+
+        boardGrid.getChildren().forEach(item->item.setVisible(true));
 
         //current player update & turn handling
         Platform.runLater(()->{
@@ -135,13 +163,10 @@ public class GamePanelController{
                     for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
                         Node n = getTileImgView(row, col, otherShelfGrid1);
                         if (n != null) {
-                            if (!view.getOthersGUIShelves().get(0).get(i).contains("transparent.png")) {
-                                System.out.println("putting not transparent tile, row: "+row+" column: "+col);
-                                Image image = new Image(Paths.get(view.getOthersGUIShelves().get(0).get(i)).toUri().toString());
-                                ImageView im = (ImageView) n;
-                                im.setImage(image);
-                                im.setVisible(true);
-                            }
+                            Image image = new Image(Paths.get(view.getOthersGUIShelves().get(0).get(i)).toUri().toString());
+                            ImageView im = (ImageView) n;
+                            im.setImage(image);
+                            im.setVisible(true);
                             i++;
                         }
                     }
@@ -168,13 +193,10 @@ public class GamePanelController{
                     for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
                         Node n = getTileImgView(row, col, otherShelfGrid1);
                         if (n != null) {
-                            if (!view.getOthersGUIShelves().get(0).get(i).contains("transparent.png")) {
-                                System.out.println("putting not transparent tile, row: "+row+" column: "+col);
-                                Image image = new Image(Paths.get(view.getOthersGUIShelves().get(0).get(i)).toUri().toString());
-                                ImageView im = (ImageView) n;
-                                im.setImage(image);
-                                im.setVisible(true);
-                            }
+                            Image image = new Image(Paths.get(view.getOthersGUIShelves().get(0).get(i)).toUri().toString());
+                            ImageView im = (ImageView) n;
+                            im.setImage(image);
+                            im.setVisible(true);
                             i++;
                         }
                     }
@@ -187,13 +209,10 @@ public class GamePanelController{
                     for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
                         Node n = getTileImgView(row, col, otherShelfGrid2);
                         if (n != null) {
-                            if (!view.getOthersGUIShelves().get(1).get(i).contains("transparent.png")) {
-                                System.out.println("putting not transparent tile, row: "+row+" column: "+col);
-                                Image image = new Image(Paths.get(view.getOthersGUIShelves().get(1).get(i)).toUri().toString());
-                                ImageView im = (ImageView) n;
-                                im.setImage(image);
-                                im.setVisible(true);
-                            }
+                            Image image = new Image(Paths.get(view.getOthersGUIShelves().get(1).get(i)).toUri().toString());
+                            ImageView im = (ImageView) n;
+                            im.setImage(image);
+                            im.setVisible(true);
                             i++;
                         }
                     }
@@ -222,13 +241,10 @@ public class GamePanelController{
                     for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
                         Node n = getTileImgView(row, col, otherShelfGrid1);
                         if (n != null) {
-                            if (!view.getOthersGUIShelves().get(0).get(i).contains("transparent.png")) {
-                                System.out.println("putting not transparent tile, row: "+row+" column: "+col);
-                                Image image = new Image(Paths.get(view.getOthersGUIShelves().get(0).get(i)).toUri().toString());
-                                ImageView im = (ImageView) n;
-                                im.setImage(image);
-                                im.setVisible(true);
-                            }
+                            Image image = new Image(Paths.get(view.getOthersGUIShelves().get(0).get(i)).toUri().toString());
+                            ImageView im = (ImageView) n;
+                            im.setImage(image);
+                            im.setVisible(true);
                             i++;
                         }
                     }
@@ -241,13 +257,10 @@ public class GamePanelController{
                     for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
                         Node n = getTileImgView(row, col, otherShelfGrid2);
                         if (n != null) {
-                            if (!view.getOthersGUIShelves().get(1).get(i).contains("transparent.png")) {
-                                System.out.println("putting not transparent tile, row: "+row+" column: "+col);
-                                Image image = new Image(Paths.get(view.getOthersGUIShelves().get(1).get(i)).toUri().toString());
-                                ImageView im = (ImageView) n;
-                                im.setImage(image);
-                                im.setVisible(true);
-                            }
+                            Image image = new Image(Paths.get(view.getOthersGUIShelves().get(1).get(i)).toUri().toString());
+                            ImageView im = (ImageView) n;
+                            im.setImage(image);
+                            im.setVisible(true);
                             i++;
                         }
                     }
@@ -260,13 +273,10 @@ public class GamePanelController{
                     for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
                         Node n = getTileImgView(row, col, otherShelfGrid3);
                         if (n != null) {
-                            if (!view.getOthersGUIShelves().get(2).get(i).contains("transparent.png")) {
-                                System.out.println("putting not transparent tile, row: "+row+" column: "+col);
-                                Image image = new Image(Paths.get(view.getOthersGUIShelves().get(2).get(i)).toUri().toString());
-                                ImageView im = (ImageView) n;
-                                im.setImage(image);
-                                im.setVisible(true);
-                            }
+                            Image image = new Image(Paths.get(view.getOthersGUIShelves().get(2).get(i)).toUri().toString());
+                            ImageView im = (ImageView) n;
+                            im.setImage(image);
+                            im.setVisible(true);
                             i++;
                         }
                     }
@@ -282,12 +292,10 @@ public class GamePanelController{
                         for (int col = 0; col < Settings.BOARD_DIM; col++) {
                             Node n = getTileImgView(row, col, boardGrid);
                             if (n != null) {
-                                if (!view.getGUIboard().get(i).contains("transparent.png")) {
-                                    Image image = new Image(Paths.get(view.getGUIboard().get(i)).toUri().toString());
-                                    ImageView im = (ImageView) n;
-                                    im.setImage(image);
-                                    im.setVisible(true);
-                                }
+                                Image image = new Image(Paths.get(view.getGUIboard().get(i)).toUri().toString());
+                                ImageView im = (ImageView) n;
+                                im.setImage(image);
+                                im.setVisible(true);
                                 i++;
                             }
                         }
@@ -317,13 +325,10 @@ public class GamePanelController{
                 for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
                     Node n = getTileImgView(row, col, myShelfGrid);
                     if (n != null) {
-                        if (!view.getMyShelf().get(i).contains("transparent.png")) {
-                            System.out.println("putting not transparent tile, row: "+row+" column: "+col);
-                            Image image = new Image(Paths.get(view.getMyShelf().get(i)).toUri().toString());
-                            ImageView im = (ImageView) n;
-                            im.setImage(image);
-                            im.setVisible(true);
-                        }
+                        Image image = new Image(Paths.get(view.getMyShelf().get(i)).toUri().toString());
+                        ImageView im = (ImageView) n;
+                        im.setImage(image);
+                        im.setVisible(true);
                         i++;
                     }
                 }
@@ -392,25 +397,124 @@ public class GamePanelController{
         }
     }
 
-    public void insertCol1(ActionEvent actionEvent) {
-    }
-
-    public void insertCol2(ActionEvent actionEvent) {
-    }
-
-    public void insertCol3(ActionEvent actionEvent) {
-    }
-
-    public void insertCol4(ActionEvent actionEvent) {
-    }
-
-    public void insertCol5(ActionEvent actionEvent) {
-    }
-
     public void resetCollectedTiles(ActionEvent actionEvent) {
-        setColBtnsEnabled(false);
+        setResetEnabled(false);
         collectedTiles.clear();
         boardGrid.getChildren().forEach(tile->tile.setVisible(true));
         collectedTilesBox.getChildren().clear();
+    }
+
+    public void glowColumn1(MouseEvent mouseEvent) {
+        if(collectedTiles.size()>0) {
+            Platform.runLater(() -> {
+                col1Box.setBackground(new Background(new BackgroundFill(Color.web("#7cb8d6"), CornerRadii.EMPTY, Insets.EMPTY)));
+                col1Box.setOpacity(0.5);
+            });
+        }
+    }
+
+    public void deglowColumn1(MouseEvent mouseEvent) {
+        Platform.runLater(() -> {
+            col1Box.setBackground(null);
+            col1Box.setOpacity(0);
+        });
+    }
+
+    public void glowColumn2(MouseEvent mouseEvent) {
+        if(collectedTiles.size()>0) {
+            Platform.runLater(() -> {
+                col2Box.setBackground(new Background(new BackgroundFill(Color.web("#7cb8d6"), CornerRadii.EMPTY, Insets.EMPTY)));
+                col2Box.setOpacity(0.5);
+            });
+        }
+    }
+
+    public void deglowColumn2(MouseEvent mouseEvent) {
+        Platform.runLater(()->{
+            col2Box.setBackground(null);
+            col2Box.setOpacity(0);
+        });
+    }
+    public void glowColumn3(MouseEvent mouseEvent) {
+        if(collectedTiles.size()>0) {
+            Platform.runLater(() -> {
+                col3Box.setBackground(new Background(new BackgroundFill(Color.web("#7cb8d6"), CornerRadii.EMPTY, Insets.EMPTY)));
+                col3Box.setOpacity(0.5);
+            });
+        }
+    }
+
+    public void deglowColumn3(MouseEvent mouseEvent) {
+        Platform.runLater(()->{
+            col3Box.setBackground(null);
+            col3Box.setOpacity(0);
+        });
+
+    }
+    public void glowColumn4(MouseEvent mouseEvent) {
+        if(collectedTiles.size()>0) {
+            Platform.runLater(() -> {
+                col4Box.setBackground(new Background(new BackgroundFill(Color.web("#7cb8d6"), CornerRadii.EMPTY, Insets.EMPTY)));
+                col4Box.setOpacity(0.5);
+            });
+        }
+    }
+
+    public void deglowColumn4(MouseEvent mouseEvent) {
+        Platform.runLater(()->{
+            col4Box.setBackground(null);
+            col4Box.setOpacity(0);
+        });
+    }
+    public void glowColumn5(MouseEvent mouseEvent) {
+        if(collectedTiles.size()>0) {
+            Platform.runLater(() -> {
+                col5Box.setBackground(new Background(new BackgroundFill(Color.web("#7cb8d6"), CornerRadii.EMPTY, Insets.EMPTY)));
+                col5Box.setOpacity(0.5);
+            });
+        }
+    }
+
+    public void deglowColumn5(MouseEvent mouseEvent) {
+        Platform.runLater(()->{
+            col5Box.setBackground(null);
+            col5Box.setOpacity(0);
+        });
+    }
+
+    private void collectTiles(int col) {
+        column = col;
+        if(collectedTiles.size()>0) {
+            StringBuilder tiles = new StringBuilder();
+            for (ImageView imv : collectedTiles) {
+                tiles.append(GridPane.getRowIndex(imv)+1).append(",").append(GridPane.getColumnIndex(imv)+1).append(" ");
+            }
+            Client.getInstance().addGuiAction("/collect " + tiles.toString().trim());
+        }
+    }
+
+    public void insertInColumn(){
+        if(column>0) {
+            Client.getInstance().addGuiAction("/column " + column);
+            collectedTiles.clear();
+            collectedTilesBox.getChildren().clear();
+        }
+    }
+
+    public void insertTiles1(MouseEvent mouseEvent) {
+        collectTiles(1);
+    }
+
+    public void insertTiles2(MouseEvent mouseEvent) {
+        collectTiles(2);
+    }
+    public void insertTiles3(MouseEvent mouseEvent) {
+        collectTiles(3);
+    }
+    public void insertTiles4(MouseEvent mouseEvent) {
+        collectTiles(4);
+    }
+    public void insertTiles5(MouseEvent mouseEvent) {
+        collectTiles(5);
     }
 }

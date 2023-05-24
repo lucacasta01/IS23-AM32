@@ -279,6 +279,10 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                         if (isGUI) {
                                             GUIClient.getInstance().switchToWaitingScene();
                                         }
+                                    } else if (response.getResponseType() == Response.ResponseType.ACCEPT_COLLECT) {
+                                        if(isGUI){
+                                            gamePanelController.insertInColumn();
+                                        }
                                     } else if (response.getResponseType() == Response.ResponseType.RETURN_TO_MENU) {
                                         if (isGUI) {
                                             GUIClient.getInstance().switchToMenu();
@@ -706,6 +710,11 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     @Override
     public void denyRandomGame() throws RemoteException {
         GUIClient.getInstance().showDenyDialog("No game available\nYou should create a new one".toUpperCase());
+    }
+
+    @Override
+    public void acceptCollect() throws RemoteException {
+        gamePanelController.insertInColumn();
     }
 
     public void addGuiAction(String action){

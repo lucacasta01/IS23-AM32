@@ -70,6 +70,7 @@ public class Action {
         PRIVATEMESSAGE,
         PICKTILES,
         SELECTCOLUMN,
+        COLLECT_AND_INSERT,
         INFO,
         PING,
         PONG,

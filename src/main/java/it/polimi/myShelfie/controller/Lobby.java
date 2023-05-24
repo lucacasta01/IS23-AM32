@@ -225,6 +225,7 @@ public class Lobby implements Runnable{
                                     }
                                     ch.sendInfoMessage(builder.toString());
                                     ch.sendInfoMessage("Insert column or change order");
+                                    ch.notifyCollectAccepted();
                                 }
 
 

@@ -849,4 +849,19 @@ public class ClientHandler implements Runnable {
             out.println(gson.toJson(new Response(Response.ResponseType.ACCEPT_LOAD_GAME, null, null, null)));
         }
     }
+
+    public void notifyCollectAccepted() {
+        if(isRMI){
+            try{
+                rmiClient.acceptCollect();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Gson gson = new Gson();
+            out.println(gson.toJson(new Response(Response.ResponseType.ACCEPT_COLLECT, null, null, null)));
+        }
+    }
 }
