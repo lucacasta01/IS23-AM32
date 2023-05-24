@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -24,6 +25,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,14 +48,14 @@ public class GamePanelController{
     @FXML
     HBox collectedTilesBox;
     @FXML
-    Button col1Btn, col2Btn, col3Btn, col4Btn, col5Btn, colRstBtn;
+    Button col1Btn, col2Btn, col3Btn, col4Btn, col5Btn, collectRstBtn;
     Button[] colBtns;
-    List<String> collectedTiles = new ArrayList<>();
+    List<Image> collectedTiles = new ArrayList<>();
 
 
     public void initialize() {
         initializeChatPanel();
-        colBtns  = new Button[]{col1Btn,col2Btn,col3Btn,col4Btn,col5Btn,colRstBtn};
+        colBtns  = new Button[]{col1Btn,col2Btn,col3Btn,col4Btn,col5Btn,collectRstBtn};
         Client.getInstance().setGamePanelController(this);
         addGridEvent();
         setColBtnsEnabled(false);
@@ -68,14 +70,31 @@ public class GamePanelController{
     private void addGridEvent() {
         boardGrid.getChildren().forEach(item -> {
             item.setOnMouseClicked(event -> {
-                int row, column;
-                Node clickedNode = event.getPickResult().getIntersectedNode();
-                row = GridPane.getRowIndex(clickedNode);
-                column = GridPane.getColumnIndex(clickedNode);
-                collectedTiles.add("("+row+","+column   +")");
-                setColBtnsEnabled(true);
+                if(collectedTiles.size()<3&&isMyTurn()) {
+                    Node clickedNode = event.getPickResult().getIntersectedNode();
+                    ImageView im = (ImageView) clickedNode;
+                    clickedNode.setVisible(false);
+                    collectedTiles.add(im.getImage());
+                    printCollectedTiles();
+                    setColBtnsEnabled(true);
+                }
             });
         });
+    }
+
+    private boolean isMyTurn() {
+        return  Client.getInstance().getView().getCurrentPlayer().equals(Client.getInstance().getNickname());
+    }
+
+    private void printCollectedTiles() {
+        collectedTilesBox.getChildren().clear();
+        for(Image im: collectedTiles){
+            ImageView imv = new ImageView(im);
+            imv.setFitHeight(69);
+            imv.setFitWidth(69);
+            HBox.setMargin(imv, new Insets(0,0,0,5));
+            collectedTilesBox.getChildren().add(imv);
+        }
     }
 
     public void updateView() {
@@ -391,6 +410,7 @@ public class GamePanelController{
     public void resetCollectedTiles(ActionEvent actionEvent) {
         setColBtnsEnabled(false);
         collectedTiles.clear();
-        System.out.println("Collected tiles reset");
+        boardGrid.getChildren().forEach(tile->tile.setVisible(true));
+        collectedTilesBox.getChildren().clear();
     }
 }

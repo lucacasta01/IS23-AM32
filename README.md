@@ -15,15 +15,15 @@ game [MyShelfie](https://www.craniocreations.it/prodotto/my-shelfie)
 | Component            | State  |
 |----------------------|--------|
 | Model                | 🟢     |
-| View                 | 🟡     |
-| Controller           | 🟡     |
+| View                 | 🟢     |
+| Controller           | 🟢     |
 
 | Advanced feature     | State |
 |----------------------|-------|
-| Multiple games       | 🟡    |
-| Game persistence     | 🟡    |
+| Multiple games       | 🟢    |
+| Game persistence     | 🟢    |
 | Player reconnection  | 🔴    |
-| Chat room            | 🟡    |
+| Chat room            | 🟢    |
 
 
 

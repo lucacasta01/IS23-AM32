@@ -35,7 +35,7 @@
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="rulesBtn" blendMode="OVERLAY" mnemonicParsing="false" onAction="#openRules" prefHeight="35.0" prefWidth="60.0" text="RULES">
+            <Button fx:id="rulesBtn" blendMode="OVERLAY" mnemonicParsing="false" onAction="#openRules" prefHeight="27.0" prefWidth="67.0" text="RULES">
                <HBox.margin>
                   <Insets right="200.0" />
                </HBox.margin>
