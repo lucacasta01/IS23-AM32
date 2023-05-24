@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="chatPanel" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myShelfie.controller.GUIcontroller.ChatController">
+<VBox fx:id="chatPanel" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="290.0" prefWidth="430.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myShelfie.controller.GUIcontroller.ChatController">
    <children>
       <Label blendMode="OVERLAY" text="CHATROOM">
          <VBox.margin>
@@ -20,7 +20,7 @@
             <Font name="Arial Bold Italic" size="18.0" />
          </font>
       </Label>
-      <TextArea fx:id="chatTxt" blendMode="OVERLAY" prefHeight="437.0" prefWidth="230.0">
+      <TextArea fx:id="chatTxt" blendMode="OVERLAY" editable="false" prefHeight="437.0" prefWidth="230.0">
          <VBox.margin>
             <Insets left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
@@ -28,32 +28,43 @@
             <Font name="Arial" size="14.0" />
          </font>
       </TextArea>
-      <TextField fx:id="messageTxt" blendMode="OVERLAY" prefHeight="25.0" prefWidth="189.0">
+      <HBox alignment="CENTER_RIGHT">
          <VBox.margin>
-            <Insets left="50.0" right="50.0" top="7.0" />
+            <Insets left="10.0" right="10.0" top="7.0" />
          </VBox.margin>
-      </TextField>
+         <children>
+            <Label blendMode="OVERLAY" text="Message: ">
+               <font>
+                  <Font name="Arial Italic" size="12.0" />
+               </font>
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </Label>
+            <TextField fx:id="messageTxt" blendMode="OVERLAY" prefHeight="25.0" prefWidth="347.0" />
+         </children>
+      </HBox>
       <HBox alignment="CENTER_LEFT">
          <VBox.margin>
             <Insets bottom="10.0" left="10.0" top="7.0" />
          </VBox.margin>
          <children>
-            <Label blendMode="OVERLAY" text="To:">
+            <Label blendMode="OVERLAY" prefHeight="16.0" prefWidth="37.0" text="To:">
                <font>
-                  <Font name="Arial Italic" size="10.0" />
+                  <Font name="Arial Italic" size="13.0" />
                </font>
                <HBox.margin>
-                  <Insets left="20.0" />
+                  <Insets />
                </HBox.margin>
             </Label>
             <ComboBox fx:id="messageToCombo" blendMode="OVERLAY" prefWidth="150.0">
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="42.0" />
                </HBox.margin>
             </ComboBox>
             <Button fx:id="sendBtn" blendMode="OVERLAY" mnemonicParsing="false" onAction="#sendMessage" prefHeight="25.0" prefWidth="130.0" text="Send">
                <HBox.margin>
-                  <Insets left="120.0" />
+                  <Insets left="100.0" right="10.0" />
                </HBox.margin>
             </Button>
          </children>

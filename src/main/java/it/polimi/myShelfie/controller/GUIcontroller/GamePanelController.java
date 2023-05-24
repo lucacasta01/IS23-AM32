@@ -6,6 +6,7 @@ import it.polimi.myShelfie.application.GUIClient;
 import it.polimi.myShelfie.utilities.Settings;
 import it.polimi.myShelfie.utilities.beans.View;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -39,7 +40,7 @@ public class GamePanelController{
     @FXML
     ImageView sharedGoal1, sharedGoal2, personalGoal;
     @FXML
-    HBox collectedTilesBox;
+    VBox collectedTilesBox;
     @FXML
     Button collectRstBtn;
 
@@ -114,11 +115,13 @@ public class GamePanelController{
 
     private void printCollectedTiles() {
         collectedTilesBox.getChildren().clear();
-        for(ImageView im: collectedTiles){
+        List<ImageView> reversed = new ArrayList<>(collectedTiles);
+        Collections.reverse(reversed);
+        for(ImageView im: reversed){
             ImageView imv = new ImageView(im.getImage());
             imv.setFitHeight(69);
             imv.setFitWidth(69);
-            HBox.setMargin(imv, new Insets(0,0,0,5));
+            HBox.setMargin(imv, new Insets(0,0,5,0));
             collectedTilesBox.getChildren().add(imv);
         }
     }
@@ -483,13 +486,18 @@ public class GamePanelController{
     }
 
     private void collectTiles(int col) {
-        column = col;
-        if(collectedTiles.size()>0) {
-            StringBuilder tiles = new StringBuilder();
-            for (ImageView imv : collectedTiles) {
-                tiles.append(GridPane.getRowIndex(imv)+1).append(",").append(GridPane.getColumnIndex(imv)+1).append(" ");
+        if(collectedTiles.size() > freeSpots(col)){
+            GUIClient.getInstance().showDenyDialog("Column "+col+" can contain\na maximum of "+freeSpots(col)+" other tiles");
+        }
+        else {
+            column = col;
+            if (collectedTiles.size() > 0) {
+                StringBuilder tiles = new StringBuilder();
+                for (ImageView imv : collectedTiles) {
+                    tiles.append(GridPane.getRowIndex(imv) + 1).append(",").append(GridPane.getColumnIndex(imv) + 1).append(" ");
+                }
+                Client.getInstance().addGuiAction("/collect " + tiles.toString().trim());
             }
-            Client.getInstance().addGuiAction("/collect " + tiles.toString().trim());
         }
     }
 
@@ -497,8 +505,31 @@ public class GamePanelController{
         if(column>0) {
             Client.getInstance().addGuiAction("/column " + column);
             collectedTiles.clear();
-            collectedTilesBox.getChildren().clear();
+            Platform.runLater(()->{
+                collectedTilesBox.getChildren().clear();
+                setResetEnabled(false);
+            });
+
         }
+    }
+
+    private int freeSpots(int col) {
+        int count = 0;
+        int i=0, k=0;
+
+        for(Node n : myShelfGrid.getChildren()){
+            if(i % Settings.SHELFCOLUMN == col-1){
+                try{
+                    if(((ImageView)n).getImage().getUrl().contains("transparent.png")){
+                        count++;
+                    }
+                }catch (ClassCastException e){
+                    //ignore
+                }
+            }
+            i++;
+        }
+        return count;
     }
 
     public void insertTiles1(MouseEvent mouseEvent) {

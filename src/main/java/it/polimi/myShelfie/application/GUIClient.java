@@ -158,7 +158,7 @@ public class GUIClient extends Application {
             stage.setHeight(850);
             stage.setWidth(1440);
             stage.setScene(new Scene(gameParent));
-            stage.setFullScreen(true);
+            //stage.setFullScreen(true);
         });
     }
     public void addMyChatMessage(String message){
