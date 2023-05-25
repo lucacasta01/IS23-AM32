@@ -140,7 +140,10 @@ public class Server extends UnicastRemoteObject implements Runnable{
                 .setPrettyPrinting()
                 .create();
         try {
-            FileWriter fw = new FileWriter("src/config/usergame.json");
+            if(getClass().getResource("/config/usergame.json") == null){
+               new File(getClass().getResource("/config").getPath()+"/usergame.json").createNewFile();
+            }
+            FileWriter fw = new FileWriter(getClass().getResource("/config/usergame.json").getPath());
             Map<String,String> toSave = new HashMap<>();
             Usergame usergame = new Usergame();
             for(String k : userGame.keySet()){
@@ -158,12 +161,12 @@ public class Server extends UnicastRemoteObject implements Runnable{
         }
     }
     public Map<String,String> loadUserGame(){
-        Path path = Paths.get("src/config/usergame.json");
-        if(!path.toFile().isFile()){
+        URL url = getClass().getResource("/config/usergame.json");
+        if(url == null){
             return new HashMap<>();
         }
         else{
-            return JsonParser.getUsergame(path.toString());
+            return JsonParser.getUsergame(url.toString());
         }
     }
 
