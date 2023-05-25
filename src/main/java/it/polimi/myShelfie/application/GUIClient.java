@@ -1,10 +1,8 @@
 package it.polimi.myShelfie.application;
 
-import it.polimi.myShelfie.controller.GUIcontroller.ChatController;
-import it.polimi.myShelfie.controller.GUIcontroller.GamePanelController;
-import it.polimi.myShelfie.controller.GUIcontroller.banners.ErrorBannerController;
+import it.polimi.myShelfie.application.GUIcontroller.ChatController;
+import it.polimi.myShelfie.application.GUIcontroller.banners.ErrorBannerController;
 import it.polimi.myShelfie.utilities.beans.ChatMessage;
-import it.polimi.myShelfie.utilities.beans.Response;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +12,9 @@ import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Paths;
 
 public class GUIClient extends Application {
@@ -34,12 +34,20 @@ public class GUIClient extends Application {
         instance = this;
     }
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         this.stage = stage;
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        Parent root = fxmlLoader.load(Paths.get("src/resources/loginPanel.fxml").toUri().toURL());
+        java.net.URL url = getClass().getResource("/loginPanel.fxml");
+        System.out.println("URL: "+url);
+        FXMLLoader fxmlLoader = new FXMLLoader(url);
+        fxmlLoader.setController(new LoginController());
+        Parent root=null;
+        try {
+            root = fxmlLoader.load();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         stage.setTitle("My Shelfie");
-        stage.getIcons().add(new Image(Paths.get("src/resources/graphics/publisherMaterial/Icon.png").toUri().toURL().openStream()));
+        stage.getIcons().add(new Image(getClass().getResource("/graphics/publisherMaterial/Icon.png").toString()));
         stage.setScene(new Scene(root));
         stage.setMinWidth(820);
         stage.setMinHeight(520);
@@ -85,7 +93,7 @@ public class GUIClient extends Application {
 
 
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
 
     public void showOldGameChoice(){

@@ -1,10 +1,10 @@
 package it.polimi.myShelfie.utilities;
 public class Settings {
     //MODEL
-    public static int SHELFROW = 6;
-    public static int SHELFCOLUMN = 5;
-    public static int BOARD_DIM = 9;
-    public static int TILES_GROUP = 22;
+    public static final int SHELFROW = 6;
+    public static final int SHELFCOLUMN = 5;
+    public static final int BOARD_DIM = 9;
+    public static final int TILES_GROUP = 22;
     public static final int TCPPORT = 10768;
     //RMI
     public static final int RMIPORT = 6667;
@@ -14,4 +14,6 @@ public class Settings {
     public static final int PINGTHRESHOLD = 4000;
     public static final int PINGFACTOR = 40;
     public static final boolean pingOn = false;
+
+
 }

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="backgroundPlayerChoose" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="500.0" minWidth="800.0" prefHeight="500.0" prefWidth="800.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myShelfie.application.GUIcontroller.ChoosePlayerController">
+   <children>
+      <VBox alignment="CENTER" layoutX="-1.0" layoutY="167.0" prefHeight="333.0" prefWidth="801.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="167.0">
+         <children>
+            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Select players number">
+                     <font>
+                        <Font name="Arial" size="16.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="CENTER" prefHeight="164.0" prefWidth="801.0">
+                     <children>
+                        <Button fx:id="twoPlayersBtn" blendMode="OVERLAY" mnemonicParsing="false" onAction="#twoPlayersChoice" text="2">
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button fx:id="threePlayersBtn" blendMode="OVERLAY" mnemonicParsing="false" onAction="#threePlayersChoice" text="3" />
+                        <Button fx:id="fourPlayersBtn" blendMode="OVERLAY" mnemonicParsing="false" onAction="#fourPlayersChoice" text="4">
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+      <HBox alignment="CENTER" layoutY="14.0" prefHeight="190.0" prefWidth="801.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="14.0">
+         <children>
+            <ImageView fx:id="titleImg" fitHeight="88.0" fitWidth="329.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@graphics/publisherMaterial/Title.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+      <HBox alignment="TOP_RIGHT" layoutX="604.0" layoutY="17.0" prefHeight="143.0" prefWidth="178.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+         <children>
+            <Button fx:id="shutdownBtn" blendMode="OVERLAY" mnemonicParsing="false" onAction="#doShutdown" prefHeight="20.0" prefWidth="51.0" text="MENU" textFill="#704601">
+               <font>
+                  <Font name="Algerian" size="12.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

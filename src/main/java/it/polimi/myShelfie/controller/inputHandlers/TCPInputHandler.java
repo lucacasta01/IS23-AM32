@@ -58,13 +58,18 @@ public class TCPInputHandler extends Thread{
                     client.shutdown();
                 } else if (message.startsWith("/chat")) {
                     Action a = new Action(Action.ActionType.CHAT, client.getNickname(), message.substring(message.indexOf("/chat") + "/chat ".length()), "", null, null);
-                    GUIClient.getInstance().addMyChatMessage(message.substring(message.indexOf("/chat") + "/chat ".length()));
+                    if(client.isGUI()) {
+                        GUIClient.getInstance().addMyChatMessage(message.substring(message.indexOf("/chat") + "/chat ".length()));
+                    }
                     client.sendAction(a);
                 }
                 else if(message.startsWith("/pvt-")){
                     List<String> splitMessage = Arrays.stream(message.split(" ")).toList();
                     if(splitMessage.stream().filter(s -> !s.equals(" ")).toList().size() > 1) {
                         Action a = new Action(Action.ActionType.PRIVATEMESSAGE, client.getNickname(), message.substring("/pvt- ".length() - 1), "", null, null);
+                        if(client.isGUI()){
+                            GUIClient.getInstance().addMyChatMessage(message.substring("/pvt- ".length() - 1));
+                        }
                         client.sendAction(a);
                     }
                 }

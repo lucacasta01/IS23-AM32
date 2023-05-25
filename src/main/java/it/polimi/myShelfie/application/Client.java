@@ -1,9 +1,8 @@
 package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
-import it.polimi.myShelfie.controller.GUIcontroller.ChatController;
-import it.polimi.myShelfie.controller.GUIcontroller.GamePanelController;
-import it.polimi.myShelfie.controller.GUIcontroller.LoginController;
-import it.polimi.myShelfie.controller.GUIcontroller.banners.WaitPlayersController;
+import it.polimi.myShelfie.application.GUIcontroller.ChatController;
+import it.polimi.myShelfie.application.GUIcontroller.GamePanelController;
+import it.polimi.myShelfie.application.GUIcontroller.banners.WaitPlayersController;
 import it.polimi.myShelfie.controller.RMI.RMIClient;
 import it.polimi.myShelfie.controller.RMI.RMIServer;
 import it.polimi.myShelfie.controller.inputHandlers.RMIInputHandler;
