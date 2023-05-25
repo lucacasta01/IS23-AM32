@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Archiver-Version: Plexus Archiver
-Created-By: Apache Maven 3.8.1
-Built-By: albertocastagnoli
-Build-Jdk: 19
-Main-Class: it.polimi.myShelfie.application.MyShelfieClient
-

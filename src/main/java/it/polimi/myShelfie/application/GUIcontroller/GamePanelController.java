@@ -300,7 +300,7 @@ public class GamePanelController{
                         for (int col = 0; col < Settings.BOARD_DIM; col++) {
                             Node n = getTileImgView(row, col, boardGrid);
                             if (n != null) {
-                                Image image = new Image(Paths.get(view.getGUIboard().get(i)).toUri().toString());
+                                Image image = new Image(getClass().getResource(view.getGUIboard().get(i)).toString());
                                 ImageView im = (ImageView) n;
                                 im.setImage(image);
                                 im.setVisible(true);
@@ -313,15 +313,15 @@ public class GamePanelController{
 
         //personal goal update
         Platform.runLater(()->{
-            personalGoal.setImage(new Image(Paths.get(view.getGUIpersonalCard()).toUri().toString()));
+            personalGoal.setImage(new Image(getClass().getResource(view.getGUIpersonalCard()).toString()));
             personalGoal.setVisible(true);
         });
 
 
         //common goals update
         Platform.runLater(()->{
-            sharedGoal1.setImage(new Image(Paths.get(view.getGUIsharedCards().get(0)).toUri().toString()));
-            sharedGoal2.setImage(new Image(Paths.get(view.getGUIsharedCards().get(1)).toUri().toString()));
+            sharedGoal1.setImage(new Image(Objects.requireNonNull(getClass().getResource(view.getGUIsharedCards().get(0))).toString()));
+            sharedGoal2.setImage(new Image(Objects.requireNonNull(getClass().getResource(view.getGUIsharedCards().get(1))).toString()));
             sharedGoal1.setVisible(true);
             sharedGoal2.setVisible(true);
         });
@@ -333,7 +333,7 @@ public class GamePanelController{
                 for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
                     Node n = getTileImgView(row, col, myShelfGrid);
                     if (n != null) {
-                        Image image = new Image(Paths.get(view.getMyShelf().get(i)).toUri().toString());
+                        Image image = new Image(getClass().getResource(view.getMyShelf().get(i)).toString());
                         ImageView im = (ImageView) n;
                         im.setImage(image);
                         im.setVisible(true);
@@ -371,10 +371,10 @@ public class GamePanelController{
     private void initializeChatPanel() {
         VBox chatPanel = null;
         try {
-            chatPanel = FXMLLoader.load(Paths.get("src/resources/chatPanel.fxml").toUri().toURL());
+            chatPanel = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/chatPanel.fxml")));
         }
         catch (IOException e){
-            e.printStackTrace();
+            throw new RuntimeException("Chat panel loading failed");
         }
         chatDrawer.setSidePane(chatPanel);
         chatDrawer.setVisible(false);
@@ -397,7 +397,7 @@ public class GamePanelController{
     public void openRules(ActionEvent actionEvent) {
         if (Desktop.isDesktopSupported()) {
             try {
-                File myFile = new File("src/resources/MyShelfie_Rulebook_ITA.pdf");
+                File myFile = new File(Objects.requireNonNull(getClass().getResource("/MyShelfie_Rulebook_ITA.pdf")).toString());
                 Desktop.getDesktop().open(myFile);
             } catch (IOException ex) {
                 // no application registered for PDFs

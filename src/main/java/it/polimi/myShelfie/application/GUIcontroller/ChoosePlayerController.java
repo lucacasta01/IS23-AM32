@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 public class ChoosePlayerController {
     Client client;
@@ -39,7 +40,7 @@ public class ChoosePlayerController {
         client.setWaitPlayerStatus("(1/2)");
         FXMLLoader fxmlLoader = new FXMLLoader();
         try {
-            fxmlLoader.load(Paths.get("src/resources/waitPlayerBanner.fxml").toUri().toURL());
+            fxmlLoader.load(Objects.requireNonNull(getClass().getResource("/waitPlayerBanner.fxml")));
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -49,7 +50,7 @@ public class ChoosePlayerController {
             public void run() {
                 Parent waitPlayers = null;
                 try {
-                    waitPlayers = FXMLLoader.load(Paths.get("src/resources/waitPlayerBanner.fxml").toUri().toURL());
+                    waitPlayers = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/waitPlayerBanner.fxml")));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -69,7 +70,7 @@ public class ChoosePlayerController {
         client.setWaitPlayerStatus("(1/3)");
         FXMLLoader fxmlLoader = new FXMLLoader();
         try {
-            fxmlLoader.load(Paths.get("src/resources/waitPlayerBanner.fxml").toUri().toURL());
+            fxmlLoader.load(Objects.requireNonNull(getClass().getResource("/waitPlayerBanner.fxml")));
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -79,9 +80,9 @@ public class ChoosePlayerController {
             public void run() {
                 Parent waitPlayers = null;
                 try {
-                    waitPlayers = FXMLLoader.load(Paths.get("src/resources/waitPlayerBanner.fxml").toUri().toURL());
+                    waitPlayers = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/waitPlayerBanner.fxml")));
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException("Wait players banner loading failed");
                 }
                 stage.setMinWidth(300);
                 stage.setMinHeight(200);
@@ -99,9 +100,9 @@ public class ChoosePlayerController {
         client.setWaitPlayerStatus("(1/4)");
         FXMLLoader fxmlLoader = new FXMLLoader();
         try {
-            fxmlLoader.load(Paths.get("src/resources/waitPlayerBanner.fxml").toUri().toURL());
+            fxmlLoader.load(Objects.requireNonNull(getClass().getResource("/waitPlayerBanner.fxml")));
         }catch(Exception e){
-            e.printStackTrace();
+            throw new RuntimeException("Wait players banner loading failed");
         }
         client.setWaitPlayersController(fxmlLoader.getController());
         Platform.runLater(new Runnable() {
@@ -109,9 +110,9 @@ public class ChoosePlayerController {
             public void run() {
                 Parent waitPlayers = null;
                 try {
-                    waitPlayers = FXMLLoader.load(Paths.get("src/resources/waitPlayerBanner.fxml").toUri().toURL());
+                    waitPlayers = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/waitPlayerBanner.fxml")));
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException("Wait players banner loading failed");
                 }
                 stage.setMinWidth(300);
                 stage.setMinHeight(200);

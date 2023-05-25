@@ -61,7 +61,7 @@ public class GUIClient extends Application {
                 Stage bannerStage = new Stage();
                 FXMLLoader loader = null;
                 try {
-                    loader = new FXMLLoader(Paths.get("src/resources/errorBanner.fxml").toUri().toURL());
+                    loader = new FXMLLoader(Paths.get("/errorBanner.fxml").toUri().toURL());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -76,7 +76,7 @@ public class GUIClient extends Application {
                 //Parent root = FXMLLoader.load(Paths.get("src/resources/errorBanner.fxml").toUri().toURL());
                 bannerStage.setScene(new Scene(root));
                 try {
-                    bannerStage.getIcons().add(new Image(Paths.get("src/resources/graphics/icons/error.png").toUri().toURL().openStream()));
+                    bannerStage.getIcons().add(new Image(Paths.get("/graphics/icons/error.png").toUri().toURL().openStream()));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -101,14 +101,14 @@ public class GUIClient extends Application {
         Platform.runLater(()->{
             Parent choice = null;
             try {
-                choice = FXMLLoader.load(Paths.get("src/resources/oldGameJoinBanner.fxml").toUri().toURL());
+                choice = FXMLLoader.load(Paths.get("/oldGameJoinBanner.fxml").toUri().toURL());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
             Stage banStage = new Stage();
             banStage.setTitle("My Shelfie");
             try {
-                banStage.getIcons().add(new Image(Paths.get("src/resources/graphics/publisherMaterial/Icon.png").toUri().toURL().openStream()));
+                banStage.getIcons().add(new Image(Paths.get("/graphics/publisherMaterial/Icon.png").toUri().toURL().openStream()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -125,7 +125,7 @@ public class GUIClient extends Application {
         Platform.runLater(()->{
             Parent waitPlayers = null;
             try {
-                waitPlayers = FXMLLoader.load(Paths.get("src/resources/waitPlayerBanner.fxml").toUri().toURL());
+                waitPlayers = FXMLLoader.load(Paths.get("/waitPlayerBanner.fxml").toUri().toURL());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -140,7 +140,7 @@ public class GUIClient extends Application {
         Platform.runLater(()->{
             Parent menu = null;
             try {
-                menu = FXMLLoader.load(Paths.get("src/resources/menuPanel.fxml").toUri().toURL());
+                menu = FXMLLoader.load(Paths.get("/menuPanel.fxml").toUri().toURL());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -156,7 +156,7 @@ public class GUIClient extends Application {
         Platform.runLater(()->{
             Parent gameParent = null;
             try {
-                gameParent = FXMLLoader.load(Paths.get("src/resources/gamePanel.fxml").toUri().toURL());
+                gameParent = FXMLLoader.load(Paths.get("/gamePanel.fxml").toUri().toURL());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -180,7 +180,7 @@ public class GUIClient extends Application {
             Parent denyPanel = null;
             FXMLLoader loader = null;
             try {
-                loader = new FXMLLoader(Paths.get("src/resources/errorBanner.fxml").toUri().toURL());
+                loader = new FXMLLoader(Paths.get("/errorBanner.fxml").toUri().toURL());
             } catch (MalformedURLException e) {
                 throw new RuntimeException(e);
             }
@@ -195,7 +195,7 @@ public class GUIClient extends Application {
             Stage ban = new Stage();
             ban.setTitle("Warning!");
             try {
-                ban.getIcons().add(new Image(Paths.get("src/resources/graphics/icons/alert.png").toUri().toURL().openStream()));
+                ban.getIcons().add(new Image(Paths.get("/graphics/icons/alert.png").toUri().toURL().openStream()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -208,7 +208,7 @@ public class GUIClient extends Application {
         Platform.runLater(()->{
             Parent numberPanel = null;
             try {
-                numberPanel = FXMLLoader.load(Paths.get("src/resources/chosePlayerNumber.fxml").toUri().toURL());
+                numberPanel = FXMLLoader.load(Paths.get("/chosePlayerNumber.fxml").toUri().toURL());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -221,14 +221,14 @@ public class GUIClient extends Application {
         Platform.runLater(()->{
             Parent choice = null;
             try {
-                choice = FXMLLoader.load(Paths.get("src/resources/confirmExitBanner.fxml").toUri().toURL());
+                choice = FXMLLoader.load(Paths.get("/confirmExitBanner.fxml").toUri().toURL());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
             Stage banStage = new Stage();
             banStage.setTitle("Back to menu");
             try {
-                banStage.getIcons().add(new Image(Paths.get("src/resources/graphics/icons/alert.png").toUri().toURL().openStream()));
+                banStage.getIcons().add(new Image(Paths.get("/graphics/icons/alert.png").toUri().toURL().openStream()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
