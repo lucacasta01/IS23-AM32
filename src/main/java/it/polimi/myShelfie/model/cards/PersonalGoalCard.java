@@ -73,7 +73,7 @@ public class PersonalGoalCard extends Card{
 
     public Integer getIndex(){
         String[] strings = imgPath.split("/");
-        String myString = strings[4];
+        String myString = strings[3];
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(myString.charAt(14));
         if(myString.charAt(15) != '.'){

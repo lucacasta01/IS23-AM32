@@ -157,7 +157,7 @@ public class Server extends UnicastRemoteObject implements Runnable{
             fw.close();
         }
         catch (IOException e){
-            System.out.println(e.toString());
+            e.printStackTrace();
         }
     }
     public Map<String,String> loadUserGame(){
@@ -166,7 +166,7 @@ public class Server extends UnicastRemoteObject implements Runnable{
             return new HashMap<>();
         }
         else{
-            return JsonParser.getUsergame(url.toString());
+            return JsonParser.getUsergame(url.getPath());
         }
     }
 

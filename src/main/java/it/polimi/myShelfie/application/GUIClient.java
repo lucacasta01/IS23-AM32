@@ -70,7 +70,7 @@ public class GUIClient extends Application {
                 ErrorBannerController controller = loader.getController();
                 controller.setLabel(errorLabel);
                 bannerStage.setScene(new Scene(root));
-                bannerStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("/graphics/icons/error.png")).toString()));
+                bannerStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("/graphics/icons/error.png")).getPath()));
                 Screen.getPrimary().getBounds().getHeight();
                 bannerStage.setResizable(false);
                 bannerStage.show();
@@ -98,7 +98,7 @@ public class GUIClient extends Application {
             }
             Stage banStage = new Stage();
             banStage.setTitle("My Shelfie");
-            banStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("/graphics/publisherMaterial/Icon.png")).toString()));
+            banStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("/graphics/publisherMaterial/Icon.png")).getPath()));
             banStage.setMinWidth(300);
             banStage.setMinHeight(200);
             banStage.setWidth(300);
@@ -181,7 +181,7 @@ public class GUIClient extends Application {
             controller.setLabel(errorMessage);
             Stage ban = new Stage();
             ban.setTitle("Warning!");
-            ban.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("/graphics/icons/alert.png")).toString()));
+            ban.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("/graphics/icons/alert.png")).getPath()));
             ban.setScene(new Scene(denyPanel));
             ban.show();
         });
@@ -210,7 +210,7 @@ public class GUIClient extends Application {
             }
             Stage banStage = new Stage();
             banStage.setTitle("Back to menu");
-            banStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("/graphics/icons/alert.png")).toString()));
+            banStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("/graphics/icons/alert.png")).getPath()));
             banStage.setMinWidth(300);
             banStage.setMinHeight(200);
             banStage.setWidth(300);

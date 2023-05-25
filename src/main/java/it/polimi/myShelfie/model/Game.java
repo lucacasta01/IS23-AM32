@@ -5,6 +5,8 @@ import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.model.cards.*;
 import it.polimi.myShelfie.utilities.*;
 import it.polimi.myShelfie.utilities.beans.GameParameters;
+
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -104,12 +106,16 @@ public class Game implements Runnable{
                 .setPrettyPrinting()
                 .create();
         try {
-            FileWriter fw = new FileWriter(Objects.requireNonNull(getClass().getResource("/config/savedgames/" + UID + ".json")).toString());
+            if(getClass().getResource("/config/savedgames/" + UID + ".json")==null) {
+                File file = new File((getClass().getResource("/config/savedgames/").getPath() + UID + ".json").replace("file:", ""));
+                file.createNewFile();
+            }
+            FileWriter fw = new FileWriter(Objects.requireNonNull(getClass().getResource("/config/savedgames/" + UID + ".json")).getPath());
             fw.write(gson.toJson(gameParameters));
             fw.close();
         }
         catch (IOException e){
-            System.out.println(e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -120,7 +126,7 @@ public class Game implements Runnable{
         try {
                 gameParameters = JsonParser.getGameParameters("/config/savedgames/" + UID + ".json");
         }catch (Exception e){
-            System.out.println(e.toString());
+           e.printStackTrace();
         }
 
         assert gameParameters != null;
@@ -172,8 +178,8 @@ public class Game implements Runnable{
                 PersonalGoalCard cardToAdd = generatePersonalGoalCard(JsonParser.getPersonalGoalConfig(jPath),i);
                 personalDeck.add(cardToAdd);
             }
-        } catch (IOException e) {
-            System.out.println(e.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

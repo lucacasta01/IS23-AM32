@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -21,23 +22,26 @@ public class JsonParser {
      * @throws IOException
      */
     public static List<Position> getNullConfig(String jPath) throws IOException {
-        try (InputStream inputStream = new FileInputStream(Objects.requireNonNull(JsonParser.class.getResource(jPath)).toString())) {
+        try (InputStream inputStream = JsonParser.class.getResourceAsStream(jPath)) {
             String jsonString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             Type type = new TypeToken<ArrayList<Position>>() {}.getType();
             return new Gson().fromJson(jsonString, type);
         }
     }
 
-    public static List<ColorPosition> getPersonalGoalConfig(String jPath) throws IOException{
-        try (InputStream inputStream = new FileInputStream(Objects.requireNonNull(JsonParser.class.getResource(jPath)).toString())) {
+    public static List<ColorPosition> getPersonalGoalConfig(String jPath){
+        try (InputStream inputStream = JsonParser.class.getResourceAsStream(jPath)){
             String jsonString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             Type type = new TypeToken<ArrayList<ColorPosition>>() {}.getType();
             return new Gson().fromJson(jsonString, type);
+        }catch (Exception e){
+            e.printStackTrace();
         }
+        return null;
     }
 
     public static GameParameters getGameParameters(String jPath) throws IOException{
-        try (InputStream inputStream = new FileInputStream(Objects.requireNonNull(JsonParser.class.getResource(jPath)).toString())) {
+        try (InputStream inputStream = new FileInputStream(Objects.requireNonNull(JsonParser.class.getResource(jPath)).getPath())) {
             String jsonString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             Type type = new TypeToken<GameParameters>() {}.getType();
             GameParameters toReturn = new Gson().fromJson(jsonString, type);
@@ -56,7 +60,7 @@ public class JsonParser {
     }
 
     public static Map<String,String> getUsergame(String jPath){
-        try (InputStream inputStream = new FileInputStream(Objects.requireNonNull(JsonParser.class.getResource(jPath)).toString())) {
+        try (InputStream inputStream = new FileInputStream(jPath)) {
             String jsonString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             Type type = new TypeToken<Usergame>() {}.getType();
             Usergame usergame = new Gson().fromJson(jsonString, type);

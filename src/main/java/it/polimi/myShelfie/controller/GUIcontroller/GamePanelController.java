@@ -171,7 +171,7 @@ public class GamePanelController{
                     for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
                         Node n = getTileImgView(row, col, otherShelfGrid1);
                         if (n != null) {
-                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(0).get(i))).toString());
+                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(0).get(i))).getPath());
                             ImageView im = (ImageView) n;
                             im.setImage(image);
                             im.setVisible(true);
@@ -201,7 +201,7 @@ public class GamePanelController{
                     for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
                         Node n = getTileImgView(row, col, otherShelfGrid1);
                         if (n != null) {
-                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(0).get(i))).toString());
+                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(0).get(i))).getPath());
                             ImageView im = (ImageView) n;
                             im.setImage(image);
                             im.setVisible(true);
@@ -217,7 +217,7 @@ public class GamePanelController{
                     for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
                         Node n = getTileImgView(row, col, otherShelfGrid2);
                         if (n != null) {
-                            Image image = new Image(getClass().getResource(view.getOthersGUIShelves().get(1).get(i)).toString());
+                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(1).get(i))).getPath());
                             ImageView im = (ImageView) n;
                             im.setImage(image);
                             im.setVisible(true);
@@ -397,7 +397,7 @@ public class GamePanelController{
     public void openRules(ActionEvent actionEvent) {
         if (Desktop.isDesktopSupported()) {
             try {
-                File myFile = new File(Objects.requireNonNull(getClass().getResource("/MyShelfie_Rulebook_ITA.pdf")).toString());
+                File myFile = new File(Objects.requireNonNull(getClass().getResource("/MyShelfie_Rulebook_ITA.pdf")).getPath());
                 Desktop.getDesktop().open(myFile);
             } catch (IOException ex) {
                 // no application registered for PDFs

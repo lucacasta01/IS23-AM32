@@ -1,0 +1,1288 @@
+{
+  "UID": "aTN2edSO",
+  "usernames": [
+    "a",
+    "s"
+  ],
+  "shelf": [
+    [
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 4
+      }
+    ],
+    [
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 4
+      }
+    ]
+  ],
+  "board": [
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 0
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 1
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 2
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 3
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 4
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 5
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 6
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 0
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 1
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 2
+    },
+    {
+      "color": "W",
+      "imgpath": "src/resources/graphics/itemTiles/Libri1.1.png",
+      "row": 1,
+      "column": 3
+    },
+    {
+      "color": "G",
+      "imgpath": "src/resources/graphics/itemTiles/Gatti1.1.png",
+      "row": 1,
+      "column": 4
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 5
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 6
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 2,
+      "column": 0
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 2,
+      "column": 1
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 2,
+      "column": 2
+    },
+    {
+      "color": "G",
+      "imgpath": "src/resources/graphics/itemTiles/Gatti1.3.png",
+      "row": 2,
+      "column": 3
+    },
+    {
+      "color": "P",
+      "imgpath": "src/resources/graphics/itemTiles/Piante1.3.png",
+      "row": 2,
+      "column": 4
+    },
+    {
+      "color": "P",
+      "imgpath": "src/resources/graphics/itemTiles/Piante1.3.png",
+      "row": 2,
+      "column": 5
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 2,
+      "column": 6
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 2,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 2,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 3,
+      "column": 0
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 3,
+      "column": 1
+    },
+    {
+      "color": "Y",
+      "imgpath": "src/resources/graphics/itemTiles/Giochi1.1.png",
+      "row": 3,
+      "column": 2
+    },
+    {
+      "color": "W",
+      "imgpath": "src/resources/graphics/itemTiles/Libri1.2.png",
+      "row": 3,
+      "column": 3
+    },
+    {
+      "color": "B",
+      "imgpath": "src/resources/graphics/itemTiles/Cornici1.3.png",
+      "row": 3,
+      "column": 4
+    },
+    {
+      "color": "P",
+      "imgpath": "src/resources/graphics/itemTiles/Piante1.3.png",
+      "row": 3,
+      "column": 5
+    },
+    {
+      "color": "Y",
+      "imgpath": "src/resources/graphics/itemTiles/Giochi1.3.png",
+      "row": 3,
+      "column": 6
+    },
+    {
+      "color": "G",
+      "imgpath": "src/resources/graphics/itemTiles/Gatti1.2.png",
+      "row": 3,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 3,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 4,
+      "column": 0
+    },
+    {
+      "color": "L",
+      "imgpath": "src/resources/graphics/itemTiles/Trofei1.3.png",
+      "row": 4,
+      "column": 1
+    },
+    {
+      "color": "Y",
+      "imgpath": "src/resources/graphics/itemTiles/Giochi1.2.png",
+      "row": 4,
+      "column": 2
+    },
+    {
+      "color": "G",
+      "imgpath": "src/resources/graphics/itemTiles/Gatti1.2.png",
+      "row": 4,
+      "column": 3
+    },
+    {
+      "color": "G",
+      "imgpath": "src/resources/graphics/itemTiles/Gatti1.3.png",
+      "row": 4,
+      "column": 4
+    },
+    {
+      "color": "G",
+      "imgpath": "src/resources/graphics/itemTiles/Gatti1.2.png",
+      "row": 4,
+      "column": 5
+    },
+    {
+      "color": "L",
+      "imgpath": "src/resources/graphics/itemTiles/Trofei1.1.png",
+      "row": 4,
+      "column": 6
+    },
+    {
+      "color": "W",
+      "imgpath": "src/resources/graphics/itemTiles/Libri1.1.png",
+      "row": 4,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 4,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 5,
+      "column": 0
+    },
+    {
+      "color": "W",
+      "imgpath": "src/resources/graphics/itemTiles/Libri1.3.png",
+      "row": 5,
+      "column": 1
+    },
+    {
+      "color": "L",
+      "imgpath": "src/resources/graphics/itemTiles/Trofei1.3.png",
+      "row": 5,
+      "column": 2
+    },
+    {
+      "color": "B",
+      "imgpath": "src/resources/graphics/itemTiles/Cornici1.3.png",
+      "row": 5,
+      "column": 3
+    },
+    {
+      "color": "Y",
+      "imgpath": "src/resources/graphics/itemTiles/Giochi1.2.png",
+      "row": 5,
+      "column": 4
+    },
+    {
+      "color": "W",
+      "imgpath": "src/resources/graphics/itemTiles/Libri1.1.png",
+      "row": 5,
+      "column": 5
+    },
+    {
+      "color": "B",
+      "imgpath": "src/resources/graphics/itemTiles/Cornici1.2.png",
+      "row": 5,
+      "column": 6
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 5,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 5,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 6,
+      "column": 0
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 6,
+      "column": 1
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 6,
+      "column": 2
+    },
+    {
+      "color": "G",
+      "imgpath": "src/resources/graphics/itemTiles/Gatti1.3.png",
+      "row": 6,
+      "column": 3
+    },
+    {
+      "color": "W",
+      "imgpath": "src/resources/graphics/itemTiles/Libri1.2.png",
+      "row": 6,
+      "column": 4
+    },
+    {
+      "color": "G",
+      "imgpath": "src/resources/graphics/itemTiles/Gatti1.3.png",
+      "row": 6,
+      "column": 5
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 6,
+      "column": 6
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 6,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 6,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 7,
+      "column": 0
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 7,
+      "column": 1
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 7,
+      "column": 2
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 7,
+      "column": 3
+    },
+    {
+      "color": "W",
+      "imgpath": "src/resources/graphics/itemTiles/Libri1.2.png",
+      "row": 7,
+      "column": 4
+    },
+    {
+      "color": "P",
+      "imgpath": "src/resources/graphics/itemTiles/Piante1.2.png",
+      "row": 7,
+      "column": 5
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 7,
+      "column": 6
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 7,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 7,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 8,
+      "column": 0
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 8,
+      "column": 1
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 8,
+      "column": 2
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 8,
+      "column": 3
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 8,
+      "column": 4
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 8,
+      "column": 5
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 8,
+      "column": 6
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 8,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "src/resources/graphics/itemTiles/transparent.png",
+      "row": 8,
+      "column": 8
+    }
+  ],
+  "score": [
+    0,
+    0
+  ],
+  "personalCards": [
+    6,
+    1
+  ],
+  "sharedCards": [
+    8,
+    11
+  ],
+  "currentPlayer": 0,
+  "tileHeap": [
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.3.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.3.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.3.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.3.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.3.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.3.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.2.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.2.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.2.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.2.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.2.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.2.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.1.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.1.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.1.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.1.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.1.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.1.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Cornici1.1.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Gatti1.2.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Gatti1.2.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Gatti1.2.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Gatti1.2.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Gatti1.2.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Gatti1.1.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Gatti1.1.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Gatti1.1.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Gatti1.1.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Gatti1.1.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Gatti1.1.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Gatti1.3.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Gatti1.3.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Gatti1.3.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.2.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.2.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.2.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.2.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.2.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.2.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.3.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.3.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.3.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.3.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.3.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.3.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.1.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.1.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.1.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.1.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.1.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Giochi1.1.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Libri1.3.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Libri1.3.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Libri1.3.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Libri1.3.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Libri1.3.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Libri1.3.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Libri1.3.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Libri1.2.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Libri1.2.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Libri1.2.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Libri1.2.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Libri1.1.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Libri1.1.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Libri1.1.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Libri1.1.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.3.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.3.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.3.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.3.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.3.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.2.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.2.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.2.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.2.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.2.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.2.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.1.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.1.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.1.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.1.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.1.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.1.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Piante1.1.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.1.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.1.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.1.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.1.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.1.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.1.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.1.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.2.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.2.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.2.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.2.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.2.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.2.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.2.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.3.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.3.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.3.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.3.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "src/resources/graphics/itemTiles/Trofei1.3.png",
+      "myColor": "LIGHTBLUE"
+    }
+  ]
+}
