@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
+import java.util.Objects;
 
 
 public class LoginController {
@@ -47,7 +48,6 @@ public class LoginController {
         Client.getInstance();
         VBox configPanel = null;
         URL url = getClass().getResource("/configPanel.fxml");
-        System.out.println("config panel URL: "+url);
         try {
             configPanel = FXMLLoader.load(url);
         }
@@ -127,7 +127,7 @@ public class LoginController {
             public void run() {
                 Parent menuPage = null;
                 try {
-                    menuPage = FXMLLoader.load(Paths.get("src/resources/menuPanel.fxml").toUri().toURL());
+                    menuPage = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/menuPanel.fxml")));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
