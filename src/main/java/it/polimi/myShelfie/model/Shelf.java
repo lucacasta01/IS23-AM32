@@ -21,7 +21,7 @@ public class Shelf {
     public void initShelf(){
         for(int i = 0; i< Settings.SHELFROW; i++){
             for(int j = 0; j< Settings.SHELFCOLUMN; j++){
-                this.tileMatrix[i][j] = new Tile("src/resources/graphics/itemTiles/transparent.png", Tile.Color.NULLTILE);
+                this.tileMatrix[i][j] = new Tile("/graphics/itemTiles/transparent.png", Tile.Color.NULLTILE);
             }
         }
     }

@@ -171,7 +171,7 @@ public class GamePanelController{
                     for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
                         Node n = getTileImgView(row, col, otherShelfGrid1);
                         if (n != null) {
-                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(0).get(i))).getPath());
+                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(0).get(i))).toString());
                             ImageView im = (ImageView) n;
                             im.setImage(image);
                             im.setVisible(true);
@@ -194,54 +194,6 @@ public class GamePanelController{
                 player3Lbl.setText(otherPlayers.get(1));
                 handleTurn(view,otherPlayers.get(1),player3Lbl);
                 pl3ScoreLbl.setText("Score: "+otherScores.get(1));
-
-                //update first other player shelf
-                int i = 0;
-                for (int row = 0; row < Settings.SHELFROW; row++) {
-                    for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
-                        Node n = getTileImgView(row, col, otherShelfGrid1);
-                        if (n != null) {
-                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(0).get(i))).getPath());
-                            ImageView im = (ImageView) n;
-                            im.setImage(image);
-                            im.setVisible(true);
-                            i++;
-                        }
-                    }
-                }
-                otherShelfGrid1.setVisible(true);
-
-                //update second other player shelf
-                i = 0;
-                for (int row = 0; row < Settings.SHELFROW; row++) {
-                    for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
-                        Node n = getTileImgView(row, col, otherShelfGrid2);
-                        if (n != null) {
-                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(1).get(i))).getPath());
-                            ImageView im = (ImageView) n;
-                            im.setImage(image);
-                            im.setVisible(true);
-                            i++;
-                        }
-                    }
-                }
-                otherShelfGrid2.setVisible(true);
-
-            });
-        }
-        else{
-            Platform.runLater(()->{
-                player2Lbl.setText(otherPlayers.get(0));
-                handleTurn(view,otherPlayers.get(0),player2Lbl);
-                pl2ScoreLbl.setText("Score: "+otherScores.get(0));
-
-                player3Lbl.setText(otherPlayers.get(1));
-                handleTurn(view,otherPlayers.get(1),player3Lbl);
-                pl2ScoreLbl.setText("Score: "+otherScores.get(1));
-
-                player3Lbl.setText(otherPlayers.get(2));
-                handleTurn(view,otherPlayers.get(2),player3Lbl);
-                pl2ScoreLbl.setText("Score: "+otherScores.get(3));
 
                 //update first other player shelf
                 int i = 0;
@@ -275,13 +227,62 @@ public class GamePanelController{
                 }
                 otherShelfGrid2.setVisible(true);
 
+            });
+        }
+        else{
+            Platform.runLater(()->{
+                player2Lbl.setText(otherPlayers.get(0));
+                handleTurn(view,otherPlayers.get(0),player2Lbl);
+                pl2ScoreLbl.setText("Score: "+otherScores.get(0));
+
+                player3Lbl.setText(otherPlayers.get(1));
+                handleTurn(view,otherPlayers.get(1),player3Lbl);
+                pl2ScoreLbl.setText("Score: "+otherScores.get(1));
+
+                player3Lbl.setText(otherPlayers.get(2));
+                handleTurn(view,otherPlayers.get(2),player3Lbl);
+                pl2ScoreLbl.setText("Score: "+otherScores.get(3));
+
+                //update first other player shelf
+                int i = 0;
+                for (int row = 0; row < Settings.SHELFROW; row++) {
+                    for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
+                        Node n = getTileImgView(row, col, otherShelfGrid1);
+                        if (n != null) {
+
+                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(0).get(i))).toString());
+                            ImageView im = (ImageView) n;
+                            im.setImage(image);
+                            im.setVisible(true);
+                            i++;
+                        }
+                    }
+                }
+                otherShelfGrid1.setVisible(true);
+
+                //update second other player shelf
+                i = 0;
+                for (int row = 0; row < Settings.SHELFROW; row++) {
+                    for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
+                        Node n = getTileImgView(row, col, otherShelfGrid2);
+                        if (n != null) {
+                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(1).get(i))).toString());
+                            ImageView im = (ImageView) n;
+                            im.setImage(image);
+                            im.setVisible(true);
+                            i++;
+                        }
+                    }
+                }
+                otherShelfGrid2.setVisible(true);
+
                 //update third other player shelf
                 i = 0;
                 for (int row = 0; row < Settings.SHELFROW; row++) {
                     for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
                         Node n = getTileImgView(row, col, otherShelfGrid3);
                         if (n != null) {
-                            Image image = new Image(getClass().getResource(view.getOthersGUIShelves().get(2).get(i)).toString());
+                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(2).get(i))).toString());
                             ImageView im = (ImageView) n;
                             im.setImage(image);
                             im.setVisible(true);
@@ -300,7 +301,7 @@ public class GamePanelController{
                         for (int col = 0; col < Settings.BOARD_DIM; col++) {
                             Node n = getTileImgView(row, col, boardGrid);
                             if (n != null) {
-                                Image image = new Image(getClass().getResource(view.getGUIboard().get(i)).toString());
+                                Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getGUIboard().get(i))).toString());
                                 ImageView im = (ImageView) n;
                                 im.setImage(image);
                                 im.setVisible(true);
@@ -313,7 +314,7 @@ public class GamePanelController{
 
         //personal goal update
         Platform.runLater(()->{
-            personalGoal.setImage(new Image(getClass().getResource(view.getGUIpersonalCard()).toString()));
+            personalGoal.setImage(new Image(Objects.requireNonNull(getClass().getResource(view.getGUIpersonalCard())).toString()));
             personalGoal.setVisible(true);
         });
 

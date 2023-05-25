@@ -233,7 +233,7 @@ public class ClientHandler implements Runnable {
                                     if(!server.getUserGame().get(this.nickname).equals("-")){
                                         String oldUID = server.getUserGame().get(this.nickname);
                                         server.getUserGame().entrySet().removeIf(entry -> entry.getValue().equals(oldUID));
-                                        Path path = Paths.get("src/config/savedgames/"+oldUID+".json");
+                                        Path path = Paths.get(getClass().getResource("/config/savedgames").getPath()+"/"+oldUID+".json");
                                         if(path.toFile().isFile()){
                                             if(path.toFile().delete()){
                                                 System.out.println("Old game file deleted successfully, UID: "+ oldUID);

@@ -611,9 +611,9 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    Parent numbeofplayer = null;
+                    Parent numberofplayer = null;
                     try {
-                        numbeofplayer = FXMLLoader.load(Paths.get("src/resources/waitPlayerBanner.fxml").toUri().toURL());
+                        numberofplayer = FXMLLoader.load(getClass().getResource("/waitPlayerBanner.fxml"));
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -621,7 +621,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                     stage.setMinHeight(150);
                     stage.setWidth(300);
                     stage.setHeight(150);
-                    stage.setScene(new Scene(numbeofplayer));
+                    stage.setScene(new Scene(numberofplayer));
                 }
             });
         }

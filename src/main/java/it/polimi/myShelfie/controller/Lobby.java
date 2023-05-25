@@ -354,7 +354,7 @@ public class Lobby implements Runnable{
                 Server.getInstance().saveUserGame();
 
                 //delete saved game
-                Path path = Paths.get("src/config/savedgames/"+this.lobbyUID+".json");
+                Path path = Paths.get(getClass().getResource("/config/savedgames").getPath()+"/"+this.lobbyUID+".json");
                 if(path.toFile().isFile()){
                     if(path.toFile().delete()){
                         System.out.println("Successfully deleted saved game file");
