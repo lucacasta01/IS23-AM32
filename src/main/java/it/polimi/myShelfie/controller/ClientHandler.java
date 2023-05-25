@@ -9,6 +9,7 @@ import it.polimi.myShelfie.utilities.beans.Response;
 import it.polimi.myShelfie.utilities.beans.View;
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -233,15 +234,16 @@ public class ClientHandler implements Runnable {
                                     if(!server.getUserGame().get(this.nickname).equals("-")){
                                         String oldUID = server.getUserGame().get(this.nickname);
                                         server.getUserGame().entrySet().removeIf(entry -> entry.getValue().equals(oldUID));
-                                        Path path = Paths.get(getClass().getResource("/config/savedgames").getPath()+"/"+oldUID+".json");
-                                        if(path.toFile().isFile()){
-                                            if(path.toFile().delete()){
+                                        java.net.URL savingFileURL = getClass().getResource("/config/savedgames/" + oldUID + ".json");
+                                        if(savingFileURL != null){
+                                            try {
+                                                Files.delete(Paths.get(savingFileURL.toURI()));
                                                 System.out.println("Old game file deleted successfully, UID: "+ oldUID);
-                                            }else{
-                                                System.out.println("Error while deleting old game file, UID: "+oldUID);
+                                            }
+                                            catch (IOException e){
+                                                e.printStackTrace();
                                             }
                                         }
-
                                     }
                                 }
                                 server.getUserGame().put(nickname, lobby.getLobbyUID());

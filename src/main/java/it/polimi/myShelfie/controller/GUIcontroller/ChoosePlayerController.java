@@ -26,7 +26,8 @@ public class ChoosePlayerController {
     AnchorPane backgroundPlayerChoose;
 
     public void initialize(){
-        GUIClient.getInstance().getStage().setWidth(GUIClient.getInstance().getStage().getWidth()+1);
+        GUIClient.getInstance().getStage().setWidth(GUIClient.getInstance().getStage().getWidth()+5);
+        GUIClient.getInstance().getStage().setWidth(GUIClient.getInstance().getStage().getWidth()-5);
         GUIClient.getInstance().getStage().centerOnScreen();
         GUIClient.getInstance().getStage().setOnCloseRequest(e -> {
             GUIClient.getInstance().getStage().close();

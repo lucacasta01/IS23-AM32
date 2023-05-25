@@ -11,6 +11,8 @@ out/
 # Maven
 log/
 target/
+executable/
+
 
 #User
 *.class
