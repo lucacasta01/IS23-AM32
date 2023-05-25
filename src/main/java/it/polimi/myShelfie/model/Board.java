@@ -97,68 +97,68 @@ public class Board {
         this.tileHeap = new ArrayList<>();
         for(int i = 0; i< Settings.TILES_GROUP; i++){
             if(i<8){
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Cornici1.3.png",Tile.Color.BLUE));
+                tileHeap.add(new Tile("/graphics/itemTiles/Cornici1.3.png",Tile.Color.BLUE));
             }
             else if(i<15){
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Cornici1.2.png",Tile.Color.BLUE));
+                tileHeap.add(new Tile("/graphics/itemTiles/Cornici1.2.png",Tile.Color.BLUE));
             }
             else{
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Cornici1.1.png",Tile.Color.BLUE));
+                tileHeap.add(new Tile("/graphics/itemTiles/Cornici1.1.png",Tile.Color.BLUE));
             }
         }
         for(int i = 0; i< Settings.TILES_GROUP; i++){
             if(i<8){
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Gatti1.2.png",Tile.Color.GREEN));
+                tileHeap.add(new Tile("/graphics/itemTiles/Gatti1.2.png",Tile.Color.GREEN));
             }
             else if(i<15){
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Gatti1.1.png",Tile.Color.GREEN));
+                tileHeap.add(new Tile("/graphics/itemTiles/Gatti1.1.png",Tile.Color.GREEN));
             }
             else{
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Gatti1.3.png",Tile.Color.GREEN));
+                tileHeap.add(new Tile("/graphics/itemTiles/Gatti1.3.png",Tile.Color.GREEN));
             }
         }
         for(int i = 0; i< Settings.TILES_GROUP; i++){
             if(i<8){
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Giochi1.2.png",Tile.Color.YELLOW));
+                tileHeap.add(new Tile("/graphics/itemTiles/Giochi1.2.png",Tile.Color.YELLOW));
             }
             else if(i<15){
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Giochi1.3.png",Tile.Color.YELLOW));
+                tileHeap.add(new Tile("/graphics/itemTiles/Giochi1.3.png",Tile.Color.YELLOW));
             }
             else{
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Giochi1.1.png",Tile.Color.YELLOW));
+                tileHeap.add(new Tile("/graphics/itemTiles/Giochi1.1.png",Tile.Color.YELLOW));
             }
         }
         for(int i = 0; i< Settings.TILES_GROUP; i++){
             if(i<8){
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Libri1.3.png",Tile.Color.WHITE));
+                tileHeap.add(new Tile("/graphics/itemTiles/Libri1.3.png",Tile.Color.WHITE));
             }
             else if(i<15){
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Libri1.2.png",Tile.Color.WHITE));
+                tileHeap.add(new Tile("/graphics/itemTiles/Libri1.2.png",Tile.Color.WHITE));
             }
             else{
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Libri1.1.png",Tile.Color.WHITE));
+                tileHeap.add(new Tile("/graphics/itemTiles/Libri1.1.png",Tile.Color.WHITE));
             }
         }
         for(int i = 0; i< Settings.TILES_GROUP; i++){
             if(i<8){
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Piante1.3.png",Tile.Color.PINK));
+                tileHeap.add(new Tile("/graphics/itemTiles/Piante1.3.png",Tile.Color.PINK));
             }
             else if(i<15){
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Piante1.2.png",Tile.Color.PINK));
+                tileHeap.add(new Tile("/graphics/itemTiles/Piante1.2.png",Tile.Color.PINK));
             }
             else{
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Piante1.1.png",Tile.Color.PINK));
+                tileHeap.add(new Tile("/graphics/itemTiles/Piante1.1.png",Tile.Color.PINK));
             }
         }
         for(int i = 0; i< Settings.TILES_GROUP; i++){
             if(i<8){
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Trofei1.1.png",Tile.Color.LIGHTBLUE));
+                tileHeap.add(new Tile("/graphics/itemTiles/Trofei1.1.png",Tile.Color.LIGHTBLUE));
             }
             else if(i<15){
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Trofei1.2.png",Tile.Color.LIGHTBLUE));
+                tileHeap.add(new Tile("/graphics/itemTiles/Trofei1.2.png",Tile.Color.LIGHTBLUE));
             }
             else{
-                tileHeap.add(new Tile("src/resources/graphics/itemTiles/Trofei1.3.png",Tile.Color.LIGHTBLUE));
+                tileHeap.add(new Tile("/graphics/itemTiles/Trofei1.3.png",Tile.Color.LIGHTBLUE));
             }
         }
     }
@@ -173,7 +173,7 @@ public class Board {
             tileHeap.remove(t);
             return t;
         }else{
-            return new Tile("src/resources/graphics/itemTiles/transparent.png", Tile.Color.NULLTILE);
+            return new Tile("/graphics/itemTiles/transparent.png", Tile.Color.NULLTILE);
         }
     }
 
@@ -190,10 +190,10 @@ public class Board {
         }
 }
         try {
-            setNullTiles(JsonParser.getNullConfig("src/config/boardconfig.json"));
+            setNullTiles(JsonParser.getNullConfig("/config/boardconfig.json"));
             switch (players) {
-                case 2 -> setNullTiles(JsonParser.getNullConfig("src/config/boardconfig2p.json"));
-                case 3 -> setNullTiles(JsonParser.getNullConfig("src/config/boardconfig3p.json"));
+                case 2 -> setNullTiles(JsonParser.getNullConfig("/config/boardconfig2p.json"));
+                case 3 -> setNullTiles(JsonParser.getNullConfig("/config/boardconfig3p.json"));
             }
             setTileColors();
         }
@@ -221,7 +221,7 @@ public class Board {
      */
     private void setNullTiles(List<Position> nullTiles){
         for(Position p : nullTiles){
-            grid[p.getRow()][p.getColumn()] = new Tile("src/resources/graphics/itemTiles/transparent.png", Tile.Color.NULLTILE);
+            grid[p.getRow()][p.getColumn()] = new Tile("/graphics/itemTiles/transparent.png", Tile.Color.NULLTILE);
         }
     }
 

@@ -1,7 +1,8 @@
 package it.polimi.myShelfie.application;
 
-import it.polimi.myShelfie.application.GUIcontroller.ChatController;
-import it.polimi.myShelfie.application.GUIcontroller.banners.ErrorBannerController;
+import it.polimi.myShelfie.controller.GUIcontroller.LoginController;
+import it.polimi.myShelfie.controller.GUIcontroller.ChatController;
+import it.polimi.myShelfie.controller.GUIcontroller.banners.ErrorBannerController;
 import it.polimi.myShelfie.utilities.beans.ChatMessage;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -12,10 +13,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Paths;
+import java.util.Objects;
 
 public class GUIClient extends Application {
     private static GUIClient instance;
@@ -36,18 +34,16 @@ public class GUIClient extends Application {
     @Override
     public void start(Stage stage) {
         this.stage = stage;
-        java.net.URL url = getClass().getResource("/loginPanel.fxml");
-        System.out.println("URL: "+url);
-        FXMLLoader fxmlLoader = new FXMLLoader(url);
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/loginPanel.fxml"));
         fxmlLoader.setController(new LoginController());
         Parent root=null;
         try {
             root = fxmlLoader.load();
         }catch (Exception e){
-            e.printStackTrace();
+            throw new RuntimeException("Login panel loading failed");
         }
         stage.setTitle("My Shelfie");
-        stage.getIcons().add(new Image(getClass().getResource("/graphics/publisherMaterial/Icon.png").toString()));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("/graphics/publisherMaterial/Icon.png")).toString()));
         stage.setScene(new Scene(root));
         stage.setMinWidth(820);
         stage.setMinHeight(520);
@@ -61,9 +57,9 @@ public class GUIClient extends Application {
                 Stage bannerStage = new Stage();
                 FXMLLoader loader = null;
                 try {
-                    loader = new FXMLLoader(Paths.get("/errorBanner.fxml").toUri().toURL());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    loader = new FXMLLoader(getClass().getResource("/errorBanner.fxml"));
+                } catch (Exception e) {
+                    throw new RuntimeException("Error banner loading failed");
                 }
                 Parent root = null;
                 try {
@@ -73,13 +69,8 @@ public class GUIClient extends Application {
                 }
                 ErrorBannerController controller = loader.getController();
                 controller.setLabel(errorLabel);
-                //Parent root = FXMLLoader.load(Paths.get("src/resources/errorBanner.fxml").toUri().toURL());
                 bannerStage.setScene(new Scene(root));
-                try {
-                    bannerStage.getIcons().add(new Image(Paths.get("/graphics/icons/error.png").toUri().toURL().openStream()));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                bannerStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("/graphics/icons/error.png")).toString()));
                 Screen.getPrimary().getBounds().getHeight();
                 bannerStage.setResizable(false);
                 bannerStage.show();
@@ -101,17 +92,13 @@ public class GUIClient extends Application {
         Platform.runLater(()->{
             Parent choice = null;
             try {
-                choice = FXMLLoader.load(Paths.get("/oldGameJoinBanner.fxml").toUri().toURL());
+                choice = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/oldGameJoinBanner.fxml")));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
             Stage banStage = new Stage();
             banStage.setTitle("My Shelfie");
-            try {
-                banStage.getIcons().add(new Image(Paths.get("/graphics/publisherMaterial/Icon.png").toUri().toURL().openStream()));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            banStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("/graphics/publisherMaterial/Icon.png")).toString()));
             banStage.setMinWidth(300);
             banStage.setMinHeight(200);
             banStage.setWidth(300);
@@ -125,9 +112,9 @@ public class GUIClient extends Application {
         Platform.runLater(()->{
             Parent waitPlayers = null;
             try {
-                waitPlayers = FXMLLoader.load(Paths.get("/waitPlayerBanner.fxml").toUri().toURL());
+                waitPlayers = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/waitPlayerBanner.fxml")));
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Waiting scene failed to load");
             }
             stage.setMinWidth(300);
             stage.setMinHeight(200);
@@ -140,7 +127,7 @@ public class GUIClient extends Application {
         Platform.runLater(()->{
             Parent menu = null;
             try {
-                menu = FXMLLoader.load(Paths.get("/menuPanel.fxml").toUri().toURL());
+                menu = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/menuPanel.fxml")));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -156,9 +143,9 @@ public class GUIClient extends Application {
         Platform.runLater(()->{
             Parent gameParent = null;
             try {
-                gameParent = FXMLLoader.load(Paths.get("/gamePanel.fxml").toUri().toURL());
+                gameParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gamePanel.fxml")));
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Game panel loading failed");
             }
 
             stage.setMinWidth(1440);
@@ -180,25 +167,21 @@ public class GUIClient extends Application {
             Parent denyPanel = null;
             FXMLLoader loader = null;
             try {
-                loader = new FXMLLoader(Paths.get("/errorBanner.fxml").toUri().toURL());
-            } catch (MalformedURLException e) {
-                throw new RuntimeException(e);
+                loader = new FXMLLoader(getClass().getResource("/errorBanner.fxml"));
+            } catch (Exception e) {
+                throw new RuntimeException("Error banner loading failed");
             }
 
             try {
-                denyPanel =(Parent) loader.load();
+                denyPanel = loader.load();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Error banner loading failed");
             }
             ErrorBannerController controller = loader.getController();
             controller.setLabel(errorMessage);
             Stage ban = new Stage();
             ban.setTitle("Warning!");
-            try {
-                ban.getIcons().add(new Image(Paths.get("/graphics/icons/alert.png").toUri().toURL().openStream()));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            ban.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("/graphics/icons/alert.png")).toString()));
             ban.setScene(new Scene(denyPanel));
             ban.show();
         });
@@ -208,9 +191,9 @@ public class GUIClient extends Application {
         Platform.runLater(()->{
             Parent numberPanel = null;
             try {
-                numberPanel = FXMLLoader.load(Paths.get("/chosePlayerNumber.fxml").toUri().toURL());
+                numberPanel = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/chosePlayerNumber.fxml")));
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Player number chose form loading failed");
             }
             stage.setScene(new Scene(numberPanel));
         });
@@ -221,17 +204,13 @@ public class GUIClient extends Application {
         Platform.runLater(()->{
             Parent choice = null;
             try {
-                choice = FXMLLoader.load(Paths.get("/confirmExitBanner.fxml").toUri().toURL());
+                choice = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/confirmExitBanner.fxml")));
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Menu loading failed");
             }
             Stage banStage = new Stage();
             banStage.setTitle("Back to menu");
-            try {
-                banStage.getIcons().add(new Image(Paths.get("/graphics/icons/alert.png").toUri().toURL().openStream()));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            banStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("/graphics/icons/alert.png")).toString()));
             banStage.setMinWidth(300);
             banStage.setMinHeight(200);
             banStage.setWidth(300);

@@ -1,4 +1,4 @@
-package it.polimi.myShelfie.application;
+package it.polimi.myShelfie.controller.GUIcontroller;
 
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;

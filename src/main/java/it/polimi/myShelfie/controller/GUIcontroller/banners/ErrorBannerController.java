@@ -1,4 +1,4 @@
-package it.polimi.myShelfie.application.GUIcontroller.banners;
+package it.polimi.myShelfie.controller.GUIcontroller.banners;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

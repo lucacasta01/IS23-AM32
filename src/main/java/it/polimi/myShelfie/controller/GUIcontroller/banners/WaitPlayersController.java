@@ -1,4 +1,4 @@
-package it.polimi.myShelfie.application.GUIcontroller.banners;
+package it.polimi.myShelfie.controller.GUIcontroller.banners;
 
 import it.polimi.myShelfie.application.Client;
 import it.polimi.myShelfie.application.GUIClient;
