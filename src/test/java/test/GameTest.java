@@ -17,11 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class GameTest {
     private final String fakeIP = "192.168.1.1";
     private final String fakeName = "testName";
-/*
+
     @Test
     @DisplayName("Turn handling test")
     public void turnHandlingTest(){
-        Game myGame = new Game("");
+        Game myGame = new Game("",2);
         assertEquals(myGame.getCurrentPlayer(), 0);
         myGame.handleTurn();
         assertEquals(myGame.getCurrentPlayer(),1);
@@ -37,10 +37,33 @@ public class GameTest {
         game.addPlayer(p1);
         game.addPlayer(p2);
 
+        game.getGameBoard().initBoard(2);
         System.out.println(game.getGameBoard().toString());
 
-        String collectedTile = game.collectTile(new Position(2,3)).get(0).toString();
-        assertEquals(collectedTile,"-");
+        String[] expectedTiles = new String[]{
+                game.getGameBoard().getGrid()[1][3].toString(),
+                game.getGameBoard().getGrid()[1][4].toString(),
+                game.getGameBoard().getGrid()[0][2].toString()  // "-"
+        };
+        List<String> collectedTiles = new ArrayList<>();
+        System.out.println("board");
+        List<Tile> collected1 = game.collectTiles(List.of(new Position(1,3), new Position(1,4)));
+        collected1.forEach((t->{
+            collectedTiles.add(t.toString());
+        }));
+
+        List<Tile> tile3;
+        if((tile3 = game.collectTile(new Position(0,2))) != null){
+            collectedTiles.add(tile3.get(0).toString());
+        }
+        else{
+            collectedTiles.add("-");
+        }
+
+
+        for(int i=0;i< collectedTiles.size();i++){
+            assertEquals(collectedTiles.get(i),expectedTiles[i]);
+        }
     }
 
     @Test
@@ -77,11 +100,12 @@ public class GameTest {
     @Test
     @DisplayName("refill board")
     public void refillBoard(){
-        Game myGame = new Game("T30YX9Dp");
+        Game myGame = new Game("T30YX9Dp",2);
         if(myGame.getGameBoard().needToRefill()){
             myGame.getGameBoard().initBoard(2);
         }
         System.out.println(myGame.getGameBoard().toString());
+        //todo
     }
 
     @Test
@@ -154,7 +178,7 @@ public class GameTest {
         game.saveGame();
 
 
-        Game game2 = new Game("fakeUID",2);
+        Game game2 = new Game("fakeUID");
 
 
         assertEquals(game.getUID(),game2.getUID());
@@ -173,5 +197,4 @@ public class GameTest {
         assertEquals(game.getGameBoard().getTileHeapToString(),game2.getGameBoard().getTileHeapToString());
     }
 
- */
 }
