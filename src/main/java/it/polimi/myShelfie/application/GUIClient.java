@@ -18,6 +18,11 @@ import java.util.Objects;
 public class GUIClient extends Application {
     private static GUIClient instance;
     private Stage stage;
+
+    /**
+     * get instance method for singleton pattern
+     * @return a new instance of GUIclient if instance is null, instance if it's not null
+     */
     public static synchronized GUIClient getInstance() {
         if(instance == null){
             System.out.println("created new client");
@@ -27,7 +32,7 @@ public class GUIClient extends Application {
     }
 
 
-    public GUIClient(){
+    private GUIClient(){
         super();
         instance = this;
     }
@@ -50,34 +55,10 @@ public class GUIClient extends Application {
         stage.show();
     }
 
-    public void showErrorBanner(String errorLabel){
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                Stage bannerStage = new Stage();
-                FXMLLoader loader = null;
-                try {
-                    loader = new FXMLLoader(getClass().getResource("/errorBanner.fxml"));
-                } catch (Exception e) {
-                    throw new RuntimeException("Error banner loading failed");
-                }
-                Parent root = null;
-                try {
-                    root = (Parent) loader.load();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                ErrorBannerController controller = loader.getController();
-                controller.setLabel(errorLabel);
-                bannerStage.setScene(new Scene(root));
-                bannerStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("/graphics/icons/error.png")).toString()));
-                Screen.getPrimary().getBounds().getHeight();
-                bannerStage.setResizable(false);
-                bannerStage.show();
-            }
-        });
-    }
-
+    /**
+     *
+     * @return this gui application's stage
+     */
     public Stage getStage() {
         return stage;
     }
@@ -87,6 +68,9 @@ public class GUIClient extends Application {
         launch();
     }
 
+    /**
+     * show old game choice banner
+     */
     public void showOldGameChoice(){
         System.out.println("Show old game choice");
         Platform.runLater(()->{
@@ -108,6 +92,9 @@ public class GUIClient extends Application {
         });
     }
 
+    /**
+     * switch the scene to waiting for players scene
+     */
     public void switchToWaitingScene() {
         Platform.runLater(()->{
             Parent waitPlayers = null;
@@ -123,6 +110,10 @@ public class GUIClient extends Application {
             stage.setScene(new Scene(waitPlayers));
         });
     }
+
+    /**
+     * switch the scene to menu scene
+     */
     public void switchToMenu() {
         Platform.runLater(()->{
             Parent menu = null;
@@ -139,6 +130,9 @@ public class GUIClient extends Application {
         });
     }
 
+    /**
+     * switch scene to game scene
+     */
     public void switchToGame() {
         Platform.runLater(()->{
             Parent gameParent = null;
@@ -156,11 +150,20 @@ public class GUIClient extends Application {
             //stage.setFullScreen(true);
         });
     }
+
+    /**
+     * adds my chat message to the chat room
+     * @param message
+     */
     public void addMyChatMessage(String message){
         ChatController chatController = Client.getInstance().getChatController();
         chatController.addMessage(new ChatMessage(Client.getInstance().getNickname(), message, null));
     }
 
+    /**
+     * show a generic error message
+     * @param errorMessage to be shown
+     */
     public void showDenyDialog(String errorMessage) {
         Platform.runLater(()->{
             System.out.println("Show deny ban");
@@ -187,6 +190,9 @@ public class GUIClient extends Application {
         });
     }
 
+    /**
+     * switch the scene to choose player number scene
+     */
     public void switchToPlayerNumber() {
         Platform.runLater(()->{
             Parent numberPanel = null;
@@ -199,7 +205,9 @@ public class GUIClient extends Application {
         });
     }
 
-
+    /**
+     * show exit game choice banner
+     */
     public void showBackToMenu() {
         Platform.runLater(()->{
             Parent choice = null;

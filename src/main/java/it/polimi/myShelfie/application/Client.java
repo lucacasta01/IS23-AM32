@@ -71,6 +71,12 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         isGUI = false;
     }
 
+    /**
+     * getInstance method for singleton pattern
+     * Creates a new client if instance is null
+     * @return client instance
+     */
+
     public static synchronized Client getInstance() {
         if(instance == null){
             try {
@@ -84,44 +90,121 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         return instance;
     }
 
+    /**
+     *
+     * @return gui login panel controller
+     */
     public LoginController getLoginController() {
         return loginController;
     }
 
+    /**
+     * set game panel gui controller
+     * @param gamePanelController
+     */
+    public synchronized void setGamePanelController(GamePanelController gamePanelController) {
+        this.gamePanelController = gamePanelController;
+        this.notifyAll();
+    }
+
+    /**
+     *
+     * @return game panel gui controller
+     */
+    public GamePanelController getGamePanelController() {
+        return gamePanelController;
+    }
+
+
+    /**
+     *
+     * @return gui chat panel controller
+     */
     public ChatController getChatController() {
         return chatController;
     }
 
+    /**
+     * Sets the chat panel gui controller
+     * @param chatController
+     */
     public void setChatController(ChatController chatController) {
         this.chatController = chatController;
     }
 
+    /**
+     * sets the gui wait for players panel controller
+     * @param waitPlayersController
+     */
+    public void setWaitPlayersController(WaitPlayersController waitPlayersController) {
+        this.waitPlayersController = waitPlayersController;
+    }
+
+    /**
+     * sets gui login panel controller
+     * @param loginController
+     */
+    public void setGuiLoginController(LoginController loginController) {
+        this.loginController = loginController;
+    }
+
+    /**
+     *
+     * @return the server's ip address
+     */
     public String getServerIP() {
         return serverIP;
     }
 
+    /**
+     *
+     * @return true if the client is a gui client, false if it's a tui one
+     */
     public boolean isGUI(){return isGUI;};
 
+    /**
+     *
+     * @return TCP server port
+     */
     public int getTCPPort() {
         return TCPPort;
     }
-
+    /**
+     *
+     * @return RMI server port
+     */
     public int getRMIPort() {
         return RMIPort;
     }
 
+    /**
+     * sets the server ip
+     * @param serverIP
+     */
     public void setServerIP(String serverIP) {
         this.serverIP = serverIP;
     }
 
+    /**
+     * sets TCP port
+     * @param TCPPort
+     */
     public void setTCPPort(int TCPPort) {
         this.TCPPort = TCPPort;
     }
 
+    /**
+     * sets RMI port
+     * @param RMIPort
+     */
     public void setRMIPort(int RMIPort) {
         this.RMIPort = RMIPort;
     }
 
+    /**
+     * sets the GUI boolean attribute in the client and in it's inputHandler
+     * @param GUI
+     */
     public void setGUI(boolean GUI) {
         isGUI = GUI;
         if(connectionProtocol=="TCP"){
@@ -131,9 +214,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }
     }
 
-    public void setWaitPlayersController(WaitPlayersController waitPlayersController) {
-        this.waitPlayersController = waitPlayersController;
-    }
+
 
     @Override
     public void run() throws RuntimeException{
@@ -346,48 +427,77 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }
     }
 
-
+    /**
+     *
+     * @return waitPlayer status
+     */
     public synchronized String getWaitPlayerStatus() {
         return waitPlayerStatus;
     }
 
+    /**
+     * sets the waitPlayers status
+     * @param waitPlayerStatus
+     */
     public void setWaitPlayerStatus(String waitPlayerStatus) {
         this.waitPlayerStatus = waitPlayerStatus;
     }
 
+    /**
+     *
+     * @return RMI server interface
+     */
     public RMIServer getRmiServer() {
         return rmiServer;
     }
 
-    public void setGuiLoginController(LoginController loginController) {
-        this.loginController = loginController;
-    }
-
-    public String getConnectionProtocol() {
-        return connectionProtocol;
-    }
-
+    /**
+     * set the client's connection protocol
+     * @param connectionProtocol
+     */
     public void setConnectionProtocol(String connectionProtocol) {
         this.connectionProtocol = connectionProtocol;
     }
 
+    /**
+     *
+     * @return client's done boolean
+     */
     public boolean getDone(){
         return this.done;
     }
+
+    /**
+     *
+     * @return client's nickname
+     */
     public String getNickname(){
         return this.nickname;
     }
 
+    /**
+     * bind this client to the rmi server if online
+     * @throws RemoteException
+     * @throws NotBoundException
+     */
     private void startRMIClient() throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(serverIP,RMIPort);
         this.rmiServer = (RMIServer)registry.lookup(Settings.RMINAME);
         rmiServer.addClient(this);
     }
+
+    /**
+     * CLoses this client's process
+     */
     public void shutdown() {
         done = true;
         System.exit(0);
     }
 
+    /**
+     * Ping thread method, used by the client to ping the server
+     * @return a new ping thread
+     */
     public Thread pingThread() {
 
         return new Thread(() -> {
@@ -497,10 +607,21 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
             return message;
     }
 
+    /**
+     *
+     * @param jString jString recieved from the server
+     * @return a response from the server, obtained by a json string
+     * @throws IOException
+     */
     public Response recieveResponse(String jString) throws IOException {
         return JsonParser.getResponse(jString);
     }
 
+    /**
+     * Send a json string that contains an action to the server
+     * @param action to send
+     * @throws IOException
+     */
     public synchronized void sendAction(Action action) throws IOException {
         Gson gson = new Gson();
         if (out != null) {
@@ -508,12 +629,21 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }
     }
 
+    /**
+     * set this client's nickname
+     * @param nickname
+     */
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
-    //RMIClient interface implementation
 
 
+    //RMIClient interface methods implementation
+
+    /**
+     * Server calls this method when the nickname is  accepted (login ok)
+     * @throws RemoteException
+     */
     @Override
     public void nicknameAccepted() throws RemoteException {
         if(isGUI){
@@ -524,10 +654,12 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
             }
         }
     }
-    @Override
-    public void ping() throws RemoteException {
 
-    }
+    /**
+     * Server calls this method when the nickname is  denied (login not ok)
+     * @param message string used to describe th eerror
+     * @throws RemoteException
+     */
     @Override
     public void nicknameDenied(String message) throws RemoteException {
         if(isGUI){
@@ -542,6 +674,19 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }
     }
 
+    /**
+     * RMI ping method
+     * @throws RemoteException
+     */
+    @Override
+    public void ping() throws RemoteException {
+    }
+
+
+    /**
+     * Notify to the client that his game is started
+     * @throws RemoteException
+     */
     @Override
     public void notifyGameStarted() throws RemoteException {
         if(isGUI) {
@@ -549,6 +694,11 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }
     }
 
+    /**
+     * Updates rmi view when a new view is sent from the server
+     * @param view
+     * @throws RemoteException
+     */
     @Override
     public void update(View view) throws RemoteException {
         Client.getInstance().view=view;
@@ -588,6 +738,11 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }
     }
 
+    /**
+     * Recieves a chat message from the server
+     * @param chatMessage
+     * @throws RemoteException
+     */
     @Override
     public void chatMessage(ChatMessage chatMessage) throws RemoteException {
         String sender = ANSI.BOLD + chatMessage.getSenderColor() +chatMessage.getSender() + ANSI.RESET_COLOR + ANSI.RESET_STYLE;
@@ -597,12 +752,21 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }
     }
 
+    /**
+     * notify the client that the lobby creation went good
+     * @param lobbySize
+     * @throws RemoteException
+     */
     @Override
     public void notifyLobbyCreated(String lobbySize) throws RemoteException {
         waitPlayerStatus = "(1/"+lobbySize+")";
         System.out.println("Lobby created");
     }
 
+    /**
+     * notify the client that he joined a game
+     * @throws RemoteException
+     */
     @Override
     public void notifyGameJoined() throws RemoteException {
         if(isGUI) {
@@ -627,11 +791,21 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }
     }
 
+    /**
+     * generic valid message from the server
+     * @param message
+     * @throws RemoteException
+     */
     @Override
     public void valid(String message) throws RemoteException {
         System.out.println(ANSI.GREEN+message+ANSI.RESET_COLOR);
     }
 
+    /**
+     * generic denied message from the server
+     * @param message
+     * @throws RemoteException
+     */
     @Override
     public void denied(String message) throws RemoteException {
         if(message.startsWith("Username")){
@@ -644,11 +818,20 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         System.err.println(message);
     }
 
+    /**
+     * generic info message from the server
+     * @param message
+     * @throws RemoteException
+     */
     @Override
     public void infoMessage(String message) throws RemoteException {
         System.out.println(message);
     }
 
+    /**
+     * Deny the attempt to load an old game
+     * @throws RemoteException
+     */
     @Override
     public void denyLoadGame() throws RemoteException {
         if(isGUI) {
@@ -656,6 +839,10 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }
     }
 
+    /**
+     * accepts the attempt to load an old game
+     * @throws RemoteException
+     */
     @Override
     public void acceptLoadGame() throws RemoteException {
         if(isGUI) {
@@ -663,6 +850,11 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }
     }
 
+    /**
+     * used when the client needs to be turned off by the server
+     * @param message
+     * @throws RemoteException
+     */
     @Override
     public void remoteShutdown(String message) throws RemoteException {
         System.out.println(message);
@@ -677,11 +869,19 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     }
 
+    /**
+     * notify this client that someone joined his lobby
+     * @throws RemoteException
+     */
     @Override
     public void notifyNewJoin() throws RemoteException {
         //todo
     }
 
+    /**
+     * return to the menu page (view)
+     * @throws RemoteException
+     */
     @Override
     public void returnToMenu() throws RemoteException {
         if(isGUI) {
@@ -695,6 +895,10 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }
     }
 
+    /**
+     * notify an old game found
+     * @throws RemoteException
+     */
     @Override
     public void foundOldGame() throws RemoteException {
         if(isGUI) {
@@ -702,21 +906,37 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }
     }
 
+    /**
+     * notify old game not found
+     * @throws RemoteException
+     */
     @Override
     public void oldGameNotFound() throws RemoteException {
         GUIClient.getInstance().showDenyDialog("NO STARTED OLD GAME FOUND");
     }
 
+    /**
+     * deny access to a random game
+     * @throws RemoteException
+     */
     @Override
     public void denyRandomGame() throws RemoteException {
         GUIClient.getInstance().showDenyDialog("No game available\nYou should create a new one".toUpperCase());
     }
 
+    /**
+     * accept collected tiles
+     * @throws RemoteException
+     */
     @Override
     public void acceptCollect() throws RemoteException {
         gamePanelController.insertInColumn();
     }
 
+    /**
+     * adds a gui action that needs to be sent to the server
+     * @param action
+     */
     public void addGuiAction(String action){
         if(Objects.equals(connectionProtocol, "TCP")) {
             TCPinputHandler.addGuiAction(action);
@@ -725,19 +945,13 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }
     }
 
+    /**
+     * returns this client's view (last recieved from the server
+     * @return
+     */
     public View getView() {
         return view;
     }
-
-    public synchronized void setGamePanelController(GamePanelController gamePanelController) {
-        this.gamePanelController = gamePanelController;
-        this.notifyAll();
-    }
-
-    public GamePanelController getGamePanelController() {
-        return gamePanelController;
-    }
-
     class SwapElapsed extends Thread {
         private boolean isRunning = true;
 

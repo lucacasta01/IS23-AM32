@@ -142,7 +142,7 @@ public class LoginController {
 
     public void serverOffline() throws IOException {
         GUIClient guiClient = GUIClient.getInstance();
-        guiClient.showErrorBanner("Server is offline");
+        guiClient.showDenyDialog("Server is offline");
     }
 
 

@@ -13,8 +13,6 @@ import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.Usergame;
 import java.io.*;
 import java.net.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
@@ -50,6 +48,26 @@ public class Server extends UnicastRemoteObject implements Runnable{
         }
     }
 
+    /**
+     *get instance method for singleton pattern
+     * @return instance if not null, a new server instance if null
+     */
+    public static synchronized Server getInstance() {
+        if(instance == null){
+            try {
+                instance = new Server();
+            }catch(RemoteException e){
+                e.printStackTrace();
+                //todo
+            }
+        }
+        return instance;
+    }
+
+    /**
+     * removes a client from the server's connected clients map
+     * @param client
+     */
     public void removeClient(ClientHandler client){
         if(connectedClients.containsKey(client)){
             connectedClients.remove(client);
@@ -59,10 +77,17 @@ public class Server extends UnicastRemoteObject implements Runnable{
         }
     }
 
+    /**
+     * @return userGame map([nickname->old game uid])
+     */
     public Map<String, String> getUserGame() {
         return userGame;
     }
 
+    /**
+     *
+     * @return a list of active lobbys
+     */
     public synchronized List<Lobby> getLobbyList() {
         return lobbyList;
     }
@@ -75,27 +100,9 @@ public class Server extends UnicastRemoteObject implements Runnable{
         }
     }
 
-
-    public static synchronized Server getInstance() {
-        if(instance == null){
-            try {
-                instance = new Server();
-            }catch(RemoteException e){
-                e.printStackTrace();
-                //todo
-            }
-        }
-        return instance;
-    }
-    public void executePingThread(ClientHandler ch){
-        try{
-            pingPool.execute(connectedClients.get(ch));
-        }catch(Exception e){
-            System.out.println("Error while adding ping thread");
-            e.printStackTrace();
-        }
-    }
-
+    /**
+     * turns the server off
+     */
     public void shutdown(){
         try{
             done = true;
@@ -129,12 +136,9 @@ public class Server extends UnicastRemoteObject implements Runnable{
         new ServerInputHandler().start();
     }
 
-    public void broadcastMessage(String message){
-        for(ClientHandler t : connectedClients.keySet()){
-            t.sendInfoMessage(message);
-        }
-    }
-
+    /**
+     * saves the usergame map to a json file
+     */
     public void saveUserGame(){
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
@@ -160,6 +164,11 @@ public class Server extends UnicastRemoteObject implements Runnable{
             e.printStackTrace();
         }
     }
+
+    /**
+     * loads the usergame map from json file
+     * @return old usergame map if present, new map otherwise
+     */
     public Map<String,String> loadUserGame(){
         URL url = getClass().getResource("/config/usergame.json");
         if(url == null){
@@ -170,6 +179,10 @@ public class Server extends UnicastRemoteObject implements Runnable{
         }
     }
 
+    /**
+     * kills a lobby searched by UID
+     * @param UID to be search
+     */
     public void killLobby(String UID) {
         synchronized (lobbyList) {
             Iterator<Lobby> iter = lobbyList.iterator();
@@ -186,6 +199,11 @@ public class Server extends UnicastRemoteObject implements Runnable{
         }
     }
 
+    /**
+     * search if the client is in a lobby
+     * @param ch
+     * @return the lobby if found, null otherwise
+     */
     public Lobby lobbyOf(ClientHandler ch){
         for(Lobby l : lobbyList){
             if(l.getLobbyPlayers().contains(ch)){
@@ -195,16 +213,30 @@ public class Server extends UnicastRemoteObject implements Runnable{
         return null;
     }
 
+    /**
+     *
+     * @return connected clients map
+     */
     public Map<ClientHandler,ServerPingThread> getConnectedClients() {
         return connectedClients;
     }
-    public void executeClient(ClientHandler ch){
+
+    /**
+     * execute the client handler ch
+     * @param ch
+     */
+    public void executeClientHandler(ClientHandler ch){
         pool.execute(ch);
         if(Settings.pingOn) {
             pingPool.execute(connectedClients.get(ch));
         }
     }
 
+    /**
+     *
+     * @param nickname
+     * @return true if the client "nickname" is connected to the server
+     */
     public boolean isConnected(String nickname){
         int count = 0;
         for(ClientHandler ch : connectedClients.keySet()){
@@ -214,28 +246,29 @@ public class Server extends UnicastRemoteObject implements Runnable{
                 }
             }
         }
-
         return count>0;
     }
 
+    /**
+     *
+     * @return server tcp socket
+     */
     public ServerSocket getServerSocket() {
         return serverSocket;
     }
 
+    /**
+     * execute a lobby
+     * @param lobby
+     */
     public synchronized void runLobby(Lobby lobby){
         lobbyPool.execute(lobby);
-    }
-    public void killTcpAccepter(){
-        this.acceptOn = false;
     }
 
     public static void main(String[] args){
         Server server = Server.getInstance();
         server.run();
     }
-
-
-
 }
 class TCPaccepter extends Thread {
     @Override
@@ -252,7 +285,7 @@ class TCPaccepter extends Thread {
                     ServerPingThread pingThread = new ServerTcpPingThread(clientHandler);
                     server.getConnectedClients().put(clientHandler, pingThread);
                 }
-                server.executeClient(clientHandler);
+                server.executeClientHandler(clientHandler);
             } catch (SocketException s) {
                 System.out.println("\n"+s.getMessage());
                 if(s.getMessage().equals("Socket closed")){
