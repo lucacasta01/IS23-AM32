@@ -19,3 +19,4 @@ executable/
 src/config/savedgames/*.json
 src/config/usergame.json
 src/main/java/it/polimi/myshelfie/utilities/Settings.java
+src/main/resources/graphics/boards/
