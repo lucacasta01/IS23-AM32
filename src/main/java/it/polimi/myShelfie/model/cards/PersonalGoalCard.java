@@ -87,7 +87,6 @@ public class PersonalGoalCard extends Card{
             System.out.println("caught this exceprion");
             e.printStackTrace();
         }
-
         return toReturn;
     }
 

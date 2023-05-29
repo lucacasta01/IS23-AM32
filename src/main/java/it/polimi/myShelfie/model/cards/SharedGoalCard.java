@@ -63,7 +63,7 @@ private void initializeStack(int playerNumber){
      * adds the player p to the achievedBy list
      * @param p Player to add
      */
-    public void addPlayer(Player p){
+    protected void addPlayer(Player p){
         achievedBy.add(p);
     }
 
