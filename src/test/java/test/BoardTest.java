@@ -39,6 +39,27 @@ public class BoardTest {
     @Test
     @DisplayName("isCatchable test")
     void isCatchableTest() {
+        Board board =new Board();
+        board.initBoard(2);
+        System.out.println(board.toString());
+        assertTrue(board.isCatchable(3,2));
+        assertTrue(board.isCatchable(6,5));
+        assertFalse(board.isCatchable(4,4));
+        assertFalse(board.isCatchable(7,7));
+    }
+
+    @Test
+    @DisplayName("Init board test")
+    void initBoardTest() {
+        Board board2p =new Board();
+        Board board3p=new Board();
+        Board board4p = new Board();
+        board2p.initBoard(2);
+        board3p.initBoard(3);
+        board4p.initBoard(4);
+        System.out.println("2 players board: \n"+board2p.toString()+"\n");
+        System.out.println("3 players board: \n"+board3p.toString()+"\n");
+        System.out.println("4 players board: \n"+board4p.toString());
 
     }
 }

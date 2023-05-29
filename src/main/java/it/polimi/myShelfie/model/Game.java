@@ -38,7 +38,6 @@ public class Game{
         this.currentPlayer = 0;
         this.UID = UID;
         this.isFinished = false;
-
         initializePersonalDeck();
         initializeSharedDeck(playersNumber);
         initBoard();
@@ -155,7 +154,7 @@ public class Game{
     public String getUID() {
         return UID;
     }
-    public void initializePersonalDeck(){
+    private void initializePersonalDeck(){
         personalDeck = new ArrayList<>();
         try{
             for(int i=1;i<=12;i++){
@@ -245,11 +244,6 @@ public class Game{
     public void setPlayers(List<Player> players) {
         this.players = players;
     }
-
-    public void setGameBoard(Board gameBoard) {
-        this.gameBoard = gameBoard;
-    }
-
     public int getCurrentPlayer() {
         return currentPlayer;
     }
@@ -257,15 +251,6 @@ public class Game{
     public Board getGameBoard() {
         return gameBoard;
     }
-
-    public void setPlayersNumber(int playersNumber) {
-        this.playersNumber = playersNumber;
-    }
-
-    public void setCurrentPlayer(int currentPlayer) {
-        this.currentPlayer = currentPlayer;
-    }
-
 
     /**
      * Takes a random personal goal card from the initial deck and returns it removing it from the deck
@@ -308,7 +293,7 @@ public class Game{
      * Takes a tile from the game board and returns it as a list of a single object
      * @return The said tile as a list of tiles
      */
-    public List<Tile> collectTile(Position pos){
+    private List<Tile> collectTile(Position pos){
         if( this.gameBoard.isCatchable(pos.getRow(), pos.getColumn())) {
             Tile[][] currentGrid = this.gameBoard.getGrid();
             List<Tile> toReturn = new ArrayList<>();
@@ -326,7 +311,7 @@ public class Game{
      * Takes two tiles from the game board and returns them in a list
      * @return a list containing the picked tiles
      */
-    public List<Tile> collectTile(Position pos1, Position pos2){
+    private List<Tile> collectTile(Position pos1, Position pos2){
         if(areCatchable(pos1, pos2)) {
             Tile[][] currentGrid = this.gameBoard.getGrid();
             List<Tile> toReturn = new ArrayList<>();
@@ -348,7 +333,7 @@ public class Game{
      * Takes three tiles from the game board and returns them in a list
      * @return a list containing the picked tiles
      */
-    public List<Tile> collectTile(Position pos1, Position pos2, Position pos3){
+    private List<Tile> collectTile(Position pos1, Position pos2, Position pos3){
         if(areCatchable(pos1, pos2, pos3)) {
             Tile[][] currentGrid = this.gameBoard.getGrid();
             List<Tile> toReturn = new ArrayList<>();
@@ -487,16 +472,6 @@ public class Game{
         }
         return null;
     }
-
-    /*
-    public void checkSharedGoal(){
-        Player current = this.players[this.getCurrentPlayer()];
-        Shelf currentShelf = current.getMyShelf();
-        for(CheckSharedGoal c : this.actualSharedGoal){
-            c.checkPattern(current);
-        }
-    }
-    */
 
     private void initBoard(){
         try {

@@ -5,7 +5,6 @@ public class Player {
     // private Shelf myShelf;
     private int score;
     private final String username;
-    private int failedPings;
     private Shelf myShelf;
 
     private PersonalGoalCard myGoalCard;
@@ -59,22 +58,6 @@ public class Player {
      */
     public String getUsername() {
         return username;
-    }
-
-    /**
-     * Returns the amount of times a ping to the player's ip failed
-     *
-     * @return number of failed attempts (integer)
-     */
-    public int getFailedPings() {
-        return failedPings;
-    }
-
-    /**
-     * Increases the failed pings counter by one
-     */
-    public void addFailedPing() {
-        this.failedPings++;
     }
 
     public PersonalGoalCard getMyGoalCard() {

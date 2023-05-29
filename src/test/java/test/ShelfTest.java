@@ -36,6 +36,21 @@ public class ShelfTest {
     }
 
     @Test
+    @DisplayName("Check is full test")
+    void checkIsFullTest(){
+
+        Shelf testShelf = new Shelf();
+        testShelf.initShelf();
+        assertFalse(testShelf.checkIsFull());
+        for(int j=0; j<MAXCOLUMN; j++) {
+            for (int i = 0; i < MAXROW; i++) {
+                testShelf.insertTile(new Tile("test", Tile.Color.BLUE), j);
+            }
+        }
+        assertTrue(testShelf.checkIsFull());
+    }
+
+    @Test
     @DisplayName("insertTiles test")
     void insertTilesTest(){
 
@@ -45,6 +60,7 @@ public class ShelfTest {
             testShelf.insertTile(new Tile("test", Tile.Color.BLUE), 0);
         }
         System.out.println(testShelf.toString());
+        testShelf.insertTile(new Tile("test", Tile.Color.BLUE), 0);
     }
 
 
@@ -53,7 +69,6 @@ public class ShelfTest {
     void getFinalPointsTest(){
         Shelf testShelf = new Shelf();
         testShelf.initShelf();
-        assertEquals(0, testShelf.getColorClusterSizes().size());
         for(int i=0; i<MAXROW; i++){
             testShelf.insertTile(new Tile("test", Tile.Color.BLUE), 0);
         }
@@ -70,8 +85,6 @@ public class ShelfTest {
             testShelf.insertTile(new Tile("test", Tile.Color.WHITE), 4);
         }
         System.out.println(testShelf.toString());
-        System.out.println(testShelf.getColorClusterSizes());
-        assertEquals(5, testShelf.getColorClusterSizes().size());
         assertEquals(40, testShelf.getShelfScore());
     }
 }

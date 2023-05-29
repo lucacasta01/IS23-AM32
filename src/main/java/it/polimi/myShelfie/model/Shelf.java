@@ -70,26 +70,6 @@ public class Shelf {
     }
 
     /**
-     * Checks every column, calculate the maximum number of tiles that the player can insert
-     * @return the maximum number of tiles that can be putted in the board
-     */
-    public int maxInsert(){
-        int act = 0, max = 0;
-        for(int i = 0; i< Settings.SHELFCOLUMN; i++){
-            for(int j = 0; j< Settings.SHELFROW; j++){
-                if(tileMatrix[j][i].getColor()==Tile.Color.NULLTILE){
-                    act++;
-                }
-            }
-            if(act>max){
-                max=act;
-            }
-            act = 0;
-        }
-        return Math.min(max, 3);
-    }
-
-    /**
      * insert the given tile in the first free position from the bottom in the given column
      */
     public void insertTile(Tile t, int column) {
@@ -130,7 +110,7 @@ public class Shelf {
         return s.toString();
     }
 
-    public List<Integer> getColorClusterSizes() {
+    private List<Integer> getColorClusterSizes() {
         Tile[][] matrix = getTileMartrix();
         List<Integer> clusterSizes = new ArrayList<>();
         boolean[][] visited = new boolean[Settings.SHELFROW][Settings.SHELFCOLUMN];
