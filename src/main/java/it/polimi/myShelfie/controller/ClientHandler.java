@@ -866,4 +866,19 @@ public class ClientHandler implements Runnable {
             out.println(gson.toJson(new Response(Response.ResponseType.ACCEPT_COLLECT, null, null, null)));
         }
     }
+
+    public void notifyGameEnded(String rank) {
+        if(isRMI){
+            try{
+                rmiClient.notifyGameEnded(rank);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            Gson gson = new Gson();
+            out.println(gson.toJson(new Response(Response.ResponseType.GAME_ENDED, null, null, rank)));
+        }
+    }
 }

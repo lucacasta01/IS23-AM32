@@ -33,4 +33,6 @@ public interface RMIClient extends Remote{
     void denyRandomGame() throws RemoteException;
 
     void acceptCollect() throws RemoteException;
+
+    void notifyGameEnded(String rank) throws RemoteException;
 }

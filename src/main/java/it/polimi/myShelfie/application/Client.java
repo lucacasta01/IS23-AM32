@@ -292,6 +292,17 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                         if (isGUI) {
                                             GUIClient.getInstance().switchToGame();
                                         }
+                                    } else if (response.getResponseType() == Response.ResponseType.GAME_ENDED) {
+                                        if(isGUI){
+                                            GUIClient.getInstance().showRank(response.getInfoMessage());
+                                        }
+                                        else{
+                                            System.out.println("\n(1) New Game");
+                                            System.out.println("(2) Load last game");
+                                            System.out.println("(3) Join random game");
+                                            System.out.println("(4) Search for started saved game");
+                                            System.out.println("(0) Exit\n");
+                                        }
                                     } else if (response.getResponseType() == Response.ResponseType.UPDATE) {
                                         view = response.getView();
                                         if(isGUI){
@@ -867,6 +878,13 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
             shutdown();
         }).start();
 
+    }
+
+    @Override
+    public void notifyGameEnded(String rank) throws RemoteException {
+        if(isGUI){
+            GUIClient.getInstance().showRank(rank);
+        }
     }
 
     /**

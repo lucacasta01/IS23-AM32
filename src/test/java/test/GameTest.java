@@ -94,7 +94,7 @@ public class GameTest {
         myPlayers.add(p3);
         Game myGame = new Game(Utils.UIDGenerator(),3);
         myGame.setPlayers(myPlayers);
-        System.out.println(myGame.getRank());
+        System.out.println(myGame.getRank(false));
     }
 
     @Test

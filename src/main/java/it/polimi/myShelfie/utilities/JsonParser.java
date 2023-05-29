@@ -1,10 +1,7 @@
 package it.polimi.myShelfie.utilities;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import it.polimi.myShelfie.utilities.beans.Action;
-import it.polimi.myShelfie.utilities.beans.GameParameters;
-import it.polimi.myShelfie.utilities.beans.Response;
-import it.polimi.myShelfie.utilities.beans.Usergame;
+import it.polimi.myShelfie.utilities.beans.*;
 import org.apache.commons.io.IOUtils;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -49,12 +46,12 @@ public class JsonParser {
         }
     }
 
-    public static Action getAction(String jString) throws IOException{
+    public static Action getAction(String jString){
         Type type = new TypeToken<Action>(){}.getType();
         return new Gson().fromJson(jString,type);
     }
 
-    public static Response getResponse(String jString) throws IOException{
+    public static Response getResponse(String jString){
         Type type = new TypeToken<Response>(){}.getType();
         return new Gson().fromJson(jString,type);
     }
@@ -74,6 +71,16 @@ public class JsonParser {
         } catch (IOException e) {
             return new HashMap<>();
         }
+    }
+
+    public static GUIRank getGUIRank(String jString){
+        Type type = new TypeToken<GUIRank>(){}.getType();
+        return new Gson().fromJson(jString,type);
+    }
+
+    public static String guiRankToJson(GUIRank guiRank){
+        Type type = new TypeToken<GUIRank>(){}.getType();
+        return new Gson().toJson(guiRank,type);
     }
 }
 

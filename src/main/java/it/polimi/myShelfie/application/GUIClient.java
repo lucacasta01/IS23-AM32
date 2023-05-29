@@ -3,6 +3,7 @@ package it.polimi.myShelfie.application;
 import it.polimi.myShelfie.controller.GUIcontroller.LoginController;
 import it.polimi.myShelfie.controller.GUIcontroller.ChatController;
 import it.polimi.myShelfie.controller.GUIcontroller.banners.ErrorBannerController;
+import it.polimi.myShelfie.controller.GUIcontroller.banners.RankController;
 import it.polimi.myShelfie.utilities.beans.ChatMessage;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -32,7 +33,7 @@ public class GUIClient extends Application {
     }
 
 
-    private GUIClient(){
+    public GUIClient(){
         super();
         instance = this;
     }
@@ -226,6 +227,30 @@ public class GUIClient extends Application {
             banStage.setFullScreen(false);
             banStage.setScene(new Scene(choice));
             banStage.show();
+        });
+    }
+
+    /**
+     * show the game rank
+     * @param rank computed by the server
+     */
+    public void showRank(String rank) {
+        Platform.runLater(()->{
+            Parent rankPanel = null;
+            FXMLLoader loader = null;
+            try {
+                loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/rankPanel.fxml")));
+                rankPanel = loader.load();
+            } catch (Exception e) {
+                throw new RuntimeException("Rank panel loading failed");
+            }
+            RankController ctrl = loader.getController();
+            ctrl.setRank(rank);
+            Stage rankStage = new Stage();
+            rankStage.setOnCloseRequest(event -> switchToMenu());
+            rankStage.setScene(new Scene(rankPanel));
+            rankStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("/graphics/icons/rank.png")).toString()));
+            rankStage.show();
         });
     }
 }

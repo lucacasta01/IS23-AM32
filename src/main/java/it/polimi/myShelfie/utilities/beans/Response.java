@@ -34,7 +34,7 @@ public class Response {
         ACCEPT_LOAD_GAME,
         RETURN_TO_MENU,
         FOUND_OLD_GAME,
-        RANDOM_GAME_NOT_FOUND, ACCEPT_COLLECT, DENY_INSERT, OLD_GAME_NOT_FOUND
+        RANDOM_GAME_NOT_FOUND, ACCEPT_COLLECT, DENY_INSERT, GAME_ENDED, OLD_GAME_NOT_FOUND
     }
 
     public ChatMessage getChatMessage() {

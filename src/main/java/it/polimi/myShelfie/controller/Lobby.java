@@ -6,13 +6,13 @@ import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.utilities.Settings;
 import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.model.Tile;
-import it.polimi.myShelfie.model.cards.PersonalGoalCard;
 import it.polimi.myShelfie.model.cards.SharedGoalCard;
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.ChatMessage;
 import it.polimi.myShelfie.utilities.beans.View;
-import java.nio.file.Path;
+
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -26,13 +26,13 @@ public class Lobby implements Runnable{
     private boolean ended = false;
     private List<Tile> collectedTiles;
     private Stack<String> colors;
-
     private Game game;
     public final List<Action> actions = new ArrayList<>();
     private boolean isLastTurn = false;
     private Integer index = null;
     private boolean close;
     private final AtomicBoolean endWaitingPlayers = new AtomicBoolean(false);
+    private boolean firstToEnd = true;
     /**
      * Create a lobby for a new game
      *
@@ -344,31 +344,36 @@ public class Lobby implements Runnable{
             //END OF GAME CHECKS
             if(game.isFinished()){
                 endGameChecks();
-                String rank = game.getRank();
-                broadcastMessage(rank);
+                broadcastMessage(game.getRank(false));
                 broadcastMessage("Closing...");
-
+                notifyGameEnded(game.getRank(true));
                 for(ClientHandler ch : lobbyPlayers){
-                    Server.getInstance().getUserGame().remove(ch);
+                    Server.getInstance().getUserGame().remove(ch.getNickname());
                 }
                 Server.getInstance().saveUserGame();
 
                 //delete saved game
-                Path path = Paths.get(getClass().getResource("/config/savedgames").getPath()+"/"+this.lobbyUID+".json");
-                if(path.toFile().isFile()){
-                    if(path.toFile().delete()){
-                        System.out.println("Successfully deleted saved game file");
-                    }else{
-                        System.out.println("Error while deleting saved game file");
+                java.net.URL savingFileURL = getClass().getResource("/config/savedgames/"+this.lobbyUID+".json");
+                if(savingFileURL != null){
+                    try {
+                        Files.delete(Paths.get(savingFileURL.toURI()));
+                        System.out.println("Ended game file deleted successfully, UID: "+ this.lobbyUID);
+                    }
+                    catch (Exception e){
+                        throw new RuntimeException("Error while deleting ended game file");
                     }
                 }
-                for(ClientHandler ch:lobbyPlayers){
-                    ch.sendMenu();
-                }
+
                 Server.getInstance().getLobbyList().remove(this);
             }
         }
 
+    }
+
+    private void notifyGameEnded(String rank) {
+        for(ClientHandler ch : lobbyPlayers){
+            ch.notifyGameEnded(rank);
+        }
     }
 
     private void notifyGameStarted() {
@@ -412,7 +417,6 @@ public class Lobby implements Runnable{
 
     private void handleTurn(ClientHandler current){
         Player p = this.game.getPlayers().get(this.game.getCurrentPlayer());
-        PersonalGoalCard card = p.getMyGoalCard();
         this.game.handleTurn();
         this.game.saveGame();
     }
@@ -624,6 +628,10 @@ public class Lobby implements Runnable{
         }
         if(p.getMyShelf().checkIsFull()){
             isLastTurn = true;
+            if(firstToEnd){
+                p.setScore(p.getScore()+1);
+                firstToEnd = false;
+            }
         }
     }
 

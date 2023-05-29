@@ -4,29 +4,19 @@ import com.google.gson.GsonBuilder;
 import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.model.cards.*;
 import it.polimi.myShelfie.utilities.*;
+import it.polimi.myShelfie.utilities.beans.GUIRank;
 import it.polimi.myShelfie.utilities.beans.GameParameters;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
-public class Game implements Runnable{
-    enum GameStatus{
-        WAITINGFORPLAYERS,
-        INPROGRESS,
-        LASTITERATION,
-        EXCEPTIONSTATUS,
-        GAMEENDEDNORMALLY
-    }
+public class Game{
     private int playersNumber;
     private List<Player> players;
     private int currentPlayer;
     private Board gameBoard;
-    private GameStatus status;
     private List<PersonalGoalCard> personalDeck;
     private List<SharedGoalCard> sharedDeck;
     private String UID;
@@ -46,7 +36,6 @@ public class Game implements Runnable{
         this.currentPlayer = 0;
         this.UID = UID;
         this.isFinished = false;
-        this.status = GameStatus.WAITINGFORPLAYERS;
 
         initializePersonalDeck();
         initializeSharedDeck(playersNumber);
@@ -161,12 +150,6 @@ public class Game implements Runnable{
         }
         return new Board(tileMatrix,tileHeap);
     }
-
-    @Override
-    public void run(){
-
-    }
-
     public String getUID() {
         return UID;
     }
@@ -273,10 +256,6 @@ public class Game implements Runnable{
         return gameBoard;
     }
 
-    public GameStatus getStatus() {
-        return status;
-    }
-
     public void setPlayersNumber(int playersNumber) {
         this.playersNumber = playersNumber;
     }
@@ -285,9 +264,6 @@ public class Game implements Runnable{
         this.currentPlayer = currentPlayer;
     }
 
-    public void setStatus(GameStatus status) {
-        this.status = status;
-    }
 
     /**
      * Takes a random personal goal card from the initial deck and returns it removing it from the deck
@@ -439,32 +415,47 @@ public class Game implements Runnable{
      * Returns the final rank of the game
      * @return rank (String)
      */
-    public String getRank(){
+    public String getRank(boolean isGUI){
+        GUIRank guiRank = new GUIRank();
         List<Player> sortedPlayers = new ArrayList<>(players);
         sortedPlayers.sort(Comparator.comparingInt(Player::getScore).reversed());
 
-        StringBuilder rank = new StringBuilder();
-        rank.append(ANSI.BOLD).append("\t\t\t*** GAME RANK ***\n").append(ANSI.RESET_STYLE).append("\n");
-        rank.append(ANSI.ITALIC).append("Position\t\tUsername\t\tScore\n");
+        StringBuilder tuiRank = new StringBuilder();
+        tuiRank.append(ANSI.BOLD).append("\t\t\t*** GAME RANK ***\n").append(ANSI.RESET_STYLE).append("\n");
+        tuiRank.append(ANSI.ITALIC).append("Position\t\tUsername\t\tScore\n");
         int pos = 1;
         for(int i=0;i<sortedPlayers.size();i++){
             if(i==0){
-                rank.append(ANSI.GREEN);
+                tuiRank.append(ANSI.GREEN);
             }
-            rank.append(pos).append("\t\t\t\t").append(sortedPlayers.get(i).getUsername()).append("\t\t\t").append(sortedPlayers.get(i).getScore()).append("\n");
+            tuiRank.append(pos).append("\t\t\t\t").append(sortedPlayers.get(i).getUsername()).append("\t\t\t").append(sortedPlayers.get(i).getScore()).append("\n");
+            if(isGUI){
+                guiRank.addPos(Integer.toString(pos));
+                guiRank.addNickname(sortedPlayers.get(i).getUsername());
+                guiRank.addScore(Integer.toString(sortedPlayers.get(i).getScore()));
+            }
             int k = i;
             while(i<sortedPlayers.size()-1 && (sortedPlayers.get(i).getScore() == sortedPlayers.get(i+1).getScore())){
-                rank.append(pos).append("\t\t\t\t").append(sortedPlayers.get(i+1).getUsername()).append("\t\t\t").append(sortedPlayers.get(i+1).getScore()).append("\n");
+                tuiRank.append(pos).append("\t\t\t\t").append(sortedPlayers.get(i+1).getUsername()).append("\t\t\t").append(sortedPlayers.get(i+1).getScore()).append("\n");
+                if(isGUI){
+                    guiRank.addPos(Integer.toString(pos));
+                    guiRank.addNickname(sortedPlayers.get(i+1).getUsername());
+                    guiRank.addScore(Integer.toString(sortedPlayers.get(i+1).getScore()));
+                }
                 i++;
             }
             if(k==0){
-                rank.append(ANSI.RESET_COLOR);
+                tuiRank.append(ANSI.RESET_COLOR);
             }
             pos++;
         }
 
-
-        return rank.toString();
+        if(isGUI){
+            return JsonParser.guiRankToJson(guiRank);
+        }
+        else {
+            return tuiRank.toString();
+        }
     }
 
     public List<SharedGoalCard> getSharedDeck() {
