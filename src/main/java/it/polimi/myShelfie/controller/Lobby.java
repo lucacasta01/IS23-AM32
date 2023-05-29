@@ -28,7 +28,6 @@ public class Lobby implements Runnable{
     private Stack<String> colors;
     private Game game;
     public final List<Action> actions = new ArrayList<>();
-    private boolean isLastTurn = false;
     private Integer index = null;
     private boolean close;
     private final AtomicBoolean endWaitingPlayers = new AtomicBoolean(false);
@@ -155,6 +154,7 @@ public class Lobby implements Runnable{
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
+                reorderLobbyList();
                 game.setPlayers(game.getOldGamePlayers());
             }catch(Exception e){
                 broadcastMessage("No configuration file found...");
@@ -244,7 +244,7 @@ public class Lobby implements Runnable{
                                         ch.sendAccept("Tiles inserted correctly");
                                         collectedTiles.clear();
                                         endTurnChecks(ch);
-                                        if(isLastTurn){
+                                        if(game.isLastTurn()){
                                             index = lobbyPlayers.indexOf(ch);
                                                 if(index==lobbyPlayers.size()-1){
                                                     broadcastMessage("** GAME ENDED! **");
@@ -373,6 +373,21 @@ public class Lobby implements Runnable{
     private void notifyGameEnded(String rank) {
         for(ClientHandler ch : lobbyPlayers){
             ch.notifyGameEnded(rank);
+        }
+    }
+
+    private void reorderLobbyList(){
+        ClientHandler[] oldGameOrder = new ClientHandler[this.getLobbySize()];
+        for(int i = 0; i<this.getLobbySize(); i++){
+            for(int j = 0; j<this.getLobbySize(); j++){
+                if(this.lobbyPlayers.get(i).getNickname().equals(this.game.getOldGamePlayers().get(j).getUsername())){
+                    oldGameOrder[j]=this.lobbyPlayers.get(i);
+                }
+            }
+        }
+        synchronized (lobbyPlayers) {
+            lobbyPlayers.clear();
+            lobbyPlayers.addAll(Arrays.stream(oldGameOrder).toList());
         }
     }
 
@@ -626,13 +641,7 @@ public class Lobby implements Runnable{
                 }
             }
         }
-        if(p.getMyShelf().checkIsFull()){
-            isLastTurn = true;
-            if(firstToEnd){
-                p.setScore(p.getScore()+1);
-                firstToEnd = false;
-            }
-        }
+        game.checkLastTurn(p);
     }
 
     private void endGameChecks(){

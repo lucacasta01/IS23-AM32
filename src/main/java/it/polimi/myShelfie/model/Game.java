@@ -22,6 +22,8 @@ public class Game{
     private String UID;
     private boolean isFinished;
     private List<Player> oldGamePlayers;
+    private boolean isLastTurn = false;
+    private boolean firstToEnd = true;
 
 
     /**
@@ -71,11 +73,10 @@ public class Game{
 
     public void saveGame(){
         GameParameters gameParameters = new GameParameters();
-
         gameParameters.setUID(this.UID);
         gameParameters.setBoard(this.gameBoard.toColorPosition());
         gameParameters.setCurrentPlayer(this.currentPlayer);
-
+        gameParameters.setLastTurn(isLastTurn);
         for(Player p : players){
             gameParameters.addUsername(p.getUsername());
             gameParameters.addShelf(p.getMyShelf().toColorPosition());
@@ -123,6 +124,7 @@ public class Game{
         this.playersNumber = gameParameters.getUsernames().size();
         this.currentPlayer = gameParameters.getCurrentPlayer();
         this.gameBoard = loadBoard(gameParameters.getBoard(),gameParameters.getTileHeap());
+        this.isLastTurn = gameParameters.isLastTurn();
         oldGamePlayers = new ArrayList<>();
         for(int i=0;i<playersNumber;i++){
             Player p = new Player(gameParameters.getUsernames().get(i));
@@ -392,7 +394,19 @@ public class Game{
         }
     }
 
+    public void checkLastTurn(Player p){
+        if(p.getMyShelf().checkIsFull()){
+            isLastTurn = true;
+            if(firstToEnd){
+                p.setScore(p.getScore()+1);
+                firstToEnd = false;
+            }
+        }
+    }
 
+    public boolean isLastTurn() {
+        return isLastTurn;
+    }
 
     /**
      * Takes a list of tiles as parameter and adds it inside the player's shelf by

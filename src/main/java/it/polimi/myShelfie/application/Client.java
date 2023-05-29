@@ -948,7 +948,9 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
      */
     @Override
     public void acceptCollect() throws RemoteException {
-        gamePanelController.insertInColumn();
+        if(isGUI) {
+            gamePanelController.insertInColumn();
+        }
     }
 
     /**

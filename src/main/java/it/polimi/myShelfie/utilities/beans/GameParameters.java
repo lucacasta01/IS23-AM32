@@ -23,6 +23,7 @@ public class GameParameters {
     private List<Integer> sharedCards;
     private Integer currentPlayer;
     private List<Tile> tileHeap;
+    private boolean isLastTurn;
 
     public GameParameters(){
         usernames = new ArrayList<>();
@@ -31,6 +32,14 @@ public class GameParameters {
         personalCards = new ArrayList<>();
         sharedCards = new ArrayList<>();
         tileHeap = new ArrayList<>();
+    }
+
+    public boolean isLastTurn() {
+        return isLastTurn;
+    }
+
+    public void setLastTurn(boolean lastTurn) {
+        isLastTurn = lastTurn;
     }
 
     public void addTileToHeap(Tile t){

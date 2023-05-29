@@ -1,5 +1,6 @@
 package test;
 
+import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.utilities.Position;
@@ -85,6 +86,7 @@ public class GameTest {
         Player p1 = new Player("luca");
         Player p2 = new Player("albe");
         Player p3 = new Player("matteo");
+        Server server = Server.getInstance();
         p1.setScore(2);
         p2.setScore(6);
         p3.setScore(6);
