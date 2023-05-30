@@ -523,6 +523,9 @@ public class Game{
         return null;
     }
 
+    /**
+     * Initializes the board based on the number of players selected
+     */
     private void initBoard(){
         try {
             this.gameBoard.initBoard(this.playersNumber);
@@ -532,6 +535,10 @@ public class Game{
         }
     }
 
+    /**
+     * Adds a player to the player list
+     * @param p player to add
+     */
     public void addPlayer(Player p){
         if(players.size()<playersNumber) {
             players.add(p);
@@ -543,6 +550,10 @@ public class Game{
         }
     }
 
+    /**
+     * Adds a list of players to the player list
+     * @param p list of players to add
+     */
     public void addPlayer(List<Player> p){
         if(players.size() + p.size() <= playersNumber) {
             players.addAll(p);

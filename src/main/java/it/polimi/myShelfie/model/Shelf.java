@@ -82,6 +82,7 @@ public class Shelf {
     }
 
 
+
     public List<ColorPosition> toColorPosition(){
         List<ColorPosition> toReturn = new ArrayList<>();
         for(int i = 0; i< Settings.SHELFROW; i++){
