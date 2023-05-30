@@ -2,11 +2,11 @@ package test;
 
 import it.polimi.myShelfie.utilities.Utils;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 public class UtilsTest {
     @Test
     @DisplayName("UID generator test")
-    void UIDGeneratorTest() {
+    public void UIDGeneratorTest() {
         for(int i=0;i<100;i++){
             String UID = Utils.UIDGenerator();
             System.out.println(UID);
@@ -15,7 +15,7 @@ public class UtilsTest {
 
     @Test
     @DisplayName("Substrings test")
-    void substringsTest() {
+    public void substringsTest() {
         String s = "/collect 12,31,11";
         int firstTile = s.indexOf("/collect") + "/collect ".length();
         String substr = s.substring(firstTile);

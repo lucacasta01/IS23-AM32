@@ -102,7 +102,7 @@ public class Game{
         try {
             Path savedFilePath = Paths.get(System.getProperty("user.dir")+"/config/savedgames/" + UID + ".json");
             if(!savedFilePath.toFile().isFile()) {
-                new File(savedFilePath.toString()).createNewFile();
+                savedFilePath.toFile().createNewFile();
             }
             FileWriter fw = new FileWriter(savedFilePath.toString());
             fw.write(gson.toJson(gameParameters));

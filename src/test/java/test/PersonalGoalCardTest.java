@@ -12,7 +12,7 @@ import it.polimi.myShelfie.model.cards.PersonalGoalCard;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.Settings;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 
 
@@ -22,7 +22,7 @@ public class PersonalGoalCardTest {
 
     @Test
     @DisplayName("setPattern test")
-    void setPatternTest() {
+    public void setPatternTest() {
         PersonalGoalCard testCard = new PersonalGoalCard(fakePath);
         Tile[][] pattern;
         List<Tile.Color> colors = new ArrayList<>();
@@ -39,7 +39,7 @@ public class PersonalGoalCardTest {
 
     @Test
     @DisplayName("checkPattern test")
-    void checkPatternTest(){
+    public void checkPatternTest(){
         PersonalGoalCard testCard = new PersonalGoalCard(fakePath);
         List<Position> positions = new ArrayList<>();
         List<Tile.Color> colors = new ArrayList<>();
@@ -121,7 +121,7 @@ public class PersonalGoalCardTest {
 
     @Test
     @DisplayName("getIndex test")
-    void getIndexTest(){
+    public void getIndexTest(){
         PersonalGoalCard card1 = new PersonalGoalCard("/graphics/personalGoalCards/Personal_Goals1.png");
         assertEquals(1, card1.getIndex());
 

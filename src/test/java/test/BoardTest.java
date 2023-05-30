@@ -5,11 +5,11 @@ import it.polimi.myShelfie.model.Board;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.utilities.Settings;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 public class BoardTest {
     @Test
     @DisplayName("needToRefill test")
-    void needToRefillTest(){
+    public void needToRefillTest(){
         Board boardToRefill = new Board();
         Board boardNotToRefill = new Board();
         for(int i = 0; i< Settings.BOARD_DIM; i++){
@@ -38,7 +38,7 @@ public class BoardTest {
 
     @Test
     @DisplayName("isCatchable test")
-    void isCatchableTest() {
+    public void isCatchableTest() {
         Board board =new Board();
         board.initBoard(2);
         System.out.println(board.toString());
@@ -50,7 +50,7 @@ public class BoardTest {
 
     @Test
     @DisplayName("Init board test")
-    void initBoardTest() {
+    public void initBoardTest() {
         Board board2p =new Board();
         Board board3p=new Board();
         Board board4p = new Board();

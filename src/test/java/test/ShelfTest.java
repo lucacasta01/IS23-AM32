@@ -4,14 +4,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import it.polimi.myShelfie.model.Shelf;
 import it.polimi.myShelfie.model.Tile;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class ShelfTest {
     private final int MAXROW = 6;
     private final int MAXCOLUMN = 5;
     @Test
     @DisplayName("initShelf test")
-    void initShelfTest(){
+    public void initShelfTest(){
         Shelf testShelf = new Shelf();
         Tile[][] matrix;
         testShelf.initShelf();
@@ -24,7 +24,7 @@ public class ShelfTest {
     }
     @Test
     @DisplayName("freeTiles test")
-    void freeTilesTest(){
+    public void freeTilesTest(){
 
         Shelf testShelf = new Shelf();
         testShelf.initShelf();
@@ -37,7 +37,7 @@ public class ShelfTest {
 
     @Test
     @DisplayName("Check is full test")
-    void checkIsFullTest(){
+    public void checkIsFullTest(){
 
         Shelf testShelf = new Shelf();
         testShelf.initShelf();
@@ -52,7 +52,7 @@ public class ShelfTest {
 
     @Test
     @DisplayName("insertTiles test")
-    void insertTilesTest(){
+    public void insertTilesTest(){
 
         Shelf testShelf = new Shelf();
         testShelf.initShelf();
@@ -66,7 +66,7 @@ public class ShelfTest {
 
     @Test
     @DisplayName("getFinalPoints test")
-    void getFinalPointsTest(){
+    public void getFinalPointsTest(){
         Shelf testShelf = new Shelf();
         testShelf.initShelf();
         for(int i=0; i<MAXROW; i++){
