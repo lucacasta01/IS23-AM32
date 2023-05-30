@@ -13,6 +13,7 @@ import it.polimi.myShelfie.utilities.beans.ChatMessage;
 import it.polimi.myShelfie.utilities.beans.View;
 
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -353,10 +354,10 @@ public class Lobby implements Runnable{
                 Server.getInstance().saveUserGame();
 
                 //delete saved game
-                java.net.URL savingFileURL = getClass().getResource("/config/savedgames/"+this.lobbyUID+".json");
-                if(savingFileURL != null){
+                Path savingFilePath = Paths.get(System.getProperty("user.dir") + "/config/savedgames/" +this.lobbyUID+".json");
+                if(savingFilePath.toFile().isFile()){
                     try {
-                        Files.delete(Paths.get(savingFileURL.toURI()));
+                        Files.delete(savingFilePath);
                         System.out.println("Ended game file deleted successfully, UID: "+ this.lobbyUID);
                     }
                     catch (Exception e){

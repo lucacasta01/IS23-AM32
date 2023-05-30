@@ -13,6 +13,8 @@ import it.polimi.myShelfie.utilities.beans.Action;
 import it.polimi.myShelfie.utilities.beans.Usergame;
 import java.io.*;
 import java.net.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
@@ -144,11 +146,11 @@ public class Server extends UnicastRemoteObject implements Runnable{
                 .setPrettyPrinting()
                 .create();
         try {
-            if(getClass().getResource("/config/usergame.json") == null){
-               new File(getClass().getResource("/config").getPath()+"/usergame.json").createNewFile();
+            Path usergamePath = Paths.get(System.getProperty("user.dir")+ "/config/usergame.json");
+            if(usergamePath.toFile().isFile()){
+               new File(usergamePath.toString()).createNewFile();
             }
-            FileWriter fw = new FileWriter(getClass().getResource("/config/usergame.json").getPath());
-            Map<String,String> toSave = new HashMap<>();
+            FileWriter fw = new FileWriter(usergamePath.toString());
             Usergame usergame = new Usergame();
             for(String k : userGame.keySet()){
                 if(!userGame.get(k).equals("-")){
@@ -170,12 +172,12 @@ public class Server extends UnicastRemoteObject implements Runnable{
      * @return old usergame map if present, new map otherwise
      */
     public Map<String,String> loadUserGame(){
-        URL url = getClass().getResource("/config/usergame.json");
-        if(url == null){
+        Path usergamePath = Paths.get(System.getProperty("user.dir")+ "/config/usergame.json");
+        if(!usergamePath.toFile().isFile()){
             return new HashMap<>();
         }
         else{
-            return JsonParser.getUsergame(url.getPath());
+            return JsonParser.getUsergame(usergamePath.toString());
         }
     }
 

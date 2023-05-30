@@ -224,7 +224,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         }
 
         switch (connectionProtocol) {
-            case "TCP":
+            case "TCP" -> {
                 try {
                     try {
                         client = new Socket(serverIP, TCPPort);
@@ -269,9 +269,9 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                     if (response.getResponseType() == Response.ResponseType.INFO) {
                                         System.out.println(response.getInfoMessage());
                                     } else if (response.getResponseType() == Response.ResponseType.CHATMESSAGE) {
-                                        String sender = ANSI.BOLD + response.getChatMessage().getSenderColor() +response.getChatMessage().getSender() + ANSI.RESET_COLOR + ANSI.RESET_STYLE;
+                                        String sender = ANSI.BOLD + response.getChatMessage().getSenderColor() + response.getChatMessage().getSender() + ANSI.RESET_COLOR + ANSI.RESET_STYLE;
                                         System.out.println(">" + sender + ": " + response.getChatMessage().getMessage());
-                                        if(isGUI){
+                                        if (isGUI) {
                                             chatController.addMessage(response.getChatMessage());
                                         }
                                     } else if (response.getResponseType() == Response.ResponseType.VALID) {
@@ -293,10 +293,9 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                             GUIClient.getInstance().switchToGame();
                                         }
                                     } else if (response.getResponseType() == Response.ResponseType.GAME_ENDED) {
-                                        if(isGUI){
+                                        if (isGUI) {
                                             GUIClient.getInstance().showRank(response.getInfoMessage());
-                                        }
-                                        else{
+                                        } else {
                                             System.out.println("\n(1) New Game");
                                             System.out.println("(2) Load last game");
                                             System.out.println("(3) Join random game");
@@ -305,9 +304,9 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                         }
                                     } else if (response.getResponseType() == Response.ResponseType.UPDATE) {
                                         view = response.getView();
-                                        if(isGUI){
-                                            while(gamePanelController == null){
-                                                synchronized (this){
+                                        if (isGUI) {
+                                            while (gamePanelController == null) {
+                                                synchronized (this) {
                                                     wait();
                                                 }
                                             }
@@ -372,7 +371,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                             GUIClient.getInstance().switchToWaitingScene();
                                         }
                                     } else if (response.getResponseType() == Response.ResponseType.ACCEPT_COLLECT) {
-                                        if(isGUI){
+                                        if (isGUI) {
                                             gamePanelController.insertInColumn();
                                         }
                                     } else if (response.getResponseType() == Response.ResponseType.RETURN_TO_MENU) {
@@ -405,8 +404,8 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                break;
-            case "RMI":
+            }
+            case "RMI" -> {
                 try {
                     startRMIClient();
                 } catch (RemoteException | NotBoundException e) {
@@ -423,7 +422,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                     }
                     notConnected = true;
                 }
-                if(!close) {
+                if (!close) {
                     BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
                     //PING THREAD
                     if (Settings.pingOn) {
@@ -432,9 +431,8 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
                     RMIinputHandler.start();
                 }
-                break;
-            default:
-                System.exit(11);
+            }
+            default -> System.exit(11);
         }
     }
 

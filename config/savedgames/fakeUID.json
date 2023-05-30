@@ -1,0 +1,1442 @@
+{
+  "UID": "fakeUID",
+  "usernames": [
+    "pippo",
+    "topolino",
+    "pluto"
+  ],
+  "shelf": [
+    [
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 4
+      },
+      {
+        "color": "P",
+        "imgpath": "/graphics/itemTiles/Piante1.3.png",
+        "row": 4,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 4
+      },
+      {
+        "color": "Y",
+        "imgpath": "/graphics/itemTiles/Giochi1.3.png",
+        "row": 5,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 4
+      }
+    ],
+    [
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 4
+      },
+      {
+        "color": "P",
+        "imgpath": "/graphics/itemTiles/Piante1.2.png",
+        "row": 5,
+        "column": 0
+      },
+      {
+        "color": "P",
+        "imgpath": "/graphics/itemTiles/Piante1.1.png",
+        "row": 5,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 4
+      }
+    ],
+    [
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 0,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 1,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 2,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 1
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 3,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 1
+      },
+      {
+        "color": "P",
+        "imgpath": "/graphics/itemTiles/Piante1.3.png",
+        "row": 4,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 4,
+        "column": 4
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 0
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 1
+      },
+      {
+        "color": "L",
+        "imgpath": "/graphics/itemTiles/Trofei1.1.png",
+        "row": 5,
+        "column": 2
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 3
+      },
+      {
+        "color": "-",
+        "imgpath": "/graphics/itemTiles/transparent.png",
+        "row": 5,
+        "column": 4
+      }
+    ]
+  ],
+  "board": [
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 0
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 1
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 2
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 3
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 4
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 5
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 6
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 0,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 0
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 1
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 2
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 3
+    },
+    {
+      "color": "W",
+      "imgpath": "/graphics/itemTiles/Libri1.3.png",
+      "row": 1,
+      "column": 4
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 5
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 6
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 1,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 2,
+      "column": 0
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 2,
+      "column": 1
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 2,
+      "column": 2
+    },
+    {
+      "color": "G",
+      "imgpath": "/graphics/itemTiles/Gatti1.2.png",
+      "row": 2,
+      "column": 3
+    },
+    {
+      "color": "P",
+      "imgpath": "/graphics/itemTiles/Piante1.3.png",
+      "row": 2,
+      "column": 4
+    },
+    {
+      "color": "Y",
+      "imgpath": "/graphics/itemTiles/Giochi1.2.png",
+      "row": 2,
+      "column": 5
+    },
+    {
+      "color": "W",
+      "imgpath": "/graphics/itemTiles/Libri1.2.png",
+      "row": 2,
+      "column": 6
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 2,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 2,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 3,
+      "column": 0
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 3,
+      "column": 1
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 3,
+      "column": 2
+    },
+    {
+      "color": "B",
+      "imgpath": "/graphics/itemTiles/Cornici1.1.png",
+      "row": 3,
+      "column": 3
+    },
+    {
+      "color": "Y",
+      "imgpath": "/graphics/itemTiles/Giochi1.2.png",
+      "row": 3,
+      "column": 4
+    },
+    {
+      "color": "W",
+      "imgpath": "/graphics/itemTiles/Libri1.2.png",
+      "row": 3,
+      "column": 5
+    },
+    {
+      "color": "P",
+      "imgpath": "/graphics/itemTiles/Piante1.1.png",
+      "row": 3,
+      "column": 6
+    },
+    {
+      "color": "Y",
+      "imgpath": "/graphics/itemTiles/Giochi1.1.png",
+      "row": 3,
+      "column": 7
+    },
+    {
+      "color": "P",
+      "imgpath": "/graphics/itemTiles/Piante1.1.png",
+      "row": 3,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 4,
+      "column": 0
+    },
+    {
+      "color": "G",
+      "imgpath": "/graphics/itemTiles/Gatti1.3.png",
+      "row": 4,
+      "column": 1
+    },
+    {
+      "color": "G",
+      "imgpath": "/graphics/itemTiles/Gatti1.2.png",
+      "row": 4,
+      "column": 2
+    },
+    {
+      "color": "Y",
+      "imgpath": "/graphics/itemTiles/Giochi1.1.png",
+      "row": 4,
+      "column": 3
+    },
+    {
+      "color": "P",
+      "imgpath": "/graphics/itemTiles/Piante1.3.png",
+      "row": 4,
+      "column": 4
+    },
+    {
+      "color": "L",
+      "imgpath": "/graphics/itemTiles/Trofei1.2.png",
+      "row": 4,
+      "column": 5
+    },
+    {
+      "color": "L",
+      "imgpath": "/graphics/itemTiles/Trofei1.3.png",
+      "row": 4,
+      "column": 6
+    },
+    {
+      "color": "W",
+      "imgpath": "/graphics/itemTiles/Libri1.3.png",
+      "row": 4,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 4,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 5,
+      "column": 0
+    },
+    {
+      "color": "L",
+      "imgpath": "/graphics/itemTiles/Trofei1.2.png",
+      "row": 5,
+      "column": 1
+    },
+    {
+      "color": "P",
+      "imgpath": "/graphics/itemTiles/Piante1.1.png",
+      "row": 5,
+      "column": 2
+    },
+    {
+      "color": "W",
+      "imgpath": "/graphics/itemTiles/Libri1.3.png",
+      "row": 5,
+      "column": 3
+    },
+    {
+      "color": "P",
+      "imgpath": "/graphics/itemTiles/Piante1.1.png",
+      "row": 5,
+      "column": 4
+    },
+    {
+      "color": "G",
+      "imgpath": "/graphics/itemTiles/Gatti1.2.png",
+      "row": 5,
+      "column": 5
+    },
+    {
+      "color": "W",
+      "imgpath": "/graphics/itemTiles/Libri1.1.png",
+      "row": 5,
+      "column": 6
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 5,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 5,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 6,
+      "column": 0
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 6,
+      "column": 1
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 6,
+      "column": 2
+    },
+    {
+      "color": "L",
+      "imgpath": "/graphics/itemTiles/Trofei1.1.png",
+      "row": 6,
+      "column": 3
+    },
+    {
+      "color": "W",
+      "imgpath": "/graphics/itemTiles/Libri1.2.png",
+      "row": 6,
+      "column": 4
+    },
+    {
+      "color": "L",
+      "imgpath": "/graphics/itemTiles/Trofei1.1.png",
+      "row": 6,
+      "column": 5
+    },
+    {
+      "color": "B",
+      "imgpath": "/graphics/itemTiles/Cornici1.2.png",
+      "row": 6,
+      "column": 6
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 6,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 6,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 7,
+      "column": 0
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 7,
+      "column": 1
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 7,
+      "column": 2
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 7,
+      "column": 3
+    },
+    {
+      "color": "W",
+      "imgpath": "/graphics/itemTiles/Libri1.2.png",
+      "row": 7,
+      "column": 4
+    },
+    {
+      "color": "W",
+      "imgpath": "/graphics/itemTiles/Libri1.3.png",
+      "row": 7,
+      "column": 5
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 7,
+      "column": 6
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 7,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 7,
+      "column": 8
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 8,
+      "column": 0
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 8,
+      "column": 1
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 8,
+      "column": 2
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 8,
+      "column": 3
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 8,
+      "column": 4
+    },
+    {
+      "color": "B",
+      "imgpath": "/graphics/itemTiles/Cornici1.3.png",
+      "row": 8,
+      "column": 5
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 8,
+      "column": 6
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 8,
+      "column": 7
+    },
+    {
+      "color": "-",
+      "imgpath": "/graphics/itemTiles/transparent.png",
+      "row": 8,
+      "column": 8
+    }
+  ],
+  "score": [
+    50,
+    5,
+    1
+  ],
+  "personalCards": [
+    5,
+    6,
+    7
+  ],
+  "sharedCards": [
+    7,
+    5
+  ],
+  "currentPlayer": 0,
+  "tileHeap": [
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.3.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.3.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.3.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.3.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.3.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.3.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.3.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.2.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.2.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.2.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.2.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.2.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.2.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.1.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.1.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.1.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.1.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.1.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Cornici1.1.png",
+      "myColor": "BLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.2.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.2.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.2.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.2.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.2.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.1.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.1.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.1.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.1.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.1.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.1.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.1.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.3.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.3.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.3.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.3.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.3.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Gatti1.3.png",
+      "myColor": "GREEN"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Giochi1.2.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Giochi1.2.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Giochi1.2.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Giochi1.2.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Giochi1.2.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Giochi1.2.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Giochi1.3.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Giochi1.3.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Giochi1.3.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Giochi1.3.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Giochi1.3.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Giochi1.3.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Giochi1.1.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Giochi1.1.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Giochi1.1.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Giochi1.1.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Giochi1.1.png",
+      "myColor": "YELLOW"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Libri1.3.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Libri1.3.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Libri1.3.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Libri1.3.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Libri1.2.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Libri1.2.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Libri1.2.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Libri1.1.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Libri1.1.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Libri1.1.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Libri1.1.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Libri1.1.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Libri1.1.png",
+      "myColor": "WHITE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Piante1.3.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Piante1.3.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Piante1.3.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Piante1.3.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Piante1.2.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Piante1.2.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Piante1.2.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Piante1.2.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Piante1.2.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Piante1.2.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Piante1.1.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Piante1.1.png",
+      "myColor": "PINK"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Trofei1.1.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Trofei1.1.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Trofei1.1.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Trofei1.1.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Trofei1.1.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Trofei1.2.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Trofei1.2.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Trofei1.2.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Trofei1.2.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Trofei1.2.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Trofei1.3.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Trofei1.3.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Trofei1.3.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Trofei1.3.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Trofei1.3.png",
+      "myColor": "LIGHTBLUE"
+    },
+    {
+      "imagePath": "/graphics/itemTiles/Trofei1.3.png",
+      "myColor": "LIGHTBLUE"
+    }
+  ],
+  "isLastTurn": false
+}
