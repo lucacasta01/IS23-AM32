@@ -99,12 +99,19 @@ public class TCPInputHandler extends Thread{
                         }
                     }
                 } else if (message.startsWith("/column")) {
-                    int index = "/column ".length();
-                    String substr = message.substring(index);
-                    int col = Integer.parseInt(substr.substring(0, 1)) - 1;
-                    if (col < 0 || col > 5) {
+                    message = message.replace(" ", "");
+                    int index = "/column".length();
+                    String substr;
+                    int col=-1;
+                    try {
+                        substr = message.substring(index);
+                        col = Integer.parseInt(substr.substring(0, 1)) - 1;
+                    }catch(Exception e){
+                        System.out.println("Invalid sintax");
+                    }
+                    if ((col < 0 || col > 5)&&(col!=-1)){
                         System.out.println("Invalid column number");
-                    } else {
+                    } else if(col!=-1){
                         Action a = new Action(Action.ActionType.SELECTCOLUMN, client.getNickname(), "", "", null, col);
                         client.sendAction(a);
                     }
