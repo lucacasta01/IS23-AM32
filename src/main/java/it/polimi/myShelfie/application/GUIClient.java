@@ -4,6 +4,7 @@ import it.polimi.myShelfie.controller.GUIcontroller.LoginController;
 import it.polimi.myShelfie.controller.GUIcontroller.ChatController;
 import it.polimi.myShelfie.controller.GUIcontroller.banners.ErrorBannerController;
 import it.polimi.myShelfie.controller.GUIcontroller.banners.RankController;
+import it.polimi.myShelfie.controller.GUIcontroller.banners.ServerOfflineController;
 import it.polimi.myShelfie.utilities.beans.ChatMessage;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -251,6 +252,26 @@ public class GUIClient extends Application {
             rankStage.setScene(new Scene(rankPanel));
             rankStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("/graphics/icons/rank.png")).toString()));
             rankStage.show();
+        });
+    }
+
+    public void showServerOfflineBan() {
+        Platform.runLater(()->{
+            Parent banner = null;
+            FXMLLoader loader = null;
+            try {
+                loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/serverOfflineBanner.fxml")));
+                banner = loader.load();
+            } catch (Exception e) {
+                throw new RuntimeException("Server offline banner loading failed");
+            }
+            ServerOfflineController ctrl = loader.getController();
+
+            Stage bannerStage = new Stage();
+            bannerStage.setOnCloseRequest(event -> ctrl.doShutdown(null));
+            bannerStage.setScene(new Scene(banner));
+            bannerStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource("/graphics/icons/alert.png")).toString()));
+            bannerStage.show();
         });
     }
 }

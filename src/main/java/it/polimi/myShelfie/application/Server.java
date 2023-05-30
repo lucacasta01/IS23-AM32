@@ -145,9 +145,10 @@ public class Server extends UnicastRemoteObject implements Runnable{
                 .create();
         try {
             if(getClass().getResource("/config/usergame.json") == null){
+                System.out.println("Creating new file, path: "+getClass().getResource("/config").getPath()+"/usergame.json");
                new File(getClass().getResource("/config").getPath()+"/usergame.json").createNewFile();
             }
-            FileWriter fw = new FileWriter(getClass().getResource("/config/usergame.json").getPath());
+            FileWriter fw = new FileWriter(getClass().getResource("/config/usergame.json").getPath().replace("file:/", ""));
             Map<String,String> toSave = new HashMap<>();
             Usergame usergame = new Usergame();
             for(String k : userGame.keySet()){

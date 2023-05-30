@@ -543,9 +543,15 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                             System.out.println("Ping #" + count + " elapsed");
                             if (failedPings > 2) {
                                 System.out.println("Server offline: closing...");
-                                System.exit(1);
+                                if(!isGUI) {
+                                    System.exit(1);
+                                }else{
+                                    GUIClient.getInstance().showServerOfflineBan();
+                                }
                             }
-
+                            synchronized (pongResponses) {
+                                pongResponses.remove(0);
+                            }
                         } else {
                             try {
                                 swapElapsed.setRunning(false);
@@ -572,7 +578,11 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                         } catch (RemoteException e) { //ping failed
                             pingFailed = true;
                             System.err.println("Server offline: closing...");
-                            System.exit(1);
+                            if(!isGUI) {
+                                System.exit(1);
+                            }else{
+                                GUIClient.getInstance().showServerOfflineBan();
+                            }
                         }
                         try {
                             Thread.sleep(Settings.PINGPERIOD);

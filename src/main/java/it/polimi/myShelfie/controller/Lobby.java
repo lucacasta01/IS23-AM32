@@ -131,8 +131,8 @@ public class Lobby implements Runnable{
                 game = new Game(lobbyUID, playersNumber);
                 try {
                     this.isOpen = true;
-                    broadcastMessage("Waiting for players..." + " " + "(" + getLobbySize() + "/" + getPlayersNumber() + ")");
-                    lobbyPlayers.get(0).notifyLobbyCreated(getPlayersNumber());
+                    broadcastMessage("Waiting for players..." + " " + "(" + lobbyPlayers.size() + "/" + playersNumber + ")");
+                    lobbyPlayers.get(0).notifyLobbyCreated(playersNumber);
                     waitForPlayers();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
@@ -148,8 +148,8 @@ public class Lobby implements Runnable{
                     ch.acceptLoadGame();
                 }
                 try {
-                    broadcastMessage("Waiting for players..." + " " + "(" + getLobbySize() + "/" + getPlayersNumber() + ")");
-                    lobbyPlayers.get(0).notifyLobbyCreated(getPlayersNumber());
+                    broadcastMessage("Waiting for players..." + " " + "(" + lobbyPlayers.size() + "/" + playersNumber + ")");
+                    lobbyPlayers.get(0).notifyLobbyCreated(playersNumber);
                     waitForPlayers();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
@@ -377,9 +377,9 @@ public class Lobby implements Runnable{
     }
 
     private void reorderLobbyList(){
-        ClientHandler[] oldGameOrder = new ClientHandler[this.getLobbySize()];
-        for(int i = 0; i<this.getLobbySize(); i++){
-            for(int j = 0; j<this.getLobbySize(); j++){
+        ClientHandler[] oldGameOrder = new ClientHandler[lobbyPlayers.size()];
+        for(int i = 0; i<lobbyPlayers.size(); i++){
+            for(int j = 0; j<lobbyPlayers.size(); j++){
                 if(this.lobbyPlayers.get(i).getNickname().equals(this.game.getOldGamePlayers().get(j).getUsername())){
                     oldGameOrder[j]=this.lobbyPlayers.get(i);
                 }
@@ -419,13 +419,8 @@ public class Lobby implements Runnable{
         return lobbyUID;
     }
 
-    public int getPlayersNumber() {
-        return playersNumber;
-    }
 
-    public int getLobbySize(){
-        return lobbyPlayers.size();
-    }
+
     private void sendCommands(ClientHandler ch){
         ch.sendHelpMessage();
     }
@@ -440,9 +435,9 @@ public class Lobby implements Runnable{
 
     private void waitForPlayers() throws InterruptedException {
         synchronized (lobbyPlayers) {
-            int oldSize = getLobbySize();
-            while (getLobbySize() < getPlayersNumber()&&!endWaitingPlayers.get()) {
-                if(getLobbySize()>=oldSize){
+            int oldSize = lobbyPlayers.size();
+            while (lobbyPlayers.size() < playersNumber&&!endWaitingPlayers.get()) {
+                if(lobbyPlayers.size()>=oldSize){
                     oldSize++;
                     lobbyPlayers.wait();
                 }
@@ -472,13 +467,6 @@ public class Lobby implements Runnable{
         }
     }
 
-    public void clientError(ClientHandler ch){
-        lobbyPlayers.remove(ch);
-        ch.setPlaying(false);
-        broadcastMessage(ch.getNickname() + " connection lost");
-        broadcastMessage("Game is closing...");
-    }
-
     public void setEndWaitingPlayers(){
         synchronized (lobbyPlayers){
             endWaitingPlayers.set(true);
@@ -500,17 +488,17 @@ public class Lobby implements Runnable{
         }
         synchronized (lobbyPlayers){
             lobbyPlayers.add(player);
-            broadcastMessage(player.getNickname()+" joined the lobby "+"("+getLobbySize()+"/"+getPlayersNumber()+")");
+            broadcastMessage(player.getNickname()+" joined the lobby "+"("+lobbyPlayers.size()+"/"+playersNumber+")");
             notifyNewJoin(player); //notify other players that someone else just joined the lobby
-            player.notifyLobbyJoined("("+getLobbySize()+"/"+getPlayersNumber()+")");
+            player.notifyLobbyJoined("("+lobbyPlayers.size()+"/"+playersNumber+")");
             lobbyPlayers.notifyAll();
         }
     }
 
-    public void notifyNewJoin(ClientHandler player){
+    private void notifyNewJoin(ClientHandler player){
         for(ClientHandler t : lobbyPlayers){
             if(!t.equals(player)) {
-                t.notifyNewJoin("(" + getLobbySize() + "/" + getPlayersNumber() + ")");
+                t.notifyNewJoin("(" + lobbyPlayers.size() + "/" + playersNumber + ")");
             }
         }
     }
@@ -520,7 +508,7 @@ public class Lobby implements Runnable{
             t.sendInfoMessage(message);
         }
     }
-    public void sendPrivateMessage(String sender, String message){
+    private void sendPrivateMessage(String sender, String message){
         String receiver = message.substring(0, message.indexOf(" "));
         String[] stringArray = message.split(" ");
         List<String> stringLists = new ArrayList<>(Arrays.stream(stringArray).toList());
@@ -536,7 +524,7 @@ public class Lobby implements Runnable{
         }
     }
 
-    public void sendChat(ChatMessage chatMessage){
+    private void sendChat(ChatMessage chatMessage){
         for(ClientHandler ch : lobbyPlayers){
             if(!ch.getNickname().equals(chatMessage.getSender())) {
                 ch.sendChatMessage(chatMessage);
@@ -544,7 +532,7 @@ public class Lobby implements Runnable{
         }
     }
 
-    public void broadcastUpdate(){
+    private void broadcastUpdate(){
         View view = new View();
         List<String> players = new ArrayList<>();
         List<String> GUIBoard = new ArrayList<>();
@@ -554,11 +542,8 @@ public class Lobby implements Runnable{
         List<String> GuiSharedCard = new ArrayList<>();
         List<String> shelves = new ArrayList<>();
         ClientHandler client = lobbyPlayers.get(game.getCurrentPlayer());
-
-
         view.setANSIcolor(client.getColor());
         view.setCurrentPlayer(game.getPlayers().get(game.getCurrentPlayer()).getUsername());
-
         //TUI board
         view.setBoard(this.game.getGameBoard().toString());
         //GUI board
@@ -649,15 +634,6 @@ public class Lobby implements Runnable{
             Player p = game.chToPlayer(ch);
             p.updateScore(p.getMyGoalCard().checkPersonalGoal(p.getMyShelf()));
             //p.updateScore(p.getMyShelf().checkFinalScore());
-        }
-    }
-
-
-    //MAYBE USELESS
-    public void shutdown(){
-        for(ClientHandler t : lobbyPlayers){
-            //REPLACE WITH: GOTO MENU
-            t.shutdown();
         }
     }
     public synchronized void recieveAction(Action a){
