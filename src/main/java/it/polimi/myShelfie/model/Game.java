@@ -395,6 +395,7 @@ public class Game{
      * @param pos2
      * @return true if catchable, false otherwise
      */
+
     private boolean areCatchable(Position pos1, Position pos2){
         if(this.gameBoard.isCatchable(pos1.getRow(), pos1.getColumn())&&this.gameBoard.isCatchable(pos2.getRow(), pos2.getColumn())){
             if((pos1.getRow()==pos2.getRow())||(pos1.getColumn()==pos2.getColumn())){
@@ -535,20 +536,6 @@ public class Game{
         }
     }
 
-    /**
-     * Adds a player to the player list
-     * @param p player to add
-     */
-    public void addPlayer(Player p){
-        if(players.size()<playersNumber) {
-            players.add(p);
-            p.setGoalCard(drawPersonalGoal());
-            p.initShelf();
-        }
-        else{
-            System.out.println("No more places available");
-        }
-    }
 
     /**
      * Adds a list of players to the player list

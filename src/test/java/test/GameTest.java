@@ -4,7 +4,6 @@ import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.cards.PersonalGoalCard;
-import it.polimi.myShelfie.model.cards.SharedGoalCard;
 import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.utilities.Settings;
@@ -12,7 +11,6 @@ import it.polimi.myShelfie.utilities.Utils;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 
-import java.sql.ClientInfoStatus;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class GameTest {
-    private final String fakeIP = "192.168.1.1";
     private final String fakeName = "testName";
 
     @Test
@@ -41,8 +38,7 @@ public class GameTest {
         Player p2 = new Player("topolino");
 
         Game game = new Game("fakeUID",2);
-        game.addPlayer(p1);
-        game.addPlayer(p2);
+        game.addPlayer(List.of(p1,p2));
 
         game.getGameBoard().initBoard(2);
         System.out.println(game.getGameBoard().toString());
@@ -79,7 +75,7 @@ public class GameTest {
     @DisplayName("Tile insert test")
     public void tileInsertTest(){
         Game myGame = new Game("",2);
-        myGame.getPlayers().add(new Player(fakeName));
+        myGame.addPlayer(List.of(new Player(fakeName)));
         List<Tile> tiles = new ArrayList<>();
         tiles.add(new Tile("", Tile.Color.BLUE));
         tiles.add(new Tile("", Tile.Color.GREEN));
@@ -99,25 +95,23 @@ public class GameTest {
         Player p3 = new Player("t");
         Player p4 = new Player("g");
         Player p5 = new Player("e");
-        game2.addPlayer(p1);
-        game2.addPlayer(p2);
-        game2.addPlayer(p3);
-        System.out.println("Game 2 size: "+game2.getPlayers().size());
-        assertTrue(game2.getPlayers().size()==2);
-        game3.addPlayer(p1);
-        game3.addPlayer(p2);
-        game3.addPlayer(p3);
-        game3.addPlayer(p4);
-        System.out.println("Game 3 size: "+game3.getPlayers().size());
-        assertTrue(game3.getPlayers().size()==3);
-        game4.addPlayer(p1);
-        game4.addPlayer(p2);
-        game4.addPlayer(p3);
-        game4.addPlayer(p4);
-        game4.addPlayer(p5);
-        System.out.println("Game 4 size: "+game4.getPlayers().size());
-        assertTrue(game4.getPlayers().size()==4);
 
+        game2.addPlayer(List.of(p1,p2,p3,p4,p5));
+        assertEquals(0, game2.getPlayers().size());
+        game2.addPlayer(List.of(p1,p2));
+        assertEquals(2, game2.getPlayers().size());
+
+        game3.addPlayer(List.of(p1,p2,p3,p4,p5));
+        assertEquals(0, game3.getPlayers().size());
+        game3.addPlayer(List.of(p1,p2));
+        assertEquals(2, game3.getPlayers().size());
+
+        game4.addPlayer(List.of(p1,p2,p3,p4,p5));
+        assertEquals(0, game4.getPlayers().size());
+        game4.addPlayer(List.of(p1,p2,p3));
+        assertEquals(3, game4.getPlayers().size());
+        game4.addPlayer(List.of(p4));
+        assertEquals(4, game4.getPlayers().size());
     }
 
     @Test
@@ -223,24 +217,18 @@ public class GameTest {
 
         p1.setScore(5);
         p2.setScore(4);
-        game2.addPlayer(p1);
-        game2.addPlayer(p2);
+        game2.addPlayer(List.of(p1,p2));
         System.out.println(game2.getRank(false));
         p2.setScore(5);
         System.out.println(game2.getRank(false));
         p2.setScore(4);
 
         p3.setScore(6);
-        game3.addPlayer(p1);
-        game3.addPlayer(p2);
-        game3.addPlayer(p3);
+        game3.addPlayer(List.of(p1,p2,p3));
         System.out.println(game3.getRank(false));
 
         p4.setScore(7);
-        game4.addPlayer(p1);
-        game4.addPlayer(p2);
-        game4.addPlayer(p3);
-        game4.addPlayer(p4);
+        game4.addPlayer(List.of(p1,p2,p3,p4));
         System.out.println(game4.getRank(false));
 
 
@@ -254,9 +242,7 @@ public class GameTest {
         Player p3 = new Player("pluto");
 
         Game game = new Game("fakeUID",3);
-        game.addPlayer(p1);
-        game.addPlayer(p2);
-        game.addPlayer(p3);
+        game.addPlayer(List.of(p1,p2,p3));
 
         System.out.println(game.getGameBoard().toString());
 
@@ -299,9 +285,7 @@ public class GameTest {
         Player p3 = new Player("pluto");
         List<Position> toCollect =  new ArrayList<>();
         Game game = new Game("fakeUID",3);
-        game.addPlayer(p1);
-        game.addPlayer(p2);
-        game.addPlayer(p3);
+        game.addPlayer(List.of(p1,p2,p3));
 
 
         p1.setGoalCard(game.drawPersonalGoal());
@@ -351,5 +335,4 @@ public class GameTest {
         assertEquals(game.getGameBoard().toString(),game2.getGameBoard().toString());
         assertEquals(game.getGameBoard().getTileHeapToString(),game2.getGameBoard().getTileHeapToString());
     }
-
 }
