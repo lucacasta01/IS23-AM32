@@ -22,6 +22,7 @@ public class Board {
         initTileHeap();
     }
 
+
     public Board(Tile[][] tileMatrix, List<Tile> tileHeap) {
         this.grid = tileMatrix;
         this.tileHeap = tileHeap;

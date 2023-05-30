@@ -10,6 +10,8 @@ import it.polimi.myShelfie.utilities.beans.GameParameters;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class Game{
@@ -98,11 +100,11 @@ public class Game{
                 .setPrettyPrinting()
                 .create();
         try {
-            if(getClass().getResource("/config/savedgames/" + UID + ".json")==null) {
-                File file = new File((getClass().getResource("/config/savedgames/").getPath() + UID + ".json").replace("file:", ""));
-                file.createNewFile();
+            Path savedFilePath = Paths.get(System.getProperty("user.dir")+"/config/savedgames/" + UID + ".json");
+            if(!savedFilePath.toFile().isFile()) {
+                new File(savedFilePath.toString()).createNewFile();
             }
-            FileWriter fw = new FileWriter(Objects.requireNonNull(getClass().getResource("/config/savedgames/" + UID + ".json")).getPath());
+            FileWriter fw = new FileWriter(savedFilePath.toString());
             fw.write(gson.toJson(gameParameters));
             fw.close();
         }
@@ -521,6 +523,9 @@ public class Game{
         return null;
     }
 
+    /**
+     * Initializes the board based on the number of players selected
+     */
     private void initBoard(){
         try {
             this.gameBoard.initBoard(this.playersNumber);
@@ -530,6 +535,10 @@ public class Game{
         }
     }
 
+    /**
+     * Adds a player to the player list
+     * @param p player to add
+     */
     public void addPlayer(Player p){
         if(players.size()<playersNumber) {
             players.add(p);
@@ -541,6 +550,10 @@ public class Game{
         }
     }
 
+    /**
+     * Adds a list of players to the player list
+     * @param p list of players to add
+     */
     public void addPlayer(List<Player> p){
         if(players.size() + p.size() <= playersNumber) {
             players.addAll(p);

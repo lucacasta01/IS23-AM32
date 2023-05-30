@@ -167,6 +167,7 @@ public class TCPInputHandler extends Thread{
                 s.equals("P") || s.equals("G") || s.equals("Y");
     }
 
+
     private synchronized String getGuiAction() throws InterruptedException {
         String message;
         while(inputGUI.size()==0){
