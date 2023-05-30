@@ -5,6 +5,7 @@ import it.polimi.myShelfie.application.GUIClient;
 import it.polimi.myShelfie.controller.RMI.RMIServer;
 import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.Utils;
+import it.polimi.myShelfie.utilities.beans.Action;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -129,12 +130,19 @@ public class RMIInputHandler extends Thread {
                         }
                     }
                 } else if (message.startsWith("/column")) {
-                    int index = "/column ".length();
-                    String substr = message.substring(index);
-                    int col = Integer.parseInt(substr.substring(0, 1)) - 1;
-                    if (col < 0 || col > 5) {
+                    message = message.replace(" ", "");
+                    int index = "/column".length();
+                    String substr;
+                    int col=-1;
+                    try {
+                        substr = message.substring(index);
+                        col = Integer.parseInt(substr.substring(0, 1)) - 1;
+                    }catch(Exception e){
+                        System.out.println("Invalid sintax");
+                    }
+                    if ((col < 0 || col > 5)&&(col!=-1)){
                         System.out.println("Invalid column number");
-                    } else {
+                    } else if(col!=-1){
                         client.getRmiServer().selectColumn(client.getNickname(), col);
                     }
                 } else if (message.startsWith("/order")) {
