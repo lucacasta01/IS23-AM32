@@ -81,6 +81,7 @@ public class Shelf {
         }
     }
 
+
     public List<ColorPosition> toColorPosition(){
         List<ColorPosition> toReturn = new ArrayList<>();
         for(int i = 0; i< Settings.SHELFROW; i++){
@@ -110,6 +111,10 @@ public class Shelf {
         return s.toString();
     }
 
+    /**
+     * Method used to get the size of clusters made of same color tiles
+     * @return List of clusters' sizes
+     */
     private List<Integer> getColorClusterSizes() {
         Tile[][] matrix = getTileMartrix();
         List<Integer> clusterSizes = new ArrayList<>();
@@ -153,6 +158,10 @@ public class Shelf {
         return size;
     }
 
+    /**
+     * Gets the shelf score based on the amount of clusters of same color tiles
+     * @return shelf score
+     */
     public int getShelfScore(){
         List<Integer> clusterSizes = getColorClusterSizes();
         int toReturn = 0;

@@ -70,6 +70,9 @@ public class Game{
         }
     }
 
+    /**
+     * Saves the current state of the game
+     */
     public void saveGame(){
         GameParameters gameParameters = new GameParameters();
         gameParameters.setUID(this.UID);
@@ -136,6 +139,11 @@ public class Game{
 
     }
 
+    /**
+     * Loads a shelf based on a previous game state
+     * @param colorPositions
+     * @return Loaded shelf
+     */
     private Shelf loadShelf(List<ColorPosition> colorPositions){
         Tile[][] tileMatrix = new Tile[Settings.SHELFROW][Settings.SHELFCOLUMN];
         for(ColorPosition cp : colorPositions){
@@ -144,6 +152,12 @@ public class Game{
         return new Shelf(tileMatrix);
     }
 
+    /**
+     * Loads the board based on a previous game state
+     * @param colorPositions
+     * @param tileHeap
+     * @return Loaded board
+     */
     private Board loadBoard(List<ColorPosition> colorPositions, List<Tile> tileHeap){
         Tile[][] tileMatrix = new Tile[Settings.BOARD_DIM][Settings.BOARD_DIM];
         for(ColorPosition cp : colorPositions){
@@ -154,6 +168,10 @@ public class Game{
     public String getUID() {
         return UID;
     }
+
+    /**
+     * Initializes the initial deck used for personal goal cards
+     */
     private void initializePersonalDeck(){
         personalDeck = new ArrayList<>();
         try{
@@ -167,6 +185,12 @@ public class Game{
         }
     }
 
+    /**
+     * Generates a personal goal card
+     * @param colorPositions
+     * @param n
+     * @return the generated card
+     */
     private PersonalGoalCard generatePersonalGoalCard(List<ColorPosition> colorPositions, int n){
         List<Tile.Color> colors = new ArrayList<>();
         List<Position> positions = new ArrayList<>();
@@ -179,6 +203,10 @@ public class Game{
         return myCard;
     }
 
+    /**
+     * Initializes the shared goals deck
+     * @param playerNumber
+     */
     private void initializeSharedDeck(int playerNumber){
         sharedDeck = new ArrayList<>();
         Random rnd = new Random();
@@ -205,6 +233,10 @@ public class Game{
         sharedDeck.add(sharedGoalCards[card2]);
     }
 
+    /**
+     * Initializes the shared goals deck
+     * @param playerNumber
+     */
     private void initializeSharedDeck(int card1, int card2, int playerNumber){
         sharedDeck = new ArrayList<>();
         SharedGoalCard[] sharedGoalCards = new SharedGoalCard[12];
@@ -355,6 +387,12 @@ public class Game{
         }
     }
 
+    /**
+     * returns whether the tiles are catchable or not
+     * @param pos1
+     * @param pos2
+     * @return true if catchable, false otherwise
+     */
     private boolean areCatchable(Position pos1, Position pos2){
         if(this.gameBoard.isCatchable(pos1.getRow(), pos1.getColumn())&&this.gameBoard.isCatchable(pos2.getRow(), pos2.getColumn())){
             if((pos1.getRow()==pos2.getRow())||(pos1.getColumn()==pos2.getColumn())){
@@ -367,6 +405,12 @@ public class Game{
         }
     }
 
+    /**
+     * returns whether the tiles are catchable or not
+     * @param pos1
+     * @param pos2
+     * @return true if catchable, false otherwise
+     */
     private boolean areCatchable(Position pos1, Position pos2, Position pos3){
         if(this.gameBoard.isCatchable(pos1.getRow(), pos1.getColumn())&&this.gameBoard.isCatchable(pos2.getRow(), pos2.getColumn())&&this.gameBoard.isCatchable(pos3.getRow(), pos3.getColumn())){
             if(((pos1.getRow()== pos2.getRow())&&(pos2.getRow()==pos3.getRow()))||((pos1.getColumn()== pos2.getColumn())&&(pos2.getColumn()==pos3.getColumn()))){
@@ -379,6 +423,10 @@ public class Game{
         }
     }
 
+    /**
+     * checks if the next turns are the lasts before the game ends
+     * @param p
+     */
     public void checkLastTurn(Player p){
         if(p.getMyShelf().checkIsFull()){
             isLastTurn = true;

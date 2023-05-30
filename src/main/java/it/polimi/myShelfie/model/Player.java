@@ -64,9 +64,17 @@ public class Player {
         return myGoalCard;
     }
 
+    /**
+     * Initializes player's shelf
+     */
     public void initShelf(){
         this.myShelf  = new Shelf();
     }
+
+    /**
+     * updates the score adding the amount passed as a parameter
+     * @param toAdd
+     */
     public synchronized void updateScore(int toAdd){
         this.score += toAdd;
     }

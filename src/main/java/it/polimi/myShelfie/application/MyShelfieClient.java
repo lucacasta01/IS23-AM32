@@ -8,6 +8,10 @@ public class MyShelfieClient {
     private static String message;
     private static BufferedReader inReader ;
 
+    /**
+     * The main process for our game
+     * @param args
+     */
     public static void main(String[] args) {
         System.out.println("***MY SHELFIE***");
         System.out.println("Select your interface [TUI/GUI]");

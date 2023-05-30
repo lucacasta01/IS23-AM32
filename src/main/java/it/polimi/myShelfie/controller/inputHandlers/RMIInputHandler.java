@@ -25,14 +25,6 @@ public class RMIInputHandler extends Thread {
         inReader = new BufferedReader(new InputStreamReader(System.in));
         inputGUI = new ArrayList<>();
     }
-     public void closeBufferedReader(){
-        try{
-            inReader.close();
-            System.out.println("BufferedReader closed");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-     }
 
     public void setGUI(boolean GUI) {
         isGUI = GUI;
