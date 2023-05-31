@@ -272,6 +272,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                         String sender = ANSI.BOLD + response.getChatMessage().getSenderColor() + response.getChatMessage().getSender() + ANSI.RESET_COLOR + ANSI.RESET_STYLE;
                                         System.out.println(">" + sender + ": " + response.getChatMessage().getMessage());
                                         if (isGUI) {
+                                            gamePanelController.chatNotification();
                                             chatController.addMessage(response.getChatMessage());
                                         }
                                     } else if (response.getResponseType() == Response.ResponseType.VALID) {

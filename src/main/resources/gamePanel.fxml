@@ -19,15 +19,22 @@
    <children>
       <HBox alignment="CENTER" layoutX="455.0" layoutY="862.0" prefHeight="0.0" prefWidth="783.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="455.0" AnchorPane.rightAnchor="202.0">
          <children>
-            <Button fx:id="openChatBtn" blendMode="OVERLAY" mnemonicParsing="false" onAction="#openChatPanel" prefHeight="34.0" prefWidth="63.0" text="CHAT">
+            <Button fx:id="openChatBtn" blendMode="OVERLAY" mnemonicParsing="false" onAction="#openChatPanel" prefHeight="29.0" prefWidth="75.0" text="CHAT">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
                <font>
                   <Font name="Arial" size="14.0" />
                </font>
+               <graphic>
+                  <ImageView fx:id="chatNotificationImg" fitHeight="26.0" fitWidth="7.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@graphics/icons/redDot.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </Button>
-            <Button fx:id="quitBtn" blendMode="OVERLAY" mnemonicParsing="false" onAction="#quit" prefHeight="34.0" prefWidth="59.0" text="QUIT">
+            <Button fx:id="quitBtn" blendMode="OVERLAY" mnemonicParsing="false" onAction="#quit" prefHeight="29.0" prefWidth="69.0" text="QUIT">
                <font>
                   <Font size="14.0" />
                </font>
@@ -35,7 +42,7 @@
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="rulesBtn" blendMode="OVERLAY" mnemonicParsing="false" onAction="#openRules" prefHeight="27.0" prefWidth="67.0" text="RULES">
+            <Button fx:id="rulesBtn" blendMode="OVERLAY" mnemonicParsing="false" onAction="#openRules" prefHeight="29.0" prefWidth="77.0" text="RULES">
                <HBox.margin>
                   <Insets right="200.0" />
                </HBox.margin>

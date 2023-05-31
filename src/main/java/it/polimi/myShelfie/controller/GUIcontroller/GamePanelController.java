@@ -43,9 +43,10 @@ public class GamePanelController{
     VBox collectedTilesBox;
     @FXML
     Button collectRstBtn;
-
     @FXML
     VBox col1Box, col2Box, col3Box, col4Box, col5Box;
+    @FXML
+    ImageView chatNotificationImg;
     final List<ImageView> collectedTiles = new ArrayList<>();
     int column = -1;
 
@@ -55,6 +56,7 @@ public class GamePanelController{
         Client.getInstance().setGamePanelController(this);
         addGridEvent();
         setResetEnabled(false);
+        chatNotificationImg.setVisible(false);
         GUIClient.getInstance().getStage().setOnCloseRequest(e -> {
             GUIClient.getInstance().getStage().close();
             System.exit(0);
@@ -392,6 +394,7 @@ public class GamePanelController{
         }else{
             chatDrawer.open();
             chatDrawer.setVisible(true);
+            chatNotificationImg.setVisible(false);
         }
     }
 
@@ -553,5 +556,9 @@ public class GamePanelController{
     }
     public void insertTiles5(MouseEvent mouseEvent) {
         collectTiles(5);
+    }
+
+    public void chatNotification() {
+        chatNotificationImg.setVisible(true);
     }
 }

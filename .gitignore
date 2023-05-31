@@ -3,6 +3,9 @@
 *.iml
 *.iws
 out/
+
+#Plugin
+*.plantuml
  
 # Mac
 .DS_Store
