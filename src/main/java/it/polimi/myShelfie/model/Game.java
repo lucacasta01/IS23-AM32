@@ -515,6 +515,12 @@ public class Game{
     public List<Player> getOldGamePlayers() {
         return oldGamePlayers;
     }
+
+    /**
+     * method to get the player linked to a clientHandler
+     * @param ch clientHandler
+     * @return player linked to ch
+     */
     public Player chToPlayer(ClientHandler ch){
         for(Player p:players){
             if(p.getUsername().equals(ch.getNickname())){

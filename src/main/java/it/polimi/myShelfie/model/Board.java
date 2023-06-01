@@ -244,6 +244,10 @@ public class Board {
         return s.toString();
     }
 
+    /**
+     * Generates a list of ColorPositions starting from the board
+     * @return List of positions
+     */
     public List<ColorPosition> toColorPosition(){
         List<ColorPosition> toReturn = new ArrayList<>();
         for(int i = 0; i< Settings.BOARD_DIM; i++){

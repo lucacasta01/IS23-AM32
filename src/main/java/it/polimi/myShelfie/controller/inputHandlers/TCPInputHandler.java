@@ -68,7 +68,7 @@ public class TCPInputHandler extends Thread{
                     if(splitMessage.stream().filter(s -> !s.equals(" ")).toList().size() > 1) {
                         Action a = new Action(Action.ActionType.PRIVATEMESSAGE, client.getNickname(), message.substring("/pvt- ".length() - 1), "", null, null);
                         if(client.isGUI()){
-                            GUIClient.getInstance().addMyChatMessage(message.substring("/pvt- ".length() - 1));
+                            GUIClient.getInstance().addMyChatMessage(message.substring(message.indexOf(" ")));
                         }
                         client.sendAction(a);
                     }
