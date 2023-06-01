@@ -73,6 +73,8 @@ public class LobbyControllerTest {
         List<Player> players = new ArrayList<>();
         players.add(p1);
         players.add(p2);
+        p1.setGoalCard(game.drawPersonalGoal());
+        p2.setGoalCard(game.drawPersonalGoal());
         lobbyController.setGamePlayers(players);
         lobbyController.endTurnChecks(p1.getUsername());
         assertEquals(0, p1.getScore());

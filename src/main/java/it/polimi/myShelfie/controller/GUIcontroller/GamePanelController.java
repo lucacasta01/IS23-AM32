@@ -97,6 +97,11 @@ public class GamePanelController{
                 return false;
             }
         }
+        for(ImageView im:collectedTiles){
+            if((Math.abs(row-GridPane.getRowIndex(im))>2)||(Math.abs(column-GridPane.getColumnIndex(im))>2)){
+                return false;
+            }
+        }
 
         Boolean[][] grid = new Boolean[Settings.BOARD_DIM][Settings.BOARD_DIM];
         for(int i=0;i<Settings.BOARD_DIM;i++){
@@ -112,7 +117,7 @@ public class GamePanelController{
     }
 
     private boolean tilesMatch(int x1, int y1, int x2, int y2){
-        return (x1 == x2) && (y1 == y2);
+        return (x1==x2)&&(y1==y2);
     }
 
     private boolean isMyTurn() {
