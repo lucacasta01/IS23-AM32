@@ -1,4 +1,4 @@
-package test;
+package test.model;
 
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Shelf;

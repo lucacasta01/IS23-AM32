@@ -19,9 +19,9 @@ public class SharedGoal8Card extends SharedGoalCard implements CheckSharedGoal {
             return false;
         }
         Tile[][] toCheck = p.getMyShelf().getTileMartrix();
-        if(toCheck[0][0].getColor() == toCheck[Settings.SHELFROW-1][0].getColor()
+        if((toCheck[0][0].getColor() == toCheck[Settings.SHELFROW-1][0].getColor()
                 && toCheck[Settings.SHELFROW-1][Settings.SHELFCOLUMN-1].getColor() == toCheck[Settings.SHELFROW-1][0].getColor()
-                && toCheck[Settings.SHELFROW-1][0].getColor() == toCheck[0][Settings.SHELFCOLUMN-1].getColor()){
+                && toCheck[Settings.SHELFROW-1][0].getColor() == toCheck[0][Settings.SHELFCOLUMN-1].getColor())&&toCheck[0][0].getColor()!= Tile.Color.NULLTILE){
             addPlayer(p);
             return true;
         }

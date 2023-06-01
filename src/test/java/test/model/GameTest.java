@@ -1,4 +1,4 @@
-package test;
+package test.model;
 
 import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.model.Game;

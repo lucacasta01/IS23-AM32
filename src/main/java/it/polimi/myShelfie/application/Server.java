@@ -35,7 +35,6 @@ public class Server extends UnicastRemoteObject implements Runnable{
     private final Map<ClientHandler, ServerPingThread> connectedClients;
     private Map<String, String> userGame;
     private final List<Lobby> lobbyList;
-    public boolean acceptOn = true;
 
     private Server() throws RemoteException {
         connectedClients = new HashMap<>();

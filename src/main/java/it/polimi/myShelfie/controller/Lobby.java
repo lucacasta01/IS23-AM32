@@ -33,6 +33,7 @@ public class Lobby implements Runnable{
     private boolean close;
     private final AtomicBoolean endWaitingPlayers = new AtomicBoolean(false);
     private boolean firstToEnd = true;
+    private LobbyController lobbyController;
     /**
      * Create a lobby for a new game
      *
@@ -51,7 +52,7 @@ public class Lobby implements Runnable{
         colors.push(ANSI.PURPLE);
         colors.push(ANSI.GREEN);
         colors.push(ANSI.YELLOW);
-
+        lobbyController = new LobbyController();
     }
 
     /**
@@ -71,6 +72,7 @@ public class Lobby implements Runnable{
         colors.push(ANSI.PURPLE);
         colors.push(ANSI.GREEN);
         colors.push(ANSI.YELLOW);
+        lobbyController = new LobbyController();
     }
 
     @Override
@@ -129,7 +131,7 @@ public class Lobby implements Runnable{
                 }
                 lobbyPlayers.get(0).sendAccept("Number of players accepted");
                 actions.remove(0);
-                game = new Game(lobbyUID, playersNumber);
+                lobbyController.setGame(new Game(lobbyUID, playersNumber));
                 try {
                     this.isOpen = true;
                     broadcastMessage("Waiting for players..." + " " + "(" + lobbyPlayers.size() + "/" + playersNumber + ")");
@@ -138,13 +140,13 @@ public class Lobby implements Runnable{
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-            game.addPlayer(generatePlayers());
+            lobbyController.addPlayer(generatePlayers());
             }
         }
         else if(this.gameMode == GameMode.SAVEDGAME && !close){
             try{
-                game = new Game(lobbyUID);
-                playersNumber = game.getOldGamePlayers().size();
+                lobbyController.setGame(new Game(lobbyUID));
+                playersNumber = lobbyController.getGamePlayers().size();
                 for(ClientHandler ch:lobbyPlayers){
                     ch.acceptLoadGame();
                 }
@@ -156,7 +158,8 @@ public class Lobby implements Runnable{
                     throw new RuntimeException(e);
                 }
                 reorderLobbyList();
-                game.setPlayers(game.getOldGamePlayers());
+                lobbyController.setOldGamepLayers();
+
             }catch(Exception e){
                 broadcastMessage("No configuration file found...");
                 for(ClientHandler ch : lobbyPlayers){
@@ -180,7 +183,7 @@ public class Lobby implements Runnable{
                 sendCommands(ch);
             }
             this.isOpen = false;
-            game.saveGame();
+            lobbyController.saveGame();
             notifyGameStarted();
             broadcastUpdate();
             while (!ended) {
@@ -198,7 +201,7 @@ public class Lobby implements Runnable{
                     while (iter.hasNext()) {
                         Action a = iter.next();
                         String nickname = a.getNickname();
-                        ClientHandler ch = clientHandlerOf(a.getNickname());
+                        ClientHandler ch = clientHandlerOf(nickname);
                         if (a.getActionType() == Action.ActionType.INFO) {
                             System.out.println("Info from:" + nickname + " " + a.getInfo());
                             iter.remove();
@@ -211,62 +214,57 @@ public class Lobby implements Runnable{
                             iter.remove();
                         }
                         else if (a.getActionType() == Action.ActionType.PICKTILES) {
-                            if (game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)) {
-                                List<Position> tiles = a.getChosenTiles();
-                                collectedTiles = game.collectTiles(tiles);
-                                if (collectedTiles == null) {
-                                    if (ch != null) {
-                                        ch.sendDeny("Cannot pick those tiles");
-                                    }
-                                } else {
-                                    StringBuilder builder = new StringBuilder();
-                                    builder.append("picked tiles: ");
-                                    for (Tile t : collectedTiles) {
-                                        builder.append(t.toString() + " ");
-                                    }
-                                    ch.sendInfoMessage(builder.toString());
-                                    ch.sendInfoMessage("Insert column or change order");
-                                    ch.notifyCollectAccepted();
-                                }
-
-
-                            } else {
+                            String response = lobbyController.pickTiles(a);
+                            if(response.equals("0")){
+                                //not your turn
                                 if (ch != null) {
                                     ch.sendDeny("Is not your turn...");
+                                    singleUpdate(ch);
                                 }
+                            }else if(response.equals("1")){
+                                //cannot pick tiles
+                                if (ch != null) {
+                                    ch.sendDeny("Cannot pick those tiles");
+                                    singleUpdate(ch);
+                                }
+                            }else{
+                                //tiles picked
+                                ch.sendInfoMessage(response);
+                                ch.sendInfoMessage("Insert column or change order");
+                                ch.notifyCollectAccepted();
                             }
                             iter.remove();
                         } else if (a.getActionType() == Action.ActionType.SELECTCOLUMN) {
-                            if (game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)) {
-                                if (collectedTiles.size()==0) {
-                                    ch.sendDeny("Not selected tiles yet...");
-                                } else {
-                                    if (game.insertTiles(collectedTiles, a.getChosenColumn())) {
-                                        ch.sendAccept("Tiles inserted correctly");
-                                        collectedTiles.clear();
-                                        endTurnChecks(ch);
-                                        if(game.isLastTurn()){
-                                            index = lobbyPlayers.indexOf(ch);
-                                                if(index==lobbyPlayers.size()-1){
-                                                    broadcastMessage("** GAME ENDED! **");
-                                                    ended = true;
-                                                    game.setFinished(true);
-                                                }
-                                        }
-                                        boolean res = this.game.getGameBoard().needToRefill();
-                                        if(res){
-                                            this.game.getGameBoard().initBoard(this.playersNumber);
-                                        }
-                                        handleTurn(ch);
-                                        broadcastUpdate();
-                                    } else {
-                                        ch.sendDeny("Cannot insert tiles in this column...");
-                                    }
-                                }
-                            } else {
+                            String response = lobbyController.selectColumn(a);
+                            if(response.equals("0")){
+                                //not your turn
                                 if (ch != null) {
                                     ch.sendDeny("Is not your turn...");
+                                    singleUpdate(ch);
                                 }
+                            }else if(response.equals("1")){
+                                //cannot insert tiles in this column
+                                ch.sendDeny("Cannot insert tiles in this column...");
+                                singleUpdate(ch);
+                            }else if(response.equals("2")){
+                                //tiles not selected
+                                ch.sendDeny("Not selected tiles yet...");
+                                singleUpdate(ch);
+                            }
+                            else{
+                                //tiles inserted
+                                ch.sendAccept(response);
+                                endTurnChecks(ch);
+                                if(lobbyController.checkLastTurn()){
+                                    index = lobbyPlayers.indexOf(ch);
+                                    if(index==lobbyPlayers.size()-1){
+                                        broadcastMessage("** GAME ENDED! **");
+                                        ended = true;
+                                        lobbyController.setGameFinished();
+                                    }
+                                }
+                                lobbyController.handleTurn();
+                                broadcastUpdate();
                             }
                             iter.remove();
                         } else if (a.getActionType() == Action.ActionType.PRINTBOARD) {
@@ -275,48 +273,23 @@ public class Lobby implements Runnable{
                             }
                             iter.remove();
                         } else if (a.getActionType() == Action.ActionType.ORDER) {
-                            if (game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)) {
-                                String order = a.getInfo();
-                                String[] colors = order.split(" ");
-                                Tile[] tiles = new Tile[colors.length];
-                                if (this.collectedTiles != null) {
-                                    if (this.collectedTiles.size() != 0) {
-                                        for (String s : colors) {
-                                            for (Tile t : collectedTiles) {
-                                                if (t.toString().equals(s)) {
-                                                    tiles[List.of(colors).indexOf(s)] = new Tile(t.getImagePath(), t.getColor());
-                                                }
-                                            }
-                                        }
-
-                                        this.collectedTiles.clear();
-                                        this.collectedTiles.addAll(List.of(tiles));
-                                        if (ch != null) {
-                                            StringBuilder string = new StringBuilder();
-                                            for (Tile t : this.collectedTiles) {
-                                                string.append(t.getColor().toString()).append(" ");
-                                            }
-                                            ch.sendAccept("Order changed successfully " + string.toString());
-
-                                        }
-                                    } else {
-                                        if (ch != null) {
-                                            ch.sendDeny("You haven't picked tiles yet...");
-                                        }
-                                    }
-                                } else {
-                                    if (ch != null) {
-                                        ch.sendDeny("You haven't picked tiles yet...");
-                                    }
-                                }
-                            } else {
+                            String response = lobbyController.orderTiles(a);
+                            if(response.equals("0")){
                                 if (ch != null) {
                                     ch.sendDeny("It's not your turn...");
+                                    singleUpdate(ch);
                                 }
+                            }else if(response.equals("1")){
+                                if (ch != null) {
+                                    ch.sendDeny("You haven't picked tiles yet...");
+                                    singleUpdate(ch);
+                                }
+                            }else{
+                                ch.sendAccept(response);
                             }
                             iter.remove();
                         } else if (a.getActionType() == Action.ActionType.LOBBYKILL) {
-                            game.saveGame();
+                            lobbyController.saveGame();
                             for (ClientHandler client : lobbyPlayers) {
                                 client.sendInfoMessage("Lobby is being killed");
                                 client.setPlaying(false);
@@ -326,7 +299,7 @@ public class Lobby implements Runnable{
                             ended = true;
                         }
                         else if(a.getActionType() == Action.ActionType.REQUEST_MENU){
-                            game.saveGame();
+                            lobbyController.saveGame();
                             for (ClientHandler client : lobbyPlayers) {
                                 client.sendInfoMessage("Lobby is being killed");
                                 client.setPlaying(false);
@@ -343,11 +316,11 @@ public class Lobby implements Runnable{
                 }
             }
             //END OF GAME CHECKS
-            if(game.isFinished()){
-                endGameChecks();
-                broadcastMessage(game.getRank(false));
+            if(lobbyController.isGameFinished()){
+                lobbyController.endGameChecks();
+                broadcastMessage(lobbyController.getRank(false));
                 broadcastMessage("Closing...");
-                notifyGameEnded(game.getRank(true));
+                notifyGameEnded(lobbyController.getRank(true));
                 for(ClientHandler ch : lobbyPlayers){
                     Server.getInstance().getUserGame().remove(ch.getNickname());
                 }
@@ -368,7 +341,6 @@ public class Lobby implements Runnable{
                 Server.getInstance().getLobbyList().remove(this);
             }
         }
-
     }
 
     private void notifyGameEnded(String rank) {
@@ -378,14 +350,7 @@ public class Lobby implements Runnable{
     }
 
     private void reorderLobbyList(){
-        ClientHandler[] oldGameOrder = new ClientHandler[lobbyPlayers.size()];
-        for(int i = 0; i<lobbyPlayers.size(); i++){
-            for(int j = 0; j<lobbyPlayers.size(); j++){
-                if(this.lobbyPlayers.get(i).getNickname().equals(this.game.getOldGamePlayers().get(j).getUsername())){
-                    oldGameOrder[j]=this.lobbyPlayers.get(i);
-                }
-            }
-        }
+        ClientHandler[] oldGameOrder = lobbyController.reorderLobbyPlayers(this.lobbyPlayers);
         synchronized (lobbyPlayers) {
             lobbyPlayers.clear();
             lobbyPlayers.addAll(Arrays.stream(oldGameOrder).toList());
@@ -402,7 +367,7 @@ public class Lobby implements Runnable{
         List<Player> toReturn = new ArrayList<>();
         for(ClientHandler p : lobbyPlayers){
             Player player = new Player(p.getNickname());
-            player.setGoalCard(game.drawPersonalGoal());
+            player.setGoalCard(lobbyController.drawPersonalGoal());
             toReturn.add(player);
         }
         return toReturn;
@@ -425,13 +390,6 @@ public class Lobby implements Runnable{
     private void sendCommands(ClientHandler ch){
         ch.sendHelpMessage();
     }
-
-    private void handleTurn(ClientHandler current){
-        Player p = this.game.getPlayers().get(this.game.getCurrentPlayer());
-        this.game.handleTurn();
-        this.game.saveGame();
-    }
-
 
 
     private void waitForPlayers() throws InterruptedException {
@@ -533,115 +491,32 @@ public class Lobby implements Runnable{
         }
     }
 
+private void singleUpdate(ClientHandler chToUpdate){
+    View view = lobbyController.generateView(chToUpdate, this);
+    chToUpdate.sendView(view);
+}
     private void broadcastUpdate(){
-        View view = new View();
-        List<String> players = new ArrayList<>();
-        List<String> GUIBoard = new ArrayList<>();
-        List<List<String>> othersGUIShelves = new ArrayList<>();
-        List<String> myShelf = new ArrayList<>();
-        List<Integer> GUIScores = new ArrayList<>();
-        List<String> GuiSharedCard = new ArrayList<>();
-        List<String> shelves = new ArrayList<>();
-        ClientHandler client = lobbyPlayers.get(game.getCurrentPlayer());
-        view.setANSIcolor(client.getColor());
-        view.setCurrentPlayer(game.getPlayers().get(game.getCurrentPlayer()).getUsername());
-        //TUI board
-        view.setBoard(this.game.getGameBoard().toString());
-        //GUI board
-        for(int i = 0; i< Settings.BOARD_DIM; i++){
-            for(int j = 0; j< Settings.BOARD_DIM; j++){
-                GUIBoard.add(game.getGameBoard().getGrid()[i][j].getImagePath());
-            }
-        }
-        view.setGUIboard(GUIBoard);
-
-        //GUI players, shelves and points
-
-        //shared cards
-        for(SharedGoalCard s:game.getSharedDeck()){
-            GuiSharedCard.add(s.getImgPath());
-        }
-        view.setGUIsharedCards(GuiSharedCard);
-
-        //TUI shelves
-        synchronized (game.getPlayers()) {
-            for (Player p : game.getPlayers()) {
-                shelves.add(clientHandlerOf(p.getUsername()).getColor() + p.getUsername() + ANSI.RESET_COLOR + ": " + p.getScore() + " points\n" + p.getMyShelf().toString());
-            }
-        }
-        view.setShelves(shelves);
-
-        List<String> sharedCards = new ArrayList<>();
-        for(SharedGoalCard c: game.getSharedDeck()){
-            sharedCards.add(c.toString());
-        }
-        view.setSharedCards(sharedCards);
-
-        for(ClientHandler ch:lobbyPlayers){
-            for(Player p:game.getPlayers()){
-                if(!p.getUsername().equals(ch.getNickname())) {
-                    List<String> pShelf = new ArrayList<>();
-                    for (int i = 0; i < Settings.SHELFROW; i++) {
-                        for (int j = 0; j < Settings.SHELFCOLUMN; j++) {
-                            pShelf.add(p.getMyShelf().getTileMartrix()[i][j].getImagePath());
-                        }
-                    }
-                    othersGUIShelves.add(pShelf);
-                }else{
-                    for (int i = 0; i < Settings.SHELFROW; i++) {
-                        for (int j = 0; j < Settings.SHELFCOLUMN; j++) {
-                            myShelf.add(p.getMyShelf().getTileMartrix()[i][j].getImagePath());
-                        }
-                    }
-                }
-                GUIScores.add(p.getScore());
-                players.add(p.getUsername());
-            }
-            view.setMyShelf(myShelf);
-            view.setOthersGUIShelves(othersGUIShelves);
-            view.setGUIScoring(GUIScores);
-            view.setPlayers(players);
-            view.setPersonalCard(game.chToPlayer(ch).getMyGoalCard().toString());
-            view.setGUIpersonalCard(game.chToPlayer(ch).getMyGoalCard().getImgPath());
-            ch.sendView(view);
-            myShelf.clear();
-            othersGUIShelves.clear();
-            players.clear();
-            GUIScores.clear();
+        for(ClientHandler ch: lobbyPlayers){
+            singleUpdate(ch);
         }
     }
     private void endTurnChecks(ClientHandler ch){
-        Player p = game.chToPlayer(ch);
-        List<SharedGoalCard> SharedDeck = game.getSharedDeck();
-        for (int i = 0; i<SharedDeck.size(); i++){
-            SharedGoalCard c = SharedDeck.get(i);
-            if(!c.isAchieved(p)){
-                if(c.checkPattern(p)){
-                    ch.sendInfoMessage("Shared goal "+(i+1)+" achieved");
-                    for(ClientHandler client : lobbyPlayers){
-                        if(!client.getNickname().equals(ch.getNickname())){
-                            client.sendInfoMessage("Shared goal "+(i+1)+" achieved by "+ ch.getNickname());
-                        }
-                    }
-                    p.updateScore(c.popPointToken());
+        String response = lobbyController.endTurnChecks(ch.getNickname());
+        if(!response.equals("1")){
+            ch.sendInfoMessage(response);
+            for(ClientHandler client : lobbyPlayers){
+                if(!client.getNickname().equals(ch.getNickname())){
+                    client.sendInfoMessage(response+" by "+ ch.getNickname());
                 }
             }
         }
-        game.checkLastTurn(p);
     }
 
-    private void endGameChecks(){
-        for(ClientHandler ch:lobbyPlayers){
-            Player p = game.chToPlayer(ch);
-            p.updateScore(p.getMyGoalCard().checkPersonalGoal(p.getMyShelf()));
-            //p.updateScore(p.getMyShelf().checkFinalScore());
-        }
-    }
     public synchronized void recieveAction(Action a){
         actions.add(a);
     }
 
-    private ClientHandler clientHandlerOf(String nickname){
+    public ClientHandler clientHandlerOf(String nickname){
         for(ClientHandler ch: lobbyPlayers){
             if(ch.getNickname().equals(nickname)){
                 return ch;
