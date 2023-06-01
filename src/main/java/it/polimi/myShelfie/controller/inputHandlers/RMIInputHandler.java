@@ -101,7 +101,7 @@ public class RMIInputHandler extends Thread {
                     if(splittedMessage.stream().filter(s -> !s.equals(" ")).toList().size() > 1) {
                         client.getRmiServer().privateMessage(client.getNickname(), message.substring(message.indexOf("pvt-") + "pvt-".length()));
                         if (client.isGUI()) {
-                            GUIClient.getInstance().addMyChatMessage(message.substring(message.indexOf("/pvt-") + "/pvt- ".length()));
+                            GUIClient.getInstance().addMyChatMessage(message.substring(message.indexOf(" ")));
                         }
                     }
                 }
