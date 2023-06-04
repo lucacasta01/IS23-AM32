@@ -1,18 +1,14 @@
 package it.polimi.myShelfie.controller.GUIcontroller;
 
 import it.polimi.myShelfie.application.Client;
-import it.polimi.myShelfie.application.GUIClient;
 import it.polimi.myShelfie.utilities.Utils;
-import it.polimi.myShelfie.utilities.beans.ChatMessage;
-import it.polimi.myShelfie.utilities.beans.Response;
-import it.polimi.myShelfie.utilities.beans.View;
+import it.polimi.myShelfie.utilities.pojo.ChatMessage;
+import it.polimi.myShelfie.utilities.pojo.View;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-
-import javax.swing.event.CaretListener;
 
 public class ChatController {
     @FXML
@@ -49,6 +45,6 @@ public class ChatController {
     }
 
     public void addMessage(ChatMessage chatMessage) {
-        chatTxt.appendText(Utils.removeANSI(chatMessage.getSender())+": "+Utils.removeANSI(chatMessage.getMessage())+"\n");
+        chatTxt.appendText(chatMessage.getSender()+": "+chatMessage.getMessage()+"\n");
     }
 }

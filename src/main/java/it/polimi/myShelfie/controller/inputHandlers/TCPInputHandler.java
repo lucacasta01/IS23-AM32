@@ -3,7 +3,7 @@ package it.polimi.myShelfie.controller.inputHandlers;
 import it.polimi.myShelfie.application.Client;
 import it.polimi.myShelfie.application.GUIClient;
 import it.polimi.myShelfie.utilities.Position;
-import it.polimi.myShelfie.utilities.beans.Action;
+import it.polimi.myShelfie.utilities.pojo.Action;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -107,7 +107,7 @@ public class TCPInputHandler extends Thread{
                         substr = message.substring(index);
                         col = Integer.parseInt(substr.substring(0, 1)) - 1;
                     }catch(Exception e){
-                        System.out.println("Invalid sintax");
+                        System.out.println("Invalid syntax");
                     }
                     if ((col < 0 || col > 5)&&(col!=-1)){
                         System.out.println("Invalid column number");
@@ -119,7 +119,7 @@ public class TCPInputHandler extends Thread{
                     Action a = new Action(Action.ActionType.PRINTBOARD, client.getNickname(), "", null, null, null);
                     client.sendAction(a);
                 } else if (message.startsWith("/order")) {
-                    int index = "/order".length() + 1;
+                    int index = "/order ".length();
                     String substr = message.substring(index);
                     List<String> tiles = List.of(substr.split(" "));
                     List<String> newOrder = new ArrayList<>();

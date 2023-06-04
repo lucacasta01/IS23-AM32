@@ -4,9 +4,8 @@ import com.jfoenix.controls.JFXDrawer;
 import it.polimi.myShelfie.application.Client;
 import it.polimi.myShelfie.application.GUIClient;
 import it.polimi.myShelfie.utilities.Settings;
-import it.polimi.myShelfie.utilities.beans.View;
+import it.polimi.myShelfie.utilities.pojo.View;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,7 +22,6 @@ import javafx.scene.paint.Color;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class GamePanelController{
@@ -341,7 +339,7 @@ public class GamePanelController{
                 for (int col = 0; col < Settings.SHELFCOLUMN; col++) {
                     Node n = getTileImgView(row, col, myShelfGrid);
                     if (n != null) {
-                        Image image = new Image(getClass().getResource(view.getMyShelf().get(i)).toString());
+                        Image image = new Image(getClass().getResource(view.getCurPlayerGUIShelf().get(i)).toString());
                         ImageView im = (ImageView) n;
                         im.setImage(image);
                         im.setVisible(true);

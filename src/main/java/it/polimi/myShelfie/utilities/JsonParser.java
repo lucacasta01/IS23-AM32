@@ -1,13 +1,12 @@
 package it.polimi.myShelfie.utilities;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import it.polimi.myShelfie.utilities.beans.*;
+import it.polimi.myShelfie.utilities.pojo.*;
 import org.apache.commons.io.IOUtils;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 

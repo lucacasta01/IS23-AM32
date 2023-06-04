@@ -29,8 +29,6 @@ public class BoardTest {
         boardNotToRefill.getGrid()[1][3].setColor(Tile.Color.BLUE);
         boardNotToRefill.getGrid()[1][5].setColor(Tile.Color.LIGHTBLUE);
 
-        System.out.println(boardToRefill.toString());
-        System.out.println(boardNotToRefill.toString());
 
         assertTrue(boardToRefill.needToRefill());
         assertFalse(boardNotToRefill.needToRefill());
@@ -41,7 +39,6 @@ public class BoardTest {
     public void isCatchableTest() {
         Board board =new Board();
         board.initBoard(2);
-        System.out.println(board.toString());
         assertTrue(board.isCatchable(3,2));
         assertTrue(board.isCatchable(6,5));
         assertFalse(board.isCatchable(4,4));
@@ -60,6 +57,5 @@ public class BoardTest {
         System.out.println("2 players board: \n"+board2p.toString()+"\n");
         System.out.println("3 players board: \n"+board3p.toString()+"\n");
         System.out.println("4 players board: \n"+board4p.toString());
-
     }
 }

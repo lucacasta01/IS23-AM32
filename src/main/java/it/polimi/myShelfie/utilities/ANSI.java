@@ -14,4 +14,5 @@ public class ANSI {
     public static final String BOLD = "\033[1m";
     public static final String RESET_STYLE = "\033[0m";
 
+    public static final String CLEAR = "\u001B[2J";
 }

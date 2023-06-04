@@ -4,10 +4,9 @@ import com.google.gson.GsonBuilder;
 import it.polimi.myShelfie.controller.ClientHandler;
 import it.polimi.myShelfie.model.cards.*;
 import it.polimi.myShelfie.utilities.*;
-import it.polimi.myShelfie.utilities.beans.GUIRank;
-import it.polimi.myShelfie.utilities.beans.GameParameters;
+import it.polimi.myShelfie.utilities.pojo.GUIRank;
+import it.polimi.myShelfie.utilities.pojo.GameParameters;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;

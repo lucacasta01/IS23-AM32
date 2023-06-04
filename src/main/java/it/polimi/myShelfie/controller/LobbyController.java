@@ -8,8 +8,8 @@ import it.polimi.myShelfie.model.cards.SharedGoalCard;
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.Settings;
-import it.polimi.myShelfie.utilities.beans.Action;
-import it.polimi.myShelfie.utilities.beans.View;
+import it.polimi.myShelfie.utilities.pojo.Action;
+import it.polimi.myShelfie.utilities.pojo.View;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,11 +17,8 @@ import java.util.List;
 
 public class LobbyController {
     private Game game;
-    private List<Tile> collectedTiles;
+    private List<Tile> collectedTiles = new ArrayList<>();
 
-    public void setGame(Game game) {
-        this.game = game;
-    }
 
     public String pickTiles(Action a){
         String nickname = a.getNickname();
@@ -49,6 +46,7 @@ public class LobbyController {
         String nickname = a.getNickname();
         if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){
             if(collectedTiles.size()==0){
+                //no tiles selected
                 return "2";
             }else{
                 if(game.insertTiles(collectedTiles, a.getChosenColumn())){
@@ -57,12 +55,14 @@ public class LobbyController {
                     if(res){
                         this.game.getGameBoard().initBoard(game.getPlayersNumber());
                     }
-                    return "Tiles inerted correctly";
+                    return "Tiles inserted correctly";
                 }else{
+                    //out of column limit
                     return "1";
                 }
             }
         }else{
+            //not your turn
             return "0";
         }
     }
@@ -96,7 +96,7 @@ public class LobbyController {
                     StringBuilder string = new StringBuilder();
                     string.append("Order changed successfully: ");
                     for (Tile t : this.collectedTiles) {
-                        string.append(t.getColor().toString()).append(" ");
+                        string.append(t.toString()).append(" ");
                     }
                     return string.toString();
                 }else{
@@ -129,9 +129,6 @@ public class LobbyController {
     }
     public boolean checkLastTurn(){
         return game.isLastTurn();
-    }
-    public void addPlayer(List<Player> generatePlayers) {
-        this.game.addPlayer(generatePlayers);
     }
 
     public List<Player> getGamePlayers(){
@@ -228,7 +225,7 @@ public class LobbyController {
             GUIScores.add(p.getScore());
             players.add(p.getUsername());
         }
-        view.setMyShelf(myShelf);
+        view.setCurPlayerGUIShelf(myShelf);
         view.setOthersGUIShelves(othersGUIShelves);
         view.setGUIScoring(GUIScores);
         view.setPlayers(players);
@@ -265,5 +262,17 @@ public class LobbyController {
         }
         game.checkLastTurn(p);
         return toReturn;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public void addPlayer(List<Player> players) {
+        game.addPlayer(players);
+    }
+
+    public List<Tile> getCollectedTiles() {
+        return collectedTiles;
     }
 }

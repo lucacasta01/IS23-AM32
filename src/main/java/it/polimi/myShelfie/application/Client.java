@@ -8,14 +8,11 @@ import it.polimi.myShelfie.controller.RMI.RMIClient;
 import it.polimi.myShelfie.controller.RMI.RMIServer;
 import it.polimi.myShelfie.controller.inputHandlers.RMIInputHandler;
 import it.polimi.myShelfie.controller.inputHandlers.TCPInputHandler;
-import it.polimi.myShelfie.utilities.ANSI;
-import it.polimi.myShelfie.utilities.Settings;
-import it.polimi.myShelfie.utilities.JsonParser;
-import it.polimi.myShelfie.utilities.PingObject;
-import it.polimi.myShelfie.utilities.beans.Action;
-import it.polimi.myShelfie.utilities.beans.Response;
-import it.polimi.myShelfie.utilities.beans.View;
-import it.polimi.myShelfie.utilities.beans.ChatMessage;
+import it.polimi.myShelfie.utilities.*;
+import it.polimi.myShelfie.utilities.pojo.Action;
+import it.polimi.myShelfie.utilities.pojo.Response;
+import it.polimi.myShelfie.utilities.pojo.View;
+import it.polimi.myShelfie.utilities.pojo.ChatMessage;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,7 +23,6 @@ import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.io.*;
-import java.nio.file.Paths;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -314,25 +310,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                             gamePanelController.updateView();
                                         }
 
-                                        //printing console view
-                                        //shelves
-                                        for (String s : view.getShelves()) {
-                                            System.out.println(s + "\n");
-                                        }
-                                        //personal card
-                                        System.out.println(ANSI.ITALIC + "Personal goal card:" + ANSI.RESET_STYLE);
-                                        System.out.println(view.getPersonalCard());
-
-                                        //shared cards
-                                        for (int i = 0; i < view.getSharedCards().size(); i++) {
-                                            System.out.println(ANSI.ITALIC + "Shared goal " + (i + 1) + ": " + ANSI.RESET_STYLE);
-                                            System.out.println(view.getSharedCards().get(i) + "\n");
-                                        }
-                                        //board
-                                        System.out.println(ANSI.ITALIC + "Board:" + ANSI.RESET_STYLE);
-                                        System.out.println(view.getBoard() + "\n");
-                                        //current player
-                                        System.out.println(ANSI.ITALIC + "Turn of: " + ANSI.RESET_STYLE + view.getCurrentPlayer());
+                                        Utils.printTUIView(view);
                                     } else if (response.getResponseType() == Response.ResponseType.PONG) {
                                         synchronized (pongResponses) {
                                             pongResponses.add(new PingObject(false));

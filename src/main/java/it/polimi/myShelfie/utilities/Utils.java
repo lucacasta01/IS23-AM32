@@ -1,5 +1,6 @@
 package it.polimi.myShelfie.utilities;
 import it.polimi.myShelfie.application.Server;
+import it.polimi.myShelfie.utilities.pojo.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,24 +30,25 @@ public class Utils {
         return !nickname.contains(" ") && !nickname.equals("\n") && !nickname.equals("/");
     }
 
-    public static String removeANSI(String s){
-        List<String> ansiList = new ArrayList<>();
-        ansiList.add(ANSI.BLUE);
-        ansiList.add(ANSI.PURPLE);
-        ansiList.add(ANSI.GREEN);
-        ansiList.add(ANSI.YELLOW);
-        ansiList.add(ANSI.ITALIC);
-        ansiList.add(ANSI.BOLD);
-        ansiList.add(ANSI.RESET_STYLE);
-        ansiList.add(ANSI.RESET_COLOR);
-        ansiList.add(ANSI.RED);
-
-        for(String ansi : ansiList){
-            if(s.contains(ansi)) {
-                s = s.replaceAll(ansi, "");
-            }
+    public static void printTUIView(View view){
+        //printing console view
+        //shelves
+        for (String s : view.getShelves()) {
+            System.out.println(s + "\n");
         }
+        //personal card
+        System.out.println(ANSI.ITALIC + "Personal goal card:" + ANSI.RESET_STYLE);
+        System.out.println(view.getPersonalCard());
 
-        return s;
+        //shared cards
+        for (int i = 0; i < view.getSharedCards().size(); i++) {
+            System.out.println(ANSI.ITALIC + "Shared goal " + (i + 1) + ": " + ANSI.RESET_STYLE);
+            System.out.println(view.getSharedCards().get(i) + "\n");
+        }
+        //board
+        System.out.println(ANSI.ITALIC + "Board:" + ANSI.RESET_STYLE);
+        System.out.println(view.getBoard() + "\n");
+        //current player
+        System.out.println(ANSI.ITALIC + "Turn of: " + ANSI.RESET_STYLE + view.getCurrentPlayer());
     }
 }

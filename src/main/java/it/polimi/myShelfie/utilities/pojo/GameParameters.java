@@ -1,4 +1,4 @@
-package it.polimi.myShelfie.utilities.beans;
+package it.polimi.myShelfie.utilities.pojo;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.utilities.ColorPosition;
 import java.util.ArrayList;

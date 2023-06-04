@@ -1,8 +1,7 @@
 package it.polimi.myShelfie.controller.GUIcontroller.banners;
 
 import it.polimi.myShelfie.utilities.JsonParser;
-import it.polimi.myShelfie.utilities.Position;
-import it.polimi.myShelfie.utilities.beans.GUIRank;
+import it.polimi.myShelfie.utilities.pojo.GUIRank;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

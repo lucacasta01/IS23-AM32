@@ -1,4 +1,4 @@
-package it.polimi.myShelfie.utilities.beans;
+package it.polimi.myShelfie.utilities.pojo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ public class View implements Serializable {
     private String currentPlayer;
     private List<String> players;
     private List<List<String>> othersGUIShelves;
-    private List<String> myShelf;
+    private List<String> curPlayerGUIShelf;
     private List<Integer> GUIScoring;
     private List<String> GUIboard;
     private List<String> GUIsharedCards;
@@ -25,21 +25,21 @@ public class View implements Serializable {
         this.GUIScoring = new ArrayList<>();
         this.players = new ArrayList<>();
         this.GUIsharedCards = new ArrayList<>();
-        this.myShelf = new ArrayList<>();
+        this.curPlayerGUIShelf = new ArrayList<>();
     }
 
     public List<List<String>> getOthersGUIShelves() {
         return othersGUIShelves;
     }
 
-    public List<String> getMyShelf() {
-        return myShelf;
+    public List<String> getCurPlayerGUIShelf() {
+        return curPlayerGUIShelf;
     }
 
 
 
-    public void setMyShelf(List<String> myShelf) {
-        this.myShelf = myShelf;
+    public void setCurPlayerGUIShelf(List<String> curPlayerGUIShelf) {
+        this.curPlayerGUIShelf = curPlayerGUIShelf;
     }
 
     public String getGUIpersonalCard() {

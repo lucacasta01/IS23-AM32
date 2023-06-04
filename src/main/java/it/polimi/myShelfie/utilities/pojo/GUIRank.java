@@ -1,6 +1,4 @@
-package it.polimi.myShelfie.utilities.beans;
-
-import it.polimi.myShelfie.utilities.Position;
+package it.polimi.myShelfie.utilities.pojo;
 
 import java.util.ArrayList;
 import java.util.List;

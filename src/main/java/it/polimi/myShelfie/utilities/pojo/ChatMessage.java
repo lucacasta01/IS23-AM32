@@ -1,4 +1,4 @@
-package it.polimi.myShelfie.utilities.beans;
+package it.polimi.myShelfie.utilities.pojo;
 
 import java.io.Serializable;
 

@@ -5,7 +5,6 @@ import it.polimi.myShelfie.application.GUIClient;
 import it.polimi.myShelfie.controller.RMI.RMIServer;
 import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.Utils;
-import it.polimi.myShelfie.utilities.beans.Action;
 
 import java.io.BufferedReader;
 import java.io.IOException;

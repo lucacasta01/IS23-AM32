@@ -3,14 +3,11 @@ package it.polimi.myShelfie.controller;
 import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
-import it.polimi.myShelfie.utilities.Settings;
-import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.model.Tile;
-import it.polimi.myShelfie.model.cards.SharedGoalCard;
 import it.polimi.myShelfie.utilities.ANSI;
-import it.polimi.myShelfie.utilities.beans.Action;
-import it.polimi.myShelfie.utilities.beans.ChatMessage;
-import it.polimi.myShelfie.utilities.beans.View;
+import it.polimi.myShelfie.utilities.pojo.Action;
+import it.polimi.myShelfie.utilities.pojo.ChatMessage;
+import it.polimi.myShelfie.utilities.pojo.View;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,22 +17,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Lobby implements Runnable{
     private final List<ClientHandler> lobbyPlayers;
-    private String lobbyUID;
+    private final String lobbyUID;
     private Integer playersNumber;
-    private GameMode gameMode;
+    private final GameMode gameMode;
     private boolean isOpen;
     private boolean ended = false;
     private List<Tile> collectedTiles;
-    private Stack<String> colors;
+    private final Stack<String> colors;
     private Game game;
     public final List<Action> actions = new ArrayList<>();
-    private Integer index = null;
     private boolean close;
     private final AtomicBoolean endWaitingPlayers = new AtomicBoolean(false);
-    private boolean firstToEnd = true;
-    private LobbyController lobbyController;
+    private final LobbyController lobbyController;
     /**
-     * Create a lobby for a new game
+     * Create a lobby for a brand-new game
      *
      * @param lobbyHost the lobby creator
      * @param lobbyUID
@@ -236,35 +231,39 @@ public class Lobby implements Runnable{
                             iter.remove();
                         } else if (a.getActionType() == Action.ActionType.SELECTCOLUMN) {
                             String response = lobbyController.selectColumn(a);
-                            if(response.equals("0")){
-                                //not your turn
-                                if (ch != null) {
-                                    ch.sendDeny("Is not your turn...");
-                                    singleUpdate(ch);
-                                }
-                            }else if(response.equals("1")){
-                                //cannot insert tiles in this column
-                                ch.sendDeny("Cannot insert tiles in this column...");
-                                singleUpdate(ch);
-                            }else if(response.equals("2")){
-                                //tiles not selected
-                                ch.sendDeny("Not selected tiles yet...");
-                                singleUpdate(ch);
-                            }
-                            else{
-                                //tiles inserted
-                                ch.sendAccept(response);
-                                endTurnChecks(ch);
-                                if(lobbyController.checkLastTurn()){
-                                    index = lobbyPlayers.indexOf(ch);
-                                    if(index==lobbyPlayers.size()-1){
-                                        broadcastMessage("** GAME ENDED! **");
-                                        ended = true;
-                                        lobbyController.setGameFinished();
+                            switch (response) {
+                                case "0" -> {
+                                    //not your turn
+                                    if (ch != null) {
+                                        ch.sendDeny("Is not your turn...");
+                                        singleUpdate(ch);
                                     }
                                 }
-                                lobbyController.handleTurn();
-                                broadcastUpdate();
+                                case "1" -> {
+                                    //cannot insert tiles in this column
+                                    ch.sendDeny("Cannot insert tiles in this column...");
+                                    singleUpdate(ch);
+                                }
+                                case "2" -> {
+                                    //tiles not selected
+                                    ch.sendDeny("Not selected tiles yet...");
+                                    singleUpdate(ch);
+                                }
+                                default -> {
+                                    //tiles inserted
+                                    ch.sendAccept(response);
+                                    endTurnChecks(ch);
+                                    if (lobbyController.checkLastTurn()) {
+                                        Integer index = lobbyPlayers.indexOf(ch);
+                                        if (index == lobbyPlayers.size() - 1) {
+                                            broadcastMessage("** GAME ENDED! **");
+                                            ended = true;
+                                            lobbyController.setGameFinished();
+                                        }
+                                    }
+                                    lobbyController.handleTurn();
+                                    broadcastUpdate();
+                                }
                             }
                             iter.remove();
                         } else if (a.getActionType() == Action.ActionType.PRINTBOARD) {

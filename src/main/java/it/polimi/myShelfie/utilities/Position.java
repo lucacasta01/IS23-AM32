@@ -17,8 +17,4 @@ public class Position implements Serializable {
         return column;
     }
 
-    @Override
-    public String toString() {
-        return super.toString();
-    }
 }
