@@ -14,17 +14,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.util.Objects;
 
@@ -82,7 +77,7 @@ public class LoginController {
         });
     }
 
-    public void doLogin(ActionEvent actionEvent) throws RemoteException {
+    public void doLogin(ActionEvent actionEvent){
         stage = (Stage)((javafx.scene.Node)actionEvent.getSource()).getScene().getWindow();
         if (TCPrbtn.isSelected()) {
             connectionProtocol = "TCP";
@@ -111,21 +106,17 @@ public class LoginController {
     }
 
     public void nicknameDenied(String message) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run(){
-                nicknameDeniedLbl.setText(message);
-                nicknameDeniedLbl.setVisible(true);
-            }
-
+        Platform.runLater(() -> {
+            nicknameDeniedLbl.setText(message);
+            nicknameDeniedLbl.setVisible(true);
         });
     }
 
-    public void loginAccepted() throws IOException {
+    public void loginAccepted(){
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                Parent menuPage = null;
+                Parent menuPage;
                 try {
                     menuPage = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/menuPanel.fxml")));
                 } catch (IOException e) {

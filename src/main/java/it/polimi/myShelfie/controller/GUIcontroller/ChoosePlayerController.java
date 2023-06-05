@@ -8,13 +8,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.nio.file.Paths;
+
 import java.util.Objects;
 
 public class ChoosePlayerController {
@@ -49,7 +47,7 @@ public class ChoosePlayerController {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                Parent waitPlayers = null;
+                Parent waitPlayers;
                 try {
                     waitPlayers = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/waitPlayerBanner.fxml")));
                 } catch (IOException e) {
@@ -79,7 +77,7 @@ public class ChoosePlayerController {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                Parent waitPlayers = null;
+                Parent waitPlayers;
                 try {
                     waitPlayers = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/waitPlayerBanner.fxml")));
                 } catch (IOException e) {
@@ -109,7 +107,7 @@ public class ChoosePlayerController {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                Parent waitPlayers = null;
+                Parent waitPlayers;
                 try {
                     waitPlayers = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/waitPlayerBanner.fxml")));
                 } catch (IOException e) {

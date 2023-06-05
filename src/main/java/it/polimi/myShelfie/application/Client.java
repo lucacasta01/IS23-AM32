@@ -1,5 +1,6 @@
 package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import it.polimi.myShelfie.controller.GUIcontroller.ChatController;
 import it.polimi.myShelfie.controller.GUIcontroller.GamePanelController;
 import it.polimi.myShelfie.controller.GUIcontroller.LoginController;
@@ -40,7 +41,6 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private Socket client;
     private String nickname = "/";
     private boolean done;
-    private boolean configurationDone = false;
     private View view;
     private String connectionProtocol;
     private final List<PingObject> pongResponses = new ArrayList<>();
@@ -55,8 +55,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private int RMIPort = Settings.RMIPORT;
     //rmi server reference
     private RMIServer rmiServer;
-    private boolean isGUI = false;
-    private final List<Response> guiResponses = new ArrayList<>();
+    private boolean isGUI;
     private boolean notConnected = false;
     private GamePanelController gamePanelController = null;
 
@@ -105,15 +104,6 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     /**
      *
-     * @return game panel gui controller
-     */
-    public GamePanelController getGamePanelController() {
-        return gamePanelController;
-    }
-
-
-    /**
-     *
      * @return gui chat panel controller
      */
     public ChatController getChatController() {
@@ -156,7 +146,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
      *
      * @return true if the client is a gui client, false if it's a tui one
      */
-    public boolean isGUI(){return isGUI;};
+    public boolean isGUI(){return isGUI;}
 
     /**
      *
@@ -203,9 +193,10 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
      */
     public void setGUI(boolean GUI) {
         isGUI = GUI;
-        if(connectionProtocol=="TCP"){
+        if(TCPinputHandler!=null){
             TCPinputHandler.setGUI(GUI);
-        }else{
+        }
+        if(RMIinputHandler!=null){
             RMIinputHandler.setGUI(GUI);
         }
     }
@@ -250,8 +241,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
                         TCPinputHandler.start();
 
-                        //PI
-                        // NG THREAD
+                        //PiNG THREAD
                         if (Settings.pingOn) {
                             pingThread().start();
                         }
@@ -261,7 +251,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                             String inMessage;
                             try {
                                 while ((inMessage = in.readLine()) != null) {
-                                    Response response = recieveResponse(inMessage);
+                                    Response response = receiveResponse(inMessage);
                                     if (response.getResponseType() == Response.ResponseType.INFO) {
                                         System.out.println(response.getInfoMessage());
                                     } else if (response.getResponseType() == Response.ResponseType.CHATMESSAGE) {
@@ -402,7 +392,6 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                     notConnected = true;
                 }
                 if (!close) {
-                    BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
                     //PING THREAD
                     if (Settings.pingOn) {
                         pingThread().start();
@@ -609,9 +598,9 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
      *
      * @param jString jString recieved from the server
      * @return a response from the server, obtained by a json string
-     * @throws IOException
+     * @throws JsonSyntaxException
      */
-    public Response recieveResponse(String jString) throws IOException {
+    public Response receiveResponse(String jString) throws JsonSyntaxException {
         return JsonParser.getResponse(jString);
     }
 
@@ -773,7 +762,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    Parent numberofplayer = null;
+                    Parent numberofplayer;
                     try {
                         numberofplayer = FXMLLoader.load(getClass().getResource("/waitPlayerBanner.fxml"));
                     } catch (IOException e) {

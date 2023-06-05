@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class RMIInputHandler extends Thread {
-    private Client client;
+    private final Client client;
     private final BufferedReader inReader;
     private final List<String> inputGUI;
     private boolean isGUI;

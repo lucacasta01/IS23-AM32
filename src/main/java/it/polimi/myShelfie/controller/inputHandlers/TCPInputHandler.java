@@ -115,9 +115,6 @@ public class TCPInputHandler extends Thread{
                         Action a = new Action(Action.ActionType.SELECTCOLUMN, client.getNickname(), "", "", null, col);
                         client.sendAction(a);
                     }
-                } else if (message.startsWith("/printboard")) {
-                    Action a = new Action(Action.ActionType.PRINTBOARD, client.getNickname(), "", null, null, null);
-                    client.sendAction(a);
                 } else if (message.startsWith("/order")) {
                     int index = "/order ".length();
                     String substr = message.substring(index);

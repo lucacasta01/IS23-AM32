@@ -1,7 +1,6 @@
 package it.polimi.myShelfie.controller.GUIcontroller;
 
 import it.polimi.myShelfie.application.Client;
-import it.polimi.myShelfie.utilities.Settings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

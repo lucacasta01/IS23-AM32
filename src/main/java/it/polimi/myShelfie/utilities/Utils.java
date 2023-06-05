@@ -1,9 +1,6 @@
 package it.polimi.myShelfie.utilities;
 import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.utilities.pojo.View;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 public class Utils {
     public static String UIDGenerator(){
@@ -27,7 +24,7 @@ public class Utils {
     }
 
     public static boolean checkNicknameFormat(String nickname){
-        return !nickname.contains(" ") && !nickname.equals("\n") && !nickname.equals("/");
+        return !nickname.contains(" ") && !nickname.equals("\n") && !nickname.equals("/") && !nickname.equals("");
     }
 
     public static void printTUIView(View view){

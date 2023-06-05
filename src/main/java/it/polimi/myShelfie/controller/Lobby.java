@@ -3,7 +3,6 @@ package it.polimi.myShelfie.controller;
 import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
-import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.pojo.Action;
 import it.polimi.myShelfie.utilities.pojo.ChatMessage;
@@ -22,9 +21,7 @@ public class Lobby implements Runnable{
     private final GameMode gameMode;
     private boolean isOpen;
     private boolean ended = false;
-    private List<Tile> collectedTiles;
     private final Stack<String> colors;
-    private Game game;
     public final List<Action> actions = new ArrayList<>();
     private boolean close;
     private final AtomicBoolean endWaitingPlayers = new AtomicBoolean(false);
@@ -111,6 +108,7 @@ public class Lobby implements Runnable{
                     }
                     close = true;
                 }else if(action.getActionType()== Action.ActionType.REQUEST_MENU){
+                    lobbyController.saveGame();
                     close=true;
                     lobbyPlayers.get(0).sendMenu();
                 }else{
@@ -141,7 +139,7 @@ public class Lobby implements Runnable{
         else if(this.gameMode == GameMode.SAVEDGAME && !close){
             try{
                 lobbyController.setGame(new Game(lobbyUID));
-                playersNumber = lobbyController.getGamePlayers().size();
+                playersNumber = lobbyController.getOldGamePlayers().size();
                 for(ClientHandler ch:lobbyPlayers){
                     ch.acceptLoadGame();
                 }
@@ -266,12 +264,7 @@ public class Lobby implements Runnable{
                                 }
                             }
                             iter.remove();
-                        } else if (a.getActionType() == Action.ActionType.PRINTBOARD) {
-                            if (ch != null) {
-                                ch.sendInfoMessage(game.getGameBoard().toString());
-                            }
-                            iter.remove();
-                        } else if (a.getActionType() == Action.ActionType.ORDER) {
+                        }else if (a.getActionType() == Action.ActionType.ORDER) {
                             String response = lobbyController.orderTiles(a);
                             if(response.equals("0")){
                                 if (ch != null) {
@@ -473,7 +466,8 @@ public class Lobby implements Runnable{
         stringLists.remove(0);
         StringBuilder stringBuilder = new StringBuilder();
         for(String s : stringLists){
-            stringBuilder.append(s+ " ");
+            stringBuilder.append(s);
+            stringBuilder.append(" ");
         }
         for(ClientHandler t : lobbyPlayers){
             if(t.getNickname().equals(receiver)){

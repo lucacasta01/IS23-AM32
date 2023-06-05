@@ -10,7 +10,4 @@ public class PingObject {
         return isElapsed.get();
     }
 
-    public void setElapsed(boolean elapsed) {
-        isElapsed.set(elapsed);
-    }
 }

@@ -22,7 +22,7 @@ public class ClientHandler implements Runnable {
     private Boolean isRMI = false;
     private BufferedReader in;
     private PrintWriter out;
-    private Server server;
+    private final Server server;
     private boolean isPlaying = false;
     private String color;
     private final List<PingObject> pongResponses = new ArrayList<>();
@@ -55,7 +55,7 @@ public class ClientHandler implements Runnable {
                     clientSocket.close();
                 }
             } catch (Exception e) {
-                System.out.println(e.toString());
+                e.printStackTrace();
             }
         }else{
             synchronized (server.getConnectedClients()) {
@@ -111,7 +111,7 @@ public class ClientHandler implements Runnable {
                     locker.notifyAll();
                 }
             } catch (Exception e) {
-                System.err.println("Exception throws during stream creation: " + e.toString());
+                System.err.println("Exception throws during stream creation: ");
                 e.printStackTrace();
             }
         }
@@ -323,7 +323,7 @@ public class ClientHandler implements Runnable {
 
                                 action = getAction();
 
-                                while ((action.getActionType()!= Action.ActionType.INFO)||(action.getActionType()== Action.ActionType.INFO&&(!action.getInfo().toUpperCase().equals("Y")&&!action.getInfo().toUpperCase().equals("N")))){
+                                while ((action.getActionType()!= Action.ActionType.INFO)||(action.getActionType()== Action.ActionType.INFO&&(!action.getInfo().equalsIgnoreCase("Y")&&!action.getInfo().equalsIgnoreCase("N")))){
                                     if(action.getActionType() == Action.ActionType.INFO) {
                                         sendDeny("Type the right key...");
                                     }else if(action.getActionType()== Action.ActionType.CHAT){
@@ -342,7 +342,7 @@ public class ClientHandler implements Runnable {
                                             sendShutdown();
                                             shutdown();
                                         }
-                                    }else if(action.getActionType() == Action.ActionType.PING){;
+                                    }else if(action.getActionType() == Action.ActionType.PING){
                                         sendPong(action.getInfo());
                                     } else if (action.getActionType() == Action.ActionType.PONG){
                                         addPong();
@@ -351,7 +351,7 @@ public class ClientHandler implements Runnable {
                                     action = getAction();
                                 }
                                 message = action.getInfo();
-                                if (message.toUpperCase().equals("Y")) {
+                                if (message.equalsIgnoreCase("Y")) {
                                     lobby.broadcastMessage(nickname + " joined");
                                     System.out.println(nickname + " joined game " + lobby.getLobbyUID());
                                     this.isPlaying=true;
@@ -444,7 +444,7 @@ public class ClientHandler implements Runnable {
             try {
                 out.println(gson.toJson(r));
             } catch (Exception e) {
-                System.out.println("Error occurred while sending a message: " + e.toString());
+                System.out.println("Error occurred while sending a message: ");
                 e.printStackTrace();
             }
         }
@@ -465,7 +465,7 @@ public class ClientHandler implements Runnable {
             try {
                 out.println(gson.toJson(r));
             } catch (Exception e) {
-                System.out.println("Error occurred while sending a message: " + e.toString());
+                System.out.println("Error occurred while sending a message: ");
                 e.printStackTrace();
             }
         }
@@ -486,7 +486,7 @@ public class ClientHandler implements Runnable {
             try {
                 out.println(gson.toJson(r));
             } catch (Exception e) {
-                System.out.println("Error occurred while sending a message: " + e.toString());
+                System.out.println("Error occurred while sending a message: ");
                 e.printStackTrace();
             }
         }
@@ -507,7 +507,7 @@ public class ClientHandler implements Runnable {
             try {
                 out.println(gson.toJson(r));
             } catch (Exception e) {
-                System.out.println("Error occurred while sending a message: " + e.toString());
+                System.out.println("Error occurred while sending a message: ");
                 e.printStackTrace();
             }
         }
@@ -527,11 +527,6 @@ public class ClientHandler implements Runnable {
     public void setColor(String color) {
         this.color = color;
     }
-
-    public Socket getClientSocket() {
-        return clientSocket;
-    }
-
     public synchronized boolean isPlaying() {
         return isPlaying;
     }
@@ -553,7 +548,7 @@ public class ClientHandler implements Runnable {
             try {
                 out.println(gson.toJson(new Response(Response.ResponseType.INFO, null, null, message)));
             } catch (Exception e) {
-                System.out.println("Error occurred while sending a message: " + e.toString());
+                System.out.println("Error occurred while sending a message: ");
                 e.printStackTrace();
             }
         }
@@ -575,7 +570,7 @@ public class ClientHandler implements Runnable {
             try {
                 out.println(gson.toJson(r));
             } catch (Exception e) {
-                System.out.println("Error occurred while sending a message: " + e.toString());
+                System.out.println("Error occurred while sending a message: ");
                 e.printStackTrace();
             }
         }
@@ -596,7 +591,7 @@ public class ClientHandler implements Runnable {
             try {
                 out.println(gson.toJson(r));
             } catch (Exception e) {
-                System.out.println("Error occurred while sending a message: " + e.toString());
+                System.out.println("Error occurred while sending a message: ");
                 e.printStackTrace();
             }
         }
@@ -618,7 +613,7 @@ public class ClientHandler implements Runnable {
             try {
                 out.println(gson.toJson(r));
             } catch (Exception e) {
-                System.out.println("Error occurred while sending a message: " + e.toString());
+                System.out.println("Error occurred while sending a message: ");
                 e.printStackTrace();
             }
         }
@@ -638,7 +633,7 @@ public class ClientHandler implements Runnable {
             try {
                 out.println(gson.toJson(new Response(Response.ResponseType.LOBBY_CREATED, null, null, Integer.toString(playersNumber))));
             } catch (Exception e) {
-                System.out.println("Error occurred while sending a message: " + e.toString());
+                System.out.println("Error occurred while sending a message: ");
                 e.printStackTrace();
             }
         }
@@ -657,7 +652,7 @@ public class ClientHandler implements Runnable {
             try {
                 out.println(gson.toJson(new Response(Response.ResponseType.LOBBY_JOINED, null, null, waitPlayerStatus)));
             } catch (Exception e) {
-                System.out.println("Error occurred while sending a message: " + e.toString());
+                System.out.println("Error occurred while sending a message: ");
                 e.printStackTrace();
             }
         }
@@ -677,7 +672,7 @@ public class ClientHandler implements Runnable {
             try {
                 out.println(gson.toJson(new Response(Response.ResponseType.GAME_STARTED, null, null, null)));
             } catch (Exception e) {
-                System.out.println("Error occurred while sending a message: " + e.toString());
+                System.out.println("Error occurred while sending a message: ");
                 e.printStackTrace();
             }
         }
@@ -697,7 +692,7 @@ public class ClientHandler implements Runnable {
             try {
                 out.println(gson.toJson(new Response(Response.ResponseType.DENIED, null, null, message)));
             } catch (Exception e) {
-                System.out.println("Error occurred while sending a message: " + e.toString());
+                System.out.println("Error occurred while sending a message: ");
                 e.printStackTrace();
             }
         }
@@ -715,7 +710,7 @@ public class ClientHandler implements Runnable {
         try {
             out.println(gson.toJson(new Response(Response.ResponseType.PONG, null ,null,count)));
         } catch (Exception e) {
-            System.out.println("Error occurred while sending a pong: " + e.toString());
+            System.out.println("Error occurred while sending a pong: ");
             e.printStackTrace();
         }
     }
@@ -734,7 +729,7 @@ public class ClientHandler implements Runnable {
             try {
                 out.println(gson.toJson(new Response(Response.ResponseType.VALID, new ChatMessage(this.nickname, "",""), null, message)));
             } catch (Exception e) {
-                System.out.println("Error occurred while sending a message: " + e.toString());
+                System.out.println("Error occurred while sending a message: ");
                 e.printStackTrace();
             }
         }
@@ -754,7 +749,7 @@ public class ClientHandler implements Runnable {
             try {
                 out.println(gson.toJson(new Response(Response.ResponseType.SOMEONE_JOINED_LOBBY, null, null, waitStatus)));
             } catch (Exception e) {
-                System.out.println("Error occurred while sending a message: " + e.toString());
+                System.out.println("Error occurred while sending a message: ");
                 e.printStackTrace();
             }
         }
@@ -807,15 +802,14 @@ public class ClientHandler implements Runnable {
 
     public synchronized void sendHelpMessage(){
 
-        StringBuilder string = new StringBuilder();
-        string.append("\t\t\t\t\t\t"+ ANSI.BOLD+ANSI.ITALIC +"****** MY SHELFIE ******"+ANSI.RESET_STYLE+"\n\n");
-        string.append(ANSI.BOLD+"Command\t\t\tArguments\t\t\t\tNotes"+ANSI.RESET_STYLE+"\n");
-        string.append("/chat\t\t\ttext message\t\t\tuse it to send a chat message to other players\n");
-        string.append("/collect\t\tr1,c1 (r2,c2) (r3,c3)\t\tgame command to collect tiles from the board\n");
-        string.append("/order\t\t\tC1 C2 C3\t\t\t\tuse it if you want change the tiles order before insert them in your shelf\n");
-        string.append("/column\t\t\tcol number\t\t\t\tgame command to insert the tiles you have collected into your shelf at the selected column\n");
-        string.append("/quit\t\t\t-\t\t\t\t\t\texit from the game\n");
-        sendInfoMessage(string.toString());
+        String string = "\t\t\t\t\t\t" + ANSI.BOLD + ANSI.ITALIC + "****** MY SHELFIE ******" + ANSI.RESET_STYLE + "\n\n" +
+                ANSI.BOLD + "Command\t\t\tArguments\t\t\t\tNotes" + ANSI.RESET_STYLE + "\n" +
+                "/chat\t\t\ttext message\t\t\tuse it to send a chat message to other players\n" +
+                "/collect\t\tr1,c1 (r2,c2) (r3,c3)\t\tgame command to collect tiles from the board\n" +
+                "/order\t\t\tC1 C2 C3\t\t\t\tuse it if you want change the tiles order before insert them in your shelf\n" +
+                "/column\t\t\tcol number\t\t\t\tgame command to insert the tiles you have collected into your shelf at the selected column\n" +
+                "/quit\t\t\t-\t\t\t\t\t\texit from the game\n";
+        sendInfoMessage(string);
     }
     public void sendMenu(){
         if(isRMI){

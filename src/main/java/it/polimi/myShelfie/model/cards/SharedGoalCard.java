@@ -10,14 +10,10 @@ public class SharedGoalCard extends Card implements CheckSharedGoal{
         super(imgPath);
         this.pointsTokenStack = new Stack<>();
         initializeStack(playerNumber);
-        this.achievedBy = new ArrayList<Player>();
+        this.achievedBy = new ArrayList<>();
     }
 
-    /**
-     * Pop one point-token from the card stack.
-     *
-     * @return Value of point-token (if present), 0 otherwise
-     */
+
 private void initializeStack(int playerNumber){
     switch(playerNumber){
         case 2:
@@ -37,6 +33,11 @@ private void initializeStack(int playerNumber){
             break;
     }
 }
+    /**
+     * Pop one point-token from the card stack.
+     *
+     * @return Value of point-token (if present), 0 otherwise
+     */
     public Integer popPointToken(){
         int p=0;
         try{

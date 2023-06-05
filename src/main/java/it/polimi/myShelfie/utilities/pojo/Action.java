@@ -2,12 +2,12 @@ package it.polimi.myShelfie.utilities.pojo;
 import it.polimi.myShelfie.utilities.Position;
 import java.util.List;
 public class Action {
-    private ActionType actionType;
+    private final ActionType actionType;
     private String nickname;
-    private String chatMessage;
-    private String info;
-    private List<Position> chosenTiles;
-    private Integer chosenColumn;
+    private final String chatMessage;
+    private final String info;
+    private final List<Position> chosenTiles;
+    private final Integer chosenColumn;
 
     public Action(ActionType actionType, String nickname, String chatMessage, String info, List<Position> chosenTiles, Integer chosenColumn) {
         this.actionType = actionType;
@@ -37,45 +37,18 @@ public class Action {
     public String getInfo() {
         return info;
     }
-    public void setChatMessage(String chatMessage) {
-        this.chatMessage = chatMessage;
-    }
-    public void setInfo(String info) {
-        this.info = info;
-    }
-    public void setActionType(ActionType actionType) {
-        this.actionType = actionType;
-    }
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
-
-    public void setChatMessage(ActionType actionType, String string) {
-        if(actionType == ActionType.CHAT){
-            this.chatMessage = string;
-        }
-        else if(actionType == ActionType.INFO){
-            this.info = string;
-        }
-    }
-    public void setChosenTiles(List<Position> chosenTiles) {
-        this.chosenTiles = chosenTiles;
-    }
-    public void setChosenColumn(Integer chosenColumn) {
-        this.chosenColumn = chosenColumn;
-    }
     public enum ActionType{
-        UPDATE,
         CHAT,
         PRIVATEMESSAGE,
         PICKTILES,
         SELECTCOLUMN,
-        COLLECT_AND_INSERT,
         INFO,
         PING,
         PONG,
         QUIT,
-        PRINTBOARD,
         ORDER,
         LOBBYKILL,
         HELP,

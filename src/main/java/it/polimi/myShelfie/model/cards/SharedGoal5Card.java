@@ -18,33 +18,19 @@ public class SharedGoal5Card extends SharedGoalCard implements CheckSharedGoal {
            int achievedCols = 0;
            int numberOfColors = 0;
            int numberOfNulls = 0;
-           boolean  g = false, b=false, lb=false, w=false, y=false, pi=false, n=false;
+           boolean  g = false, b=false, lb=false, w=false, y=false, pi=false;
             for(int col = 0; col< Settings.SHELFCOLUMN; col++){
                 for(int row = 0; row< Settings.SHELFROW; row++){
-                    switch (p.getMyShelf().getTileMartrix()[row][col].getColor()){
-                        case BLUE:
-                            b=true;
-                            break;
-                        case GREEN:
-                            g=true;
-                            break;
-                        case LIGHTBLUE:
-                            lb=true;
-                            break;
-                        case YELLOW:
-                            y=true;
-                            break;
-                        case PINK:
-                            pi=true;
-                            break;
-                        case WHITE:
-                            w=true;
-                            break;
-                        case NULLTILE:
-                            numberOfNulls++;
-                            break;
-                        default:
-                            break;
+                    switch (p.getMyShelf().getTileMartrix()[row][col].getColor()) {
+                        case BLUE -> b = true;
+                        case GREEN -> g = true;
+                        case LIGHTBLUE -> lb = true;
+                        case YELLOW -> y = true;
+                        case PINK -> pi = true;
+                        case WHITE -> w = true;
+                        case NULLTILE -> numberOfNulls++;
+                        default -> {
+                        }
                     }
                 }
                 if(b){

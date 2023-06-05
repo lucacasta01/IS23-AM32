@@ -1,7 +1,7 @@
 package it.polimi.myShelfie.controller.GUIcontroller.banners;
 
 import it.polimi.myShelfie.application.Client;
-import it.polimi.myShelfie.application.GUIClient;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,12 +22,7 @@ public class WaitPlayersController {
         waitLabel.setText(label);
     }
     public void updateLabel(String label){
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                waitLabel.setText(label);
-            }
-        });
+        Platform.runLater(() -> waitLabel.setText(label));
     }
     public void doShutdown(ActionEvent actionEvent) {
         client= Client.getInstance();

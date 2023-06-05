@@ -1,9 +1,9 @@
 package it.polimi.myShelfie.utilities.pojo;
 public class Response {
-    private ChatMessage chatMessage;
+    private final ChatMessage chatMessage;
     private View view;
-    private String infoMessage = "";
-    private ResponseType responseType;
+    private final String infoMessage;
+    private final ResponseType responseType;
 
     public Response(ResponseType responseType, ChatMessage chatMessage, View view, String infoMessage) {
         this.chatMessage = chatMessage;
@@ -16,7 +16,6 @@ public class Response {
 
         UPDATE,
         CHATMESSAGE,
-        PRIVATEMESSAGE,
         VALID,
         DENIED,
         INFO,
@@ -27,14 +26,13 @@ public class Response {
         LOBBY_CREATED,
         NICKNAME_DENIED,
         NICKNAME_ACCEPTED,
-        GAME_NOT_FOUND,
         GAME_STARTED,
         DENY_LOAD_GAME,
         SOMEONE_JOINED_LOBBY,
         ACCEPT_LOAD_GAME,
         RETURN_TO_MENU,
         FOUND_OLD_GAME,
-        RANDOM_GAME_NOT_FOUND, ACCEPT_COLLECT, DENY_INSERT, GAME_ENDED, OLD_GAME_NOT_FOUND
+        RANDOM_GAME_NOT_FOUND, ACCEPT_COLLECT, GAME_ENDED, OLD_GAME_NOT_FOUND
     }
 
     public ChatMessage getChatMessage() {
@@ -52,20 +50,7 @@ public class Response {
     public ResponseType getResponseType() {
         return responseType;
     }
-
-    public void setInfoMessage(String infoMessage) {
-        this.infoMessage = infoMessage;
-    }
-
-    public void setChatMessage(ChatMessage chatMessage) {
-        this.chatMessage = chatMessage;
-    }
-
     public void setView(View view) {
         this.view = view;
-    }
-
-    public void setResponseType(ResponseType responseType) {
-        this.responseType = responseType;
     }
 }

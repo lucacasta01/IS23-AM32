@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 public class Board {
-    private Tile[][] grid;
+    private final Tile[][] grid;
     private List<Tile> tileHeap;
 
 

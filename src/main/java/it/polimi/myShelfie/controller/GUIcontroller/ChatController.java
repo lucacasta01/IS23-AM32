@@ -1,7 +1,6 @@
 package it.polimi.myShelfie.controller.GUIcontroller;
 
 import it.polimi.myShelfie.application.Client;
-import it.polimi.myShelfie.utilities.Utils;
 import it.polimi.myShelfie.utilities.pojo.ChatMessage;
 import it.polimi.myShelfie.utilities.pojo.View;
 import javafx.event.ActionEvent;

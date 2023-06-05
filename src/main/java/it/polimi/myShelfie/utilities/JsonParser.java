@@ -1,5 +1,6 @@
 package it.polimi.myShelfie.utilities;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.myShelfie.utilities.pojo.*;
 import org.apache.commons.io.IOUtils;
@@ -49,7 +50,7 @@ public class JsonParser {
         return new Gson().fromJson(jString,type);
     }
 
-    public static Response getResponse(String jString){
+    public static Response getResponse(String jString) throws JsonSyntaxException {
         Type type = new TypeToken<Response>(){}.getType();
         return new Gson().fromJson(jString,type);
     }

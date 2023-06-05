@@ -16,11 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 public class RMIController extends UnicastRemoteObject implements RMIServer,Runnable, Unreferenced {
-    private final List<RMIClient> rmiClients;
     private final Server server;
 
     public RMIController() throws RemoteException {
-        rmiClients = new ArrayList<>();
         server = Server.getInstance();
     }
 

@@ -22,7 +22,7 @@ public class GameParameters {
     private List<Integer> personalCards;
     private List<Integer> sharedCards;
     private Integer currentPlayer;
-    private List<Tile> tileHeap;
+    private final List<Tile> tileHeap;
     private boolean isLastTurn;
 
     public GameParameters(){

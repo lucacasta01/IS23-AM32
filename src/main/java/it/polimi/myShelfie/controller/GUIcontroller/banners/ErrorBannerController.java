@@ -14,11 +14,6 @@ public class ErrorBannerController {
         stage.close();
     }
     public void setLabel(String label){
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                bannerLabel.setText(label);
-            }
-        });
+        Platform.runLater(()-> bannerLabel.setText(label));
     }
 }

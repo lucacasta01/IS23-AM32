@@ -6,13 +6,12 @@ import java.io.InputStreamReader;
 
 public class MyShelfieClient {
     private static String message;
-    private static BufferedReader inReader ;
-
     /**
      * The main process for our game
      * @param args
      */
     public static void main(String[] args) {
+        BufferedReader inReader;
         System.out.println("***MY SHELFIE***");
         System.out.println("Select your interface [TUI/GUI]");
         inReader =  new BufferedReader(new InputStreamReader(System.in));
@@ -21,16 +20,17 @@ public class MyShelfieClient {
         }catch (Exception e){
             e.printStackTrace();
         }
-        message = message.toUpperCase();
+
         while (!message.equalsIgnoreCase("TUI")&&!message.equalsIgnoreCase("GUI")){
             System.out.println("Type the right key...");
             try{
+
                 message = inReader.readLine();
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
-        if(message.equals("TUI")){
+        if(message.equalsIgnoreCase("TUI")){
             try {
                 Client.main(args);
             }catch (Exception e){

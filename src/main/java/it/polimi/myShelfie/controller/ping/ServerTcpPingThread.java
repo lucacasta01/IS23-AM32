@@ -98,10 +98,10 @@ public class ServerTcpPingThread extends ServerPingThread{
         }
     }
 
-    class SwapElapsed extends Thread {
+    static class SwapElapsed extends Thread {
 
         private boolean isRunning = true;
-        private ClientHandler client;
+        private final ClientHandler client;
         public SwapElapsed(ClientHandler ch){
             this.client = ch;
         }

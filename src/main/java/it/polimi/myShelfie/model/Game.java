@@ -115,7 +115,6 @@ public class Game{
     public void loadGame(String UID) throws IOException{
 
         GameParameters gameParameters = null;
-
         try {
                 gameParameters = JsonParser.getGameParameters("/config/savedgames/" + UID + ".json");
         }catch (Exception e){
@@ -397,11 +396,7 @@ public class Game{
 
     private boolean areCatchable(Position pos1, Position pos2){
         if(this.gameBoard.isCatchable(pos1.getRow(), pos1.getColumn())&&this.gameBoard.isCatchable(pos2.getRow(), pos2.getColumn())){
-            if((pos1.getRow()==pos2.getRow())||(pos1.getColumn()==pos2.getColumn())){
-                return true;
-            }else{
-                return false;
-            }
+            return (pos1.getRow() == pos2.getRow()) || (pos1.getColumn() == pos2.getColumn());
         }else{
             return false;
         }
@@ -415,11 +410,7 @@ public class Game{
      */
     private boolean areCatchable(Position pos1, Position pos2, Position pos3){
         if(this.gameBoard.isCatchable(pos1.getRow(), pos1.getColumn())&&this.gameBoard.isCatchable(pos2.getRow(), pos2.getColumn())&&this.gameBoard.isCatchable(pos3.getRow(), pos3.getColumn())){
-            if(((pos1.getRow()== pos2.getRow())&&(pos2.getRow()==pos3.getRow()))||((pos1.getColumn()== pos2.getColumn())&&(pos2.getColumn()==pos3.getColumn()))){
-                return true;
-            }else{
-                return false;
-            }
+            return ((pos1.getRow() == pos2.getRow()) && (pos2.getRow() == pos3.getRow())) || ((pos1.getColumn() == pos2.getColumn()) && (pos2.getColumn() == pos3.getColumn()));
         }else{
             return false;
         }
@@ -537,7 +528,7 @@ public class Game{
             this.gameBoard.initBoard(this.playersNumber);
         }
         catch(Exception e){
-            System.out.println(e.toString());
+           e.printStackTrace();
         }
     }
 
@@ -557,6 +548,10 @@ public class Game{
         else{
             System.out.println("No more places available");
         }
+    }
+
+    public void initializeoldGamePlayers(){
+        this.oldGamePlayers = new ArrayList<>();
     }
 
 

@@ -13,6 +13,7 @@ import it.polimi.myShelfie.utilities.pojo.View;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -156,6 +157,28 @@ public class LobbyControllerTest {
     @Test
     @DisplayName("reorder lobby players test")
     public void reorderLobbyPlayersTest(){
+        Game game = new Game("fakeUid", 3);
+        game.initializeoldGamePlayers();
+        List<Player> oldGamePlayers = game.getOldGamePlayers();
+        oldGamePlayers.add(new Player("1"));
+        oldGamePlayers.add(new Player("2"));
+        oldGamePlayers.add(new Player("3"));
+        List<ClientHandler> lobbyPlayers = new ArrayList<>();
+        ClientHandler ch1 = new ClientHandler(new Socket());
+        ch1.setNickname("3");
+        lobbyPlayers.add(ch1);
+        ClientHandler ch2 = new ClientHandler(new Socket());
+        ch2.setNickname("1");
+        lobbyPlayers.add(ch2);
+        ClientHandler ch3 = new ClientHandler(new Socket());
+        ch3.setNickname("2");
+        lobbyPlayers.add(ch3);
+        LobbyController lobbyController = new LobbyController();
+        lobbyController.setGame(game);
+        ClientHandler[] orderedList = lobbyController.reorderLobbyPlayers(lobbyPlayers);
+        assertEquals("1", orderedList[0].getNickname());
+        assertEquals("2", orderedList[1].getNickname());
+        assertEquals("3", orderedList[2].getNickname());
 
     }
     @Test
@@ -310,4 +333,5 @@ public class LobbyControllerTest {
         assertEquals("p1", lobbyController.getGamePlayers().get(game.getCurrentPlayer()).getUsername());
 
     }
+
 }

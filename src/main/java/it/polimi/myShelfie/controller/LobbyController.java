@@ -32,7 +32,8 @@ public class LobbyController {
                 StringBuilder builder = new StringBuilder();
                 builder.append("picked tiles: ");
                 for (Tile t : collectedTiles) {
-                    builder.append(t.toString() + " ");
+                    builder.append(t.toString());
+                    builder.append(" ");
                 }
                 return builder.toString();
             }

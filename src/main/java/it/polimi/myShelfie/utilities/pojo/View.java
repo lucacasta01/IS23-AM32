@@ -74,10 +74,6 @@ public class View implements Serializable {
         this.GUIsharedCards = GUIsharedCards;
     }
 
-    public List<List<String>> getGUIShelves() {
-        return othersGUIShelves;
-    }
-
     public List<Integer> getGUIScoring() {
         return GUIScoring;
     }
@@ -129,10 +125,6 @@ public class View implements Serializable {
     public String getBoard() {
         return board;
     }
-    public void addShelf(String Shelf){
-        this.shelves.add(Shelf);
-    }
-
     public void setANSIcolor(String ANSIcolor) {
         this.ANSIcolor = ANSIcolor;
     }

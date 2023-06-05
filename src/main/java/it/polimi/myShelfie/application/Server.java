@@ -18,7 +18,6 @@ import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
-import java.rmi.registry.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -28,7 +27,6 @@ public class Server extends UnicastRemoteObject implements Runnable{
     boolean done = false;
     private static Server instance;
     private ServerSocket serverSocket;
-    private Registry registry;
     private ExecutorService pool;
     private ExecutorService lobbyPool;
     private ExecutorService pingPool;
@@ -41,10 +39,15 @@ public class Server extends UnicastRemoteObject implements Runnable{
         lobbyList = new ArrayList<>();
         try {
             serverSocket = new ServerSocket(Settings.TCPPORT);
-            userGame = loadUserGame();
         }
         catch(Exception e){
-            System.err.println("Server side exception thrown: " + e.toString());
+            System.err.println("Server side socket exception thrown: ");
+            e.printStackTrace();
+        }
+        try {
+            userGame = loadUserGame();
+        }catch (Exception e){
+            System.err.println("Server side error while loading usergame");
             e.printStackTrace();
         }
     }
@@ -295,7 +298,7 @@ class TCPaccepter extends Thread {
                     s.printStackTrace();
                 }
             }catch (Exception e){
-                System.err.println("Server side error " + e.toString());
+                System.err.println("Server side error ");
                 e.printStackTrace();
             }
         }
@@ -342,12 +345,11 @@ class ServerInputHandler extends Thread {
                     }
 
                 } else if(message.equals("/h")){
-                    StringBuilder help = new StringBuilder();
-                    help.append("***MY SHELFIE SERVER***\n");
-                    help.append(server.getConnectedClients().size()+" Connected clients\n");
-                    help.append(server.getLobbyList().size()+" started games\n");
-                    help.append("type /q to exit from the server app\n");
-                    System.out.println(help.toString());
+                    String help = "***MY SHELFIE SERVER***\n" +
+                            server.getConnectedClients().size() + " Connected clients\n" +
+                            server.getLobbyList().size() + " started games\n" +
+                            "type /q to exit from the server app\n";
+                    System.out.println(help);
                 }else{
                     System.out.println("*Wrong input message*");
                 }

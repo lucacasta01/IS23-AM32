@@ -28,14 +28,13 @@ public class ServerRmiPingThread extends ServerPingThread{
                 System.err.println("Ping failed for " + ch.getNickname() + "");
                 if (ch.isPlaying()) {
                     Lobby l =server.lobbyOf(ch);
-                    l.getLobbyPlayers().remove(ch);
-                    server.killLobby(l.getLobbyUID());
-                    ch.shutdown();
-                    server.removeClient(ch);
-                } else {
-                    ch.shutdown();
-                    server.removeClient(ch);
+                    if(l!=null){
+                        l.getLobbyPlayers().remove(ch);
+                        server.killLobby(l.getLobbyUID());
+                    }
                 }
+                ch.shutdown();
+                server.removeClient(ch);
                 if (server.getUserGame() != null) {
                     if (server.getUserGame().get(ch.getNickname()) != null) {
                         if (server.getUserGame().get(ch.getNickname()).equals("-")) {

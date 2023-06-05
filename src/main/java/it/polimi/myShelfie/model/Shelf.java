@@ -5,7 +5,7 @@ import it.polimi.myShelfie.utilities.Settings;
 import java.util.ArrayList;
 import java.util.List;
 public class Shelf {
-    private Tile[][] tileMatrix;
+    private final Tile[][] tileMatrix;
 
     public Shelf() {
         this.tileMatrix = new Tile[Settings.SHELFROW][Settings.SHELFCOLUMN];
@@ -168,15 +168,11 @@ public class Shelf {
         int toReturn = 0;
         for(int s : clusterSizes){
             if(s > 2){
-                switch(s){
-                    case 3: toReturn += 2;
-                    break;
-                    case 4: toReturn += 3;
-                    break;
-                    case 5: toReturn += 5;
-                    break;
-                    default: toReturn += 8;
-                    break;
+                switch (s) {
+                    case 3 -> toReturn += 2;
+                    case 4 -> toReturn += 3;
+                    case 5 -> toReturn += 5;
+                    default -> toReturn += 8;
                 }
             }
         }

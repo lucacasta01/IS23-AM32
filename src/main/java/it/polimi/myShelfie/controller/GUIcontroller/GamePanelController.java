@@ -67,23 +67,21 @@ public class GamePanelController{
     }
 
     private void addGridEvent() {
-        boardGrid.getChildren().forEach(item -> {
-            item.setOnMouseClicked(event -> {
-                if(collectedTiles.size()<3&&isMyTurn()) {
-                    Node clickedNode = event.getPickResult().getIntersectedNode();
-                    ImageView im = (ImageView) clickedNode;
-                    if(isCatchable(im,GridPane.getRowIndex(clickedNode),GridPane.getColumnIndex(clickedNode))) {
-                        clickedNode.setVisible(false);
-                        collectedTiles.add(im);
-                        printCollectedTiles();
-                        setResetEnabled(true);
-                    }
-                    else{
-                        GUIClient.getInstance().showDenyDialog("You can't pick this tile!");
-                    }
+        boardGrid.getChildren().forEach(item -> item.setOnMouseClicked(event -> {
+            if(collectedTiles.size()<3&&isMyTurn()) {
+                Node clickedNode = event.getPickResult().getIntersectedNode();
+                ImageView im = (ImageView) clickedNode;
+                if(isCatchable(im,GridPane.getRowIndex(clickedNode),GridPane.getColumnIndex(clickedNode))) {
+                    clickedNode.setVisible(false);
+                    collectedTiles.add(im);
+                    printCollectedTiles();
+                    setResetEnabled(true);
                 }
-            });
-        });
+                else{
+                    GUIClient.getInstance().showDenyDialog("You can't pick this tile!");
+                }
+            }
+        }));
     }
 
     private boolean isCatchable(ImageView tile, int row, int column) {
@@ -98,6 +96,7 @@ public class GamePanelController{
         for(ImageView im:collectedTiles){
             if((Math.abs(row-GridPane.getRowIndex(im))>2)||(Math.abs(column-GridPane.getColumnIndex(im))>2)){
                 return false;
+
             }
         }
 
@@ -375,7 +374,7 @@ public class GamePanelController{
     }
 
     private void initializeChatPanel() {
-        VBox chatPanel = null;
+        VBox chatPanel;
         try {
             chatPanel = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/chatPanel.fxml")));
         }
@@ -527,7 +526,7 @@ public class GamePanelController{
 
     private int freeSpots(int col) {
         int count = 0;
-        int i=0, k=0;
+        int i=0;
 
         for(Node n : myShelfGrid.getChildren()){
             if(i % Settings.SHELFCOLUMN == col-1){

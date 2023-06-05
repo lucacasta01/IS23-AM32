@@ -42,7 +42,7 @@ public class GUIClient extends Application {
         this.stage = stage;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/loginPanel.fxml"));
         fxmlLoader.setController(new LoginController());
-        Parent root=null;
+        Parent root;
         try {
             root = fxmlLoader.load();
         }catch (Exception e){
@@ -75,7 +75,7 @@ public class GUIClient extends Application {
     public void showOldGameChoice(){
         System.out.println("Show old game choice");
         Platform.runLater(()->{
-            Parent choice = null;
+            Parent choice;
             try {
                 choice = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/oldGameJoinBanner.fxml")));
             } catch (IOException e) {
@@ -98,7 +98,7 @@ public class GUIClient extends Application {
      */
     public void switchToWaitingScene() {
         Platform.runLater(()->{
-            Parent waitPlayers = null;
+            Parent waitPlayers;
             try {
                 waitPlayers = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/waitPlayerBanner.fxml")));
             } catch (IOException e) {
@@ -117,7 +117,7 @@ public class GUIClient extends Application {
      */
     public void switchToMenu() {
         Platform.runLater(()->{
-            Parent menu = null;
+            Parent menu;
             try {
                 menu = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/menuPanel.fxml")));
             } catch (IOException e) {
@@ -136,7 +136,7 @@ public class GUIClient extends Application {
      */
     public void switchToGame() {
         Platform.runLater(()->{
-            Parent gameParent = null;
+            Parent gameParent;
             try {
                 gameParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gamePanel.fxml")));
             } catch (IOException e) {
@@ -168,8 +168,8 @@ public class GUIClient extends Application {
     public void showDenyDialog(String errorMessage) {
         Platform.runLater(()->{
             System.out.println("Show deny ban");
-            Parent denyPanel = null;
-            FXMLLoader loader = null;
+            Parent denyPanel;
+            FXMLLoader loader;
             try {
                 loader = new FXMLLoader(getClass().getResource("/errorBanner.fxml"));
             } catch (Exception e) {
@@ -196,7 +196,7 @@ public class GUIClient extends Application {
      */
     public void switchToPlayerNumber() {
         Platform.runLater(()->{
-            Parent numberPanel = null;
+            Parent numberPanel;
             try {
                 numberPanel = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/chosePlayerNumber.fxml")));
             } catch (IOException e) {
@@ -211,7 +211,7 @@ public class GUIClient extends Application {
      */
     public void showBackToMenu() {
         Platform.runLater(()->{
-            Parent choice = null;
+            Parent choice;
             try {
                 choice = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/confirmExitBanner.fxml")));
             } catch (IOException e) {
@@ -236,8 +236,8 @@ public class GUIClient extends Application {
      */
     public void showRank(String rank) {
         Platform.runLater(()->{
-            Parent rankPanel = null;
-            FXMLLoader loader = null;
+            Parent rankPanel;
+            FXMLLoader loader;
             try {
                 loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/rankPanel.fxml")));
                 rankPanel = loader.load();
@@ -256,8 +256,8 @@ public class GUIClient extends Application {
 
     public void showServerOfflineBan() {
         Platform.runLater(()->{
-            Parent banner = null;
-            FXMLLoader loader = null;
+            Parent banner;
+            FXMLLoader loader;
             try {
                 loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/serverOfflineBanner.fxml")));
                 banner = loader.load();

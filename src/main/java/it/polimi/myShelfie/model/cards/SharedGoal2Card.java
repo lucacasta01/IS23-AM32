@@ -6,8 +6,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 public class SharedGoal2Card extends SharedGoalCard implements CheckSharedGoal {
 
-    private Map<Tile.Color,Boolean> colorBooleanMap;
-
+    private final Map<Tile.Color,Boolean> colorBooleanMap;
     public SharedGoal2Card(String imgPath, int playerNumber) {
         super(imgPath, playerNumber);
         colorBooleanMap = new HashMap<>();
