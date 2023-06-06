@@ -577,6 +577,8 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private String protocolHandler(){
             String message;
             BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("TCP port: "+TCPPort);
+            System.out.println("RMI port: "+RMIPort);
             System.out.println("Choose your protocol [TCP/RMI]");
             try {
                 message= inReader.readLine().toUpperCase();
@@ -689,24 +691,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     @Override
     public void update(View view) throws RemoteException {
         Client.getInstance().view=view;
-        //shelves
-        for (String s : view.getShelves()) {
-            System.out.println(s + "\n");
-        }
-        //personal card
-        System.out.println(ANSI.ITALIC + "Personal goal card:" + ANSI.RESET_STYLE);
-        System.out.println(view.getPersonalCard());
-
-        //shared cards
-        for (int i = 0; i < view.getSharedCards().size(); i++) {
-            System.out.println(ANSI.ITALIC + "Shared goal " + (i + 1) + ": " + ANSI.RESET_STYLE);
-            System.out.println(view.getSharedCards().get(i) + "\n");
-        }
-        //board
-        System.out.println(ANSI.ITALIC + "Board:" + ANSI.RESET_STYLE);
-        System.out.println(view.getBoard() + "\n");
-        //current player
-        System.out.println(ANSI.ITALIC + "Turn of: " + ANSI.RESET_STYLE + view.getCurrentPlayer());
+        Utils.printTUIView(view);
         if(isGUI){
             System.out.println("GUI view update");
             while(gamePanelController == null){

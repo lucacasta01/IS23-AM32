@@ -36,6 +36,20 @@ public class JsonParser {
         }
         return null;
     }
+    public static List<Integer> getPortsConfig(String jPath){
+        try (InputStream inputStream = new FileInputStream(System.getProperty("user.dir")+jPath)){
+            String jsonString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+            Type type = new TypeToken<Ports>() {}.getType();
+            Ports ports = new Gson().fromJson(jsonString, type);
+            List<Integer> portList = new ArrayList<>();
+            portList.add(ports.getPorts().get(0));
+            portList.add(ports.getPorts().get(1));
+            return portList;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static GameParameters getGameParameters(String jPath) throws IOException{
         try (InputStream inputStream = new FileInputStream(System.getProperty("user.dir")+jPath)) {

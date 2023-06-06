@@ -32,7 +32,7 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
     }
 
     private void startServer() throws RemoteException {
-        Registry registry = LocateRegistry.createRegistry(Settings.RMIPORT);
+        Registry registry = LocateRegistry.createRegistry(server.getRMIport());
 
         try{
             registry.bind(Settings.RMINAME, this);

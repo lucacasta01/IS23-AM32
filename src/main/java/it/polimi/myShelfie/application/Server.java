@@ -33,12 +33,37 @@ public class Server extends UnicastRemoteObject implements Runnable{
     private final Map<ClientHandler, ServerPingThread> connectedClients;
     private Map<String, String> userGame;
     private final List<Lobby> lobbyList;
+    private int TCPport = 0;
+    private int RMIport = 0;
 
     private Server() throws RemoteException {
         connectedClients = new HashMap<>();
         lobbyList = new ArrayList<>();
+        //load ports from json
+        List<Integer> ports = JsonParser.getPortsConfig("/config/ports.json");
+        if(ports!=null){
+            if(ports.get(0)!=0){
+                System.out.println("Setted tcp port: "+ports.get(0));
+                TCPport = ports.get(0);
+            }else{
+                TCPport = Settings.TCPPORT;
+            }
+            if(ports.get(1)!=0){
+                System.out.println("Setted rmi port: "+ports.get(1));
+                RMIport = ports.get(1);
+            }else{
+                RMIport = Settings.RMIPORT;
+            }
+        }else{
+            TCPport = Settings.TCPPORT;
+            RMIport = Settings.RMIPORT;
+        }
+        System.out.println("Server TCP port: "+TCPport);
+        System.out.println("Server RMI port: "+RMIport);
+
+
         try {
-            serverSocket = new ServerSocket(Settings.TCPPORT);
+            serverSocket = new ServerSocket(TCPport);
         }
         catch(Exception e){
             System.err.println("Server side socket exception thrown: ");
@@ -86,6 +111,10 @@ public class Server extends UnicastRemoteObject implements Runnable{
      */
     public Map<String, String> getUserGame() {
         return userGame;
+    }
+
+    public int getRMIport(){
+        return this.RMIport;
     }
 
     /**

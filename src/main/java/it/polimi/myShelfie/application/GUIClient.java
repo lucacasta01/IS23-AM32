@@ -41,7 +41,6 @@ public class GUIClient extends Application {
     public void start(Stage stage) {
         this.stage = stage;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/loginPanel.fxml"));
-        fxmlLoader.setController(new LoginController());
         Parent root;
         try {
             root = fxmlLoader.load();
