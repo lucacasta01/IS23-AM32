@@ -191,10 +191,10 @@ public class Board {
         }
 }
         try {
-            setNullTiles(JsonParser.getNullConfig("/config/boardconfig.json"));
+            setNullTiles(JsonParser.getNullConfig("/configJsons/boardconfig.json"));
             switch (players) {
-                case 2 -> setNullTiles(JsonParser.getNullConfig("/config/boardconfig2p.json"));
-                case 3 -> setNullTiles(JsonParser.getNullConfig("/config/boardconfig3p.json"));
+                case 2 -> setNullTiles(JsonParser.getNullConfig("/configJsons/boardconfig2p.json"));
+                case 3 -> setNullTiles(JsonParser.getNullConfig("/configJsons/boardconfig3p.json"));
             }
             setTileColors();
         }

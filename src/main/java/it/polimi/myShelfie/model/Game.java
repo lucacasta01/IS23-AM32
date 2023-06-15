@@ -1,7 +1,7 @@
 package it.polimi.myShelfie.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.myShelfie.controller.ClientHandler;
+import it.polimi.myShelfie.network.ClientHandler;
 import it.polimi.myShelfie.model.cards.*;
 import it.polimi.myShelfie.utilities.*;
 import it.polimi.myShelfie.utilities.pojo.GUIRank;
@@ -176,7 +176,7 @@ public class Game{
         personalDeck = new ArrayList<>();
         try{
             for(int i=1;i<=12;i++){
-                String jPath = "/config/personalgoals/pg" + i + ".json";
+                String jPath = "/configJsons/personalgoals/pg" + i + ".json";
                 PersonalGoalCard cardToAdd = generatePersonalGoalCard(JsonParser.getPersonalGoalConfig(jPath),i);
                 personalDeck.add(cardToAdd);
             }

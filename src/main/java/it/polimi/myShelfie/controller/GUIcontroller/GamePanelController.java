@@ -18,9 +18,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import org.apache.commons.io.FileUtils;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -45,6 +47,10 @@ public class GamePanelController{
     VBox col1Box, col2Box, col3Box, col4Box, col5Box;
     @FXML
     ImageView chatNotificationImg;
+    @FXML
+    ImageView myChairImg, p2ChairImg, p3ChairImg, p4ChairImg;
+    @FXML
+    List<ImageView> chairs = List.of(myChairImg, p2ChairImg, p3ChairImg, p4ChairImg);
     final List<ImageView> collectedTiles = new ArrayList<>();
     int column = -1;
 
@@ -59,6 +65,7 @@ public class GamePanelController{
             GUIClient.getInstance().getStage().close();
             System.exit(0);
         });
+        chairs.forEach(c->c.setVisible(false));
     }
 
     private void setResetEnabled(boolean value){
@@ -138,16 +145,23 @@ public class GamePanelController{
         System.out.println("Updating view");
         View view = Client.getInstance().getView();
         String curNickname = Client.getInstance().getNickname();
-
         int playersNumber = view.getPlayers().size();
         int curPlayerIndex = view.getPlayers().indexOf(curNickname);
         List<String> otherPlayers = new ArrayList<>(view.getPlayers());
         List<Integer> otherScores = new ArrayList<>(view.getGUIScoring());
-
-
         otherPlayers.remove(curPlayerIndex);
         otherScores.remove(curPlayerIndex);
 
+        if(curNickname.equals(view.getPlayers().get(0))){
+            setChair(1);
+        }else{
+            for(int i=0; i<otherPlayers.size(); i++){
+                String s = otherPlayers.get(i);
+                if(s.equals(view.getPlayers().get(0))){
+                    setChair(i+2);
+                }
+            }
+        }
         boardGrid.getChildren().forEach(item->item.setVisible(true));
 
         //current player update & turn handling
@@ -351,6 +365,10 @@ public class GamePanelController{
         System.out.println("GUI VIEW UPDATED");
     }
 
+    private void setChair(int n) {
+        chairs.get(n-1).setVisible(true);
+    }
+
     private void handleTurn(View v, String nickname, Label l){
         if(v.getCurrentPlayer().equals(nickname)){
             l.setText(l.getText()+" (your turn)");
@@ -403,10 +421,11 @@ public class GamePanelController{
     public void openRules(ActionEvent actionEvent) {
         if (Desktop.isDesktopSupported()) {
             try {
-                File myFile = new File(Objects.requireNonNull(getClass().getResource("/MyShelfie_Rulebook_ITA.pdf")).getPath());
+                File myFile = new File(System.getProperty("user.dir")+"/config/tmpRules.pdf");
+                FileUtils.copyInputStreamToFile(getClass().getResourceAsStream("/MyShelfie_Rulebook_ITA.pdf"), myFile);
                 Desktop.getDesktop().open(myFile);
-            } catch (IOException ex) {
-                // no application registered for PDFs
+            } catch (Exception e) {
+                GUIClient.getInstance().showDenyDialog("Rules file not found");
             }
         }
     }

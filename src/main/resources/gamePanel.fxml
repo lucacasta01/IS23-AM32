@@ -65,18 +65,57 @@
                   <Insets bottom="10.0" />
                </VBox.margin>
             </Label>
-            <ImageView fx:id="sharedGoal1" fitHeight="122.0" fitWidth="192.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="sharedGoal2" fitHeight="122.0" fitWidth="192.0" pickOnBounds="true" preserveRatio="true">
+            <StackPane>
+               <children>
+                  <ImageView fx:id="sharedGoal1" fitHeight="122.0" fitWidth="192.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@graphics/commonGoalCards/1.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="SharedGoal1Stack" fitHeight="55.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" rotate="-8.0">
+                     <StackPane.margin>
+                        <Insets bottom="10.0" left="85.0" />
+                     </StackPane.margin>
+                     <image>
+                        <Image url="@graphics/scoringTokens/scoring_2.jpg" />
+                     </image>
+                  </ImageView>
+               </children>
+            </StackPane>
+            <StackPane>
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
-            </ImageView>
+               <children>
+                  <ImageView fx:id="sharedGoal2" fitHeight="122.0" fitWidth="192.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@graphics/commonGoalCards/9.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="SharedGoal2Stack" fitHeight="55.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" rotate="-8.0">
+                     <StackPane.margin>
+                        <Insets bottom="10.0" left="85.0" />
+                     </StackPane.margin>
+                     <image>
+                        <Image url="@graphics/scoringTokens/scoring_6.jpg" />
+                     </image>
+                  </ImageView>
+               </children>
+            </StackPane>
          </children>
       </VBox>
       <VBox alignment="BOTTOM_LEFT" layoutX="2.0" layoutY="248.0" prefHeight="609.0" prefWidth="439.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="7.0">
          <children>
             <HBox alignment="CENTER_RIGHT" prefHeight="240.0" prefWidth="439.0">
                <children>
+                  <ImageView fx:id="myChairImg" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                     <HBox.margin>
+                        <Insets right="280.0" top="160.0" />
+                     </HBox.margin>
+                     <image>
+                        <Image url="@graphics/misc/firstplayertoken.png" />
+                     </image>
+                  </ImageView>
                   <VBox fx:id="selectColBox" alignment="CENTER" prefHeight="125.0" prefWidth="70.0">
                      <children>
                         <VBox fx:id="collectedTilesBox" alignment="BOTTOM_CENTER" prefHeight="249.0" prefWidth="70.0" />
@@ -344,26 +383,38 @@
          <children>
             <VBox fx:id="player2Box" alignment="CENTER_RIGHT" prefHeight="199.0" prefWidth="145.0">
                <children>
-                  <VBox alignment="TOP_RIGHT">
+                  <HBox alignment="TOP_RIGHT">
                      <children>
-                        <Label fx:id="player2Lbl" text="Player #2">
-                           <font>
-                              <Font name="Arial" size="18.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets right="15.0" />
-                           </VBox.margin>
-                        </Label>
-                        <Label fx:id="pl2ScoreLbl" text="Score: ">
-                           <font>
-                              <Font name="System Bold Italic" size="16.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets right="15.0" />
-                           </VBox.margin>
-                        </Label>
+                        <ImageView fx:id="p2ChairImg" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@graphics/misc/firstplayertoken.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <VBox alignment="TOP_RIGHT">
+                           <children>
+                              <Label fx:id="player2Lbl" text="Player #2">
+                                 <font>
+                                    <Font name="Arial" size="18.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets right="15.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label fx:id="pl2ScoreLbl" text="Score: ">
+                                 <font>
+                                    <Font name="System Bold Italic" size="16.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets right="15.0" />
+                                 </VBox.margin>
+                              </Label>
+                           </children>
+                        </VBox>
                      </children>
-                  </VBox>
+                  </HBox>
                   <StackPane>
                      <children>
                         <HBox alignment="TOP_RIGHT">
@@ -527,26 +578,37 @@
             </VBox>
             <VBox fx:id="player3Box" alignment="CENTER_RIGHT">
                <children>
-                  <VBox alignment="TOP_RIGHT">
+                  <HBox alignment="TOP_RIGHT">
                      <children>
-                        <Label fx:id="player3Lbl" text="Player #3">
-                           <font>
-                              <Font name="Arial" size="18.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets right="15.0" />
-                           </VBox.margin>
-                        </Label>
-                        <Label fx:id="pl3ScoreLbl" text="Score: ">
-                           <font>
-                              <Font name="System Bold Italic" size="16.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets right="15.0" />
-                           </VBox.margin>
-                        </Label>
+                        <ImageView fx:id="p3ChairImg" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                           <image>
+                              <Image url="@graphics/misc/firstplayertoken.png" />
+                           </image></ImageView>
+                        <VBox alignment="TOP_RIGHT">
+                           <children>
+                              <Label fx:id="player3Lbl" text="Player #3">
+                                 <font>
+                                    <Font name="Arial" size="18.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets right="15.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label fx:id="pl3ScoreLbl" text="Score: ">
+                                 <font>
+                                    <Font name="System Bold Italic" size="16.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets right="15.0" />
+                                 </VBox.margin>
+                              </Label>
+                           </children>
+                        </VBox>
                      </children>
-                  </VBox>
+                  </HBox>
                   <StackPane>
                      <children>
                         <HBox alignment="TOP_RIGHT">
@@ -713,26 +775,38 @@
             </VBox>
             <VBox fx:id="player4Box" alignment="CENTER_RIGHT">
                <children>
-                  <VBox alignment="TOP_RIGHT">
+                  <HBox alignment="TOP_RIGHT">
                      <children>
-                        <Label fx:id="player4Lbl" text="Player #4">
-                           <font>
-                              <Font name="Arial" size="18.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets right="15.0" />
-                           </VBox.margin>
-                        </Label>
-                        <Label fx:id="pl4ScoreLbl" text="Score: ">
-                           <font>
-                              <Font name="System Bold Italic" size="16.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets right="15.0" />
-                           </VBox.margin>
-                        </Label>
+                        <ImageView fx:id="p4ChairImg" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@graphics/misc/firstplayertoken.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <VBox alignment="TOP_RIGHT">
+                           <children>
+                              <Label fx:id="player4Lbl" text="Player #4">
+                                 <font>
+                                    <Font name="Arial" size="18.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets right="15.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label fx:id="pl4ScoreLbl" text="Score: ">
+                                 <font>
+                                    <Font name="System Bold Italic" size="16.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets right="15.0" />
+                                 </VBox.margin>
+                              </Label>
+                           </children>
+                        </VBox>
                      </children>
-                  </VBox>
+                  </HBox>
                   <StackPane>
                      <children>
                         <HBox alignment="TOP_RIGHT">

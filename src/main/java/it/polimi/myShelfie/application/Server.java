@@ -1,18 +1,19 @@
 package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.myShelfie.controller.RMI.RMIController;
-import it.polimi.myShelfie.controller.ping.ServerPingThread;
-import it.polimi.myShelfie.controller.ClientHandler;
-import it.polimi.myShelfie.controller.Lobby;
-import it.polimi.myShelfie.controller.ping.ServerRmiPingThread;
-import it.polimi.myShelfie.controller.ping.ServerTcpPingThread;
+import it.polimi.myShelfie.network.RMI.RMIController;
+import it.polimi.myShelfie.network.ping.ServerPingThread;
+import it.polimi.myShelfie.network.ClientHandler;
+import it.polimi.myShelfie.network.Lobby;
+import it.polimi.myShelfie.network.ping.ServerRmiPingThread;
+import it.polimi.myShelfie.network.ping.ServerTcpPingThread;
 import it.polimi.myShelfie.utilities.Settings;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.pojo.Action;
 import it.polimi.myShelfie.utilities.pojo.Usergame;
 import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
@@ -39,6 +40,12 @@ public class Server extends UnicastRemoteObject implements Runnable{
     private Server() throws RemoteException {
         connectedClients = new HashMap<>();
         lobbyList = new ArrayList<>();
+        try {
+            Files.createDirectories(Paths.get(System.getProperty("user.dir") + "/config/savedgames/"));
+        }catch (IOException e){
+            System.err.println("Server side socket exception thrown: failed to create directory");
+            e.printStackTrace();
+        }
         //load ports from json
         List<Integer> ports = JsonParser.getPortsConfig("/config/ports.json");
         if(ports!=null){

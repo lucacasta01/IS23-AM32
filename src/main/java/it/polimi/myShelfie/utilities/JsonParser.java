@@ -19,7 +19,7 @@ public class JsonParser {
      * @throws IOException
      */
     public static List<Position> getNullConfig(String jPath) throws IOException {
-        try (InputStream inputStream = new FileInputStream(System.getProperty("user.dir")+jPath)) {
+        try (InputStream inputStream = JsonParser.class.getResourceAsStream(jPath)) {
             String jsonString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             Type type = new TypeToken<ArrayList<Position>>() {}.getType();
             return new Gson().fromJson(jsonString, type);
@@ -27,7 +27,7 @@ public class JsonParser {
     }
 
     public static List<ColorPosition> getPersonalGoalConfig(String jPath){
-        try (InputStream inputStream = new FileInputStream(System.getProperty("user.dir")+jPath)){
+        try (InputStream inputStream = JsonParser.class.getResourceAsStream(jPath)){
             String jsonString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             Type type = new TypeToken<ArrayList<ColorPosition>>() {}.getType();
             return new Gson().fromJson(jsonString, type);
@@ -46,9 +46,8 @@ public class JsonParser {
             portList.add(ports.getPorts().get(1));
             return portList;
         }catch (Exception e){
-            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     public static GameParameters getGameParameters(String jPath) throws IOException{
