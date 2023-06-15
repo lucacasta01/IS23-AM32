@@ -37,6 +37,4 @@ game [MyShelfie](https://www.craniocreations.it/prodotto/my-shelfie)
 
 ## Implementation description
 
-Following is the rationale behind the central parts of our architecture. what you'll read here is to be considered an introduction to the architecture, we think that a
-brief explanation of our thought process can be helpful for understanding the code you can find in this repository.
 

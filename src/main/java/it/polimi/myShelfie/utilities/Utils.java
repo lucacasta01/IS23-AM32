@@ -1,6 +1,6 @@
 package it.polimi.myShelfie.utilities;
 import it.polimi.myShelfie.application.Server;
-import it.polimi.myShelfie.utilities.pojo.View;
+import it.polimi.myShelfie.view.View;
 import java.util.Random;
 public class Utils {
     public static String UIDGenerator(){

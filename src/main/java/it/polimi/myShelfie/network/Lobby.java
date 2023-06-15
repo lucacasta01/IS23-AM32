@@ -4,11 +4,10 @@ import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.controller.GameController;
 import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
-import it.polimi.myShelfie.network.ClientHandler;
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.pojo.Action;
 import it.polimi.myShelfie.utilities.pojo.ChatMessage;
-import it.polimi.myShelfie.utilities.pojo.View;
+import it.polimi.myShelfie.view.View;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

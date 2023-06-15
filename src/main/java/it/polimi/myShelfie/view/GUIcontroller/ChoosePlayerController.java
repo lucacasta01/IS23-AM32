@@ -1,4 +1,4 @@
-package it.polimi.myShelfie.controller.GUIcontroller;
+package it.polimi.myShelfie.view.GUIcontroller;
 
 import it.polimi.myShelfie.application.Client;
 import it.polimi.myShelfie.application.GUIClient;

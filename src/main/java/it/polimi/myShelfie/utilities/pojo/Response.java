@@ -1,4 +1,7 @@
 package it.polimi.myShelfie.utilities.pojo;
+
+import it.polimi.myShelfie.view.View;
+
 public class Response {
     private final ChatMessage chatMessage;
     private View view;

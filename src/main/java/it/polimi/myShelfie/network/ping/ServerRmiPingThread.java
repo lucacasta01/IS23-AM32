@@ -1,7 +1,8 @@
 package it.polimi.myShelfie.network.ping;
-import it.polimi.myShelfie.network.ClientHandler;
 import it.polimi.myShelfie.network.Lobby;
+import it.polimi.myShelfie.network.ClientHandler;
 import it.polimi.myShelfie.utilities.Settings;
+
 import java.rmi.RemoteException;
 import java.util.concurrent.atomic.AtomicBoolean;
 

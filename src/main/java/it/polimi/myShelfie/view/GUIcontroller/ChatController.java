@@ -1,8 +1,8 @@
-package it.polimi.myShelfie.controller.GUIcontroller;
+package it.polimi.myShelfie.view.GUIcontroller;
 
 import it.polimi.myShelfie.application.Client;
 import it.polimi.myShelfie.utilities.pojo.ChatMessage;
-import it.polimi.myShelfie.utilities.pojo.View;
+import it.polimi.myShelfie.view.View;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;

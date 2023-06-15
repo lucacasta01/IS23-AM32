@@ -1,6 +1,6 @@
 package it.polimi.myShelfie.network.RMI;
 import it.polimi.myShelfie.utilities.pojo.ChatMessage;
-import it.polimi.myShelfie.utilities.pojo.View;
+import it.polimi.myShelfie.view.View;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 public interface RMIClient extends Remote{

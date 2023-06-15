@@ -1,4 +1,4 @@
-package it.polimi.myShelfie.controller.GUIcontroller.banners;
+package it.polimi.myShelfie.view.GUIcontroller.banners;
 
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.pojo.GUIRank;

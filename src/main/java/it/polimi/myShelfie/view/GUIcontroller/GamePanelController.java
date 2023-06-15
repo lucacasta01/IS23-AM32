@@ -1,10 +1,10 @@
-package it.polimi.myShelfie.controller.GUIcontroller;
+package it.polimi.myShelfie.view.GUIcontroller;
 
 import com.jfoenix.controls.JFXDrawer;
 import it.polimi.myShelfie.application.Client;
 import it.polimi.myShelfie.application.GUIClient;
 import it.polimi.myShelfie.utilities.Settings;
-import it.polimi.myShelfie.utilities.pojo.View;
+import it.polimi.myShelfie.view.View;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,7 +22,6 @@ import org.apache.commons.io.FileUtils;
 
 import java.awt.Desktop;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 

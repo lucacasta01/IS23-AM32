@@ -1,10 +1,9 @@
 package it.polimi.myShelfie.application;
 
-import it.polimi.myShelfie.controller.GUIcontroller.LoginController;
-import it.polimi.myShelfie.controller.GUIcontroller.ChatController;
-import it.polimi.myShelfie.controller.GUIcontroller.banners.ErrorBannerController;
-import it.polimi.myShelfie.controller.GUIcontroller.banners.RankController;
-import it.polimi.myShelfie.controller.GUIcontroller.banners.ServerOfflineController;
+import it.polimi.myShelfie.view.GUIcontroller.ChatController;
+import it.polimi.myShelfie.view.GUIcontroller.banners.ErrorBannerController;
+import it.polimi.myShelfie.view.GUIcontroller.banners.RankController;
+import it.polimi.myShelfie.view.GUIcontroller.banners.ServerOfflineController;
 import it.polimi.myShelfie.utilities.pojo.ChatMessage;
 import javafx.application.Application;
 import javafx.application.Platform;

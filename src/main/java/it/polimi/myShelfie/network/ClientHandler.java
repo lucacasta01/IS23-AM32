@@ -6,7 +6,7 @@ import it.polimi.myShelfie.utilities.*;
 import it.polimi.myShelfie.utilities.pojo.Action;
 import it.polimi.myShelfie.utilities.pojo.ChatMessage;
 import it.polimi.myShelfie.utilities.pojo.Response;
-import it.polimi.myShelfie.utilities.pojo.View;
+import it.polimi.myShelfie.view.View;
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;

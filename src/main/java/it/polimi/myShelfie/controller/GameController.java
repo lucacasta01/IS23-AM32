@@ -1,17 +1,17 @@
 package it.polimi.myShelfie.controller;
 
+import it.polimi.myShelfie.network.Lobby;
 import it.polimi.myShelfie.model.Game;
 import it.polimi.myShelfie.model.Player;
 import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.model.cards.PersonalGoalCard;
 import it.polimi.myShelfie.model.cards.SharedGoalCard;
 import it.polimi.myShelfie.network.ClientHandler;
-import it.polimi.myShelfie.network.Lobby;
 import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.Settings;
 import it.polimi.myShelfie.utilities.pojo.Action;
-import it.polimi.myShelfie.utilities.pojo.View;
+import it.polimi.myShelfie.view.View;
 
 import java.util.ArrayList;
 import java.util.Arrays;

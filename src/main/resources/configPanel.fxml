@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="backgroundConfigPanel" prefHeight="410.0" prefWidth="200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myShelfie.controller.GUIcontroller.ConfigPanelController">
+<VBox fx:id="backgroundConfigPanel" prefHeight="410.0" prefWidth="200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.myShelfie.view.GUIcontroller.ConfigPanelController">
    <children>
       <HBox alignment="CENTER" prefHeight="31.0" prefWidth="180.0">
          <children>

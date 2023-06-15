@@ -9,7 +9,7 @@ import it.polimi.myShelfie.utilities.ANSI;
 import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.Settings;
 import it.polimi.myShelfie.utilities.pojo.Action;
-import it.polimi.myShelfie.utilities.pojo.View;
+import it.polimi.myShelfie.view.View;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 

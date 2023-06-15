@@ -1,4 +1,4 @@
-package it.polimi.myShelfie.utilities.pojo;
+package it.polimi.myShelfie.view;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
