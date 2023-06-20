@@ -21,7 +21,10 @@ public class GameController {
     private Game game;
     private List<Tile> collectedTiles = new ArrayList<>();
 
-
+    /**
+     * Method used to pick up tiles from the game board
+     * @param a action to execute
+     */
     public String pickTiles(Action a){
         String nickname = a.getNickname();
         if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){
@@ -45,6 +48,11 @@ public class GameController {
             return "0";
         }
     }
+
+    /**
+     * Method used to select in which column you want to insert the tiles you picked
+     * @param a action
+     */
     public String selectColumn(Action a){
         String nickname = a.getNickname();
         if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){
@@ -70,6 +78,10 @@ public class GameController {
         }
     }
 
+    /**
+     * Method used to select the order of insertion of the tiles
+     * @param a action
+     */
     public String orderTiles(Action a){
         String nickname = a.getNickname();
         if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){
@@ -154,6 +166,9 @@ public class GameController {
         this.game.setFinished(true);
     }
 
+    /**
+     * checks if the game has ended
+     */
     public boolean isGameFinished(){
         if(game!=null) {
             return this.game.isFinished();
@@ -237,6 +252,9 @@ public class GameController {
         return view;
     }
 
+    /**
+     * Performs endgame tasks to calculate points
+     */
     public void endGameChecks() {
         for(Player p:game.getPlayers()){
             p.updateScore(p.getMyGoalCard().checkPersonalGoal(p.getMyShelf()));
@@ -244,6 +262,9 @@ public class GameController {
         }
     }
 
+    /**
+     * Performs game checks at the end of a turn
+     */
     public String endTurnChecks(String nickname) {
         Player p=null;
         for(Player pl:game.getPlayers()){
