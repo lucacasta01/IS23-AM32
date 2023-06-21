@@ -72,12 +72,12 @@
                         <Image url="@graphics/commonGoalCards/1.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="SharedGoal1Stack" fitHeight="55.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" rotate="-8.0">
+                  <ImageView fx:id="sharedGoal1Stack" fitHeight="55.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" rotate="-8.0" visible="false">
                      <StackPane.margin>
                         <Insets bottom="10.0" left="85.0" />
                      </StackPane.margin>
                      <image>
-                        <Image url="@graphics/scoringTokens/scoring_2.jpg" />
+                        <Image url="@graphics/scoringTokens/2.jpg" />
                      </image>
                   </ImageView>
                </children>
@@ -92,12 +92,12 @@
                         <Image url="@graphics/commonGoalCards/9.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="SharedGoal2Stack" fitHeight="55.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" rotate="-8.0">
+                  <ImageView fx:id="sharedGoal2Stack" fitHeight="55.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true" rotate="-8.0" visible="false">
                      <StackPane.margin>
                         <Insets bottom="10.0" left="85.0" />
                      </StackPane.margin>
                      <image>
-                        <Image url="@graphics/scoringTokens/scoring_6.jpg" />
+                        <Image url="@graphics/scoringTokens/6.jpg" />
                      </image>
                   </ImageView>
                </children>

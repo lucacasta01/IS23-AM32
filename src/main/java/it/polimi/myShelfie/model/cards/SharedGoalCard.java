@@ -13,26 +13,25 @@ public class SharedGoalCard extends Card implements CheckSharedGoal{
         this.achievedBy = new ArrayList<>();
     }
 
-
-private void initializeStack(int playerNumber){
-    switch(playerNumber){
-        case 2:
-            this.pointsTokenStack.push(2);
-            this.pointsTokenStack.push(4);
-            break;
-        case 3:
-            this.pointsTokenStack.push(2);
-            this.pointsTokenStack.push(4);
-            this.pointsTokenStack.push(6);
-            break;
-        case 4:
-            this.pointsTokenStack.push(2);
-            this.pointsTokenStack.push(4);
-            this.pointsTokenStack.push(6);
-            this.pointsTokenStack.push(8);
-            break;
+    private void initializeStack(int playerNumber){
+        switch (playerNumber) {
+            case 2 -> {
+                this.pointsTokenStack.push(2);
+                this.pointsTokenStack.push(4);
+            }
+            case 3 -> {
+                this.pointsTokenStack.push(2);
+                this.pointsTokenStack.push(4);
+                this.pointsTokenStack.push(6);
+            }
+            case 4 -> {
+                this.pointsTokenStack.push(2);
+                this.pointsTokenStack.push(4);
+                this.pointsTokenStack.push(6);
+                this.pointsTokenStack.push(8);
+            }
+        }
     }
-}
     /**
      * Pop one point-token from the card stack.
      *
@@ -47,6 +46,14 @@ private void initializeStack(int playerNumber){
             return p;
         }
         return p;
+    }
+
+    /**
+     *
+     * @return the next score will be achieved
+     */
+    public int actualPointToken(){
+        return pointsTokenStack.get(pointsTokenStack.size()-1);
     }
 
     /**

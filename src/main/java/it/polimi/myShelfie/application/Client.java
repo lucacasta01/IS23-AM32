@@ -203,6 +203,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
 
 
+
     @Override
     public void run() throws RuntimeException{
         boolean close = false;

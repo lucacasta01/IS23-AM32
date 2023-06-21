@@ -159,7 +159,9 @@ public class GameController {
         return this.game.getOldGamePlayers();
     }
     public void saveGame(){
-        this.game.saveGame();
+        if(this.game!=null) {
+            this.game.saveGame();
+        }
     }
 
     public void setGameFinished() {
@@ -205,10 +207,13 @@ public class GameController {
         //GUI players, shelves and points
 
         //shared cards
+        view.setSharedCardsPointTokens(new ArrayList<>());
         for(SharedGoalCard s:game.getSharedDeck()){
             GuiSharedCard.add(s.getImgPath());
+            view.getSharedCardsPointTokens().add(s.actualPointToken());
         }
         view.setGUIsharedCards(GuiSharedCard);
+
 
         //TUI shelves
         synchronized (game.getPlayers()) {

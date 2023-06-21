@@ -39,7 +39,7 @@ public class ColorPosition {
 
     /**
      *
-     * @return <Tile.Color> tileColor
+     * @return Tile.Color tileColor
      */
     public Tile.Color getTileColor(){
         switch(color){

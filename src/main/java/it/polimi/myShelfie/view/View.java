@@ -7,6 +7,7 @@ public class View implements Serializable {
     private String board;
     private List<String> shelves;
     private List<String> sharedCards;
+    private List<Integer> sharedCardsPointTokens;
     private String personalCard;
     private String currentPlayer;
     private List<String> players;
@@ -17,6 +18,7 @@ public class View implements Serializable {
     private List<String> GUIsharedCards;
     private String GUIpersonalCard;
     private String ANSIcolor;
+
     public View() {
         this.shelves = new ArrayList<>();
         this.sharedCards = new ArrayList<>();
@@ -131,5 +133,13 @@ public class View implements Serializable {
 
     public String getANSIcolor() {
         return ANSIcolor;
+    }
+
+    public List<Integer> getSharedCardsPointTokens() {
+        return sharedCardsPointTokens;
+    }
+
+    public void setSharedCardsPointTokens(List<Integer> sharedCardsPointTokens) {
+        this.sharedCardsPointTokens = sharedCardsPointTokens;
     }
 }

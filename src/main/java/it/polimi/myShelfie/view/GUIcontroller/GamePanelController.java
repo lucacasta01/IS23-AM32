@@ -9,6 +9,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -20,12 +21,14 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import org.apache.commons.io.FileUtils;
 
+import javax.print.attribute.standard.JobKOctets;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 
-public class GamePanelController{
+public class GamePanelController implements Initializable {
     @FXML
     GridPane boardGrid, myShelfGrid, otherShelfGrid1, otherShelfGrid2, otherShelfGrid3;
     @FXML
@@ -49,12 +52,13 @@ public class GamePanelController{
     @FXML
     ImageView myChairImg, p2ChairImg, p3ChairImg, p4ChairImg;
     @FXML
-    List<ImageView> chairs = List.of(myChairImg, p2ChairImg, p3ChairImg, p4ChairImg);
+    ImageView sharedGoal1Stack, sharedGoal2Stack;
     final List<ImageView> collectedTiles = new ArrayList<>();
     int column = -1;
 
 
-    public void initialize() {
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeChatPanel();
         Client.getInstance().setGamePanelController(this);
         addGridEvent();
@@ -64,7 +68,11 @@ public class GamePanelController{
             GUIClient.getInstance().getStage().close();
             System.exit(0);
         });
-        chairs.forEach(c->c.setVisible(false));
+        System.out.println("init chairs");
+        myChairImg.setVisible(false);
+        p2ChairImg.setVisible(false);
+        p3ChairImg.setVisible(false);
+        p4ChairImg.setVisible(false);
     }
 
     private void setResetEnabled(boolean value){
@@ -151,17 +159,30 @@ public class GamePanelController{
         otherPlayers.remove(curPlayerIndex);
         otherScores.remove(curPlayerIndex);
 
-        if(curNickname.equals(view.getPlayers().get(0))){
-            setChair(1);
-        }else{
-            for(int i=0; i<otherPlayers.size(); i++){
-                String s = otherPlayers.get(i);
-                if(s.equals(view.getPlayers().get(0))){
-                    setChair(i+2);
+        Platform.runLater(()->{
+            if(curNickname.equals(view.getPlayers().get(0))){
+                myChairImg.setVisible(true);
+            }else{
+                for(int i=0; i<otherPlayers.size(); i++){
+                    String s = otherPlayers.get(i);
+                    if(s.equals(view.getPlayers().get(0))) {
+                        switch (i) {
+                            case 0 -> {
+                                p2ChairImg.setVisible(true);
+                            }
+                            case 1 -> {
+                                p3ChairImg.setVisible(true);
+                            }
+                            case 2 -> {
+                                p4ChairImg.setVisible(true);
+                            }
+                        }
+                    }
                 }
             }
-        }
-        boardGrid.getChildren().forEach(item->item.setVisible(true));
+            boardGrid.getChildren().forEach(item->item.setVisible(true));
+        });
+
 
         //current player update & turn handling
         Platform.runLater(()->{
@@ -342,6 +363,10 @@ public class GamePanelController{
             sharedGoal2.setImage(new Image(Objects.requireNonNull(getClass().getResource(view.getGUIsharedCards().get(1))).toString()));
             sharedGoal1.setVisible(true);
             sharedGoal2.setVisible(true);
+            sharedGoal1Stack.setImage(new Image(Objects.requireNonNull(getClass().getResource("/graphics/scoringTokens/" + view.getSharedCardsPointTokens().get(0).toString() + ".jpg")).toString()));
+            sharedGoal2Stack.setImage(new Image(Objects.requireNonNull(getClass().getResource("/graphics/scoringTokens/" + view.getSharedCardsPointTokens().get(1).toString() + ".jpg")).toString()));
+            sharedGoal1Stack.setVisible(true);
+            sharedGoal2Stack.setVisible(true);
         });
 
         //myShelf update
@@ -362,10 +387,6 @@ public class GamePanelController{
             myShelfGrid.setVisible(true);
         });
         System.out.println("GUI VIEW UPDATED");
-    }
-
-    private void setChair(int n) {
-        chairs.get(n-1).setVisible(true);
     }
 
     private void handleTurn(View v, String nickname, Label l){

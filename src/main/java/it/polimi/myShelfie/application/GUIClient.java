@@ -138,6 +138,7 @@ public class GUIClient extends Application {
             try {
                 gameParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gamePanel.fxml")));
             } catch (IOException e) {
+                e.printStackTrace();
                 throw new RuntimeException("Game panel loading failed");
             }
 
