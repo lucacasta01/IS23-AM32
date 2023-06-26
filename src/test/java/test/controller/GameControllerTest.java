@@ -25,8 +25,13 @@ public class GameControllerTest {
         Player p1 = new Player("p1");
         Player p2 = new Player("p2");
         GameController gameController = new GameController();
+
+        assertFalse(gameController.isGameFinished());
+
         gameController.setGame(game);
         gameController.addPlayer(List.of(p1,p2));
+
+        assertFalse(gameController.isGameFinished());
 
         Position pos1 = new Position(4,1);
         Position pos2 = new Position(5,1);
