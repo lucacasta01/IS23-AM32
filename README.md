@@ -48,8 +48,8 @@ Firstly, the Model represents the game's data and logic.
 In MyShelfie, it manages the inventory of virtual shelves, items, and their properties. 
 The Model updates and stores information while ensuring consistency and integrity throughout the game. By encapsulating the game's data and operations, the Model simplifies the overall development and maintenance process.
 
-In our implementation everything revolves around the `Game` class which holds all the information about the current state of the game. This class also provides all the necessary methods to easily update its state.
-At any point a `Game` object may be read by a controller and reconstruct the entire player view.
+In our implementation, everything revolves around the `Game` class which holds all the information about the current state of the game. This class also provides all the necessary methods to easily update its state.
+At any point, a `Game` object may be read by a controller and reconstruct the entire player view.
 
 ### View 
 
@@ -63,18 +63,18 @@ Lastly, the Controller acts as an intermediary between the Model and the View. I
 In MyShelfie, the Controller manages interactions with the UI, such as adding or removing items from shelves or initiating any gameplay event. 
 By separating the logic from the UI, the Controller ensures maintainability and flexibility.
 
-Any modification to the game state (apart from initialization) is applied via `Action` objects, each action has a type that identifies the effect said action will have on the game model (some examples of types used are CHAT, PRIVATEMESSAGE, PICKTILES etc.).
+Any modification to the game state (apart from initialization) is applied via `Action` objects, each action has a type that identifies the effect said action will have on the game model (some examples of types used are CHAT, PRIVATEMESSAGE, PICKTILES, etc.).
 
 ### Network
 
 We decided to implement both TCP and RMI communication, allowing the user to choose which protocol they want to use before joining a game.
-Each protocol has its own `InputHandler` class, this approach makes adding another communication protocol extremely easy since it would only take and extra InputHandler class and some adjustments to the server to make it work.
+Each protocol has its own `InputHandler` class, this approach makes adding another communication protocol extremely easy since it would only take an extra InputHandler class and some adjustments to the server to make it work.
 Each connected client has an associated ping thread that ensures that the client and server are connected at all times during the game. Whenever a client loses connection to the server the game is immediately stopped and its current state is saved on the server.
 
 ### Advanced features
 
 * `Multiple games`: The server can host multiple games at once.
-* `Chat room`: Player have the possibility to send private messages to another player as well as broadcast messages during the game.
-* `Game persistence`: Whenever a game is stopped by any reason other than its "natural" ending, the game state is saved on the server. Whenever one of those players connects to the server, they can decide to continue playing that game instead of creating a new one.
+* `Chat room`: Players have the possibility to send private messages to another player as well as broadcast messages during the game.
+* `Game persistence`: Whenever a game is stopped for any reason other than its "natural" ending, the game state is saved on the server. Whenever one of those players connects to the server, they can decide to continue playing that game instead of creating a new one.
 
 
