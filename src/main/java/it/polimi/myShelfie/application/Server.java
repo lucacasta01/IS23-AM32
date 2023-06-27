@@ -25,10 +25,10 @@ import java.util.concurrent.Executors;
 
 public class Server extends UnicastRemoteObject implements Runnable{
 
-    boolean done = false;
+    public boolean done = false;
     private static Server instance;
     private ServerSocket serverSocket;
-    private ExecutorService pool;
+    private ExecutorService clientPool;
     private ExecutorService lobbyPool;
     private ExecutorService pingPool;
     private final Map<ClientHandler, ServerPingThread> connectedClients;
@@ -135,7 +135,7 @@ public class Server extends UnicastRemoteObject implements Runnable{
     public void addRmiClientHandler(ClientHandler ch){
         synchronized (this.connectedClients) {
             this.connectedClients.put(ch, new ServerRmiPingThread(ch));
-            pool.execute(ch);
+            clientPool.execute(ch);
             pingPool.execute(connectedClients.get(ch));
         }
     }
@@ -157,7 +157,7 @@ public class Server extends UnicastRemoteObject implements Runnable{
     @Override
     public void run(){
         System.out.println("Server started");
-        pool = Executors.newCachedThreadPool();
+        clientPool = Executors.newCachedThreadPool();
         lobbyPool = Executors.newCachedThreadPool();
         pingPool = Executors.newCachedThreadPool();
 
@@ -266,7 +266,7 @@ public class Server extends UnicastRemoteObject implements Runnable{
      * @param ch
      */
     public void executeClientHandler(ClientHandler ch){
-        pool.execute(ch);
+        clientPool.execute(ch);
         if(Settings.pingOn) {
             pingPool.execute(connectedClients.get(ch));
         }

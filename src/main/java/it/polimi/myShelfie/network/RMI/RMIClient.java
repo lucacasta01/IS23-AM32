@@ -16,22 +16,13 @@ public interface RMIClient extends Remote{
      void notifyGameJoined()throws RemoteException;
      void ping() throws RemoteException;
      void notifyGameStarted() throws RemoteException;
-
-    void denyLoadGame() throws RemoteException;
-
+     void denyLoadGame() throws RemoteException;
      void acceptLoadGame() throws RemoteException;
-
-    void notifyNewJoin() throws RemoteException;
-
-    void returnToMenu() throws RemoteException;
-
-    void foundOldGame() throws RemoteException;
-
-    void oldGameNotFound() throws  RemoteException;
-
-    void denyRandomGame() throws RemoteException;
-
-    void acceptCollect() throws RemoteException;
-
-    void notifyGameEnded(String rank) throws RemoteException;
+     void notifyNewJoin() throws RemoteException;
+     void returnToMenu() throws RemoteException;
+     void foundOldGame() throws RemoteException;
+     void oldGameNotFound() throws  RemoteException;
+     void denyRandomGame() throws RemoteException;
+     void acceptCollect() throws RemoteException;
+     void notifyGameEnded(String rank) throws RemoteException;
 }

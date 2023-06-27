@@ -42,7 +42,6 @@ public class GameController {
                 }
                 return builder.toString();
             }
-
         }else{
             //not your turn
             return "0";
@@ -145,7 +144,6 @@ public class GameController {
     public boolean checkLastTurn(){
         return game.isLastTurn();
     }
-
     public List<Player> getGamePlayers(){
         return this.game.getPlayers();
     }

@@ -5,7 +5,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 public class MyShelfieClient {
-    private static String message;
+    private static String interfaceType;
     /**
      * The main process for our game
      * @param args
@@ -16,21 +16,21 @@ public class MyShelfieClient {
         System.out.println("Select your interface [TUI/GUI]");
         inReader =  new BufferedReader(new InputStreamReader(System.in));
         try{
-            message = inReader.readLine();
+            interfaceType = inReader.readLine();
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        while (!message.equalsIgnoreCase("TUI")&&!message.equalsIgnoreCase("GUI")){
+        while (!interfaceType.equalsIgnoreCase("TUI")&&!interfaceType.equalsIgnoreCase("GUI")){
             System.out.println("Type the right key...");
             try{
 
-                message = inReader.readLine();
+                interfaceType = inReader.readLine();
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
-        if(message.equalsIgnoreCase("TUI")){
+        if(interfaceType.equalsIgnoreCase("TUI")){
             try {
                 Client.main(args);
             }catch (Exception e){
