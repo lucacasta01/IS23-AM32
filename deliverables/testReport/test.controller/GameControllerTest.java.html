@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameControllerTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jacoco.exec</a> &gt; <a href="index.source.html" class="el_package">test.controller</a> &gt; <span class="el_source">GameControllerTest.java</span></div><h1>GameControllerTest.java</h1><pre class="source lang-java linenums">package test.controller;
+import static org.junit.jupiter.api.Assertions.*;
+
+import it.polimi.myShelfie.network.ClientHandler;
+import it.polimi.myShelfie.network.Lobby;
+import it.polimi.myShelfie.controller.GameController;
+import it.polimi.myShelfie.model.*;
+import it.polimi.myShelfie.utilities.ANSI;
+import it.polimi.myShelfie.utilities.Position;
+import it.polimi.myShelfie.utilities.Settings;
+import it.polimi.myShelfie.utilities.pojo.Action;
+import it.polimi.myShelfie.view.View;
+import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="fc" id="L20">public class GameControllerTest {</span>
+    @Test
+    @DisplayName(&quot;pick tiles test&quot;)
+    public void pickTilesTest(){
+<span class="fc" id="L24">        Game game = new Game(&quot;fakeUID&quot;,2);</span>
+<span class="fc" id="L25">        Player p1 = new Player(&quot;p1&quot;);</span>
+<span class="fc" id="L26">        Player p2 = new Player(&quot;p2&quot;);</span>
+<span class="fc" id="L27">        GameController gameController = new GameController();</span>
+
+<span class="fc" id="L29">        assertFalse(gameController.isGameFinished());</span>
+
+<span class="fc" id="L31">        gameController.setGame(game);</span>
+<span class="fc" id="L32">        gameController.addPlayer(List.of(p1,p2));</span>
+
+<span class="fc" id="L34">        assertFalse(gameController.isGameFinished());</span>
+
+<span class="fc" id="L36">        Position pos1 = new Position(4,1);</span>
+<span class="fc" id="L37">        Position pos2 = new Position(5,1);</span>
+
+<span class="fc" id="L39">        Action pickAction1 = new Action(</span>
+                Action.ActionType.PICKTILES,
+<span class="fc" id="L41">                p1.getUsername(),</span>
+                null,
+                null,
+<span class="fc" id="L44">                List.of(pos1,pos2),</span>
+                null
+                );
+<span class="fc" id="L47">        Action pickAction2 = new Action(</span>
+                Action.ActionType.PICKTILES,
+<span class="fc" id="L49">                p2.getUsername(),</span>
+                null,
+                null,
+<span class="fc" id="L52">                List.of(pos1,pos2),</span>
+                null
+        );
+
+<span class="fc" id="L56">        String t1 = game.getGameBoard().getGrid()[pos1.getRow()][pos1.getColumn()].toString();</span>
+<span class="fc" id="L57">        String t2 = game.getGameBoard().getGrid()[pos2.getRow()][pos2.getColumn()].toString();</span>
+
+<span class="fc" id="L59">        String pickedTiles2 = gameController.pickTiles(pickAction2); //p1 turn =&gt; &quot;0&quot; expected</span>
+<span class="fc" id="L60">        String pickedTiles1 = gameController.pickTiles(pickAction1);</span>
+
+<span class="fc" id="L62">        assertEquals(&quot;0&quot;, pickedTiles2);</span>
+<span class="pc bpc" id="L63" title="2 of 4 branches missed.">        assertTrue(pickedTiles1.contains(t1) &amp;&amp; pickedTiles1.contains(t2));</span>
+<span class="fc" id="L64">    }</span>
+    @Test
+    @DisplayName(&quot;select column&quot;)
+    public void selectColumnTest(){
+<span class="fc" id="L68">        Game game = new Game(&quot;fakeUID&quot;,2);</span>
+<span class="fc" id="L69">        Player p1 = new Player(&quot;p1&quot;);</span>
+<span class="fc" id="L70">        Player p2 = new Player(&quot;p2&quot;);</span>
+<span class="fc" id="L71">        GameController gameController = new GameController();</span>
+<span class="fc" id="L72">        gameController.setGame(game);</span>
+<span class="fc" id="L73">        gameController.addPlayer(List.of(p1,p2));</span>
+
+        //populating p1 shelf manually
+        //first column is full, second column has 2 free spots, other column are empty
+<span class="fc" id="L77">        Tile[][] matrix = new Tile[Settings.SHELFROW][Settings.SHELFCOLUMN];</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        for(int j=0;j&lt; Settings.SHELFCOLUMN;j++){</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">            for(int i=Settings.SHELFROW-1;i&gt;=0;i--){</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">                if(j==0){</span>
+<span class="fc" id="L81">                    matrix[i][j] = new Tile(&quot;&quot;, Tile.Color.BLUE);</span>
+                }
+<span class="fc bfc" id="L83" title="All 4 branches covered.">                else if(j==1 &amp;&amp; i&gt;2){</span>
+<span class="fc" id="L84">                    matrix[i][j] = new Tile(&quot;&quot;, Tile.Color.LIGHTBLUE);</span>
+                }
+                else{
+<span class="fc" id="L87">                    matrix[i][j] = new Tile(&quot;&quot;, Tile.Color.NULLTILE);</span>
+                }
+            }
+        }
+<span class="fc" id="L91">        p1.setMyShelf(new Shelf(matrix));</span>
+<span class="fc" id="L92">        String colorInserted = game.getGameBoard().getGrid()[4][1].toString();</span>
+<span class="fc" id="L93">        gameController.getCollectedTiles().add(game.getGameBoard().getGrid()[4][1]);</span>
+
+        //a1: p1 tries to insert 1 tile in col 1 -&gt; expected &quot;1&quot;
+<span class="fc" id="L96">        Action a1 = new Action(Action.ActionType.SELECTCOLUMN,p1.getUsername(),null,null,null,0);</span>
+
+        //a2: p2 tries to insert 1 tile in col 2 -&gt; expected &quot;0&quot; (not his turn)
+<span class="fc" id="L99">        Action a2 = new Action(Action.ActionType.SELECTCOLUMN,p2.getUsername(),null,null,null,1);</span>
+
+        //a3: p1 tries to insert 1 tile in col 2 -&gt; expected &quot;Tiles inserted correctly&quot; and tile effectively in column 2
+<span class="fc" id="L102">        Action a3 = new Action(Action.ActionType.SELECTCOLUMN,p1.getUsername(),null,null,null,1);</span>
+
+
+<span class="fc" id="L105">        assertEquals(&quot;1&quot;, gameController.selectColumn(a1));</span>
+<span class="fc" id="L106">        assertEquals(&quot;0&quot;, gameController.selectColumn(a2));</span>
+<span class="fc" id="L107">        assertEquals(&quot;Tiles inserted correctly&quot;, gameController.selectColumn(a3));</span>
+<span class="fc" id="L108">        assertEquals(colorInserted,p1.getMyShelf().getTileMartrix()[2][1].toString());</span>
+<span class="fc" id="L109">        assertNotEquals(&quot;-&quot;, p1.getMyShelf().getTileMartrix()[2][1].toString());</span>
+<span class="fc" id="L110">    }</span>
+    @Test
+    @DisplayName(&quot;order tiles&quot;)
+    public void orderTilesTest(){
+<span class="fc" id="L114">        Game game = new Game(&quot;fakeUID&quot;,2);</span>
+<span class="fc" id="L115">        Player p1 = new Player(&quot;p1&quot;);</span>
+<span class="fc" id="L116">        Player p2 = new Player(&quot;p2&quot;);</span>
+<span class="fc" id="L117">        GameController gameController = new GameController();</span>
+<span class="fc" id="L118">        gameController.setGame(game);</span>
+<span class="fc" id="L119">        gameController.addPlayer(List.of(p1,p2));</span>
+
+        //collectedTiles.size() == 0
+<span class="fc" id="L122">        assertEquals(&quot;1&quot;, gameController.orderTiles(new Action(</span>
+                Action.ActionType.ORDER,
+<span class="fc" id="L124">                p1.getUsername(),</span>
+                null,
+                &quot;L B&quot;,
+                null,
+                null))
+        );
+
+<span class="fc" id="L131">        String[] collectedTiles = gameController.pickTiles(new Action(</span>
+                Action.ActionType.PICKTILES,
+<span class="fc" id="L133">                p1.getUsername(),</span>
+                null,
+                null,
+<span class="fc" id="L136">                List.of(new Position(4,1),new Position(5,1)),</span>
+                null)
+<span class="fc" id="L138">        ).substring(&quot;picked tiles: &quot;.length()).split(&quot; &quot;);</span>
+
+        //not p2 turn
+<span class="fc" id="L141">        assertEquals(&quot;0&quot;, gameController.orderTiles(new Action(</span>
+                Action.ActionType.ORDER,
+<span class="fc" id="L143">                p2.getUsername(),</span>
+                null,
+                collectedTiles[1]+&quot; &quot;+collectedTiles[0],
+                null,
+                null))
+        );
+
+<span class="fc" id="L150">        String[] newOrder = gameController.orderTiles(new Action(</span>
+                Action.ActionType.ORDER,
+<span class="fc" id="L152">                p1.getUsername(),</span>
+                null,
+                collectedTiles[1]+&quot; &quot;+collectedTiles[0],
+                null,
+                null)
+<span class="fc" id="L157">        ).substring(&quot;Order changed successfully: &quot;.length()).split(&quot; &quot;);</span>
+
+<span class="pc bpc" id="L159" title="2 of 4 branches missed.">        assertTrue(collectedTiles[0].equals(newOrder[1]) &amp;&amp; collectedTiles[1].equals(newOrder[0]));</span>
+
+<span class="fc" id="L161">    }</span>
+    @Test
+    @DisplayName(&quot;reorder lobby players test&quot;)
+    public void reorderLobbyPlayersTest(){
+<span class="fc" id="L165">        Game game = new Game(&quot;fakeUid&quot;, 3);</span>
+<span class="fc" id="L166">        game.initializeoldGamePlayers();</span>
+<span class="fc" id="L167">        List&lt;Player&gt; oldGamePlayers = game.getOldGamePlayers();</span>
+<span class="fc" id="L168">        oldGamePlayers.add(new Player(&quot;1&quot;));</span>
+<span class="fc" id="L169">        oldGamePlayers.add(new Player(&quot;2&quot;));</span>
+<span class="fc" id="L170">        oldGamePlayers.add(new Player(&quot;3&quot;));</span>
+<span class="fc" id="L171">        List&lt;ClientHandler&gt; lobbyPlayers = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L172">        ClientHandler ch1 = new ClientHandler(new Socket());</span>
+<span class="fc" id="L173">        ch1.setNickname(&quot;3&quot;);</span>
+<span class="fc" id="L174">        lobbyPlayers.add(ch1);</span>
+<span class="fc" id="L175">        ClientHandler ch2 = new ClientHandler(new Socket());</span>
+<span class="fc" id="L176">        ch2.setNickname(&quot;1&quot;);</span>
+<span class="fc" id="L177">        lobbyPlayers.add(ch2);</span>
+<span class="fc" id="L178">        ClientHandler ch3 = new ClientHandler(new Socket());</span>
+<span class="fc" id="L179">        ch3.setNickname(&quot;2&quot;);</span>
+<span class="fc" id="L180">        lobbyPlayers.add(ch3);</span>
+<span class="fc" id="L181">        GameController gameController = new GameController();</span>
+<span class="fc" id="L182">        gameController.setGame(game);</span>
+<span class="fc" id="L183">        ClientHandler[] orderedList = gameController.reorderLobbyPlayers(lobbyPlayers);</span>
+<span class="fc" id="L184">        assertEquals(&quot;1&quot;, orderedList[0].getNickname());</span>
+<span class="fc" id="L185">        assertEquals(&quot;2&quot;, orderedList[1].getNickname());</span>
+<span class="fc" id="L186">        assertEquals(&quot;3&quot;, orderedList[2].getNickname());</span>
+
+<span class="fc" id="L188">    }</span>
+    @Test
+    @DisplayName(&quot;generate view test&quot;)
+    public void generateViewTest(){
+<span class="fc" id="L192">        Game game = new Game(&quot;fakeUID&quot;,2);</span>
+<span class="fc" id="L193">        Player p1 = new Player(&quot;p1&quot;);</span>
+<span class="fc" id="L194">        Player p2 = new Player(&quot;p2&quot;);</span>
+<span class="fc" id="L195">        GameController gameController = new GameController();</span>
+<span class="fc" id="L196">        gameController.setGame(game);</span>
+<span class="fc" id="L197">        gameController.addPlayer(List.of(p1,p2));</span>
+
+<span class="fc" id="L199">        ClientHandler chp1 = new ClientHandler();</span>
+<span class="fc" id="L200">        chp1.setNickname(p1.getUsername());</span>
+<span class="fc" id="L201">        chp1.setColor(ANSI.BLUE);</span>
+
+<span class="fc" id="L203">        ClientHandler chp2 = new ClientHandler();</span>
+<span class="fc" id="L204">        chp2.setNickname(p2.getUsername());</span>
+<span class="fc" id="L205">        chp2.setColor(ANSI.PURPLE);</span>
+
+<span class="fc" id="L207">        Lobby lobby = new Lobby(chp1,&quot;fakeUID&quot;,2);</span>
+<span class="fc" id="L208">        lobby.getLobbyPlayers().add(chp2);</span>
+<span class="fc" id="L209">        View viewp1 = gameController.generateView(chp1,lobby);</span>
+<span class="fc" id="L210">        View viewp2 = gameController.generateView(chp2,lobby);</span>
+
+        //board
+<span class="fc" id="L213">        assertEquals(game.getGameBoard().toString(), viewp1.getBoard());</span>
+
+        //shelves and score
+<span class="fc" id="L216">        assertEquals(chp1.getColor()+p1.getUsername()+ANSI.RESET_COLOR+&quot;: &quot;+p1.getScore()+&quot; points\n&quot;+p1.getMyShelf().toString(),viewp1.getShelves().get(0));</span>
+<span class="fc" id="L217">        assertEquals(chp2.getColor()+p2.getUsername()+ANSI.RESET_COLOR+&quot;: &quot;+p2.getScore()+&quot; points\n&quot;+p2.getMyShelf().toString(),viewp2.getShelves().get(1));</span>
+
+        //shared cards
+<span class="fc bfc" id="L220" title="All 2 branches covered.">        for(int i=0;i&lt;game.getSharedDeck().size();i++){</span>
+<span class="fc" id="L221">            assertEquals(game.getSharedDeck().get(i).toString(),viewp1.getSharedCards().get(i));</span>
+<span class="fc" id="L222">            assertEquals(game.getSharedDeck().get(i).toString(),viewp2.getSharedCards().get(i));</span>
+        }
+
+        //personal cards
+<span class="fc" id="L226">        assertEquals(p1.getMyGoalCard().toString(),viewp1.getPersonalCard());</span>
+<span class="fc" id="L227">        assertEquals(p2.getMyGoalCard().toString(),viewp2.getPersonalCard());</span>
+
+        //current player
+<span class="fc" id="L230">        assertEquals(game.getPlayers().get(game.getCurrentPlayer()).getUsername(),viewp1.getCurrentPlayer());</span>
+<span class="fc" id="L231">        assertEquals(game.getPlayers().get(game.getCurrentPlayer()).getUsername(),viewp2.getCurrentPlayer());</span>
+
+        //players
+<span class="fc bfc" id="L234" title="All 2 branches covered.">        for(int i=0;i&lt;game.getPlayers().size();i++){</span>
+<span class="fc" id="L235">            assertEquals(game.getPlayers().get(i).getUsername(),viewp1.getPlayers().get(i));</span>
+<span class="fc" id="L236">            assertEquals(game.getPlayers().get(i).getUsername(),viewp2.getPlayers().get(i));</span>
+        }
+
+        //GUI shelves
+<span class="fc" id="L240">        int k=0;</span>
+<span class="fc bfc" id="L241" title="All 2 branches covered.">        for(int i=0;i&lt;Settings.SHELFROW;i++){</span>
+<span class="fc bfc" id="L242" title="All 2 branches covered.">            for(int j=0;j&lt;Settings.SHELFCOLUMN;j++){</span>
+<span class="fc" id="L243">                assertEquals(p1.getMyShelf().getTileMartrix()[i][j].getImagePath(),viewp1.getCurPlayerGUIShelf().get(k));</span>
+<span class="fc" id="L244">                assertEquals(p2.getMyShelf().getTileMartrix()[i][j].getImagePath(),viewp1.getOthersGUIShelves().get(0).get(k));</span>
+<span class="fc" id="L245">                k++;</span>
+            }
+        }
+
+        //GUI scores
+<span class="fc" id="L250">        assertEquals(p1.getScore(),viewp1.getGUIScoring().get(0));</span>
+<span class="fc" id="L251">        assertEquals(p2.getScore(),viewp1.getGUIScoring().get(1));</span>
+
+        //GUI board
+<span class="fc" id="L254">        k=0;</span>
+<span class="fc bfc" id="L255" title="All 2 branches covered.">        for(int i=0;i&lt;Settings.BOARD_DIM;i++){</span>
+<span class="fc bfc" id="L256" title="All 2 branches covered.">            for(int j=0;j&lt;Settings.BOARD_DIM;j++){</span>
+<span class="fc" id="L257">                assertEquals(game.getGameBoard().getGrid()[i][j].getImagePath(),viewp1.getGUIboard().get(k));</span>
+<span class="fc" id="L258">                k++;</span>
+            }
+        }
+
+        //GUI shared cards
+<span class="fc" id="L263">        assertEquals(game.getSharedDeck().get(0).getImgPath(),viewp1.getGUIsharedCards().get(0));</span>
+<span class="fc" id="L264">        assertEquals(game.getSharedDeck().get(1).getImgPath(),viewp1.getGUIsharedCards().get(1));</span>
+
+        //GUI personal cards
+<span class="fc" id="L267">        assertEquals(p1.getMyGoalCard().getImgPath(),viewp1.getGUIpersonalCard());</span>
+<span class="fc" id="L268">        assertEquals(p2.getMyGoalCard().getImgPath(),viewp2.getGUIpersonalCard());</span>
+
+        //ansi colors
+<span class="fc" id="L271">        assertEquals(chp1.getColor(),viewp1.getANSIcolor());</span>
+<span class="fc" id="L272">        assertEquals(chp2.getColor(),viewp2.getANSIcolor());</span>
+
+
+<span class="fc" id="L275">    }</span>
+    @Test
+    @DisplayName(&quot;end game checks test&quot;)
+    public void endGameChecksTest(){
+<span class="fc" id="L279">        Game game = new Game(&quot;FakeUid&quot;, 2);</span>
+<span class="fc" id="L280">        GameController gameController = new GameController();</span>
+<span class="fc" id="L281">        gameController.setGame(game);</span>
+<span class="fc" id="L282">        Player p1 = new Player(&quot;p1&quot;);</span>
+<span class="fc" id="L283">        Player p2 = new Player(&quot;p2&quot;);</span>
+<span class="fc" id="L284">        p1.setGoalCard(game.drawPersonalGoal());</span>
+<span class="fc" id="L285">        p2.setGoalCard(game.drawPersonalGoal());</span>
+<span class="fc" id="L286">        assertEquals(0, p1.getScore());</span>
+<span class="fc" id="L287">        assertEquals(0, p2.getScore());</span>
+<span class="fc" id="L288">        List&lt;Player&gt; players = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L289">        players.add(p1);</span>
+<span class="fc" id="L290">        players.add(p2);</span>
+<span class="fc" id="L291">        gameController.setGamePlayers(players);</span>
+<span class="fc" id="L292">        gameController.endGameChecks();</span>
+<span class="fc" id="L293">        assertEquals(0, p1.getScore());</span>
+<span class="fc" id="L294">        assertEquals(0, p2.getScore());</span>
+
+<span class="fc" id="L296">    }</span>
+    @Test
+    @DisplayName(&quot;end turn checks test&quot;)
+    public void endTurnChecksTest(){
+<span class="fc" id="L300">        Game game = new Game(&quot;FakeUid&quot;, 2);</span>
+<span class="fc" id="L301">        GameController gameController = new GameController();</span>
+<span class="fc" id="L302">        gameController.setGame(game);</span>
+<span class="fc" id="L303">        Player p1 = new Player(&quot;p1&quot;);</span>
+<span class="fc" id="L304">        Player p2 = new Player(&quot;p2&quot;);</span>
+<span class="fc" id="L305">        assertEquals(0, p1.getScore());</span>
+<span class="fc" id="L306">        assertEquals(0, p2.getScore());</span>
+<span class="fc" id="L307">        List&lt;Player&gt; players = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L308">        players.add(p1);</span>
+<span class="fc" id="L309">        players.add(p2);</span>
+<span class="fc" id="L310">        p1.setGoalCard(game.drawPersonalGoal());</span>
+<span class="fc" id="L311">        p2.setGoalCard(game.drawPersonalGoal());</span>
+<span class="fc" id="L312">        gameController.setGamePlayers(players);</span>
+<span class="fc" id="L313">        gameController.endTurnChecks(p1.getUsername());</span>
+<span class="fc" id="L314">        assertEquals(0, p1.getScore());</span>
+<span class="fc" id="L315">        assertEquals(0, p2.getScore());</span>
+<span class="fc" id="L316">        gameController.handleTurn();</span>
+<span class="fc" id="L317">        gameController.endTurnChecks(p2.getUsername());</span>
+<span class="fc" id="L318">        assertEquals(0, p1.getScore());</span>
+<span class="fc" id="L319">        assertEquals(0, p2.getScore());</span>
+
+<span class="fc" id="L321">    }</span>
+    @Test
+    @DisplayName(&quot;handle turn test&quot;)
+    public void handleTurnTest(){
+<span class="fc" id="L325">        Game game = new Game(&quot;FakeUid&quot;, 2);</span>
+<span class="fc" id="L326">        GameController gameController = new GameController();</span>
+<span class="fc" id="L327">        gameController.setGame(game);</span>
+<span class="fc" id="L328">        Player p1 = new Player(&quot;p1&quot;);</span>
+<span class="fc" id="L329">        Player p2 = new Player(&quot;p2&quot;);</span>
+<span class="fc" id="L330">        List&lt;Player&gt; players = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L331">        players.add(p1);</span>
+<span class="fc" id="L332">        players.add(p2);</span>
+<span class="fc" id="L333">        gameController.setGamePlayers(players);</span>
+<span class="fc" id="L334">        assertEquals(&quot;p1&quot;, gameController.getGamePlayers().get(game.getCurrentPlayer()).getUsername());</span>
+<span class="fc" id="L335">        game.handleTurn();</span>
+<span class="fc" id="L336">        assertEquals(&quot;p2&quot;, gameController.getGamePlayers().get(game.getCurrentPlayer()).getUsername());</span>
+<span class="fc" id="L337">        game.handleTurn();</span>
+<span class="fc" id="L338">        assertEquals(&quot;p1&quot;, gameController.getGamePlayers().get(game.getCurrentPlayer()).getUsername());</span>
+
+<span class="fc" id="L340">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

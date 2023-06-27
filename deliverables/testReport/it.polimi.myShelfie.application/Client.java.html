@@ -1,0 +1,970 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Client.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jacoco.exec</a> &gt; <a href="index.source.html" class="el_package">it.polimi.myShelfie.application</a> &gt; <span class="el_source">Client.java</span></div><h1>Client.java</h1><pre class="source lang-java linenums">package it.polimi.myShelfie.application;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import it.polimi.myShelfie.view.GUIcontroller.ChatController;
+import it.polimi.myShelfie.view.GUIcontroller.GamePanelController;
+import it.polimi.myShelfie.view.GUIcontroller.LoginController;
+import it.polimi.myShelfie.view.GUIcontroller.banners.WaitPlayersController;
+import it.polimi.myShelfie.network.RMI.RMIClient;
+import it.polimi.myShelfie.network.RMI.RMIServer;
+import it.polimi.myShelfie.network.inputHandlers.RMIInputHandler;
+import it.polimi.myShelfie.network.inputHandlers.TCPInputHandler;
+import it.polimi.myShelfie.utilities.*;
+import it.polimi.myShelfie.utilities.pojo.Action;
+import it.polimi.myShelfie.utilities.pojo.Response;
+import it.polimi.myShelfie.view.View;
+import it.polimi.myShelfie.utilities.pojo.ChatMessage;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import java.io.PrintWriter;
+import java.net.ConnectException;
+import java.net.Socket;
+import java.io.*;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+
+public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
+    private static Client instance;
+    private BufferedReader in;
+    private PrintWriter out;
+    private Socket client;
+<span class="nc" id="L42">    private String nickname = &quot;/&quot;;</span>
+    private boolean done;
+    private View view;
+    private String connectionProtocol;
+<span class="nc" id="L46">    private final List&lt;PingObject&gt; pongResponses = new ArrayList&lt;&gt;();</span>
+    private final RMIInputHandler RMIinputHandler;
+    private final TCPInputHandler TCPinputHandler;
+    private LoginController loginController;
+<span class="nc" id="L50">    private WaitPlayersController waitPlayersController = null;</span>
+    private ChatController chatController;
+    public String waitPlayerStatus;
+<span class="nc" id="L53">    private String serverIP = Settings.SERVER_IP;</span>
+<span class="nc" id="L54">    private int TCPPort = Settings.TCPPORT;</span>
+<span class="nc" id="L55">    private int RMIPort = Settings.RMIPORT;</span>
+    //rmi server reference
+    private RMIServer rmiServer;
+    private boolean isGUI;
+<span class="nc" id="L59">    private boolean notConnected = false;</span>
+<span class="nc" id="L60">    private GamePanelController gamePanelController = null;</span>
+
+
+<span class="nc" id="L63">    private Client() throws RemoteException {</span>
+<span class="nc" id="L64">        RMIinputHandler  = new RMIInputHandler(this);</span>
+<span class="nc" id="L65">        TCPinputHandler =  new TCPInputHandler(this);</span>
+<span class="nc" id="L66">        isGUI = false;</span>
+<span class="nc" id="L67">    }</span>
+
+    /**
+     * getInstance method for singleton pattern
+     * Creates a new client if instance is null
+     * @return client instance
+     */
+
+    public static synchronized Client getInstance() {
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if(instance == null){</span>
+            try {
+<span class="nc" id="L78">                System.out.println(&quot;created new client&quot;);</span>
+<span class="nc" id="L79">                instance = new Client();</span>
+<span class="nc" id="L80">            }catch(RemoteException e){</span>
+<span class="nc" id="L81">                e.printStackTrace();</span>
+                //todo
+<span class="nc" id="L83">            }</span>
+        }
+<span class="nc" id="L85">        return instance;</span>
+    }
+
+    /**
+     *
+     * @return gui login panel controller
+     */
+    public LoginController getLoginController() {
+<span class="nc" id="L93">        return loginController;</span>
+    }
+
+    /**
+     * set game panel gui controller
+     * @param gamePanelController
+     */
+    public synchronized void setGamePanelController(GamePanelController gamePanelController) {
+<span class="nc" id="L101">        this.gamePanelController = gamePanelController;</span>
+<span class="nc" id="L102">        this.notifyAll();</span>
+<span class="nc" id="L103">    }</span>
+
+    /**
+     *
+     * @return gui chat panel controller
+     */
+    public ChatController getChatController() {
+<span class="nc" id="L110">        return chatController;</span>
+    }
+
+    /**
+     * Sets the chat panel gui controller
+     * @param chatController
+     */
+    public void setChatController(ChatController chatController) {
+<span class="nc" id="L118">        this.chatController = chatController;</span>
+<span class="nc" id="L119">    }</span>
+
+    /**
+     * sets the gui wait for players panel controller
+     * @param waitPlayersController
+     */
+    public void setWaitPlayersController(WaitPlayersController waitPlayersController) {
+<span class="nc" id="L126">        this.waitPlayersController = waitPlayersController;</span>
+<span class="nc" id="L127">    }</span>
+
+    /**
+     * sets gui login panel controller
+     * @param loginController
+     */
+    public void setGuiLoginController(LoginController loginController) {
+<span class="nc" id="L134">        this.loginController = loginController;</span>
+<span class="nc" id="L135">    }</span>
+
+    /**
+     *
+     * @return the server's ip address
+     */
+    public String getServerIP() {
+<span class="nc" id="L142">        return serverIP;</span>
+    }
+
+    /**
+     *
+     * @return true if the client is a gui client, false if it's a tui one
+     */
+<span class="nc" id="L149">    public boolean isGUI(){return isGUI;}</span>
+
+    /**
+     *
+     * @return TCP server port
+     */
+    public int getTCPPort() {
+<span class="nc" id="L156">        return TCPPort;</span>
+    }
+    /**
+     *
+     * @return RMI server port
+     */
+    public int getRMIPort() {
+<span class="nc" id="L163">        return RMIPort;</span>
+    }
+
+    /**
+     * sets the server ip
+     * @param serverIP
+     */
+    public void setServerIP(String serverIP) {
+<span class="nc" id="L171">        this.serverIP = serverIP;</span>
+<span class="nc" id="L172">    }</span>
+
+    /**
+     * sets TCP port
+     * @param TCPPort
+     */
+    public void setTCPPort(int TCPPort) {
+<span class="nc" id="L179">        this.TCPPort = TCPPort;</span>
+<span class="nc" id="L180">    }</span>
+
+    /**
+     * sets RMI port
+     * @param RMIPort
+     */
+    public void setRMIPort(int RMIPort) {
+<span class="nc" id="L187">        this.RMIPort = RMIPort;</span>
+<span class="nc" id="L188">    }</span>
+
+    /**
+     * sets the GUI boolean attribute in the client and in it's inputHandler
+     * @param GUI
+     */
+    public void setGUI(boolean GUI) {
+<span class="nc" id="L195">        isGUI = GUI;</span>
+<span class="nc bnc" id="L196" title="All 2 branches missed.">        if(TCPinputHandler!=null){</span>
+<span class="nc" id="L197">            TCPinputHandler.setGUI(GUI);</span>
+        }
+<span class="nc bnc" id="L199" title="All 2 branches missed.">        if(RMIinputHandler!=null){</span>
+<span class="nc" id="L200">            RMIinputHandler.setGUI(GUI);</span>
+        }
+<span class="nc" id="L202">    }</span>
+
+
+
+
+    @Override
+    public void run() throws RuntimeException{
+<span class="nc" id="L209">        boolean close = false;</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">        if (!isGUI) {</span>
+<span class="nc" id="L211">            connectionProtocol = protocolHandler();</span>
+        }
+
+<span class="nc bnc" id="L214" title="All 3 branches missed.">        switch (connectionProtocol) {</span>
+            case &quot;TCP&quot; -&gt; {
+                try {
+                    try {
+<span class="nc" id="L218">                        client = new Socket(serverIP, TCPPort);</span>
+<span class="nc" id="L219">                    } catch (ConnectException connectException) {</span>
+<span class="nc" id="L220">                        System.out.println(&quot;Server not found&quot;);</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">                        if (in != null) {</span>
+                            try {
+<span class="nc" id="L223">                                in.close();</span>
+<span class="nc" id="L224">                            } catch (IOException ex) {</span>
+<span class="nc" id="L225">                                throw new RuntimeException(ex);</span>
+<span class="nc" id="L226">                            }</span>
+                        }
+<span class="nc bnc" id="L228" title="All 2 branches missed.">                        if (out != null) {</span>
+<span class="nc" id="L229">                            out.close();</span>
+                        }
+<span class="nc bnc" id="L231" title="All 2 branches missed.">                        if (isGUI) {</span>
+<span class="nc" id="L232">                            loginController.serverOffline();</span>
+<span class="nc" id="L233">                            loginController = null;</span>
+                        }
+<span class="nc" id="L235">                        close = true;</span>
+<span class="nc" id="L236">                        notConnected = true;</span>
+<span class="nc" id="L237">                    }</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">                    if (!close) {</span>
+<span class="nc" id="L239">                        in = new BufferedReader(new InputStreamReader(client.getInputStream()));</span>
+<span class="nc" id="L240">                        out = new PrintWriter(client.getOutputStream(), true);</span>
+
+
+<span class="nc" id="L243">                        TCPinputHandler.start();</span>
+
+                        //PiNG THREAD
+                        if (Settings.pingOn) {
+<span class="nc" id="L247">                            pingThread().start();</span>
+                        }
+
+
+<span class="nc" id="L251">                        new Thread(() -&gt; {</span>
+                            String inMessage;
+                            try {
+<span class="nc bnc" id="L254" title="All 2 branches missed.">                                while ((inMessage = in.readLine()) != null) {</span>
+<span class="nc" id="L255">                                    Response response = receiveResponse(inMessage);</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">                                    if (response.getResponseType() == Response.ResponseType.INFO) {</span>
+<span class="nc" id="L257">                                        System.out.println(response.getInfoMessage());</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.CHATMESSAGE) {</span>
+<span class="nc" id="L259">                                        String sender = ANSI.BOLD + response.getChatMessage().getSenderColor() + response.getChatMessage().getSender() + ANSI.RESET_COLOR + ANSI.RESET_STYLE;</span>
+<span class="nc" id="L260">                                        System.out.println(&quot;&gt;&quot; + sender + &quot;: &quot; + response.getChatMessage().getMessage());</span>
+<span class="nc bnc" id="L261" title="All 2 branches missed.">                                        if (isGUI) {</span>
+<span class="nc" id="L262">                                            gamePanelController.chatNotification();</span>
+<span class="nc" id="L263">                                            chatController.addMessage(response.getChatMessage());</span>
+                                        }
+<span class="nc bnc" id="L265" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.VALID) {</span>
+<span class="nc" id="L266">                                        System.out.println(ANSI.GREEN + response.getInfoMessage() + ANSI.RESET_COLOR);</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.NICKNAME_ACCEPTED) {</span>
+<span class="nc" id="L268">                                        nickname = response.getChatMessage().getSender();</span>
+<span class="nc bnc" id="L269" title="All 2 branches missed.">                                        if (isGUI) {</span>
+<span class="nc" id="L270">                                            loginController.loginAccepted();</span>
+                                        }
+<span class="nc bnc" id="L272" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.DENIED) {</span>
+<span class="nc" id="L273">                                        System.out.println(response.getInfoMessage());</span>
+
+<span class="nc bnc" id="L275" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.NICKNAME_DENIED) {</span>
+<span class="nc bnc" id="L276" title="All 2 branches missed.">                                        if (isGUI) {</span>
+<span class="nc" id="L277">                                            loginController.nicknameDenied(response.getInfoMessage());</span>
+                                        }
+<span class="nc bnc" id="L279" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.GAME_STARTED) {</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">                                        if (isGUI) {</span>
+<span class="nc" id="L281">                                            GUIClient.getInstance().switchToGame();</span>
+                                        }
+<span class="nc bnc" id="L283" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.GAME_ENDED) {</span>
+<span class="nc bnc" id="L284" title="All 2 branches missed.">                                        if (isGUI) {</span>
+<span class="nc" id="L285">                                            GUIClient.getInstance().showRank(response.getInfoMessage());</span>
+                                        } else {
+<span class="nc" id="L287">                                            System.out.println(&quot;\n(1) New Game&quot;);</span>
+<span class="nc" id="L288">                                            System.out.println(&quot;(2) Load last game&quot;);</span>
+<span class="nc" id="L289">                                            System.out.println(&quot;(3) Join random game&quot;);</span>
+<span class="nc" id="L290">                                            System.out.println(&quot;(4) Search for started saved game&quot;);</span>
+<span class="nc" id="L291">                                            System.out.println(&quot;(0) Exit\n&quot;);</span>
+                                        }
+<span class="nc bnc" id="L293" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.UPDATE) {</span>
+<span class="nc" id="L294">                                        view = response.getView();</span>
+<span class="nc bnc" id="L295" title="All 2 branches missed.">                                        if (isGUI) {</span>
+<span class="nc bnc" id="L296" title="All 2 branches missed.">                                            while (gamePanelController == null) {</span>
+<span class="nc" id="L297">                                                synchronized (this) {</span>
+<span class="nc" id="L298">                                                    wait();</span>
+<span class="nc" id="L299">                                                }</span>
+                                            }
+<span class="nc" id="L301">                                            gamePanelController.updateView();</span>
+                                        }
+
+<span class="nc" id="L304">                                        Utils.printTUIView(view);</span>
+<span class="nc bnc" id="L305" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.PONG) {</span>
+<span class="nc" id="L306">                                        synchronized (pongResponses) {</span>
+<span class="nc" id="L307">                                            pongResponses.add(new PingObject(false));</span>
+<span class="nc" id="L308">                                            pongResponses.notifyAll();</span>
+<span class="nc" id="L309">                                        }</span>
+
+<span class="nc bnc" id="L311" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.PING) {</span>
+<span class="nc" id="L312">                                        sendAction(new Action(Action.ActionType.PONG, nickname, null, null, null, null));</span>
+
+<span class="nc bnc" id="L314" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.SHUTDOWN) {</span>
+<span class="nc" id="L315">                                        System.out.println(response.getInfoMessage());</span>
+<span class="nc" id="L316">                                        shutdown();</span>
+<span class="nc bnc" id="L317" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.LOBBY_CREATED) {</span>
+<span class="nc" id="L318">                                        synchronized (this) {</span>
+<span class="nc" id="L319">                                            waitPlayerStatus = &quot;(1/&quot; + response.getInfoMessage() + &quot;)&quot;;</span>
+<span class="nc" id="L320">                                        }</span>
+<span class="nc bnc" id="L321" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.LOBBY_JOINED) {</span>
+<span class="nc" id="L322">                                        System.out.println(&quot;Lobby joined&quot;);</span>
+<span class="nc" id="L323">                                        setWaitPlayerStatus(response.getInfoMessage());</span>
+<span class="nc" id="L324">                                        System.out.println(&quot;Waiting for players...&quot; + getWaitPlayerStatus());</span>
+<span class="nc bnc" id="L325" title="All 2 branches missed.">                                        if (isGUI) {</span>
+<span class="nc" id="L326">                                            GUIClient.getInstance().switchToWaitingScene();</span>
+                                        }
+<span class="nc bnc" id="L328" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.SOMEONE_JOINED_LOBBY) {</span>
+<span class="nc bnc" id="L329" title="All 2 branches missed.">                                        if (isGUI) {</span>
+<span class="nc" id="L330">                                            waitPlayerStatus = response.getInfoMessage();</span>
+<span class="nc" id="L331">                                            waitPlayersController.updateLabel(&quot;Waiting for players...&quot; + waitPlayerStatus);</span>
+                                        }
+<span class="nc bnc" id="L333" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.DENY_LOAD_GAME) {</span>
+<span class="nc bnc" id="L334" title="All 2 branches missed.">                                        if (isGUI) {</span>
+<span class="nc" id="L335">                                            GUIClient.getInstance().showDenyDialog(&quot;NO OLD GAME FOUND&quot;);</span>
+                                        }
+<span class="nc bnc" id="L337" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.RANDOM_GAME_NOT_FOUND) {</span>
+<span class="nc" id="L338">                                        GUIClient.getInstance().showDenyDialog(&quot;No game available\nYou should create a new one&quot;.toUpperCase());</span>
+<span class="nc bnc" id="L339" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.ACCEPT_LOAD_GAME) {</span>
+<span class="nc bnc" id="L340" title="All 2 branches missed.">                                        if (isGUI) {</span>
+<span class="nc" id="L341">                                            GUIClient.getInstance().switchToWaitingScene();</span>
+                                        }
+<span class="nc bnc" id="L343" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.ACCEPT_COLLECT) {</span>
+<span class="nc bnc" id="L344" title="All 2 branches missed.">                                        if (isGUI) {</span>
+<span class="nc" id="L345">                                            gamePanelController.insertInColumn();</span>
+                                        }
+<span class="nc bnc" id="L347" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.RETURN_TO_MENU) {</span>
+<span class="nc bnc" id="L348" title="All 2 branches missed.">                                        if (isGUI) {</span>
+<span class="nc" id="L349">                                            GUIClient.getInstance().switchToMenu();</span>
+<span class="nc" id="L350">                                            gamePanelController = null;</span>
+                                        } else {
+<span class="nc" id="L352">                                            System.out.println(&quot;\n(1) New Game&quot;);</span>
+<span class="nc" id="L353">                                            System.out.println(&quot;(2) Load last game&quot;);</span>
+<span class="nc" id="L354">                                            System.out.println(&quot;(3) Join random game&quot;);</span>
+<span class="nc" id="L355">                                            System.out.println(&quot;(4) Search for started saved game&quot;);</span>
+<span class="nc" id="L356">                                            System.out.println(&quot;(0) Exit\n&quot;);</span>
+                                        }
+<span class="nc bnc" id="L358" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.FOUND_OLD_GAME) {</span>
+<span class="nc bnc" id="L359" title="All 2 branches missed.">                                        if (isGUI) {</span>
+<span class="nc" id="L360">                                            GUIClient.getInstance().showOldGameChoice();</span>
+                                        }
+<span class="nc bnc" id="L362" title="All 2 branches missed.">                                    } else if (response.getResponseType() == Response.ResponseType.OLD_GAME_NOT_FOUND) {</span>
+<span class="nc bnc" id="L363" title="All 2 branches missed.">                                        if (isGUI) {</span>
+<span class="nc" id="L364">                                            GUIClient.getInstance().showDenyDialog(&quot;NO STARTED OLD GAME FOUND&quot;);</span>
+                                        }
+                                    }
+<span class="nc" id="L367">                                }</span>
+<span class="nc" id="L368">                            } catch (Exception e) {</span>
+                                //todo (when null or close exit)
+<span class="nc" id="L370">                            }</span>
+
+<span class="nc" id="L372">                        }).start();</span>
+                    }
+<span class="nc" id="L374">                } catch (Exception e) {</span>
+<span class="nc" id="L375">                    e.printStackTrace();</span>
+<span class="nc" id="L376">                }</span>
+<span class="nc" id="L377">            }</span>
+            case &quot;RMI&quot; -&gt; {
+                try {
+<span class="nc" id="L380">                    startRMIClient();</span>
+<span class="nc" id="L381">                } catch (RemoteException | NotBoundException e) {</span>
+<span class="nc" id="L382">                    System.err.println(&quot;Server not found&quot;);</span>
+<span class="nc bnc" id="L383" title="All 2 branches missed.">                    if (isGUI) {</span>
+                        try {
+<span class="nc" id="L385">                            loginController.serverOffline();</span>
+<span class="nc" id="L386">                        } catch (IOException ex) {</span>
+<span class="nc" id="L387">                            throw new RuntimeException(ex);</span>
+<span class="nc" id="L388">                        }</span>
+
+<span class="nc" id="L390">                        loginController = null;</span>
+<span class="nc" id="L391">                        close = true;</span>
+                    }
+<span class="nc" id="L393">                    notConnected = true;</span>
+<span class="nc" id="L394">                }</span>
+<span class="nc bnc" id="L395" title="All 2 branches missed.">                if (!close) {</span>
+                    //PING THREAD
+                    if (Settings.pingOn) {
+<span class="nc" id="L398">                        pingThread().start();</span>
+                    }
+
+<span class="nc" id="L401">                    RMIinputHandler.start();</span>
+                }
+            }
+<span class="nc" id="L404">            default -&gt; System.exit(11);</span>
+        }
+<span class="nc" id="L406">    }</span>
+
+    /**
+     *
+     * @return waitPlayer status
+     */
+    public synchronized String getWaitPlayerStatus() {
+<span class="nc" id="L413">        return waitPlayerStatus;</span>
+    }
+
+    /**
+     * sets the waitPlayers status
+     * @param waitPlayerStatus
+     */
+    public void setWaitPlayerStatus(String waitPlayerStatus) {
+<span class="nc" id="L421">        this.waitPlayerStatus = waitPlayerStatus;</span>
+<span class="nc" id="L422">    }</span>
+
+    /**
+     *
+     * @return RMI server interface
+     */
+    public RMIServer getRmiServer() {
+<span class="nc" id="L429">        return rmiServer;</span>
+    }
+
+    /**
+     * set the client's connection protocol
+     * @param connectionProtocol
+     */
+    public void setConnectionProtocol(String connectionProtocol) {
+<span class="nc" id="L437">        this.connectionProtocol = connectionProtocol;</span>
+<span class="nc" id="L438">    }</span>
+
+    /**
+     *
+     * @return client's done boolean
+     */
+    public boolean getDone(){
+<span class="nc" id="L445">        return this.done;</span>
+    }
+
+    /**
+     *
+     * @return client's nickname
+     */
+    public String getNickname(){
+<span class="nc" id="L453">        return this.nickname;</span>
+    }
+
+    /**
+     * bind this client to the rmi server if online
+     * @throws RemoteException
+     * @throws NotBoundException
+     */
+    private void startRMIClient() throws RemoteException, NotBoundException {
+<span class="nc" id="L462">        Registry registry = LocateRegistry.getRegistry(serverIP,RMIPort);</span>
+<span class="nc" id="L463">        this.rmiServer = (RMIServer)registry.lookup(Settings.RMINAME);</span>
+<span class="nc" id="L464">        rmiServer.addClient(this);</span>
+<span class="nc" id="L465">    }</span>
+
+    /**
+     * CLoses this client's process
+     */
+    public void shutdown() {
+<span class="nc" id="L471">        done = true;</span>
+<span class="nc" id="L472">        System.exit(0);</span>
+<span class="nc" id="L473">    }</span>
+
+    /**
+     * Ping thread method, used by the client to ping the server
+     * @return a new ping thread
+     */
+    public Thread pingThread() {
+
+<span class="nc" id="L481">        return new Thread(() -&gt; {</span>
+<span class="nc bnc" id="L482" title="All 3 branches missed.">            switch (connectionProtocol) {</span>
+                case &quot;TCP&quot; -&gt; {
+<span class="nc" id="L484">                    int failedPings = 0;</span>
+<span class="nc" id="L485">                    int count = 1;</span>
+                    while (true) {
+                        try {
+<span class="nc" id="L488">                            sendAction(new Action(Action.ActionType.PING, nickname, null, Integer.toString(count), null, null));</span>
+<span class="nc" id="L489">                        } catch (IOException e) {</span>
+<span class="nc" id="L490">                            System.exit(10);</span>
+<span class="nc" id="L491">                        }</span>
+
+<span class="nc" id="L493">                        SwapElapsed swapElapsed = new SwapElapsed();</span>
+<span class="nc" id="L494">                        swapElapsed.start();</span>
+
+
+<span class="nc bnc" id="L497" title="All 2 branches missed.">                        while (pongResponses.size() == 0) {</span>
+<span class="nc" id="L498">                            synchronized (pongResponses) {</span>
+                                try {
+<span class="nc" id="L500">                                    pongResponses.wait();</span>
+<span class="nc" id="L501">                                } catch (InterruptedException e) {</span>
+<span class="nc" id="L502">                                    throw new RuntimeException(e);</span>
+<span class="nc" id="L503">                                }</span>
+<span class="nc" id="L504">                            }</span>
+                        }
+
+
+<span class="nc bnc" id="L508" title="All 2 branches missed.">                        if (pongResponses.get(0).isElapsed()) {</span>
+<span class="nc" id="L509">                            failedPings++;</span>
+<span class="nc" id="L510">                            System.out.println(&quot;Ping #&quot; + count + &quot; elapsed&quot;);</span>
+<span class="nc bnc" id="L511" title="All 2 branches missed.">                            if (failedPings &gt; 2) {</span>
+<span class="nc" id="L512">                                System.out.println(&quot;Server offline: closing...&quot;);</span>
+<span class="nc bnc" id="L513" title="All 2 branches missed.">                                if(!isGUI) {</span>
+<span class="nc" id="L514">                                    System.exit(1);</span>
+                                }else{
+<span class="nc" id="L516">                                    GUIClient.getInstance().showServerOfflineBan();</span>
+                                }
+                            }
+<span class="nc" id="L519">                            synchronized (pongResponses) {</span>
+<span class="nc" id="L520">                                pongResponses.remove(0);</span>
+<span class="nc" id="L521">                            }</span>
+                        } else {
+                            try {
+<span class="nc" id="L524">                                swapElapsed.setRunning(false);</span>
+<span class="nc" id="L525">                            } catch (Exception e) {</span>
+                                //ignore
+<span class="nc" id="L527">                            }</span>
+<span class="nc" id="L528">                            synchronized (pongResponses) {</span>
+<span class="nc" id="L529">                                pongResponses.remove(0);</span>
+<span class="nc" id="L530">                            }</span>
+                            try {
+<span class="nc" id="L532">                                Thread.sleep(Settings.PINGPERIOD);</span>
+<span class="nc" id="L533">                            } catch (InterruptedException e) {</span>
+<span class="nc" id="L534">                                throw new RuntimeException(e);</span>
+<span class="nc" id="L535">                            }</span>
+<span class="nc" id="L536">                            count++;</span>
+                        }
+<span class="nc" id="L538">                    }</span>
+                }
+                case &quot;RMI&quot; -&gt; {
+<span class="nc" id="L541">                    boolean pingFailed = false;</span>
+<span class="nc bnc" id="L542" title="All 2 branches missed.">                    while (!pingFailed) {</span>
+                        try {
+<span class="nc" id="L544">                            rmiServer.ping();</span>
+<span class="nc" id="L545">                        } catch (RemoteException e) { //ping failed</span>
+<span class="nc" id="L546">                            pingFailed = true;</span>
+<span class="nc" id="L547">                            System.err.println(&quot;Server offline: closing...&quot;);</span>
+<span class="nc bnc" id="L548" title="All 2 branches missed.">                            if(!isGUI) {</span>
+<span class="nc" id="L549">                                System.exit(1);</span>
+                            }else{
+<span class="nc" id="L551">                                GUIClient.getInstance().showServerOfflineBan();</span>
+                            }
+<span class="nc" id="L553">                        }</span>
+                        try {
+<span class="nc" id="L555">                            Thread.sleep(Settings.PINGPERIOD);</span>
+<span class="nc" id="L556">                        } catch (InterruptedException e) {</span>
+<span class="nc" id="L557">                            e.printStackTrace();</span>
+<span class="nc" id="L558">                        }</span>
+                    }
+                }
+            }
+<span class="nc" id="L562">        });</span>
+    }
+
+    public static void main(String[] args) throws RemoteException {
+<span class="nc" id="L566">        Client client = Client.getInstance();</span>
+<span class="nc" id="L567">        client.setGUI(false);</span>
+        try {
+<span class="nc" id="L569">            client.run();</span>
+<span class="nc" id="L570">        } catch (Exception e) {</span>
+<span class="nc" id="L571">            System.out.println(&quot;Closing&quot;);</span>
+<span class="nc" id="L572">            System.exit(0);</span>
+<span class="nc" id="L573">        }</span>
+<span class="nc bnc" id="L574" title="All 4 branches missed.">        if(!client.isGUI&amp;&amp; client.notConnected){</span>
+<span class="nc" id="L575">            System.exit(0);</span>
+        }
+<span class="nc" id="L577">    }</span>
+    private String protocolHandler(){
+            String message;
+<span class="nc" id="L580">            BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));</span>
+<span class="nc" id="L581">            System.out.println(&quot;TCP port: &quot;+TCPPort);</span>
+<span class="nc" id="L582">            System.out.println(&quot;RMI port: &quot;+RMIPort);</span>
+<span class="nc" id="L583">            System.out.println(&quot;Choose your protocol [TCP/RMI]&quot;);</span>
+            try {
+<span class="nc" id="L585">                message= inReader.readLine().toUpperCase();</span>
+<span class="nc" id="L586">            } catch (IOException e) {</span>
+<span class="nc" id="L587">                throw new RuntimeException(e);</span>
+<span class="nc" id="L588">            }</span>
+<span class="nc bnc" id="L589" title="All 4 branches missed.">            while(!message.equalsIgnoreCase(&quot;RMI&quot;)&amp;&amp;!message.equalsIgnoreCase(&quot;TCP&quot;)){</span>
+<span class="nc" id="L590">                System.out.println(&quot;Type the right key...&quot;);</span>
+                try {
+<span class="nc" id="L592">                    message= inReader.readLine().toUpperCase();</span>
+<span class="nc" id="L593">                } catch (IOException e) {</span>
+<span class="nc" id="L594">                    throw new RuntimeException(e);</span>
+<span class="nc" id="L595">                }</span>
+            }
+<span class="nc" id="L597">            return message;</span>
+    }
+
+    /**
+     *
+     * @param jString jString recieved from the server
+     * @return a response from the server, obtained by a json string
+     * @throws JsonSyntaxException
+     */
+    public Response receiveResponse(String jString) throws JsonSyntaxException {
+<span class="nc" id="L607">        return JsonParser.getResponse(jString);</span>
+    }
+
+    /**
+     * Send a json string that contains an action to the server
+     * @param action to send
+     * @throws IOException
+     */
+    public synchronized void sendAction(Action action) throws IOException {
+<span class="nc" id="L616">        Gson gson = new Gson();</span>
+<span class="nc bnc" id="L617" title="All 2 branches missed.">        if (out != null) {</span>
+<span class="nc" id="L618">            out.println(gson.toJson(action));</span>
+        }
+<span class="nc" id="L620">    }</span>
+
+    /**
+     * set this client's nickname
+     * @param nickname
+     */
+    public void setNickname(String nickname) {
+<span class="nc" id="L627">        this.nickname = nickname;</span>
+<span class="nc" id="L628">    }</span>
+
+
+    //RMIClient interface methods implementation
+
+    /**
+     * Server calls this method when the nickname is  accepted (login ok)
+     * @throws RemoteException
+     */
+    @Override
+    public void nicknameAccepted() throws RemoteException {
+<span class="nc bnc" id="L639" title="All 2 branches missed.">        if(isGUI){</span>
+            try {
+<span class="nc" id="L641">                loginController.loginAccepted();</span>
+<span class="nc" id="L642">            }catch(Exception e){</span>
+<span class="nc" id="L643">                e.printStackTrace();</span>
+<span class="nc" id="L644">            }</span>
+        }
+<span class="nc" id="L646">    }</span>
+
+    /**
+     * Server calls this method when the nickname is  denied (login not ok)
+     * @param message string used to describe th eerror
+     * @throws RemoteException
+     */
+    @Override
+    public void nicknameDenied(String message) throws RemoteException {
+<span class="nc bnc" id="L655" title="All 2 branches missed.">        if(isGUI){</span>
+            try {
+<span class="nc" id="L657">                loginController.nicknameDenied(message);</span>
+<span class="nc" id="L658">            }catch(Exception e){</span>
+<span class="nc" id="L659">                e.printStackTrace();</span>
+<span class="nc" id="L660">            }</span>
+        }
+        else{
+<span class="nc" id="L663">            System.err.println(message);</span>
+        }
+<span class="nc" id="L665">    }</span>
+
+    /**
+     * RMI ping method
+     * @throws RemoteException
+     */
+    @Override
+    public void ping() throws RemoteException {
+<span class="nc" id="L673">    }</span>
+
+
+    /**
+     * Notify to the client that his game is started
+     * @throws RemoteException
+     */
+    @Override
+    public void notifyGameStarted() throws RemoteException {
+<span class="nc bnc" id="L682" title="All 2 branches missed.">        if(isGUI) {</span>
+<span class="nc" id="L683">            GUIClient.getInstance().switchToGame();</span>
+        }
+<span class="nc" id="L685">    }</span>
+
+    /**
+     * Updates rmi view when a new view is sent from the server
+     * @param view
+     * @throws RemoteException
+     */
+    @Override
+    public void update(View view) throws RemoteException {
+<span class="nc" id="L694">        Client.getInstance().view=view;</span>
+<span class="nc" id="L695">        Utils.printTUIView(view);</span>
+<span class="nc bnc" id="L696" title="All 2 branches missed.">        if(isGUI){</span>
+<span class="nc" id="L697">            System.out.println(&quot;GUI view update&quot;);</span>
+<span class="nc bnc" id="L698" title="All 2 branches missed.">            while(gamePanelController == null){</span>
+<span class="nc" id="L699">                System.out.println(&quot;gamePanelController is null&quot;);</span>
+<span class="nc" id="L700">                synchronized (this){</span>
+                    try{
+<span class="nc" id="L702">                        wait();</span>
+<span class="nc" id="L703">                    }catch (Exception e){</span>
+<span class="nc" id="L704">                        e.printStackTrace();</span>
+<span class="nc" id="L705">                    }</span>
+
+<span class="nc" id="L707">                }</span>
+            }
+<span class="nc" id="L709">            System.out.println(&quot;Updating view finally...&quot;);</span>
+<span class="nc" id="L710">            gamePanelController.updateView();</span>
+        }
+<span class="nc" id="L712">    }</span>
+
+    /**
+     * Recieves a chat message from the server
+     * @param chatMessage
+     * @throws RemoteException
+     */
+    @Override
+    public void chatMessage(ChatMessage chatMessage) throws RemoteException {
+<span class="nc" id="L721">        String sender = ANSI.BOLD + chatMessage.getSenderColor() +chatMessage.getSender() + ANSI.RESET_COLOR + ANSI.RESET_STYLE;</span>
+<span class="nc" id="L722">        System.out.println(&quot;&gt;&quot; + sender + &quot;: &quot; + chatMessage.getMessage());</span>
+<span class="nc bnc" id="L723" title="All 2 branches missed.">        if(isGUI){</span>
+<span class="nc" id="L724">            Client.getInstance().getChatController().addMessage(chatMessage);</span>
+        }
+<span class="nc" id="L726">    }</span>
+
+    /**
+     * notify the client that the lobby creation went good
+     * @param lobbySize
+     * @throws RemoteException
+     */
+    @Override
+    public void notifyLobbyCreated(String lobbySize) throws RemoteException {
+<span class="nc" id="L735">        waitPlayerStatus = &quot;(1/&quot;+lobbySize+&quot;)&quot;;</span>
+<span class="nc" id="L736">        System.out.println(&quot;Lobby created&quot;);</span>
+<span class="nc" id="L737">    }</span>
+
+    /**
+     * notify the client that he joined a game
+     * @throws RemoteException
+     */
+    @Override
+    public void notifyGameJoined() throws RemoteException {
+<span class="nc bnc" id="L745" title="All 2 branches missed.">        if(isGUI) {</span>
+<span class="nc" id="L746">            GUIClient guiClient = GUIClient.getInstance();</span>
+<span class="nc" id="L747">            Stage stage = guiClient.getStage();</span>
+<span class="nc" id="L748">            Platform.runLater(new Runnable() {</span>
+                @Override
+                public void run() {
+                    Parent numberofplayer;
+                    try {
+<span class="nc" id="L753">                        numberofplayer = FXMLLoader.load(getClass().getResource(&quot;/waitPlayerBanner.fxml&quot;));</span>
+<span class="nc" id="L754">                    } catch (IOException e) {</span>
+<span class="nc" id="L755">                        throw new RuntimeException(e);</span>
+<span class="nc" id="L756">                    }</span>
+<span class="nc" id="L757">                    stage.setMinWidth(300);</span>
+<span class="nc" id="L758">                    stage.setMinHeight(150);</span>
+<span class="nc" id="L759">                    stage.setWidth(300);</span>
+<span class="nc" id="L760">                    stage.setHeight(150);</span>
+<span class="nc" id="L761">                    stage.setScene(new Scene(numberofplayer));</span>
+<span class="nc" id="L762">                }</span>
+            });
+        }
+<span class="nc" id="L765">    }</span>
+
+    /**
+     * generic valid message from the server
+     * @param message
+     * @throws RemoteException
+     */
+    @Override
+    public void valid(String message) throws RemoteException {
+<span class="nc" id="L774">        System.out.println(ANSI.GREEN+message+ANSI.RESET_COLOR);</span>
+<span class="nc" id="L775">    }</span>
+
+    /**
+     * generic denied message from the server
+     * @param message
+     * @throws RemoteException
+     */
+    @Override
+    public void denied(String message) throws RemoteException {
+<span class="nc bnc" id="L784" title="All 2 branches missed.">        if(message.startsWith(&quot;Username&quot;)){</span>
+            try {
+<span class="nc" id="L786">                loginController.nicknameDenied(message);</span>
+<span class="nc" id="L787">            }catch(Exception e){</span>
+<span class="nc" id="L788">                e.printStackTrace();</span>
+<span class="nc" id="L789">            }</span>
+        }
+<span class="nc" id="L791">        System.err.println(message);</span>
+<span class="nc" id="L792">    }</span>
+
+    /**
+     * generic info message from the server
+     * @param message
+     * @throws RemoteException
+     */
+    @Override
+    public void infoMessage(String message) throws RemoteException {
+<span class="nc" id="L801">        System.out.println(message);</span>
+<span class="nc" id="L802">    }</span>
+
+    /**
+     * Deny the attempt to load an old game
+     * @throws RemoteException
+     */
+    @Override
+    public void denyLoadGame() throws RemoteException {
+<span class="nc bnc" id="L810" title="All 2 branches missed.">        if(isGUI) {</span>
+<span class="nc" id="L811">            GUIClient.getInstance().showDenyDialog(&quot;NO OLD GAME FOUND&quot;);</span>
+        }
+<span class="nc" id="L813">    }</span>
+
+    /**
+     * accepts the attempt to load an old game
+     * @throws RemoteException
+     */
+    @Override
+    public void acceptLoadGame() throws RemoteException {
+<span class="nc bnc" id="L821" title="All 2 branches missed.">        if(isGUI) {</span>
+<span class="nc" id="L822">            GUIClient.getInstance().switchToWaitingScene();</span>
+        }
+<span class="nc" id="L824">    }</span>
+
+    /**
+     * used when the client needs to be turned off by the server
+     * @param message
+     * @throws RemoteException
+     */
+    @Override
+    public void remoteShutdown(String message) throws RemoteException {
+<span class="nc" id="L833">        System.out.println(message);</span>
+<span class="nc" id="L834">        new Thread(()-&gt;{</span>
+            try {
+<span class="nc" id="L836">                Thread.sleep(1000);</span>
+<span class="nc" id="L837">            } catch (InterruptedException e) {</span>
+<span class="nc" id="L838">                e.printStackTrace();</span>
+<span class="nc" id="L839">            }</span>
+<span class="nc" id="L840">            shutdown();</span>
+<span class="nc" id="L841">        }).start();</span>
+
+<span class="nc" id="L843">    }</span>
+
+    @Override
+    public void notifyGameEnded(String rank) throws RemoteException {
+<span class="nc bnc" id="L847" title="All 2 branches missed.">        if(isGUI){</span>
+<span class="nc" id="L848">            GUIClient.getInstance().showRank(rank);</span>
+        }
+<span class="nc" id="L850">    }</span>
+
+    /**
+     * notify this client that someone joined his lobby
+     * @throws RemoteException
+     */
+    @Override
+    public void notifyNewJoin() throws RemoteException {
+        //todo
+<span class="nc" id="L859">    }</span>
+
+    /**
+     * return to the menu page (view)
+     * @throws RemoteException
+     */
+    @Override
+    public void returnToMenu() throws RemoteException {
+<span class="nc bnc" id="L867" title="All 2 branches missed.">        if(isGUI) {</span>
+<span class="nc" id="L868">            GUIClient.getInstance().switchToMenu();</span>
+        }else{
+<span class="nc" id="L870">            System.out.println(&quot;\n(1) New Game&quot;);</span>
+<span class="nc" id="L871">            System.out.println(&quot;(2) Load last game&quot;);</span>
+<span class="nc" id="L872">            System.out.println(&quot;(3) Join random game&quot;);</span>
+<span class="nc" id="L873">            System.out.println(&quot;(4) Search for started saved game&quot;);</span>
+<span class="nc" id="L874">            System.out.println(&quot;(0) Exit\n&quot;);</span>
+        }
+<span class="nc" id="L876">    }</span>
+
+    /**
+     * notify an old game found
+     * @throws RemoteException
+     */
+    @Override
+    public void foundOldGame() throws RemoteException {
+<span class="nc bnc" id="L884" title="All 2 branches missed.">        if(isGUI) {</span>
+<span class="nc" id="L885">            GUIClient.getInstance().showOldGameChoice();</span>
+        }
+<span class="nc" id="L887">    }</span>
+
+    /**
+     * notify old game not found
+     * @throws RemoteException
+     */
+    @Override
+    public void oldGameNotFound() throws RemoteException {
+<span class="nc" id="L895">        GUIClient.getInstance().showDenyDialog(&quot;NO STARTED OLD GAME FOUND&quot;);</span>
+<span class="nc" id="L896">    }</span>
+
+    /**
+     * deny access to a random game
+     * @throws RemoteException
+     */
+    @Override
+    public void denyRandomGame() throws RemoteException {
+<span class="nc" id="L904">        GUIClient.getInstance().showDenyDialog(&quot;No game available\nYou should create a new one&quot;.toUpperCase());</span>
+<span class="nc" id="L905">    }</span>
+
+    /**
+     * accept collected tiles
+     * @throws RemoteException
+     */
+    @Override
+    public void acceptCollect() throws RemoteException {
+<span class="nc bnc" id="L913" title="All 2 branches missed.">        if(isGUI) {</span>
+<span class="nc" id="L914">            gamePanelController.insertInColumn();</span>
+        }
+<span class="nc" id="L916">    }</span>
+
+    /**
+     * adds a gui action that needs to be sent to the server
+     * @param action
+     */
+    public void addGuiAction(String action){
+<span class="nc bnc" id="L923" title="All 2 branches missed.">        if(Objects.equals(connectionProtocol, &quot;TCP&quot;)) {</span>
+<span class="nc" id="L924">            TCPinputHandler.addGuiAction(action);</span>
+        }else{
+<span class="nc" id="L926">            RMIinputHandler.addGuiAction((action));</span>
+        }
+<span class="nc" id="L928">    }</span>
+
+    /**
+     * returns this client's view (last recieved from the server
+     * @return
+     */
+    public View getView() {
+<span class="nc" id="L935">        return view;</span>
+    }
+<span class="nc" id="L937">    class SwapElapsed extends Thread {</span>
+<span class="nc" id="L938">        private boolean isRunning = true;</span>
+
+        public boolean isRunning() {
+<span class="nc" id="L941">            return isRunning;</span>
+        }
+
+        public void setRunning(boolean running) {
+<span class="nc" id="L945">            isRunning = running;</span>
+<span class="nc" id="L946">        }</span>
+
+        @Override
+        public void run() {
+<span class="nc" id="L950">            int time = 0;</span>
+<span class="nc bnc" id="L951" title="All 4 branches missed.">            while (isRunning() &amp;&amp; time &lt; Settings.PINGTHRESHOLD) {</span>
+                try {
+<span class="nc" id="L953">                    Thread.sleep(Settings.PINGTHRESHOLD/ Settings.PINGFACTOR);</span>
+<span class="nc" id="L954">                    time += Settings.PINGTHRESHOLD/ Settings.PINGFACTOR;</span>
+<span class="nc" id="L955">                } catch (InterruptedException e) {</span>
+<span class="nc" id="L956">                    throw new RuntimeException(e);</span>
+<span class="nc" id="L957">                }</span>
+            }
+<span class="nc bnc" id="L959" title="All 2 branches missed.">            if (isRunning()) {</span>
+<span class="nc" id="L960">                synchronized (pongResponses) {</span>
+<span class="nc" id="L961">                    pongResponses.add(new PingObject(true));</span>
+<span class="nc" id="L962">                    pongResponses.notifyAll();</span>
+<span class="nc" id="L963">                }</span>
+            }
+<span class="nc" id="L965">        }</span>
+    }
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

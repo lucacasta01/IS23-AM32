@@ -14,7 +14,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
-    <javafx.version>19</javafx.version>
+    <javafx.version>20.0.1</javafx.version>
     <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
   </properties>
 
@@ -40,8 +40,38 @@
       <dependency>
           <groupId>org.openjfx</groupId>
           <artifactId>javafx-controls</artifactId>
-          <version>${javafx.version}</version>
+          <version>20.0.1</version>
           <classifier>win</classifier>
+      </dependency>
+      <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-controls</artifactId>
+          <version>20.0.1</version>
+          <classifier>mac</classifier>
+      </dependency>
+      <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-controls</artifactId>
+          <version>20.0.1</version>
+          <classifier>linux</classifier>
+      </dependency>
+      <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-graphics</artifactId>
+          <version>20.0.1</version>
+          <classifier>win</classifier>
+      </dependency>
+      <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-graphics</artifactId>
+          <version>20.0.1</version>
+          <classifier>mac</classifier>
+      </dependency>
+      <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-graphics</artifactId>
+          <version>20.0.1</version>
+          <classifier>linux</classifier>
       </dependency>
       <dependency>
           <groupId>org.openjfx</groupId>
@@ -95,7 +125,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -107,8 +137,7 @@
                             <shadedClassifierName>project-classifier</shadedClassifierName>
                             <outputFile>deliveries\application\MyShelfie-Server.jar</outputFile>
                             <transformers>
-                                <transformer implementation=
-                                                     "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer implementation= "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>it.polimi.myShelfie.application.Server</mainClass>
                                 </transformer>
                             </transformers>

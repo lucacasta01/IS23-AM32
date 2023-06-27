@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Player.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jacoco.exec</a> &gt; <a href="index.source.html" class="el_package">it.polimi.myShelfie.model</a> &gt; <span class="el_source">Player.java</span></div><h1>Player.java</h1><pre class="source lang-java linenums">package it.polimi.myShelfie.model;
+import it.polimi.myShelfie.model.cards.PersonalGoalCard;
+public class Player {
+
+    // private Shelf myShelf;
+    private int score;
+    private final String username;
+    private Shelf myShelf;
+
+    private PersonalGoalCard myGoalCard;
+
+<span class="fc" id="L12">    public Player(String name) {</span>
+<span class="fc" id="L13">        username = name;</span>
+<span class="fc" id="L14">        score = 0;</span>
+<span class="fc" id="L15">        myShelf = new Shelf();</span>
+<span class="fc" id="L16">        myGoalCard = null;</span>
+<span class="fc" id="L17">    }</span>
+
+    public void setGoalCard(PersonalGoalCard goalCard){
+<span class="fc" id="L20">        myGoalCard = goalCard;</span>
+<span class="fc" id="L21">    }</span>
+
+    public void setMyShelf(Shelf myShelf){
+<span class="fc" id="L24">        this.myShelf = myShelf;</span>
+<span class="fc" id="L25">    }</span>
+
+    /**
+     * Returns the player's shelf
+     *
+     * @return player's shelf (shelf)
+     */
+    public Shelf getMyShelf() {
+<span class="fc" id="L33">        return myShelf;</span>
+    }
+
+    /**
+     * Returns the player's score
+     *
+     * @return player's score (integer)
+     */
+    public int getScore() {
+<span class="fc" id="L42">        return score;</span>
+    }
+
+    /**
+     * Sets the player's score to a given integer
+     *
+     * @param score (integer)
+     */
+    public void setScore(int score) {
+<span class="fc" id="L51">        this.score = score;</span>
+<span class="fc" id="L52">    }</span>
+
+    /**
+     * Returns the player's username
+     *
+     * @return player's username (String)
+     */
+    public String getUsername() {
+<span class="fc" id="L60">        return username;</span>
+    }
+
+    public PersonalGoalCard getMyGoalCard() {
+<span class="fc" id="L64">        return myGoalCard;</span>
+    }
+
+    /**
+     * Initializes player's shelf
+     */
+    public void initShelf(){
+<span class="fc" id="L71">        this.myShelf  = new Shelf();</span>
+<span class="fc" id="L72">    }</span>
+
+    /**
+     * updates the score adding the amount passed as a parameter
+     * @param toAdd
+     */
+    public synchronized void updateScore(int toAdd){
+<span class="fc" id="L79">        this.score += toAdd;</span>
+<span class="fc" id="L80">    }</span>
+
+    @Override
+    public String toString(){
+<span class="fc" id="L84">        return username+&quot;\n&quot;+score;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

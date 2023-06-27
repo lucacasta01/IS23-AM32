@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RankController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jacoco.exec</a> &gt; <a href="index.source.html" class="el_package">it.polimi.myShelfie.view.GUIcontroller.banners</a> &gt; <span class="el_source">RankController.java</span></div><h1>RankController.java</h1><pre class="source lang-java linenums">package it.polimi.myShelfie.view.GUIcontroller.banners;
+
+import it.polimi.myShelfie.utilities.JsonParser;
+import it.polimi.myShelfie.utilities.pojo.GUIRank;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+
+import java.util.HashMap;
+import java.util.Map;
+
+<span class="nc" id="L21">public class RankController {</span>
+
+    @FXML
+    GridPane rankGrid;
+    @FXML
+    Label pos1,pos2,pos3,pos4,nick1,nick2,nick3,nick4,score1,score2,score3,score4;
+
+    Map&lt;Integer,Label[]&gt; rankRow;
+
+    public void initialize(){
+<span class="nc" id="L31">        GridPane.setHalignment(rankGrid, HPos.CENTER);</span>
+<span class="nc" id="L32">    }</span>
+    public void setRank(String rank) {
+<span class="nc" id="L34">        GUIRank guiRank = JsonParser.getGUIRank(rank);</span>
+<span class="nc" id="L35">        rankRow = generateRankMap();</span>
+<span class="nc" id="L36">        Platform.runLater(()-&gt;{</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">            for(int i=0;i&lt;guiRank.getNicknames().size();i++){</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">                if(guiRank.getPos().get(i).equals(&quot;1&quot;)){</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">                    for(int j=0;j&lt;3;j++) {</span>
+<span class="nc" id="L40">                        rankRow.get(i)[j].setTextFill(Color.GREEN);</span>
+<span class="nc" id="L41">                        rankRow.get(i)[j].setFont(Font.font(&quot;SYSTEM&quot;, FontWeight.BOLD, FontPosture.ITALIC,16));</span>
+                    }
+                }
+<span class="nc bnc" id="L44" title="All 2 branches missed.">                for(int j=0;j&lt;3;j++) {</span>
+<span class="nc" id="L45">                    rankRow.get(i)[j].setVisible(true);</span>
+                }
+<span class="nc" id="L47">                rankRow.get(i)[0].setText(guiRank.getPos().get(i));</span>
+<span class="nc" id="L48">                rankRow.get(i)[1].setText(guiRank.getNicknames().get(i));</span>
+<span class="nc" id="L49">                rankRow.get(i)[2].setText(guiRank.getScores().get(i));</span>
+            }
+<span class="nc" id="L51">        });</span>
+<span class="nc" id="L52">    }</span>
+
+    private Map&lt;Integer,Label[]&gt; generateRankMap(){
+<span class="nc" id="L55">        Map&lt;Integer,Label[]&gt; map = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L56">        map.put(0,new Label[]{pos1,nick1,score1});</span>
+<span class="nc" id="L57">        map.put(1,new Label[]{pos2,nick2,score2});</span>
+<span class="nc" id="L58">        map.put(2,new Label[]{pos3,nick3,score3});</span>
+<span class="nc" id="L59">        map.put(3,new Label[]{pos4,nick4,score4});</span>
+<span class="nc" id="L60">        return map;</span>
+    }
+
+    public void closeStage(ActionEvent actionEvent) {
+<span class="nc" id="L64">        Node source = (Node)actionEvent.getSource();</span>
+<span class="nc" id="L65">        Stage stage = (Stage)source.getScene().getWindow();</span>
+<span class="nc" id="L66">        stage.getOnCloseRequest().handle(null);</span>
+<span class="nc" id="L67">        stage.close();</span>
+<span class="nc" id="L68">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

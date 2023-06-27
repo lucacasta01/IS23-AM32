@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Response.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jacoco.exec</a> &gt; <a href="index.source.html" class="el_package">it.polimi.myShelfie.utilities.pojo</a> &gt; <span class="el_source">Response.java</span></div><h1>Response.java</h1><pre class="source lang-java linenums">package it.polimi.myShelfie.utilities.pojo;
+
+import it.polimi.myShelfie.view.View;
+
+public class Response {
+    private final ChatMessage chatMessage;
+    private View view;
+    private final String infoMessage;
+    private final ResponseType responseType;
+
+<span class="nc" id="L11">    public Response(ResponseType responseType, ChatMessage chatMessage, View view, String infoMessage) {</span>
+<span class="nc" id="L12">        this.chatMessage = chatMessage;</span>
+<span class="nc" id="L13">        this.view = view;</span>
+<span class="nc" id="L14">        this.infoMessage = infoMessage;</span>
+<span class="nc" id="L15">        this.responseType = responseType;</span>
+<span class="nc" id="L16">    }</span>
+
+<span class="nc" id="L18">    public enum ResponseType{</span>
+
+<span class="nc" id="L20">        UPDATE,</span>
+<span class="nc" id="L21">        CHATMESSAGE,</span>
+<span class="nc" id="L22">        VALID,</span>
+<span class="nc" id="L23">        DENIED,</span>
+<span class="nc" id="L24">        INFO,</span>
+<span class="nc" id="L25">        PING,</span>
+<span class="nc" id="L26">        PONG,</span>
+<span class="nc" id="L27">        SHUTDOWN,</span>
+<span class="nc" id="L28">        LOBBY_JOINED,</span>
+<span class="nc" id="L29">        LOBBY_CREATED,</span>
+<span class="nc" id="L30">        NICKNAME_DENIED,</span>
+<span class="nc" id="L31">        NICKNAME_ACCEPTED,</span>
+<span class="nc" id="L32">        GAME_STARTED,</span>
+<span class="nc" id="L33">        DENY_LOAD_GAME,</span>
+<span class="nc" id="L34">        SOMEONE_JOINED_LOBBY,</span>
+<span class="nc" id="L35">        ACCEPT_LOAD_GAME,</span>
+<span class="nc" id="L36">        RETURN_TO_MENU,</span>
+<span class="nc" id="L37">        FOUND_OLD_GAME,</span>
+<span class="nc" id="L38">        RANDOM_GAME_NOT_FOUND, ACCEPT_COLLECT, GAME_ENDED, OLD_GAME_NOT_FOUND</span>
+    }
+
+    public ChatMessage getChatMessage() {
+<span class="nc" id="L42">        return chatMessage;</span>
+    }
+
+    public View getView() {
+<span class="nc" id="L46">        return view;</span>
+    }
+
+    public String getInfoMessage() {
+<span class="nc" id="L50">        return infoMessage;</span>
+    }
+
+    public ResponseType getResponseType() {
+<span class="nc" id="L54">        return responseType;</span>
+    }
+    public void setView(View view) {
+<span class="nc" id="L57">        this.view = view;</span>
+<span class="nc" id="L58">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

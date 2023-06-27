@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PersonalGoalCardTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jacoco.exec</a> &gt; <a href="index.source.html" class="el_package">test.model</a> &gt; <span class="el_source">PersonalGoalCardTest.java</span></div><h1>PersonalGoalCardTest.java</h1><pre class="source lang-java linenums">package test.model;
+import static org.junit.jupiter.api.Assertions.*;
+import java.util.*;
+
+import it.polimi.myShelfie.utilities.ColorPosition;
+import it.polimi.myShelfie.utilities.Position;
+
+import it.polimi.myShelfie.model.Player;
+import it.polimi.myShelfie.model.*;
+import it.polimi.myShelfie.model.Tile;
+import it.polimi.myShelfie.model.cards.PersonalGoalCard;
+import it.polimi.myShelfie.utilities.JsonParser;
+import it.polimi.myShelfie.utilities.Settings;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.Test;
+
+
+
+<span class="fc" id="L19">public class PersonalGoalCardTest {</span>
+
+<span class="fc" id="L21">    private final String fakePath = &quot;testPath&quot;;</span>
+
+    @Test
+    @DisplayName(&quot;setPattern test&quot;)
+    public void setPatternTest() {
+<span class="fc" id="L26">        PersonalGoalCard testCard = new PersonalGoalCard(fakePath);</span>
+        Tile[][] pattern;
+<span class="fc" id="L28">        List&lt;Tile.Color&gt; colors = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L29">        List&lt;Position&gt; positions = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L30">        colors.add(Tile.Color.BLUE);</span>
+<span class="fc" id="L31">        colors.add(Tile.Color.WHITE);</span>
+<span class="fc" id="L32">        positions.add(new Position(0, 0));</span>
+<span class="fc" id="L33">        positions.add(new Position(2, 2));</span>
+<span class="fc" id="L34">        testCard.setPattern(positions, colors);</span>
+<span class="fc" id="L35">        pattern = testCard.getPattern();</span>
+<span class="fc" id="L36">        assertEquals(pattern[0][0].getColor(), Tile.Color.BLUE);</span>
+<span class="fc" id="L37">        assertEquals(pattern[2][2].getColor(), Tile.Color.WHITE);</span>
+<span class="fc" id="L38">    }</span>
+
+    @Test
+    @DisplayName(&quot;checkPattern test&quot;)
+    public void checkPatternTest(){
+<span class="fc" id="L43">        PersonalGoalCard testCard = new PersonalGoalCard(fakePath);</span>
+<span class="fc" id="L44">        List&lt;Position&gt; positions = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L45">        List&lt;Tile.Color&gt; colors = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L46">        colors.add(Tile.Color.PINK);</span>
+<span class="fc" id="L47">        colors.add(Tile.Color.BLUE);</span>
+<span class="fc" id="L48">        colors.add(Tile.Color.GREEN);</span>
+<span class="fc" id="L49">        colors.add(Tile.Color.WHITE);</span>
+<span class="fc" id="L50">        colors.add(Tile.Color.YELLOW);</span>
+<span class="fc" id="L51">        colors.add(Tile.Color.LIGHTBLUE);</span>
+<span class="fc" id="L52">        positions.add(new Position(0,0));</span>
+<span class="fc" id="L53">        positions.add(new Position(0,2));</span>
+<span class="fc" id="L54">        positions.add(new Position(1,4));</span>
+<span class="fc" id="L55">        positions.add(new Position(2,3));</span>
+<span class="fc" id="L56">        positions.add(new Position(3,1));</span>
+<span class="fc" id="L57">        positions.add(new Position(5,2));</span>
+<span class="fc" id="L58">        testCard.setPattern(positions, colors);</span>
+<span class="fc" id="L59">        Player testPlayer = new Player(&quot;fakeName&quot;);</span>
+<span class="fc" id="L60">        Tile[][] matrix = new Tile[Settings.SHELFROW][Settings.SHELFCOLUMN];</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        for(int i=0; i&lt; Settings.SHELFROW; i++){</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">            for(int j=0; j&lt;Settings.SHELFCOLUMN; j++){</span>
+<span class="fc" id="L63">                matrix[i][j] = new Tile(&quot;test&quot;, Tile.Color.NULLTILE);</span>
+            }
+        }
+<span class="fc" id="L66">        matrix[0][0].setColor(Tile.Color.PINK);</span>
+<span class="fc" id="L67">        matrix[0][2].setColor(Tile.Color.BLUE);</span>
+<span class="fc" id="L68">        matrix[1][4].setColor(Tile.Color.GREEN);</span>
+<span class="fc" id="L69">        matrix[2][3].setColor(Tile.Color.WHITE);</span>
+<span class="fc" id="L70">        matrix[3][1].setColor(Tile.Color.YELLOW);</span>
+<span class="fc" id="L71">        matrix[5][2].setColor(Tile.Color.LIGHTBLUE);</span>
+<span class="fc" id="L72">        Shelf shelf = new Shelf(matrix);</span>
+<span class="fc" id="L73">        testPlayer.setMyShelf(shelf);</span>
+<span class="fc" id="L74">        assertEquals(testCard.checkPersonalGoal(testPlayer.getMyShelf()), 12);</span>
+<span class="fc" id="L75">        matrix[0][0].setColor(Tile.Color.PINK);</span>
+<span class="fc" id="L76">        matrix[0][2].setColor(Tile.Color.BLUE);</span>
+<span class="fc" id="L77">        matrix[1][4].setColor(Tile.Color.GREEN);</span>
+<span class="fc" id="L78">        matrix[2][3].setColor(Tile.Color.WHITE);</span>
+<span class="fc" id="L79">        matrix[3][1].setColor(Tile.Color.YELLOW);</span>
+<span class="fc" id="L80">        matrix[5][2].setColor(Tile.Color.GREEN);</span>
+<span class="fc" id="L81">        Shelf shelf1 = new Shelf(matrix);</span>
+<span class="fc" id="L82">        testPlayer.setMyShelf(shelf1);</span>
+<span class="fc" id="L83">        assertEquals(testCard.checkPersonalGoal(testPlayer.getMyShelf()), 9);</span>
+<span class="fc" id="L84">        matrix[0][0].setColor(Tile.Color.PINK);</span>
+<span class="fc" id="L85">        matrix[0][2].setColor(Tile.Color.BLUE);</span>
+<span class="fc" id="L86">        matrix[1][4].setColor(Tile.Color.GREEN);</span>
+<span class="fc" id="L87">        matrix[2][3].setColor(Tile.Color.WHITE);</span>
+<span class="fc" id="L88">        matrix[3][1].setColor(Tile.Color.GREEN);</span>
+<span class="fc" id="L89">        matrix[5][2].setColor(Tile.Color.GREEN);</span>
+<span class="fc" id="L90">        Shelf shelf2 = new Shelf(matrix);</span>
+<span class="fc" id="L91">        testPlayer.setMyShelf(shelf2);</span>
+<span class="fc" id="L92">        assertEquals(testCard.checkPersonalGoal(testPlayer.getMyShelf()), 6);</span>
+<span class="fc" id="L93">        matrix[0][0].setColor(Tile.Color.PINK);</span>
+<span class="fc" id="L94">        matrix[0][2].setColor(Tile.Color.BLUE);</span>
+<span class="fc" id="L95">        matrix[1][4].setColor(Tile.Color.GREEN);</span>
+<span class="fc" id="L96">        matrix[2][3].setColor(Tile.Color.GREEN);</span>
+<span class="fc" id="L97">        matrix[3][1].setColor(Tile.Color.GREEN);</span>
+<span class="fc" id="L98">        matrix[5][2].setColor(Tile.Color.GREEN);</span>
+<span class="fc" id="L99">        Shelf shelf3 = new Shelf(matrix);</span>
+<span class="fc" id="L100">        testPlayer.setMyShelf(shelf3);</span>
+<span class="fc" id="L101">        assertEquals(testCard.checkPersonalGoal(testPlayer.getMyShelf()), 4);</span>
+<span class="fc" id="L102">        matrix[0][0].setColor(Tile.Color.PINK);</span>
+<span class="fc" id="L103">        matrix[0][2].setColor(Tile.Color.BLUE);</span>
+<span class="fc" id="L104">        matrix[1][4].setColor(Tile.Color.BLUE);</span>
+<span class="fc" id="L105">        matrix[2][3].setColor(Tile.Color.GREEN);</span>
+<span class="fc" id="L106">        matrix[3][1].setColor(Tile.Color.GREEN);</span>
+<span class="fc" id="L107">        matrix[5][2].setColor(Tile.Color.GREEN);</span>
+<span class="fc" id="L108">        Shelf shelf4 = new Shelf(matrix);</span>
+<span class="fc" id="L109">        testPlayer.setMyShelf(shelf4);</span>
+<span class="fc" id="L110">        assertEquals(testCard.checkPersonalGoal(testPlayer.getMyShelf()), 2);</span>
+<span class="fc" id="L111">        matrix[0][0].setColor(Tile.Color.PINK);</span>
+<span class="fc" id="L112">        matrix[0][2].setColor(Tile.Color.YELLOW);</span>
+<span class="fc" id="L113">        matrix[1][4].setColor(Tile.Color.BLUE);</span>
+<span class="fc" id="L114">        matrix[2][3].setColor(Tile.Color.GREEN);</span>
+<span class="fc" id="L115">        matrix[3][1].setColor(Tile.Color.GREEN);</span>
+<span class="fc" id="L116">        matrix[5][2].setColor(Tile.Color.GREEN);</span>
+<span class="fc" id="L117">        Shelf shelf5 = new Shelf(matrix);</span>
+<span class="fc" id="L118">        testPlayer.setMyShelf(shelf5);</span>
+<span class="fc" id="L119">        assertEquals(testCard.checkPersonalGoal(testPlayer.getMyShelf()), 1);</span>
+<span class="fc" id="L120">    }</span>
+
+    @Test
+    @DisplayName(&quot;getIndex test&quot;)
+    public void getIndexTest(){
+<span class="fc" id="L125">        PersonalGoalCard card1 = new PersonalGoalCard(&quot;/graphics/personalGoalCards/Personal_Goals1.png&quot;);</span>
+<span class="fc" id="L126">        assertEquals(1, card1.getIndex());</span>
+
+<span class="fc" id="L128">        PersonalGoalCard card2 = new PersonalGoalCard(&quot;/graphics/personalGoalCards/Personal_Goals2.png&quot;);</span>
+<span class="fc" id="L129">        assertEquals(2, card2.getIndex());</span>
+
+<span class="fc" id="L131">        PersonalGoalCard card3 = new PersonalGoalCard(&quot;/graphics/personalGoalCards/Personal_Goals3.png&quot;);</span>
+<span class="fc" id="L132">        assertEquals(3, card3.getIndex());</span>
+
+<span class="fc" id="L134">        PersonalGoalCard card4 = new PersonalGoalCard(&quot;/graphics/personalGoalCards/Personal_Goals4.png&quot;);</span>
+<span class="fc" id="L135">        assertEquals(4, card4.getIndex());</span>
+
+<span class="fc" id="L137">        PersonalGoalCard card5 = new PersonalGoalCard(&quot;/graphics/personalGoalCards/Personal_Goals5.png&quot;);</span>
+<span class="fc" id="L138">        assertEquals(5, card5.getIndex());</span>
+
+<span class="fc" id="L140">        PersonalGoalCard card6 = new PersonalGoalCard(&quot;/graphics/personalGoalCards/Personal_Goals6.png&quot;);</span>
+<span class="fc" id="L141">        assertEquals(6, card6.getIndex());</span>
+
+<span class="fc" id="L143">        PersonalGoalCard card7 = new PersonalGoalCard(&quot;/graphics/personalGoalCards/Personal_Goals7.png&quot;);</span>
+<span class="fc" id="L144">        assertEquals(7, card7.getIndex());</span>
+
+<span class="fc" id="L146">        PersonalGoalCard card8 = new PersonalGoalCard(&quot;/graphics/personalGoalCards/Personal_Goals8.png&quot;);</span>
+<span class="fc" id="L147">        assertEquals(8, card8.getIndex());</span>
+
+<span class="fc" id="L149">        PersonalGoalCard card9 = new PersonalGoalCard(&quot;/graphics/personalGoalCards/Personal_Goals9.png&quot;);</span>
+<span class="fc" id="L150">        assertEquals(9, card9.getIndex());</span>
+
+<span class="fc" id="L152">        PersonalGoalCard card10 = new PersonalGoalCard(&quot;/graphics/personalGoalCards/Personal_Goals10.png&quot;);</span>
+<span class="fc" id="L153">        assertEquals(10, card10.getIndex());</span>
+
+<span class="fc" id="L155">        PersonalGoalCard card11 = new PersonalGoalCard(&quot;/graphics/personalGoalCards/Personal_Goals11.png&quot;);</span>
+<span class="fc" id="L156">        assertEquals(11, card11.getIndex());</span>
+
+<span class="fc" id="L158">        PersonalGoalCard card12 = new PersonalGoalCard(&quot;/graphics/personalGoalCards/Personal_Goals12.png&quot;);</span>
+<span class="fc" id="L159">        assertEquals(12, card12.getIndex());</span>
+<span class="fc" id="L160">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

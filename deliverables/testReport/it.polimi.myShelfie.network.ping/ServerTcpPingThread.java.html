@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServerTcpPingThread.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jacoco.exec</a> &gt; <a href="index.source.html" class="el_package">it.polimi.myShelfie.network.ping</a> &gt; <span class="el_source">ServerTcpPingThread.java</span></div><h1>ServerTcpPingThread.java</h1><pre class="source lang-java linenums">package it.polimi.myShelfie.network.ping;
+import it.polimi.myShelfie.network.ClientHandler;
+import it.polimi.myShelfie.utilities.Settings;
+import it.polimi.myShelfie.utilities.PingObject;
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+
+//todo seems broken
+
+public class ServerTcpPingThread extends ServerPingThread{
+
+    private final AtomicBoolean elapsed;
+
+    public ServerTcpPingThread(ClientHandler ch) {
+<span class="nc" id="L16">        super(ch);</span>
+<span class="nc" id="L17">        this.elapsed = new AtomicBoolean(false);</span>
+<span class="nc" id="L18">    }</span>
+
+    @Override
+    public synchronized void setElapsed() {
+<span class="nc" id="L22">        this.elapsed.set(true);</span>
+<span class="nc" id="L23">    }</span>
+    @Override
+    public synchronized boolean getElapsed(){
+<span class="nc" id="L26">        return elapsed.get();</span>
+    }
+
+    @Override
+    public void run() {
+<span class="nc" id="L31">        synchronized (ch.locker){</span>
+            try {
+<span class="nc" id="L33">                ch.locker.wait();</span>
+<span class="nc" id="L34">            }catch(Exception e){</span>
+<span class="nc" id="L35">                e.printStackTrace();</span>
+<span class="nc" id="L36">            }</span>
+<span class="nc" id="L37">        }</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        while (!getElapsed()) {</span>
+            try {
+<span class="nc" id="L40">                ch.sendPing();</span>
+<span class="nc" id="L41">            } catch (IOException e) {</span>
+<span class="nc" id="L42">                System.exit(10);</span>
+<span class="nc" id="L43">            }</span>
+<span class="nc" id="L44">            SwapElapsed swapElapsed = new SwapElapsed(ch);</span>
+<span class="nc" id="L45">            swapElapsed.start();</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">            while (ch.getPongResponses().size() == 0) {</span>
+<span class="nc" id="L47">                synchronized (ch.getPongResponses()) {</span>
+                    try {
+<span class="nc" id="L49">                        ch.getPongResponses().wait();</span>
+<span class="nc" id="L50">                    } catch (InterruptedException e) {</span>
+<span class="nc" id="L51">                        throw new RuntimeException(e);</span>
+<span class="nc" id="L52">                    }</span>
+<span class="nc" id="L53">                }</span>
+            }
+
+
+<span class="nc bnc" id="L57" title="All 2 branches missed.">            if (ch.getPongResponses().get(0).isElapsed()) {</span>
+<span class="nc" id="L58">                System.err.println(&quot;Ping failed for &quot; + ch.getNickname() + &quot;&quot;);</span>
+
+<span class="nc bnc" id="L60" title="All 2 branches missed.">                if (ch.isPlaying()) {</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">                    if(server.lobbyOf(ch)!=null) {</span>
+<span class="nc" id="L62">                        server.killLobby(server.lobbyOf(ch).getLobbyUID());</span>
+                    }
+<span class="nc" id="L64">                    ch.shutdown();</span>
+<span class="nc" id="L65">                    server.removeClient(ch);</span>
+                } else {
+<span class="nc" id="L67">                    ch.shutdown();</span>
+<span class="nc" id="L68">                    server.removeClient(ch);</span>
+                }
+
+<span class="nc" id="L71">                setElapsed();</span>
+            } else {
+                try {
+<span class="nc" id="L74">                    swapElapsed.setRunning(false);</span>
+<span class="nc" id="L75">                } catch (Exception e) {</span>
+                    //ignore
+<span class="nc" id="L77">                }</span>
+<span class="nc" id="L78">                synchronized (ch.getPongResponses()) {</span>
+<span class="nc" id="L79">                    ch.getPongResponses().remove(0);</span>
+<span class="nc" id="L80">                }</span>
+                try {
+<span class="nc" id="L82">                    Thread.sleep(Settings.PINGPERIOD);</span>
+<span class="nc" id="L83">                } catch (InterruptedException e) {</span>
+<span class="nc" id="L84">                    throw new RuntimeException(e);</span>
+<span class="nc" id="L85">                }</span>
+
+            }
+<span class="nc" id="L88">        }</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        if (server.getUserGame() != null) {</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">            if (server.getUserGame().get(ch.getNickname()) != null) {</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">                if (server.getUserGame().get(ch.getNickname()).equals(&quot;-&quot;)) {</span>
+<span class="nc" id="L92">                    server.getUserGame().remove(ch.getNickname());</span>
+                }
+            }
+        }
+<span class="nc" id="L96">        synchronized (server.getUserGame()) {</span>
+<span class="nc" id="L97">            server.saveUserGame();</span>
+<span class="nc" id="L98">        }</span>
+<span class="nc" id="L99">    }</span>
+
+    static class SwapElapsed extends Thread {
+
+<span class="nc" id="L103">        private boolean isRunning = true;</span>
+        private final ClientHandler client;
+<span class="nc" id="L105">        public SwapElapsed(ClientHandler ch){</span>
+<span class="nc" id="L106">            this.client = ch;</span>
+<span class="nc" id="L107">        }</span>
+
+        public boolean isRunning() {
+<span class="nc" id="L110">            return isRunning;</span>
+        }
+
+        public void setRunning(boolean running) {
+<span class="nc" id="L114">            isRunning = running;</span>
+<span class="nc" id="L115">        }</span>
+
+        @Override
+        public void run() {
+<span class="nc" id="L119">            int time = 0;</span>
+<span class="nc bnc" id="L120" title="All 4 branches missed.">            while (isRunning() &amp;&amp; time &lt; Settings.PINGTHRESHOLD) {</span>
+                try {
+<span class="nc" id="L122">                    Thread.sleep(Settings.PINGTHRESHOLD/ Settings.PINGFACTOR);</span>
+<span class="nc" id="L123">                    time += Settings.PINGTHRESHOLD/ Settings.PINGFACTOR;</span>
+<span class="nc" id="L124">                } catch (InterruptedException e) {</span>
+<span class="nc" id="L125">                    throw new RuntimeException(e);</span>
+<span class="nc" id="L126">                }</span>
+            }
+<span class="nc bnc" id="L128" title="All 2 branches missed.">            if (isRunning()) {</span>
+<span class="nc" id="L129">                synchronized (client.getPongResponses()) {</span>
+<span class="nc" id="L130">                    client.getPongResponses().add(new PingObject(true));</span>
+<span class="nc" id="L131">                    client.getPongResponses().notifyAll();</span>
+<span class="nc" id="L132">                }</span>
+            }
+<span class="nc" id="L134">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

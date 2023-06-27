@@ -10,6 +10,7 @@ import it.polimi.myShelfie.network.ping.ServerTcpPingThread;
 import it.polimi.myShelfie.utilities.Settings;
 import it.polimi.myShelfie.utilities.JsonParser;
 import it.polimi.myShelfie.utilities.pojo.Action;
+import it.polimi.myShelfie.utilities.pojo.Ports;
 import it.polimi.myShelfie.utilities.pojo.Usergame;
 import java.io.*;
 import java.net.*;
@@ -43,25 +44,30 @@ public class Server extends UnicastRemoteObject implements Runnable{
         try {
             Files.createDirectories(Paths.get(System.getProperty("user.dir") + "/config/savedgames/"));
         }catch (IOException e){
-            System.err.println("Server side socket exception thrown: failed to create directory");
+            System.err.println("Server side exception: failed to create directory");
             e.printStackTrace();
         }
+
         //load ports from json
         List<Integer> ports = JsonParser.getPortsConfig("/config/ports.json");
         if(ports!=null){
             if(ports.get(0)!=0){
-                System.out.println("Setted tcp port: "+ports.get(0));
                 TCPport = ports.get(0);
             }else{
                 TCPport = Settings.TCPPORT;
             }
+
             if(ports.get(1)!=0){
-                System.out.println("Setted rmi port: "+ports.get(1));
                 RMIport = ports.get(1);
+                if(RMIport == TCPport){
+                    RMIport++;
+                    System.out.println("RMI and TCP ports are equals. Switching RMI port to: "+ RMIport);
+                }
             }else{
                 RMIport = Settings.RMIPORT;
             }
         }else{
+            initPortsConfig();
             TCPport = Settings.TCPPORT;
             RMIport = Settings.RMIPORT;
         }
@@ -174,6 +180,27 @@ public class Server extends UnicastRemoteObject implements Runnable{
 
         //Start server inputHandler
         new ServerInputHandler().start();
+    }
+
+    private void initPortsConfig(){
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+        try {
+            Path path = Paths.get(System.getProperty("user.dir")+ "/config/ports.json");
+            if(path.toFile().isFile()){
+                new File(path.toString()).createNewFile();
+            }
+            FileWriter fw = new FileWriter(path.toString());
+            Ports ports = new Ports();
+            ports.getPorts().add(0);
+            ports.getPorts().add(0);
+            fw.write(gson.toJson(ports));
+            fw.close();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -372,7 +399,7 @@ class ServerInputHandler extends Thread {
                     for(ClientHandler ch:clients.keySet()){
                         ch.sendShutdown();
                     }
-                    System.out.println("All the client sare killed");
+                    System.out.println("All the clients are killed");
                     try{
                         server.shutdown();
                     }catch (Exception e){

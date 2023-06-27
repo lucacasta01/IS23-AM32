@@ -4,9 +4,8 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.myShelfie.utilities.pojo.*;
 import org.apache.commons.io.IOUtils;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+
+import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -36,16 +35,17 @@ public class JsonParser {
         }
         return null;
     }
-    public static List<Integer> getPortsConfig(String jPath){
-        try (InputStream inputStream = new FileInputStream(System.getProperty("user.dir")+jPath)){
+    public static List<Integer> getPortsConfig(String jPath) {
+        try (InputStream inputStream = new FileInputStream(System.getProperty("user.dir") + jPath)) {
             String jsonString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-            Type type = new TypeToken<Ports>() {}.getType();
+            Type type = new TypeToken<Ports>() {
+            }.getType();
             Ports ports = new Gson().fromJson(jsonString, type);
             List<Integer> portList = new ArrayList<>();
             portList.add(ports.getPorts().get(0));
             portList.add(ports.getPorts().get(1));
             return portList;
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }

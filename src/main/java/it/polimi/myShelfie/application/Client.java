@@ -209,10 +209,13 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         boolean close = false;
         if (!isGUI) {
             connectionProtocol = protocolHandler();
+            portHandler(connectionProtocol);
         }
 
         switch (connectionProtocol) {
             case "TCP" -> {
+
+
                 try {
                     try {
                         client = new Socket(serverIP, TCPPort);
@@ -578,8 +581,6 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private String protocolHandler(){
             String message;
             BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
-            System.out.println("TCP port: "+TCPPort);
-            System.out.println("RMI port: "+RMIPort);
             System.out.println("Choose your protocol [TCP/RMI]");
             try {
                 message= inReader.readLine().toUpperCase();
@@ -595,6 +596,55 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                 }
             }
             return message;
+    }
+
+    private void portHandler(String connectionProtocol){
+        String message;
+        BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
+
+        if(connectionProtocol.equals("RMI")){
+            System.out.println("RMI port: "+RMIPort);
+        }else{
+            System.out.println("TCP port: "+TCPPort);
+        }
+        System.out.println("Would you like to change the port? [y/n]");
+        try {
+            message= inReader.readLine().toUpperCase();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        while(!message.equalsIgnoreCase("Y")&&!message.equalsIgnoreCase("N")){
+            System.out.println("Type the right key...");
+            try {
+                message= inReader.readLine().toUpperCase();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if(message.equalsIgnoreCase("Y")){
+            System.out.println("Port number: ");
+            try {
+                message= inReader.readLine().toUpperCase();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            while(!message.matches("^\\d{1,5}$")){
+                System.out.println("Type the right key...");
+                try {
+                    message= inReader.readLine().toUpperCase();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            if(connectionProtocol.equals("RMI")){
+                this.RMIPort = Integer.parseInt(message);
+            }else{
+                this.TCPPort = Integer.parseInt(message);
+            }
+        }
     }
 
     /**

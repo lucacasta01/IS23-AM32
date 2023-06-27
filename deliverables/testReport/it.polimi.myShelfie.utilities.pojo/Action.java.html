@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Action.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jacoco.exec</a> &gt; <a href="index.source.html" class="el_package">it.polimi.myShelfie.utilities.pojo</a> &gt; <span class="el_source">Action.java</span></div><h1>Action.java</h1><pre class="source lang-java linenums">package it.polimi.myShelfie.utilities.pojo;
+import it.polimi.myShelfie.utilities.Position;
+import java.util.List;
+public class Action {
+    private final ActionType actionType;
+    private String nickname;
+    private final String chatMessage;
+    private final String info;
+    private final List&lt;Position&gt; chosenTiles;
+    private final Integer chosenColumn;
+
+<span class="fc" id="L12">    public Action(ActionType actionType, String nickname, String chatMessage, String info, List&lt;Position&gt; chosenTiles, Integer chosenColumn) {</span>
+<span class="fc" id="L13">        this.actionType = actionType;</span>
+<span class="fc" id="L14">        this.nickname = nickname;</span>
+<span class="fc" id="L15">        this.chatMessage = chatMessage;</span>
+<span class="fc" id="L16">        this.info = info;</span>
+<span class="fc" id="L17">        this.chosenTiles = chosenTiles;</span>
+<span class="fc" id="L18">        this.chosenColumn = chosenColumn;</span>
+<span class="fc" id="L19">    }</span>
+
+    public ActionType getActionType() {
+<span class="nc" id="L22">        return actionType;</span>
+    }
+
+    public String getNickname() {
+<span class="fc" id="L26">        return nickname;</span>
+    }
+    public String getChatMessage() {
+<span class="nc" id="L29">        return chatMessage;</span>
+    }
+    public List&lt;Position&gt; getChosenTiles() {
+<span class="fc" id="L32">        return chosenTiles;</span>
+    }
+    public Integer getChosenColumn() {
+<span class="fc" id="L35">        return chosenColumn;</span>
+    }
+    public String getInfo() {
+<span class="fc" id="L38">        return info;</span>
+    }
+    public void setNickname(String nickname) {
+<span class="nc" id="L41">        this.nickname = nickname;</span>
+<span class="nc" id="L42">    }</span>
+<span class="fc" id="L43">    public enum ActionType{</span>
+<span class="fc" id="L44">        CHAT,</span>
+<span class="fc" id="L45">        PRIVATEMESSAGE,</span>
+<span class="fc" id="L46">        PICKTILES,</span>
+<span class="fc" id="L47">        SELECTCOLUMN,</span>
+<span class="fc" id="L48">        INFO,</span>
+<span class="fc" id="L49">        PING,</span>
+<span class="fc" id="L50">        PONG,</span>
+<span class="fc" id="L51">        QUIT,</span>
+<span class="fc" id="L52">        ORDER,</span>
+<span class="fc" id="L53">        LOBBYKILL,</span>
+<span class="fc" id="L54">        HELP,</span>
+<span class="fc" id="L55">        VOID,</span>
+<span class="fc" id="L56">        REQUEST_MENU</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
