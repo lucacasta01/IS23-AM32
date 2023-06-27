@@ -549,10 +549,7 @@ public class Game{
             System.out.println("No more places available");
         }
     }
-
     public void initializeoldGamePlayers(){
         this.oldGamePlayers = new ArrayList<>();
     }
-
-
 }

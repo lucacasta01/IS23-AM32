@@ -255,7 +255,6 @@ public class Board {
                 toReturn.add(new ColorPosition(grid[i][j].toString(),grid[i][j].getImagePath(),i,j));
             }
         }
-
         return toReturn;
     }
 }
