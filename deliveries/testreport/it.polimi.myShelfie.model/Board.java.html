@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Board.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jacoco.exec</a> &gt; <a href="index.source.html" class="el_package">it.polimi.myShelfie.model</a> &gt; <span class="el_source">Board.java</span></div><h1>Board.java</h1><pre class="source lang-java linenums">package it.polimi.myShelfie.model;
+import it.polimi.myShelfie.utilities.ColorPosition;
+import it.polimi.myShelfie.utilities.Settings;
+import it.polimi.myShelfie.utilities.JsonParser;
+import it.polimi.myShelfie.utilities.Position;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+public class Board {
+    private final Tile[][] grid;
+    private List&lt;Tile&gt; tileHeap;
+
+
+<span class="fc" id="L15">    public Board() {</span>
+<span class="fc" id="L16">        this.grid = new Tile[Settings.BOARD_DIM][Settings.BOARD_DIM];</span>
+<span class="fc bfc" id="L17" title="All 2 branches covered.">        for(int i = 0; i&lt; Settings.BOARD_DIM; i++){</span>
+<span class="fc bfc" id="L18" title="All 2 branches covered.">            for(int j = 0; j&lt; Settings.BOARD_DIM; j++){</span>
+<span class="fc" id="L19">                this.grid[i][j] = null;</span>
+            }
+        }
+<span class="fc" id="L22">        initTileHeap();</span>
+<span class="fc" id="L23">    }</span>
+
+
+<span class="fc" id="L26">    public Board(Tile[][] tileMatrix, List&lt;Tile&gt; tileHeap) {</span>
+<span class="fc" id="L27">        this.grid = tileMatrix;</span>
+<span class="fc" id="L28">        this.tileHeap = tileHeap;</span>
+<span class="fc" id="L29">    }</span>
+
+    /**
+     * Returns the current state of a board's grid
+     *
+     * @return current state of the grid
+     */
+    public Tile[][] getGrid() {
+<span class="fc" id="L37">        return this.grid;</span>
+    }
+
+    public List&lt;Tile&gt; getTileHeap() {
+<span class="fc" id="L41">        return tileHeap;</span>
+    }
+
+    public String getTileHeapToString(){
+<span class="fc" id="L45">        StringBuilder toReturn = new StringBuilder();</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        for(Tile t : tileHeap){</span>
+<span class="fc" id="L47">            toReturn.append(t.toString()).append(&quot;\n&quot;);</span>
+<span class="fc" id="L48">        }</span>
+<span class="fc" id="L49">        return toReturn.toString();</span>
+    }
+
+    /**
+     * Checks whether the board's grid needs to be refilled
+     * @return true if needed, false otherwise
+     */
+
+    public boolean needToRefill() {
+<span class="fc" id="L58">        boolean check = true;</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        for (int i = 0; i &lt; Settings.BOARD_DIM; i++) {</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">            for (int j = 0; j &lt; Settings.BOARD_DIM; j++) {</span>
+<span class="fc" id="L61">                Tile toCheck = this.grid[i][j];</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">                if (this.grid[i][j].getColor() != Tile.Color.NULLTILE) {</span>
+<span class="pc bpc" id="L63" title="1 of 4 branches missed.">                    if (((this.grid[Math.min(i + 1, Settings.BOARD_DIM-1)][j].getColor() != Tile.Color.NULLTILE) &amp;&amp;  this.grid[Math.min(i + 1, Settings.BOARD_DIM-1)][j] != toCheck) ||</span>
+<span class="pc bpc" id="L64" title="1 of 4 branches missed.">                            ((this.grid[i][Math.min(j + 1, Settings.BOARD_DIM-1)].getColor() != Tile.Color.NULLTILE) &amp;&amp; this.grid[i][Math.min(j + 1, Settings.BOARD_DIM-1)] != toCheck) ||</span>
+<span class="pc bpc" id="L65" title="1 of 4 branches missed.">                            ((this.grid[Math.max(i - 1, 0)][j].getColor() != Tile.Color.NULLTILE) &amp;&amp; this.grid[Math.max(i - 1, 0)][j] != toCheck) ||</span>
+<span class="pc bpc" id="L66" title="1 of 4 branches missed.">                            (( this.grid[i][Math.max(j - 1, 0)].getColor() != Tile.Color.NULLTILE) &amp;&amp; this.grid[i][Math.max(j - 1, 0)] != toCheck)) {</span>
+<span class="fc" id="L67">                        check = false;</span>
+                    }
+                }
+            }
+        }
+<span class="fc" id="L72">        return check;</span>
+    }
+
+    /**
+     * Checks if a Tile in a given position is catchable by a player
+     *
+     * @param row    of the tile we want to catch
+     * @param column of the tile we want to catch
+     * @return true if the Tile is catchable, else otherwise
+     */
+    public boolean isCatchable(int row, int column) {
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        if (this.grid[row][column].getColor() == Tile.Color.NULLTILE) {</span>
+<span class="fc" id="L84">            return false;</span>
+        }
+<span class="fc" id="L86">        Tile toCheck = this.grid[row][column];</span>
+        // might need to be modified
+<span class="pc bpc" id="L88" title="1 of 4 branches missed.">        return  ((this.grid[Math.min(row + 1, Settings.BOARD_DIM)][column].getColor() == Tile.Color.NULLTILE) &amp;&amp;  this.grid[Math.min(row + 1, Settings.BOARD_DIM)][column] != toCheck) ||</span>
+<span class="pc bpc" id="L89" title="1 of 4 branches missed.">                ((this.grid[row][Math.min(column + 1, Settings.BOARD_DIM)].getColor() == Tile.Color.NULLTILE) &amp;&amp; this.grid[row][Math.min(column + 1, Settings.BOARD_DIM)] != toCheck) ||</span>
+<span class="pc bpc" id="L90" title="1 of 4 branches missed.">                ((this.grid[Math.max(row - 1, 0)][column].getColor() == Tile.Color.NULLTILE) &amp;&amp; this.grid[Math.max(row - 1, 0)][column] != toCheck) ||</span>
+<span class="pc bpc" id="L91" title="1 of 4 branches missed.">                (( this.grid[row][Math.max(column - 1, 0)].getColor() == Tile.Color.NULLTILE) &amp;&amp; this.grid[row][Math.max(column - 1, 0)] != toCheck);</span>
+    }
+
+    /**
+     * Initializes the tiles heap with relative colors and image path
+     */
+    private void initTileHeap(){
+<span class="fc" id="L98">        this.tileHeap = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        for(int i = 0; i&lt; Settings.TILES_GROUP; i++){</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">            if(i&lt;8){</span>
+<span class="fc" id="L101">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Cornici1.3.png&quot;,Tile.Color.BLUE));</span>
+            }
+<span class="fc bfc" id="L103" title="All 2 branches covered.">            else if(i&lt;15){</span>
+<span class="fc" id="L104">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Cornici1.2.png&quot;,Tile.Color.BLUE));</span>
+            }
+            else{
+<span class="fc" id="L107">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Cornici1.1.png&quot;,Tile.Color.BLUE));</span>
+            }
+        }
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        for(int i = 0; i&lt; Settings.TILES_GROUP; i++){</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">            if(i&lt;8){</span>
+<span class="fc" id="L112">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Gatti1.2.png&quot;,Tile.Color.GREEN));</span>
+            }
+<span class="fc bfc" id="L114" title="All 2 branches covered.">            else if(i&lt;15){</span>
+<span class="fc" id="L115">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Gatti1.1.png&quot;,Tile.Color.GREEN));</span>
+            }
+            else{
+<span class="fc" id="L118">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Gatti1.3.png&quot;,Tile.Color.GREEN));</span>
+            }
+        }
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        for(int i = 0; i&lt; Settings.TILES_GROUP; i++){</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">            if(i&lt;8){</span>
+<span class="fc" id="L123">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Giochi1.2.png&quot;,Tile.Color.YELLOW));</span>
+            }
+<span class="fc bfc" id="L125" title="All 2 branches covered.">            else if(i&lt;15){</span>
+<span class="fc" id="L126">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Giochi1.3.png&quot;,Tile.Color.YELLOW));</span>
+            }
+            else{
+<span class="fc" id="L129">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Giochi1.1.png&quot;,Tile.Color.YELLOW));</span>
+            }
+        }
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        for(int i = 0; i&lt; Settings.TILES_GROUP; i++){</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">            if(i&lt;8){</span>
+<span class="fc" id="L134">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Libri1.3.png&quot;,Tile.Color.WHITE));</span>
+            }
+<span class="fc bfc" id="L136" title="All 2 branches covered.">            else if(i&lt;15){</span>
+<span class="fc" id="L137">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Libri1.2.png&quot;,Tile.Color.WHITE));</span>
+            }
+            else{
+<span class="fc" id="L140">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Libri1.1.png&quot;,Tile.Color.WHITE));</span>
+            }
+        }
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        for(int i = 0; i&lt; Settings.TILES_GROUP; i++){</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">            if(i&lt;8){</span>
+<span class="fc" id="L145">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Piante1.3.png&quot;,Tile.Color.PINK));</span>
+            }
+<span class="fc bfc" id="L147" title="All 2 branches covered.">            else if(i&lt;15){</span>
+<span class="fc" id="L148">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Piante1.2.png&quot;,Tile.Color.PINK));</span>
+            }
+            else{
+<span class="fc" id="L151">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Piante1.1.png&quot;,Tile.Color.PINK));</span>
+            }
+        }
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        for(int i = 0; i&lt; Settings.TILES_GROUP; i++){</span>
+<span class="fc bfc" id="L155" title="All 2 branches covered.">            if(i&lt;8){</span>
+<span class="fc" id="L156">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Trofei1.1.png&quot;,Tile.Color.LIGHTBLUE));</span>
+            }
+<span class="fc bfc" id="L158" title="All 2 branches covered.">            else if(i&lt;15){</span>
+<span class="fc" id="L159">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Trofei1.2.png&quot;,Tile.Color.LIGHTBLUE));</span>
+            }
+            else{
+<span class="fc" id="L162">                tileHeap.add(new Tile(&quot;/graphics/itemTiles/Trofei1.3.png&quot;,Tile.Color.LIGHTBLUE));</span>
+            }
+        }
+<span class="fc" id="L165">    }</span>
+
+    /**
+     *Casually picks a tile from the tileHeap then deletes the picked tile from the heap
+     * @return the randomly picked tile
+     */
+    private Tile pickTile(){
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">        if(tileHeap.size()!=0) {</span>
+<span class="fc" id="L173">            Tile t = tileHeap.get(new Random().nextInt(0, tileHeap.size() - 1));</span>
+<span class="fc" id="L174">            tileHeap.remove(t);</span>
+<span class="fc" id="L175">            return t;</span>
+        }else{
+<span class="nc" id="L177">            return new Tile(&quot;/graphics/itemTiles/transparent.png&quot;, Tile.Color.NULLTILE);</span>
+        }
+    }
+
+    /**
+     * initializes the board with all the necessary tiles
+     * @param players is the game's number of players
+     */
+    public void initBoard(int players){
+<span class="fc bfc" id="L186" title="All 2 branches covered.">    for(int i = 0; i&lt; Settings.BOARD_DIM; i++){</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">        for(int j = 0; j&lt; Settings.BOARD_DIM; j++){</span>
+<span class="fc bfc" id="L188" title="All 4 branches covered.">            if(this.grid[i][j]!=null&amp;&amp;this.grid[i][j].getColor()== Tile.Color.NULLTILE){</span>
+<span class="fc" id="L189">                this.grid[i][j]=null;</span>
+            }
+        }
+}
+        try {
+<span class="fc" id="L194">            setNullTiles(JsonParser.getNullConfig(&quot;/configJsons/boardconfig.json&quot;));</span>
+<span class="fc bfc" id="L195" title="All 3 branches covered.">            switch (players) {</span>
+<span class="fc" id="L196">                case 2 -&gt; setNullTiles(JsonParser.getNullConfig(&quot;/configJsons/boardconfig2p.json&quot;));</span>
+<span class="fc" id="L197">                case 3 -&gt; setNullTiles(JsonParser.getNullConfig(&quot;/configJsons/boardconfig3p.json&quot;));</span>
+            }
+<span class="fc" id="L199">            setTileColors();</span>
+        }
+<span class="nc" id="L201">        catch (IOException e){</span>
+<span class="nc" id="L202">            System.out.println(&quot;JSON parsing error&quot;);</span>
+<span class="fc" id="L203">        }</span>
+<span class="fc" id="L204">    }</span>
+
+    /**
+     * pick tiles from the heap and assign them to their relative place
+     */
+    private void setTileColors(){
+<span class="fc bfc" id="L210" title="All 2 branches covered.">        for(int i = 0; i&lt; Settings.BOARD_DIM; i++){</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">            for(int j = 0; j&lt; Settings.BOARD_DIM; j++){</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">                if(grid[i][j] == null){</span>
+<span class="fc" id="L213">                    grid[i][j] = pickTile();</span>
+                }
+            }
+        }
+<span class="fc" id="L217">    }</span>
+
+    /**
+     * sets all out of borders tiles
+     * @param nullTiles list of all the out of border positions
+     */
+    private void setNullTiles(List&lt;Position&gt; nullTiles){
+<span class="fc bfc" id="L224" title="All 2 branches covered.">        for(Position p : nullTiles){</span>
+<span class="fc" id="L225">            grid[p.getRow()][p.getColumn()] = new Tile(&quot;/graphics/itemTiles/transparent.png&quot;, Tile.Color.NULLTILE);</span>
+<span class="fc" id="L226">        }</span>
+<span class="fc" id="L227">    }</span>
+
+
+    @Override
+    public String toString(){
+<span class="fc" id="L232">        StringBuilder s = new StringBuilder();</span>
+<span class="fc" id="L233">        s.append(&quot;\t&quot;);</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">        for(int i = 0; i&lt; Settings.BOARD_DIM; i++)</span>
+<span class="fc" id="L235">            s.append(i+1).append(&quot; | &quot;);</span>
+<span class="fc" id="L236">        s.append(&quot;\n&quot;);</span>
+<span class="fc bfc" id="L237" title="All 2 branches covered.">        for(int i = 0; i&lt; Settings.BOARD_DIM; i++){</span>
+<span class="fc" id="L238">            s.append(i+1).append(&quot;\t&quot;);</span>
+<span class="fc bfc" id="L239" title="All 2 branches covered.">            for(int j = 0; j&lt; Settings.BOARD_DIM; j++){</span>
+<span class="fc" id="L240">                s.append(grid[i][j].toString()).append(&quot; | &quot;);</span>
+            }
+<span class="fc" id="L242">            s.append(&quot;\n&quot;);</span>
+        }
+<span class="fc" id="L244">        return s.toString();</span>
+    }
+
+    /**
+     * Generates a list of ColorPositions starting from the board
+     * @return List of positions
+     */
+    public List&lt;ColorPosition&gt; toColorPosition(){
+<span class="fc" id="L252">        List&lt;ColorPosition&gt; toReturn = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L253" title="All 2 branches covered.">        for(int i = 0; i&lt; Settings.BOARD_DIM; i++){</span>
+<span class="fc bfc" id="L254" title="All 2 branches covered.">            for(int j = 0; j&lt; Settings.BOARD_DIM; j++){</span>
+<span class="fc" id="L255">                toReturn.add(new ColorPosition(grid[i][j].toString(),grid[i][j].getImagePath(),i,j));</span>
+            }
+        }
+
+<span class="fc" id="L259">        return toReturn;</span>
+    }
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

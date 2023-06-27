@@ -54,7 +54,7 @@ public class SharedGoal6Card extends SharedGoalCard implements CheckSharedGoal {
                 }
                 colors.clear();
             }
-            if(achievedRows>=3){
+            if(achievedRows>=2){
                 addPlayer(p);
                 return true;
             }else{

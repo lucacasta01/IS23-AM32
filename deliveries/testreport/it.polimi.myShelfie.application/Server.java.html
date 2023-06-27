@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Server.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jacoco.exec</a> &gt; <a href="index.source.html" class="el_package">it.polimi.myShelfie.application</a> &gt; <span class="el_source">Server.java</span></div><h1>Server.java</h1><pre class="source lang-java linenums">package it.polimi.myShelfie.application;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import it.polimi.myShelfie.network.RMI.RMIController;
+import it.polimi.myShelfie.network.ping.ServerPingThread;
+import it.polimi.myShelfie.network.ClientHandler;
+import it.polimi.myShelfie.network.Lobby;
+import it.polimi.myShelfie.network.ping.ServerRmiPingThread;
+import it.polimi.myShelfie.network.ping.ServerTcpPingThread;
+import it.polimi.myShelfie.utilities.Settings;
+import it.polimi.myShelfie.utilities.JsonParser;
+import it.polimi.myShelfie.utilities.pojo.Action;
+import it.polimi.myShelfie.utilities.pojo.Usergame;
+import java.io.*;
+import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+
+public class Server extends UnicastRemoteObject implements Runnable{
+
+<span class="fc" id="L28">    boolean done = false;</span>
+    private static Server instance;
+    private ServerSocket serverSocket;
+    private ExecutorService pool;
+    private ExecutorService lobbyPool;
+    private ExecutorService pingPool;
+    private final Map&lt;ClientHandler, ServerPingThread&gt; connectedClients;
+    private Map&lt;String, String&gt; userGame;
+    private final List&lt;Lobby&gt; lobbyList;
+<span class="fc" id="L37">    private int TCPport = 0;</span>
+<span class="fc" id="L38">    private int RMIport = 0;</span>
+
+<span class="fc" id="L40">    private Server() throws RemoteException {</span>
+<span class="fc" id="L41">        connectedClients = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L42">        lobbyList = new ArrayList&lt;&gt;();</span>
+        try {
+<span class="fc" id="L44">            Files.createDirectories(Paths.get(System.getProperty(&quot;user.dir&quot;) + &quot;/config/savedgames/&quot;));</span>
+<span class="nc" id="L45">        }catch (IOException e){</span>
+<span class="nc" id="L46">            System.err.println(&quot;Server side socket exception thrown: failed to create directory&quot;);</span>
+<span class="nc" id="L47">            e.printStackTrace();</span>
+<span class="fc" id="L48">        }</span>
+        //load ports from json
+<span class="fc" id="L50">        List&lt;Integer&gt; ports = JsonParser.getPortsConfig(&quot;/config/ports.json&quot;);</span>
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">        if(ports!=null){</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">            if(ports.get(0)!=0){</span>
+<span class="nc" id="L53">                System.out.println(&quot;Setted tcp port: &quot;+ports.get(0));</span>
+<span class="nc" id="L54">                TCPport = ports.get(0);</span>
+            }else{
+<span class="fc" id="L56">                TCPport = Settings.TCPPORT;</span>
+            }
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">            if(ports.get(1)!=0){</span>
+<span class="nc" id="L59">                System.out.println(&quot;Setted rmi port: &quot;+ports.get(1));</span>
+<span class="nc" id="L60">                RMIport = ports.get(1);</span>
+            }else{
+<span class="fc" id="L62">                RMIport = Settings.RMIPORT;</span>
+            }
+        }else{
+<span class="nc" id="L65">            TCPport = Settings.TCPPORT;</span>
+<span class="nc" id="L66">            RMIport = Settings.RMIPORT;</span>
+        }
+<span class="fc" id="L68">        System.out.println(&quot;Server TCP port: &quot;+TCPport);</span>
+<span class="fc" id="L69">        System.out.println(&quot;Server RMI port: &quot;+RMIport);</span>
+
+
+        try {
+<span class="fc" id="L73">            serverSocket = new ServerSocket(TCPport);</span>
+        }
+<span class="nc" id="L75">        catch(Exception e){</span>
+<span class="nc" id="L76">            System.err.println(&quot;Server side socket exception thrown: &quot;);</span>
+<span class="nc" id="L77">            e.printStackTrace();</span>
+<span class="fc" id="L78">        }</span>
+        try {
+<span class="fc" id="L80">            userGame = loadUserGame();</span>
+<span class="nc" id="L81">        }catch (Exception e){</span>
+<span class="nc" id="L82">            System.err.println(&quot;Server side error while loading usergame&quot;);</span>
+<span class="nc" id="L83">            e.printStackTrace();</span>
+<span class="fc" id="L84">        }</span>
+<span class="fc" id="L85">    }</span>
+
+    /**
+     *get instance method for singleton pattern
+     * @return instance if not null, a new server instance if null
+     */
+    public static synchronized Server getInstance() {
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        if(instance == null){</span>
+            try {
+<span class="fc" id="L94">                instance = new Server();</span>
+<span class="nc" id="L95">            }catch(RemoteException e){</span>
+<span class="nc" id="L96">                e.printStackTrace();</span>
+                //todo
+<span class="fc" id="L98">            }</span>
+        }
+<span class="fc" id="L100">        return instance;</span>
+    }
+
+    /**
+     * removes a client from the server's connected clients map
+     * @param client
+     */
+    public void removeClient(ClientHandler client){
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        if(connectedClients.containsKey(client)){</span>
+<span class="nc" id="L109">            connectedClients.remove(client);</span>
+        }
+        else{
+<span class="nc" id="L112">            System.out.println(&quot;Client not connected&quot;);</span>
+        }
+<span class="nc" id="L114">    }</span>
+
+    /**
+     * @return userGame map([nickname-&gt;old game uid])
+     */
+    public Map&lt;String, String&gt; getUserGame() {
+<span class="fc" id="L120">        return userGame;</span>
+    }
+
+    public int getRMIport(){
+<span class="nc" id="L124">        return this.RMIport;</span>
+    }
+
+    /**
+     *
+     * @return a list of active lobbys
+     */
+    public synchronized List&lt;Lobby&gt; getLobbyList() {
+<span class="nc" id="L132">        return lobbyList;</span>
+    }
+
+    public void addRmiClientHandler(ClientHandler ch){
+<span class="nc" id="L136">        synchronized (this.connectedClients) {</span>
+<span class="nc" id="L137">            this.connectedClients.put(ch, new ServerRmiPingThread(ch));</span>
+<span class="nc" id="L138">            pool.execute(ch);</span>
+<span class="nc" id="L139">            pingPool.execute(connectedClients.get(ch));</span>
+<span class="nc" id="L140">        }</span>
+<span class="nc" id="L141">    }</span>
+
+    /**
+     * turns the server off
+     */
+    public void shutdown(){
+        try{
+<span class="nc" id="L148">            done = true;</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">            if(!instance.serverSocket.isClosed()){</span>
+<span class="nc" id="L150">                serverSocket.close();</span>
+            }
+<span class="nc" id="L152">        } catch (IOException e) {</span>
+<span class="nc" id="L153">            throw new RuntimeException(e);</span>
+<span class="nc" id="L154">        }</span>
+<span class="nc" id="L155">    }</span>
+
+    @Override
+    public void run(){
+<span class="nc" id="L159">        System.out.println(&quot;Server started&quot;);</span>
+<span class="nc" id="L160">        pool = Executors.newCachedThreadPool();</span>
+<span class="nc" id="L161">        lobbyPool = Executors.newCachedThreadPool();</span>
+<span class="nc" id="L162">        pingPool = Executors.newCachedThreadPool();</span>
+
+
+        //Start RMI server
+        try {
+<span class="nc" id="L167">            new Thread(new RMIController()).start();</span>
+<span class="nc" id="L168">        } catch (RemoteException e) {</span>
+<span class="nc" id="L169">            throw new RuntimeException(e);</span>
+<span class="nc" id="L170">        }</span>
+
+        //Start tcp accepter
+<span class="nc" id="L173">        new TCPaccepter().start();</span>
+
+        //Start server inputHandler
+<span class="nc" id="L176">        new ServerInputHandler().start();</span>
+<span class="nc" id="L177">    }</span>
+
+    /**
+     * saves the usergame map to a json file
+     */
+    public void saveUserGame(){
+<span class="nc" id="L183">        Gson gson = new GsonBuilder()</span>
+<span class="nc" id="L184">                .setPrettyPrinting()</span>
+<span class="nc" id="L185">                .create();</span>
+        try {
+<span class="nc" id="L187">            Path usergamePath = Paths.get(System.getProperty(&quot;user.dir&quot;)+ &quot;/config/usergame.json&quot;);</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">            if(usergamePath.toFile().isFile()){</span>
+<span class="nc" id="L189">               new File(usergamePath.toString()).createNewFile();</span>
+            }
+<span class="nc" id="L191">            FileWriter fw = new FileWriter(usergamePath.toString());</span>
+<span class="nc" id="L192">            Usergame usergame = new Usergame();</span>
+<span class="nc bnc" id="L193" title="All 2 branches missed.">            for(String k : userGame.keySet()){</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">                if(!userGame.get(k).equals(&quot;-&quot;)){</span>
+<span class="nc" id="L195">                    usergame.getNicknames().add(k);</span>
+<span class="nc" id="L196">                    usergame.getUIDs().add(userGame.get(k));</span>
+                }
+<span class="nc" id="L198">            }</span>
+
+<span class="nc" id="L200">            fw.write(gson.toJson(usergame));</span>
+<span class="nc" id="L201">            fw.close();</span>
+        }
+<span class="nc" id="L203">        catch (IOException e){</span>
+<span class="nc" id="L204">            e.printStackTrace();</span>
+<span class="nc" id="L205">        }</span>
+<span class="nc" id="L206">    }</span>
+
+    /**
+     * loads the usergame map from json file
+     * @return old usergame map if present, new map otherwise
+     */
+    public Map&lt;String,String&gt; loadUserGame(){
+<span class="fc" id="L213">        Path usergamePath = Paths.get(System.getProperty(&quot;user.dir&quot;)+ &quot;/config/usergame.json&quot;);</span>
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">        if(!usergamePath.toFile().isFile()){</span>
+<span class="nc" id="L215">            return new HashMap&lt;&gt;();</span>
+        }
+        else{
+<span class="fc" id="L218">            return JsonParser.getUsergame(usergamePath.toString());</span>
+        }
+    }
+
+    /**
+     * kills a lobby searched by UID
+     * @param UID to be search
+     */
+    public void killLobby(String UID) {
+<span class="nc" id="L227">        synchronized (lobbyList) {</span>
+<span class="nc" id="L228">            Iterator&lt;Lobby&gt; iter = lobbyList.iterator();</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">            while (iter.hasNext()) {</span>
+<span class="nc" id="L230">                Lobby l = iter.next();</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">                if (l.getLobbyUID().equals(UID)) {</span>
+<span class="nc" id="L232">                    synchronized (l.actions) {</span>
+<span class="nc" id="L233">                        l.actions.add(new Action(Action.ActionType.LOBBYKILL, &quot;server&quot;, null, null, null, null));</span>
+<span class="nc" id="L234">                        l.actions.notifyAll();</span>
+<span class="nc" id="L235">                    }</span>
+<span class="nc" id="L236">                    iter.remove();</span>
+                }
+<span class="nc" id="L238">            }</span>
+<span class="nc" id="L239">        }</span>
+<span class="nc" id="L240">    }</span>
+
+    /**
+     * search if the client is in a lobby
+     * @param ch
+     * @return the lobby if found, null otherwise
+     */
+    public Lobby lobbyOf(ClientHandler ch){
+<span class="nc bnc" id="L248" title="All 2 branches missed.">        for(Lobby l : lobbyList){</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">            if(l.getLobbyPlayers().contains(ch)){</span>
+<span class="nc" id="L250">                return l;</span>
+            }
+<span class="nc" id="L252">        }</span>
+<span class="nc" id="L253">        return null;</span>
+    }
+
+    /**
+     *
+     * @return connected clients map
+     */
+    public Map&lt;ClientHandler,ServerPingThread&gt; getConnectedClients() {
+<span class="nc" id="L261">        return connectedClients;</span>
+    }
+
+    /**
+     * execute the client handler ch
+     * @param ch
+     */
+    public void executeClientHandler(ClientHandler ch){
+<span class="nc" id="L269">        pool.execute(ch);</span>
+        if(Settings.pingOn) {
+<span class="nc" id="L271">            pingPool.execute(connectedClients.get(ch));</span>
+        }
+<span class="nc" id="L273">    }</span>
+
+    /**
+     *
+     * @param nickname
+     * @return true if the client &quot;nickname&quot; is connected to the server
+     */
+    public boolean isConnected(String nickname){
+<span class="nc" id="L281">        int count = 0;</span>
+<span class="nc bnc" id="L282" title="All 2 branches missed.">        for(ClientHandler ch : connectedClients.keySet()){</span>
+<span class="nc bnc" id="L283" title="All 2 branches missed.">            if(ch.getNickname()!=null) {</span>
+<span class="nc bnc" id="L284" title="All 2 branches missed.">                if (ch.getNickname().equals(nickname)) {</span>
+<span class="nc" id="L285">                    count++;</span>
+                }
+            }
+<span class="nc" id="L288">        }</span>
+<span class="nc bnc" id="L289" title="All 2 branches missed.">        return count&gt;0;</span>
+    }
+
+    /**
+     *
+     * @return server tcp socket
+     */
+    public ServerSocket getServerSocket() {
+<span class="nc" id="L297">        return serverSocket;</span>
+    }
+
+    /**
+     * execute a lobby
+     * @param lobby
+     */
+    public synchronized void runLobby(Lobby lobby){
+<span class="nc" id="L305">        lobbyPool.execute(lobby);</span>
+<span class="nc" id="L306">    }</span>
+
+    public static void main(String[] args){
+<span class="nc" id="L309">        Server server = Server.getInstance();</span>
+<span class="nc" id="L310">        server.run();</span>
+<span class="nc" id="L311">    }</span>
+}
+<span class="nc" id="L313">class TCPaccepter extends Thread {</span>
+    @Override
+    public void run() {
+<span class="nc" id="L316">        Server server = Server.getInstance();</span>
+<span class="nc" id="L317">        ServerSocket serverSocket = server.getServerSocket();</span>
+<span class="nc bnc" id="L318" title="All 2 branches missed.">        while (!server.done) {</span>
+            try {
+<span class="nc" id="L320">                Socket clientSocket = serverSocket.accept();</span>
+                ClientHandler clientHandler;
+<span class="nc" id="L322">                synchronized (server.getConnectedClients()) {</span>
+<span class="nc" id="L323">                    System.out.println(&quot;Client Accepted, number of connected hosts: &quot; + (server.getConnectedClients().size() + 1));</span>
+<span class="nc" id="L324">                    clientHandler = new ClientHandler(clientSocket);</span>
+<span class="nc" id="L325">                    ServerPingThread pingThread = new ServerTcpPingThread(clientHandler);</span>
+<span class="nc" id="L326">                    server.getConnectedClients().put(clientHandler, pingThread);</span>
+<span class="nc" id="L327">                }</span>
+<span class="nc" id="L328">                server.executeClientHandler(clientHandler);</span>
+<span class="nc" id="L329">            } catch (SocketException s) {</span>
+<span class="nc" id="L330">                System.out.println(&quot;\n&quot;+s.getMessage());</span>
+<span class="nc bnc" id="L331" title="All 2 branches missed.">                if(s.getMessage().equals(&quot;Socket closed&quot;)){</span>
+<span class="nc" id="L332">                    System.out.println(&quot;Socket is closed, quitting TCP accepter&quot;);</span>
+                }else{
+<span class="nc" id="L334">                    s.printStackTrace();</span>
+                }
+<span class="nc" id="L336">            }catch (Exception e){</span>
+<span class="nc" id="L337">                System.err.println(&quot;Server side error &quot;);</span>
+<span class="nc" id="L338">                e.printStackTrace();</span>
+<span class="nc" id="L339">            }</span>
+        }
+<span class="nc" id="L341">        System.exit(12);</span>
+<span class="nc" id="L342">    }</span>
+}
+
+<span class="nc" id="L345">class ServerInputHandler extends Thread {</span>
+    @Override
+    public void run() {
+<span class="nc" id="L348">        Server server = Server.getInstance();</span>
+
+        String message;
+<span class="nc" id="L351">        BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));</span>
+<span class="nc bnc" id="L352" title="All 2 branches missed.">        while (!server.done) {</span>
+            try {
+<span class="nc" id="L354">                message = inReader.readLine();</span>
+
+<span class="nc bnc" id="L356" title="All 2 branches missed.">                if (message.equals(&quot;/q&quot;)) {</span>
+<span class="nc" id="L357">                    System.out.println(&quot;Quitting server...&quot;);</span>
+                    //closes all the lobbys
+                    List&lt;Lobby&gt; lobbys;
+<span class="nc" id="L360">                    synchronized (server.getLobbyList()){</span>
+<span class="nc" id="L361">                        lobbys = new ArrayList&lt;&gt;(server.getLobbyList());</span>
+<span class="nc" id="L362">                    }</span>
+<span class="nc bnc" id="L363" title="All 2 branches missed.">                    for(Lobby l: lobbys){</span>
+<span class="nc" id="L364">                        server.killLobby(l.getLobbyUID());</span>
+<span class="nc" id="L365">                    }</span>
+<span class="nc" id="L366">                    System.out.println(&quot;All the lobbys are killed&quot;);</span>
+                    //closes all the clients
+                    Map&lt;ClientHandler, ServerPingThread&gt; clients;
+<span class="nc" id="L369">                    synchronized (server.getConnectedClients()){</span>
+<span class="nc" id="L370">                        clients = new HashMap&lt;&gt;(server.getConnectedClients());</span>
+<span class="nc" id="L371">                    }</span>
+<span class="nc bnc" id="L372" title="All 2 branches missed.">                    for(ClientHandler ch:clients.keySet()){</span>
+<span class="nc" id="L373">                        ch.sendShutdown();</span>
+<span class="nc" id="L374">                    }</span>
+<span class="nc" id="L375">                    System.out.println(&quot;All the client sare killed&quot;);</span>
+                    try{
+<span class="nc" id="L377">                        server.shutdown();</span>
+<span class="nc" id="L378">                    }catch (Exception e){</span>
+<span class="nc" id="L379">                        System.out.println(&quot;Error in server shutdown&quot;);</span>
+<span class="nc" id="L380">                        e.printStackTrace();</span>
+<span class="nc" id="L381">                    }</span>
+
+<span class="nc bnc" id="L383" title="All 2 branches missed.">                } else if(message.equals(&quot;/h&quot;)){</span>
+<span class="nc" id="L384">                    String help = &quot;***MY SHELFIE SERVER***\n&quot; +</span>
+<span class="nc" id="L385">                            server.getConnectedClients().size() + &quot; Connected clients\n&quot; +</span>
+<span class="nc" id="L386">                            server.getLobbyList().size() + &quot; started games\n&quot; +</span>
+                            &quot;type /q to exit from the server app\n&quot;;
+<span class="nc" id="L388">                    System.out.println(help);</span>
+<span class="nc" id="L389">                }else{</span>
+<span class="nc" id="L390">                    System.out.println(&quot;*Wrong input message*&quot;);</span>
+                }
+<span class="nc" id="L392">            } catch (IOException e) {</span>
+<span class="nc" id="L393">                throw new RuntimeException(e);</span>
+<span class="nc" id="L394">            }</span>
+
+        }
+<span class="nc" id="L397">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

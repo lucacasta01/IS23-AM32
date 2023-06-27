@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Game.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jacoco.exec</a> &gt; <a href="index.source.html" class="el_package">it.polimi.myShelfie.model</a> &gt; <span class="el_source">Game.java</span></div><h1>Game.java</h1><pre class="source lang-java linenums">package it.polimi.myShelfie.model;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import it.polimi.myShelfie.network.ClientHandler;
+import it.polimi.myShelfie.model.cards.*;
+import it.polimi.myShelfie.utilities.*;
+import it.polimi.myShelfie.utilities.pojo.GUIRank;
+import it.polimi.myShelfie.utilities.pojo.GameParameters;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+
+<span class="fc" id="L16">public class Game{</span>
+    private int playersNumber;
+    private List&lt;Player&gt; players;
+    private int currentPlayer;
+    private Board gameBoard;
+    private List&lt;PersonalGoalCard&gt; personalDeck;
+    private List&lt;SharedGoalCard&gt; sharedDeck;
+    private String UID;
+    private boolean isFinished;
+    private List&lt;Player&gt; oldGamePlayers;
+<span class="fc" id="L26">    private boolean isLastTurn = false;</span>
+<span class="fc" id="L27">    private boolean firstToEnd = true;</span>
+
+
+    /**
+     * Create a brand-new game
+     * @param UID
+     * @param playersNumber
+     */
+<span class="fc" id="L35">    public Game(String UID, int playersNumber){</span>
+<span class="fc" id="L36">        this.players = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L37">        this.gameBoard = new Board();</span>
+<span class="fc" id="L38">        this.playersNumber = playersNumber;</span>
+<span class="fc" id="L39">        this.currentPlayer = 0;</span>
+<span class="fc" id="L40">        this.UID = UID;</span>
+<span class="fc" id="L41">        this.isFinished = false;</span>
+<span class="fc" id="L42">        initializePersonalDeck();</span>
+<span class="fc" id="L43">        initializeSharedDeck(playersNumber);</span>
+<span class="fc" id="L44">        initBoard();</span>
+<span class="fc" id="L45">    }</span>
+
+    /**
+     * Load a Game from the configuration file UID.json (if exists)
+     * @param UID
+     */
+<span class="fc" id="L51">    public Game(String UID){</span>
+<span class="fc" id="L52">        this.UID = UID;</span>
+<span class="fc" id="L53">        this.isFinished = false;</span>
+        //load game by UID
+        /*
+        * JSON:
+        *   UID
+        *   PLAYER USERNAMES
+        *   PLAYER SHELVES
+        *   BOARD
+        *   POINTS AND CARDS (FOR EACH PLAYER)
+        *   SHARED CARDS
+        */
+
+<span class="fc" id="L65">        initializePersonalDeck();</span>
+        try{
+<span class="fc" id="L67">            loadGame(UID);</span>
+        }
+<span class="nc" id="L69">        catch (IOException e){</span>
+<span class="nc" id="L70">            throw new RuntimeException();</span>
+<span class="fc" id="L71">        }</span>
+<span class="fc" id="L72">    }</span>
+
+    /**
+     * Saves the current state of the game
+     */
+    public void saveGame(){
+<span class="fc" id="L78">        GameParameters gameParameters = new GameParameters();</span>
+<span class="fc" id="L79">        gameParameters.setUID(this.UID);</span>
+<span class="fc" id="L80">        gameParameters.setBoard(this.gameBoard.toColorPosition());</span>
+<span class="fc" id="L81">        gameParameters.setCurrentPlayer(this.currentPlayer);</span>
+<span class="fc" id="L82">        gameParameters.setLastTurn(isLastTurn);</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        for(Player p : players){</span>
+<span class="fc" id="L84">            gameParameters.addUsername(p.getUsername());</span>
+<span class="fc" id="L85">            gameParameters.addShelf(p.getMyShelf().toColorPosition());</span>
+<span class="fc" id="L86">            gameParameters.addScore(p.getScore());</span>
+<span class="fc" id="L87">            gameParameters.addPersonalCard(p.getMyGoalCard().getIndex());</span>
+<span class="fc" id="L88">        }</span>
+
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        for(SharedGoalCard c : sharedDeck){</span>
+<span class="fc" id="L91">            gameParameters.addSharedCard(c.getIndex());</span>
+<span class="fc" id="L92">        }</span>
+
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        for(Tile t : this.gameBoard.getTileHeap()){</span>
+<span class="fc" id="L95">            gameParameters.addTileToHeap(t);</span>
+<span class="fc" id="L96">        }</span>
+
+<span class="fc" id="L98">        Gson gson = new GsonBuilder()</span>
+<span class="fc" id="L99">                .setPrettyPrinting()</span>
+<span class="fc" id="L100">                .create();</span>
+        try {
+<span class="fc" id="L102">            Path savedFilePath = Paths.get(System.getProperty(&quot;user.dir&quot;)+&quot;/config/savedgames/&quot; + UID + &quot;.json&quot;);</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">            if(!savedFilePath.toFile().isFile()) {</span>
+<span class="nc" id="L104">                savedFilePath.toFile().createNewFile();</span>
+            }
+<span class="fc" id="L106">            FileWriter fw = new FileWriter(savedFilePath.toString());</span>
+<span class="fc" id="L107">            fw.write(gson.toJson(gameParameters));</span>
+<span class="fc" id="L108">            fw.close();</span>
+        }
+<span class="nc" id="L110">        catch (IOException e){</span>
+<span class="nc" id="L111">            e.printStackTrace();</span>
+<span class="fc" id="L112">        }</span>
+<span class="fc" id="L113">    }</span>
+
+    public void loadGame(String UID) throws IOException{
+
+<span class="fc" id="L117">        GameParameters gameParameters = null;</span>
+        try {
+<span class="fc" id="L119">                gameParameters = JsonParser.getGameParameters(&quot;/config/savedgames/&quot; + UID + &quot;.json&quot;);</span>
+<span class="nc" id="L120">        }catch (Exception e){</span>
+<span class="nc" id="L121">           e.printStackTrace();</span>
+<span class="fc" id="L122">        }</span>
+
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">        assert gameParameters != null;</span>
+<span class="fc" id="L125">        this.UID = gameParameters.getUID();</span>
+<span class="fc" id="L126">        this.playersNumber = gameParameters.getUsernames().size();</span>
+<span class="fc" id="L127">        this.currentPlayer = gameParameters.getCurrentPlayer();</span>
+<span class="fc" id="L128">        this.gameBoard = loadBoard(gameParameters.getBoard(),gameParameters.getTileHeap());</span>
+<span class="fc" id="L129">        this.isLastTurn = gameParameters.isLastTurn();</span>
+<span class="fc" id="L130">        oldGamePlayers = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">        for(int i=0;i&lt;playersNumber;i++){</span>
+<span class="fc" id="L132">            Player p = new Player(gameParameters.getUsernames().get(i));</span>
+<span class="fc" id="L133">            p.setScore(gameParameters.getScore().get(i));</span>
+<span class="fc" id="L134">            p.setMyShelf(loadShelf(gameParameters.getShelf().get(i)));</span>
+<span class="fc" id="L135">            p.setGoalCard(personalDeck.get(gameParameters.getPersonalCards().get(i)-1));</span>
+<span class="fc" id="L136">            oldGamePlayers.add(p);</span>
+        }
+<span class="fc" id="L138">        initializeSharedDeck(gameParameters.getSharedCards().get(0),gameParameters.getSharedCards().get(1), playersNumber);</span>
+
+<span class="fc" id="L140">    }</span>
+
+    /**
+     * Loads a shelf based on a previous game state
+     * @param colorPositions
+     * @return Loaded shelf
+     */
+    private Shelf loadShelf(List&lt;ColorPosition&gt; colorPositions){
+<span class="fc" id="L148">        Tile[][] tileMatrix = new Tile[Settings.SHELFROW][Settings.SHELFCOLUMN];</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        for(ColorPosition cp : colorPositions){</span>
+<span class="fc" id="L150">            tileMatrix[cp.getRow()][cp.getColumn()] = new Tile(cp.getImgpath(),cp.getTileColor());</span>
+<span class="fc" id="L151">        }</span>
+<span class="fc" id="L152">        return new Shelf(tileMatrix);</span>
+    }
+
+    /**
+     * Loads the board based on a previous game state
+     * @param colorPositions
+     * @param tileHeap
+     * @return Loaded board
+     */
+    private Board loadBoard(List&lt;ColorPosition&gt; colorPositions, List&lt;Tile&gt; tileHeap){
+<span class="fc" id="L162">        Tile[][] tileMatrix = new Tile[Settings.BOARD_DIM][Settings.BOARD_DIM];</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        for(ColorPosition cp : colorPositions){</span>
+<span class="fc" id="L164">            tileMatrix[cp.getRow()][cp.getColumn()] = new Tile(cp.getImgpath(),cp.getTileColor());</span>
+<span class="fc" id="L165">        }</span>
+<span class="fc" id="L166">        return new Board(tileMatrix,tileHeap);</span>
+    }
+    public String getUID() {
+<span class="fc" id="L169">        return UID;</span>
+    }
+
+    /**
+     * Initializes the initial deck used for personal goal cards
+     */
+    private void initializePersonalDeck(){
+<span class="fc" id="L176">        personalDeck = new ArrayList&lt;&gt;();</span>
+        try{
+<span class="fc bfc" id="L178" title="All 2 branches covered.">            for(int i=1;i&lt;=12;i++){</span>
+<span class="fc" id="L179">                String jPath = &quot;/configJsons/personalgoals/pg&quot; + i + &quot;.json&quot;;</span>
+<span class="fc" id="L180">                PersonalGoalCard cardToAdd = generatePersonalGoalCard(JsonParser.getPersonalGoalConfig(jPath),i);</span>
+<span class="fc" id="L181">                personalDeck.add(cardToAdd);</span>
+            }
+<span class="nc" id="L183">        } catch (Exception e) {</span>
+<span class="nc" id="L184">            e.printStackTrace();</span>
+<span class="fc" id="L185">        }</span>
+<span class="fc" id="L186">    }</span>
+
+    /**
+     * Generates a personal goal card
+     * @param colorPositions
+     * @param n
+     * @return the generated card
+     */
+    private PersonalGoalCard generatePersonalGoalCard(List&lt;ColorPosition&gt; colorPositions, int n){
+<span class="fc" id="L195">        List&lt;Tile.Color&gt; colors = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L196">        List&lt;Position&gt; positions = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L197" title="All 2 branches covered.">        for(ColorPosition c : colorPositions){</span>
+<span class="fc" id="L198">            colors.add(c.getTileColor());</span>
+<span class="fc" id="L199">            positions.add(new Position(c.getRow(),c.getColumn()));</span>
+<span class="fc" id="L200">        }</span>
+<span class="fc" id="L201">        PersonalGoalCard myCard = new PersonalGoalCard(&quot;/graphics/personalGoalCards/Personal_Goals&quot; + n + &quot;.png&quot;);</span>
+<span class="fc" id="L202">        myCard.setPattern(positions,colors);</span>
+<span class="fc" id="L203">        return myCard;</span>
+    }
+
+    /**
+     * Initializes the shared goals deck
+     * @param playerNumber
+     */
+    private void initializeSharedDeck(int playerNumber){
+<span class="fc" id="L211">        sharedDeck = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L212">        Random rnd = new Random();</span>
+<span class="fc" id="L213">        SharedGoalCard[] sharedGoalCards = new SharedGoalCard[12];</span>
+<span class="fc" id="L214">        sharedGoalCards[0] = new SharedGoal1Card(&quot;/graphics/commonGoalCards/1.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L215">        sharedGoalCards[1] = new SharedGoal2Card(&quot;/graphics/commonGoalCards/2.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L216">        sharedGoalCards[2] = new SharedGoal3Card(&quot;/graphics/commonGoalCards/3.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L217">        sharedGoalCards[3] = new SharedGoal4Card(&quot;/graphics/commonGoalCards/4.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L218">        sharedGoalCards[4] = new SharedGoal5Card(&quot;/graphics/commonGoalCards/5.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L219">        sharedGoalCards[5] = new SharedGoal6Card(&quot;/graphics/commonGoalCards/6.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L220">        sharedGoalCards[6] = new SharedGoal7Card(&quot;/graphics/commonGoalCards/7.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L221">        sharedGoalCards[7] = new SharedGoal8Card(&quot;/graphics/commonGoalCards/8.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L222">        sharedGoalCards[8] = new SharedGoal9Card(&quot;/graphics/commonGoalCards/9.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L223">        sharedGoalCards[9] = new SharedGoal10Card(&quot;/graphics/commonGoalCards/10.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L224">        sharedGoalCards[10] = new SharedGoal11Card(&quot;/graphics/commonGoalCards/11.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L225">        sharedGoalCards[11] = new SharedGoal12Card(&quot;/graphics/commonGoalCards/12.jpg&quot;, playerNumber);</span>
+
+<span class="fc" id="L227">        int card1 = rnd.nextInt(0,11);</span>
+<span class="fc" id="L228">        int card2 = rnd.nextInt(0,11);</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">        while(card1 == card2){</span>
+<span class="fc" id="L230">            card2 = rnd.nextInt(0,11);</span>
+        }
+<span class="fc" id="L232">        sharedDeck.add(sharedGoalCards[card1]);</span>
+<span class="fc" id="L233">        sharedDeck.add(sharedGoalCards[card2]);</span>
+<span class="fc" id="L234">    }</span>
+
+    /**
+     * Initializes the shared goals deck
+     * @param playerNumber
+     */
+    private void initializeSharedDeck(int card1, int card2, int playerNumber){
+<span class="fc" id="L241">        sharedDeck = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L242">        SharedGoalCard[] sharedGoalCards = new SharedGoalCard[12];</span>
+<span class="fc" id="L243">        sharedGoalCards[0] = new SharedGoal1Card(&quot;/graphics/commonGoalCards/1.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L244">        sharedGoalCards[1] = new SharedGoal2Card(&quot;/graphics/commonGoalCards/2.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L245">        sharedGoalCards[2] = new SharedGoal3Card(&quot;/graphics/commonGoalCards/3.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L246">        sharedGoalCards[3] = new SharedGoal4Card(&quot;/graphics/commonGoalCards/4.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L247">        sharedGoalCards[4] = new SharedGoal5Card(&quot;/graphics/commonGoalCards/5.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L248">        sharedGoalCards[5] = new SharedGoal6Card(&quot;/graphics/commonGoalCards/6.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L249">        sharedGoalCards[6] = new SharedGoal7Card(&quot;/graphics/commonGoalCards/7.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L250">        sharedGoalCards[7] = new SharedGoal8Card(&quot;/graphics/commonGoalCards/8.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L251">        sharedGoalCards[8] = new SharedGoal9Card(&quot;/graphics/commonGoalCards/9.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L252">        sharedGoalCards[9] = new SharedGoal10Card(&quot;/graphics/commonGoalCards/10.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L253">        sharedGoalCards[10] = new SharedGoal11Card(&quot;/graphics/commonGoalCards/11.jpg&quot;, playerNumber);</span>
+<span class="fc" id="L254">        sharedGoalCards[11] = new SharedGoal12Card(&quot;/graphics/commonGoalCards/12.jpg&quot;, playerNumber);</span>
+
+<span class="fc" id="L256">        sharedDeck.add(sharedGoalCards[card1-1]);</span>
+<span class="fc" id="L257">        sharedDeck.add(sharedGoalCards[card2-1]);</span>
+<span class="fc" id="L258">    }</span>
+
+    public int getPlayersNumber() {
+<span class="fc" id="L261">        return playersNumber;</span>
+    }
+
+    public boolean isFinished() {
+<span class="fc" id="L265">        return isFinished;</span>
+    }
+
+    public void setFinished(boolean finished) {
+<span class="nc" id="L269">        isFinished = finished;</span>
+<span class="nc" id="L270">    }</span>
+
+    public List&lt;Player&gt; getPlayers() {
+<span class="fc" id="L273">        return players;</span>
+    }
+
+    public void setPlayers(List&lt;Player&gt; players) {
+<span class="fc" id="L277">        this.players = players;</span>
+<span class="fc" id="L278">    }</span>
+    public int getCurrentPlayer() {
+<span class="fc" id="L280">        return currentPlayer;</span>
+    }
+
+    public Board getGameBoard() {
+<span class="fc" id="L284">        return gameBoard;</span>
+    }
+
+    /**
+     * Takes a random personal goal card from the initial deck and returns it removing it from the deck
+     * @return the drawn card (PersonalGoalCard)
+     */
+    public PersonalGoalCard drawPersonalGoal(){
+<span class="fc" id="L292">        int upperBound = this.personalDeck.size();</span>
+<span class="fc" id="L293">        Random rand = new Random();</span>
+<span class="fc" id="L294">        PersonalGoalCard toReturn = null;</span>
+        try {
+<span class="fc" id="L296">            int myRand = rand.nextInt(upperBound);</span>
+<span class="fc" id="L297">            toReturn = this.personalDeck.get(myRand);</span>
+<span class="fc" id="L298">            this.personalDeck.remove(myRand);</span>
+        }
+<span class="nc" id="L300">        catch (Exception e){</span>
+<span class="nc" id="L301">            System.out.println(&quot;Illegal action: PersonalDeck is empty.&quot;);</span>
+<span class="fc" id="L302">        }</span>
+
+<span class="fc" id="L304">        return toReturn;</span>
+    }
+
+    /**
+     * Moves on with the game, giving the turn to the next player
+     */
+    public void handleTurn(){
+<span class="fc" id="L311">        this.currentPlayer = (this.currentPlayer +1 ) % this.playersNumber;</span>
+<span class="fc" id="L312">    }</span>
+
+    public List&lt;Tile&gt; collectTiles(List&lt;Position&gt; tiles){
+<span class="fc bfc" id="L315" title="All 2 branches covered.">        if(tiles.size()==1){</span>
+<span class="fc" id="L316">            return this.collectTile(tiles.get(0));</span>
+<span class="fc bfc" id="L317" title="All 2 branches covered.">        }else if(tiles.size()==2){</span>
+<span class="fc" id="L318">            return this.collectTile(tiles.get(0), tiles.get(1));</span>
+<span class="fc bfc" id="L319" title="All 2 branches covered.">        }else if (tiles.size()==3){</span>
+<span class="fc" id="L320">            return this.collectTile(tiles.get(0), tiles.get(1), tiles.get(2));</span>
+        }
+<span class="fc" id="L322">        return null;</span>
+    }
+    /**
+     * Takes a tile from the game board and returns it as a list of a single object
+     * @return The said tile as a list of tiles
+     */
+    private List&lt;Tile&gt; collectTile(Position pos){
+<span class="fc bfc" id="L329" title="All 2 branches covered.">        if( this.gameBoard.isCatchable(pos.getRow(), pos.getColumn())) {</span>
+<span class="fc" id="L330">            Tile[][] currentGrid = this.gameBoard.getGrid();</span>
+<span class="fc" id="L331">            List&lt;Tile&gt; toReturn = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L332">            Tile t = currentGrid[pos.getRow()][pos.getColumn()];</span>
+<span class="fc" id="L333">            toReturn.add(new Tile(t.getImagePath(), t.getColor()));</span>
+<span class="fc" id="L334">            t.setColor(Tile.Color.NULLTILE);</span>
+<span class="fc" id="L335">            t.setImagePath(&quot;/graphics/itemTiles/transparent.png&quot;);</span>
+<span class="fc" id="L336">            return toReturn;</span>
+        }else{
+<span class="fc" id="L338">            return null;</span>
+        }
+    }
+
+    /**
+     * Takes two tiles from the game board and returns them in a list
+     * @return a list containing the picked tiles
+     */
+    private List&lt;Tile&gt; collectTile(Position pos1, Position pos2){
+<span class="pc bpc" id="L347" title="1 of 2 branches missed.">        if(areCatchable(pos1, pos2)) {</span>
+<span class="fc" id="L348">            Tile[][] currentGrid = this.gameBoard.getGrid();</span>
+<span class="fc" id="L349">            List&lt;Tile&gt; toReturn = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L350">            Tile t1 = currentGrid[pos1.getRow()][pos1.getColumn()];</span>
+<span class="fc" id="L351">            Tile t2 = currentGrid[pos2.getRow()][pos2.getColumn()];</span>
+<span class="fc" id="L352">            toReturn.add(new Tile(t1.getImagePath(), t1.getColor()));</span>
+<span class="fc" id="L353">            toReturn.add(new Tile(t2.getImagePath(), t2.getColor()));</span>
+<span class="fc" id="L354">            t1.setColor(Tile.Color.NULLTILE);</span>
+<span class="fc" id="L355">            t1.setImagePath(&quot;/graphics/itemTiles/transparent.png&quot;);</span>
+<span class="fc" id="L356">            t2.setColor(Tile.Color.NULLTILE);</span>
+<span class="fc" id="L357">            t2.setImagePath(&quot;/graphics/itemTiles/transparent.png&quot;);</span>
+<span class="fc" id="L358">            return toReturn;</span>
+        }else{
+<span class="nc" id="L360">            return null;</span>
+        }
+    }
+
+    /**
+     * Takes three tiles from the game board and returns them in a list
+     * @return a list containing the picked tiles
+     */
+    private List&lt;Tile&gt; collectTile(Position pos1, Position pos2, Position pos3){
+<span class="pc bpc" id="L369" title="1 of 2 branches missed.">        if(areCatchable(pos1, pos2, pos3)) {</span>
+<span class="fc" id="L370">            Tile[][] currentGrid = this.gameBoard.getGrid();</span>
+<span class="fc" id="L371">            List&lt;Tile&gt; toReturn = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L372">            Tile t1 = currentGrid[pos1.getRow()][pos1.getColumn()];</span>
+<span class="fc" id="L373">            Tile t2 = currentGrid[pos2.getRow()][pos2.getColumn()];</span>
+<span class="fc" id="L374">            Tile t3 = currentGrid[pos3.getRow()][pos3.getColumn()];</span>
+<span class="fc" id="L375">            toReturn.add(new Tile(t1.getImagePath(), t1.getColor()));</span>
+<span class="fc" id="L376">            toReturn.add(new Tile(t2.getImagePath(), t2.getColor()));</span>
+<span class="fc" id="L377">            toReturn.add(new Tile(t3.getImagePath(), t3.getColor()));</span>
+<span class="fc" id="L378">            t1.setColor(Tile.Color.NULLTILE);</span>
+<span class="fc" id="L379">            t1.setImagePath(&quot;/graphics/itemTiles/transparent.png&quot;);</span>
+<span class="fc" id="L380">            t2.setColor(Tile.Color.NULLTILE);</span>
+<span class="fc" id="L381">            t2.setImagePath(&quot;/graphics/itemTiles/transparent.png&quot;);</span>
+<span class="fc" id="L382">            t3.setColor(Tile.Color.NULLTILE);</span>
+<span class="fc" id="L383">            t3.setImagePath(&quot;/graphics/itemTiles/transparent.png&quot;);</span>
+<span class="fc" id="L384">            return toReturn;</span>
+        }else{
+<span class="nc" id="L386">            return null;</span>
+        }
+    }
+
+    /**
+     * returns whether the tiles are catchable or not
+     * @param pos1
+     * @param pos2
+     * @return true if catchable, false otherwise
+     */
+
+    private boolean areCatchable(Position pos1, Position pos2){
+<span class="pc bpc" id="L398" title="2 of 4 branches missed.">        if(this.gameBoard.isCatchable(pos1.getRow(), pos1.getColumn())&amp;&amp;this.gameBoard.isCatchable(pos2.getRow(), pos2.getColumn())){</span>
+<span class="pc bpc" id="L399" title="1 of 4 branches missed.">            return (pos1.getRow() == pos2.getRow()) || (pos1.getColumn() == pos2.getColumn());</span>
+        }else{
+<span class="nc" id="L401">            return false;</span>
+        }
+    }
+
+    /**
+     * returns whether the tiles are catchable or not
+     * @param pos1
+     * @param pos2
+     * @return true if catchable, false otherwise
+     */
+    private boolean areCatchable(Position pos1, Position pos2, Position pos3){
+<span class="pc bpc" id="L412" title="3 of 6 branches missed.">        if(this.gameBoard.isCatchable(pos1.getRow(), pos1.getColumn())&amp;&amp;this.gameBoard.isCatchable(pos2.getRow(), pos2.getColumn())&amp;&amp;this.gameBoard.isCatchable(pos3.getRow(), pos3.getColumn())){</span>
+<span class="pc bpc" id="L413" title="5 of 8 branches missed.">            return ((pos1.getRow() == pos2.getRow()) &amp;&amp; (pos2.getRow() == pos3.getRow())) || ((pos1.getColumn() == pos2.getColumn()) &amp;&amp; (pos2.getColumn() == pos3.getColumn()));</span>
+        }else{
+<span class="nc" id="L415">            return false;</span>
+        }
+    }
+
+    /**
+     * checks if the next turns are the lasts before the game ends
+     * @param p
+     */
+    public void checkLastTurn(Player p){
+<span class="fc bfc" id="L424" title="All 2 branches covered.">        if(p.getMyShelf().checkIsFull()){</span>
+<span class="fc" id="L425">            isLastTurn = true;</span>
+<span class="pc bpc" id="L426" title="1 of 2 branches missed.">            if(firstToEnd){</span>
+<span class="fc" id="L427">                p.setScore(p.getScore()+1);</span>
+<span class="fc" id="L428">                firstToEnd = false;</span>
+            }
+        }
+<span class="fc" id="L431">    }</span>
+
+    public boolean isLastTurn() {
+<span class="fc" id="L434">        return isLastTurn;</span>
+    }
+
+    /**
+     * Takes a list of tiles as parameter and adds it inside the player's shelf by
+     * looping the Shelf.insertTile method
+     */
+    public boolean insertTiles(List&lt;Tile&gt; toInsert, int column){
+<span class="fc" id="L442">        Player current = this.players.get(currentPlayer);</span>
+<span class="fc" id="L443">        Shelf currentShelf = current.getMyShelf();</span>
+<span class="fc bfc" id="L444" title="All 2 branches covered.">        if(currentShelf.freeTiles(column)&gt;=toInsert.size()) {</span>
+<span class="fc bfc" id="L445" title="All 2 branches covered.">            for (Tile t : toInsert) {</span>
+<span class="fc" id="L446">                currentShelf.insertTile(t, column);</span>
+<span class="fc" id="L447">            }</span>
+<span class="fc" id="L448">            return true;</span>
+        }else{
+<span class="fc" id="L450">            return false;</span>
+        }
+    }
+
+    /**
+     * Returns the final rank of the game
+     * @return rank (String)
+     */
+    public String getRank(boolean isGUI){
+<span class="fc" id="L459">        GUIRank guiRank = new GUIRank();</span>
+<span class="fc" id="L460">        List&lt;Player&gt; sortedPlayers = new ArrayList&lt;&gt;(players);</span>
+<span class="fc" id="L461">        sortedPlayers.sort(Comparator.comparingInt(Player::getScore).reversed());</span>
+
+<span class="fc" id="L463">        StringBuilder tuiRank = new StringBuilder();</span>
+<span class="fc" id="L464">        tuiRank.append(ANSI.BOLD).append(&quot;\t\t\t*** GAME RANK ***\n&quot;).append(ANSI.RESET_STYLE).append(&quot;\n&quot;);</span>
+<span class="fc" id="L465">        tuiRank.append(ANSI.ITALIC).append(&quot;Position\t\tUsername\t\tScore\n&quot;);</span>
+<span class="fc" id="L466">        int pos = 1;</span>
+<span class="fc bfc" id="L467" title="All 2 branches covered.">        for(int i=0;i&lt;sortedPlayers.size();i++){</span>
+<span class="fc bfc" id="L468" title="All 2 branches covered.">            if(i==0){</span>
+<span class="fc" id="L469">                tuiRank.append(ANSI.GREEN);</span>
+            }
+<span class="fc" id="L471">            tuiRank.append(pos).append(&quot;\t\t\t\t&quot;).append(sortedPlayers.get(i).getUsername()).append(&quot;\t\t\t&quot;).append(sortedPlayers.get(i).getScore()).append(&quot;\n&quot;);</span>
+<span class="pc bpc" id="L472" title="1 of 2 branches missed.">            if(isGUI){</span>
+<span class="nc" id="L473">                guiRank.addPos(Integer.toString(pos));</span>
+<span class="nc" id="L474">                guiRank.addNickname(sortedPlayers.get(i).getUsername());</span>
+<span class="nc" id="L475">                guiRank.addScore(Integer.toString(sortedPlayers.get(i).getScore()));</span>
+            }
+<span class="fc" id="L477">            int k = i;</span>
+<span class="fc bfc" id="L478" title="All 4 branches covered.">            while(i&lt;sortedPlayers.size()-1 &amp;&amp; (sortedPlayers.get(i).getScore() == sortedPlayers.get(i+1).getScore())){</span>
+<span class="fc" id="L479">                tuiRank.append(pos).append(&quot;\t\t\t\t&quot;).append(sortedPlayers.get(i+1).getUsername()).append(&quot;\t\t\t&quot;).append(sortedPlayers.get(i+1).getScore()).append(&quot;\n&quot;);</span>
+<span class="pc bpc" id="L480" title="1 of 2 branches missed.">                if(isGUI){</span>
+<span class="nc" id="L481">                    guiRank.addPos(Integer.toString(pos));</span>
+<span class="nc" id="L482">                    guiRank.addNickname(sortedPlayers.get(i+1).getUsername());</span>
+<span class="nc" id="L483">                    guiRank.addScore(Integer.toString(sortedPlayers.get(i+1).getScore()));</span>
+                }
+<span class="fc" id="L485">                i++;</span>
+            }
+<span class="fc bfc" id="L487" title="All 2 branches covered.">            if(k==0){</span>
+<span class="fc" id="L488">                tuiRank.append(ANSI.RESET_COLOR);</span>
+            }
+<span class="fc" id="L490">            pos++;</span>
+        }
+
+<span class="pc bpc" id="L493" title="1 of 2 branches missed.">        if(isGUI){</span>
+<span class="nc" id="L494">            return JsonParser.guiRankToJson(guiRank);</span>
+        }
+        else {
+<span class="fc" id="L497">            return tuiRank.toString();</span>
+        }
+    }
+
+    public List&lt;SharedGoalCard&gt; getSharedDeck() {
+<span class="fc" id="L502">        return sharedDeck;</span>
+    }
+
+    public List&lt;Player&gt; getOldGamePlayers() {
+<span class="fc" id="L506">        return oldGamePlayers;</span>
+    }
+
+    /**
+     * method to get the player linked to a clientHandler
+     * @param ch clientHandler
+     * @return player linked to ch
+     */
+    public Player chToPlayer(ClientHandler ch){
+<span class="pc bpc" id="L515" title="1 of 2 branches missed.">        for(Player p:players){</span>
+<span class="fc bfc" id="L516" title="All 2 branches covered.">            if(p.getUsername().equals(ch.getNickname())){</span>
+<span class="fc" id="L517">                return p;</span>
+            }
+<span class="fc" id="L519">        }</span>
+<span class="nc" id="L520">        return null;</span>
+    }
+
+    /**
+     * Initializes the board based on the number of players selected
+     */
+    private void initBoard(){
+        try {
+<span class="fc" id="L528">            this.gameBoard.initBoard(this.playersNumber);</span>
+        }
+<span class="nc" id="L530">        catch(Exception e){</span>
+<span class="nc" id="L531">           e.printStackTrace();</span>
+<span class="fc" id="L532">        }</span>
+<span class="fc" id="L533">    }</span>
+
+
+    /**
+     * Adds a list of players to the player list
+     * @param p list of players to add
+     */
+    public void addPlayer(List&lt;Player&gt; p){
+<span class="fc bfc" id="L541" title="All 2 branches covered.">        if(players.size() + p.size() &lt;= playersNumber) {</span>
+<span class="fc" id="L542">            players.addAll(p);</span>
+<span class="fc bfc" id="L543" title="All 2 branches covered.">            for(Player player : p) {</span>
+<span class="fc" id="L544">                player.setGoalCard(drawPersonalGoal());</span>
+<span class="fc" id="L545">                player.initShelf();</span>
+<span class="fc" id="L546">            }</span>
+        }
+        else{
+<span class="fc" id="L549">            System.out.println(&quot;No more places available&quot;);</span>
+        }
+<span class="fc" id="L551">    }</span>
+
+    public void initializeoldGamePlayers(){
+<span class="fc" id="L554">        this.oldGamePlayers = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L555">    }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

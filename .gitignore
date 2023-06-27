@@ -20,7 +20,6 @@ executable/
 #User
 *.class
 src/main/java/it/polimi/myshelfie/utilities/Settings.java
-src/main/resources/graphics/boards/
 deliveries/myShelfieApplication/
 config/
 src/shade/

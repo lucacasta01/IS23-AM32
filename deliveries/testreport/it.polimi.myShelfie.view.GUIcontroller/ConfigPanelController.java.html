@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigPanelController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jacoco.exec</a> &gt; <a href="index.source.html" class="el_package">it.polimi.myShelfie.view.GUIcontroller</a> &gt; <span class="el_source">ConfigPanelController.java</span></div><h1>ConfigPanelController.java</h1><pre class="source lang-java linenums">package it.polimi.myShelfie.view.GUIcontroller;
+
+import it.polimi.myShelfie.application.Client;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+
+import java.util.regex.Pattern;
+
+<span class="nc" id="L11">public class ConfigPanelController {</span>
+
+    @FXML
+    TextField ipTxt;
+    @FXML
+    TextField tcpPortTxt;
+    @FXML
+    TextField rmiPortTxt;
+    @FXML
+    Label errorLbl;
+
+    public void initialize(){
+<span class="nc" id="L23">        errorLbl.setVisible(false);</span>
+<span class="nc" id="L24">        ipTxt.setText(Client.getInstance().getServerIP());</span>
+<span class="nc" id="L25">        tcpPortTxt.setText(Integer.toString(Client.getInstance().getTCPPort()));</span>
+<span class="nc" id="L26">        rmiPortTxt.setText(Integer.toString(Client.getInstance().getRMIPort()));</span>
+<span class="nc" id="L27">    }</span>
+
+    public void doSet(ActionEvent actionEvent) {
+<span class="nc" id="L30">        StringBuilder error = new StringBuilder();</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">        if(!checkIp(ipTxt.getText())){</span>
+<span class="nc" id="L32">            error.append(&quot;Invalid IP Address\n&quot;);</span>
+<span class="nc" id="L33">            ipTxt.setText(Client.getInstance().getServerIP());</span>
+        }else{
+<span class="nc" id="L35">            Client.getInstance().setServerIP(ipTxt.getText());</span>
+        }
+
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        if(!checkTcpPort(tcpPortTxt.getText())){</span>
+<span class="nc" id="L39">            error.append(&quot;Invalid TCP port\n&quot;);</span>
+<span class="nc" id="L40">            tcpPortTxt.setText(Integer.toString(Client.getInstance().getTCPPort()));</span>
+        }else{
+<span class="nc" id="L42">            Client.getInstance().setTCPPort(Integer.parseInt(tcpPortTxt.getText()));</span>
+        }
+
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        if(!checkRmiPort(rmiPortTxt.getText())){</span>
+<span class="nc" id="L46">            error.append(&quot;Invalid RMI port\n&quot;);</span>
+<span class="nc" id="L47">            rmiPortTxt.setText(Integer.toString(Client.getInstance().getRMIPort()));</span>
+        }else{
+<span class="nc" id="L49">            Client.getInstance().setRMIPort(Integer.parseInt(rmiPortTxt.getText()));</span>
+        }
+
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if(!error.toString().equals(&quot;&quot;)){</span>
+<span class="nc" id="L53">            errorLbl.setText(error.toString());</span>
+<span class="nc" id="L54">            errorLbl.setVisible(true);</span>
+        }
+        else{
+<span class="nc" id="L57">            errorLbl.setVisible(false);</span>
+        }
+<span class="nc" id="L59">    }</span>
+
+    public boolean checkIp(String ip){
+<span class="nc" id="L62">        Pattern IPV4 = Pattern.compile(&quot;^localhost|((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$&quot;);</span>
+<span class="nc" id="L63">        return IPV4.matcher(ip).matches();</span>
+    }
+
+    public boolean checkTcpPort(String tcpPort){
+<span class="nc" id="L67">        Pattern port = Pattern.compile(&quot;^\\d{1,5}$&quot;);</span>
+<span class="nc bnc" id="L68" title="All 4 branches missed.">        return port.matcher(tcpPort).matches() &amp;&amp; !tcpPort.equals(rmiPortTxt.getText());</span>
+    }
+
+    public boolean checkRmiPort(String rmiPort){
+<span class="nc" id="L72">        Pattern port = Pattern.compile(&quot;^\\d{1,5}$&quot;);</span>
+<span class="nc bnc" id="L73" title="All 4 branches missed.">        return port.matcher(rmiPort).matches() &amp;&amp; !rmiPort.equals(tcpPortTxt.getText());</span>
+    }
+
+    public void doSetConfig(ActionEvent actionEvent) {
+<span class="nc" id="L77">        StringBuilder error = new StringBuilder();</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if(!checkIp(ipTxt.getText())){</span>
+<span class="nc" id="L79">            error.append(&quot;Invalid IP Address\n&quot;);</span>
+<span class="nc" id="L80">            ipTxt.setText(Client.getInstance().getServerIP());</span>
+        }else{
+            //todo
+        }
+
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        if(!checkTcpPort(tcpPortTxt.getText())){</span>
+<span class="nc" id="L86">            error.append(&quot;Invalid TCP port\n&quot;);</span>
+<span class="nc" id="L87">            tcpPortTxt.setText(Integer.toString(Client.getInstance().getTCPPort()));</span>
+        }else{
+            //todo
+        }
+
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if(!checkRmiPort(rmiPortTxt.getText())){</span>
+<span class="nc" id="L93">            error.append(&quot;Invalid RMI port\n&quot;);</span>
+<span class="nc" id="L94">            rmiPortTxt.setText(Integer.toString(Client.getInstance().getRMIPort()));</span>
+        }else{
+            //todo
+        }
+
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if(!error.toString().equals(&quot;&quot;)){</span>
+<span class="nc" id="L100">            errorLbl.setText(error.toString());</span>
+<span class="nc" id="L101">            errorLbl.setVisible(true);</span>
+        }
+        else{
+<span class="nc" id="L104">            errorLbl.setVisible(false);</span>
+        }
+<span class="nc" id="L106">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

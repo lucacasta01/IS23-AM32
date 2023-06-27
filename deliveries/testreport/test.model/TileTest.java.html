@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TileTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jacoco.exec</a> &gt; <a href="index.source.html" class="el_package">test.model</a> &gt; <span class="el_source">TileTest.java</span></div><h1>TileTest.java</h1><pre class="source lang-java linenums">package test.model;
+
+import it.polimi.myShelfie.model.Tile;
+import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import static org.junit.jupiter.api.Assertions.*;
+
+
+<span class="fc" id="L9">public class TileTest {</span>
+<span class="fc" id="L10">    private final String fakePath = &quot;testPath&quot;;</span>
+    @Test
+    @DisplayName(&quot;setColor method&quot;)
+    public void setColor(){
+<span class="fc" id="L14">        Tile testTile1 = new Tile(fakePath, Tile.Color.BLUE);</span>
+<span class="fc" id="L15">        testTile1.setColor(Tile.Color.GREEN);</span>
+<span class="fc" id="L16">        assertEquals(Tile.Color.GREEN, testTile1.getColor());</span>
+<span class="fc" id="L17">        Tile testTile2 = new Tile(fakePath, Tile.Color.NULLTILE);</span>
+<span class="fc" id="L18">        testTile2.setColor(Tile.Color.PINK);</span>
+<span class="fc" id="L19">        assertEquals(Tile.Color.PINK, testTile2.getColor());</span>
+<span class="fc" id="L20">    }</span>
+    @Test
+    @DisplayName(&quot;getColor method&quot;)
+    public void getColor(){
+<span class="fc" id="L24">        Tile testTile3 = new Tile(fakePath, Tile.Color.YELLOW);</span>
+<span class="fc" id="L25">        assertEquals(Tile.Color.YELLOW, testTile3.getColor());</span>
+<span class="fc" id="L26">        Tile testTile4 = new Tile(fakePath, Tile.Color.WHITE);</span>
+<span class="fc" id="L27">        assertEquals(Tile.Color.WHITE, testTile4.getColor());</span>
+<span class="fc" id="L28">        Tile testTile5 = new Tile(fakePath, Tile.Color.LIGHTBLUE);</span>
+<span class="fc" id="L29">        assertEquals(Tile.Color.LIGHTBLUE, testTile5.getColor());</span>
+
+
+<span class="fc" id="L32">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

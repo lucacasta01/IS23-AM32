@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PlayerTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jacoco.exec</a> &gt; <a href="index.source.html" class="el_package">test.model</a> &gt; <span class="el_source">PlayerTest.java</span></div><h1>PlayerTest.java</h1><pre class="source lang-java linenums">package test.model;
+
+import it.polimi.myShelfie.model.Player;
+import it.polimi.myShelfie.model.Shelf;
+import it.polimi.myShelfie.model.Tile;
+import it.polimi.myShelfie.utilities.Settings;
+import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+<span class="fc" id="L12">public class PlayerTest {</span>
+
+    @Test
+    @DisplayName(&quot;Init shelf test&quot;)
+    public void initShelfTest(){
+<span class="fc" id="L17">        Player p = new Player(&quot;test&quot;);</span>
+<span class="fc" id="L18">        p.initShelf();</span>
+<span class="fc bfc" id="L19" title="All 2 branches covered.">        for (int i=0; i&lt; Settings.SHELFROW; i++){</span>
+<span class="fc bfc" id="L20" title="All 2 branches covered.">            for(int j=0; j&lt;Settings.SHELFCOLUMN; j++){</span>
+<span class="fc" id="L21">                assertEquals(p.getMyShelf().getTileMartrix()[i][j].getColor(), Tile.Color.NULLTILE);</span>
+            }
+        }
+<span class="fc" id="L24">    }</span>
+
+    @Test
+    @DisplayName(&quot;Update score test&quot;)
+    public void updateScoreTest(){
+<span class="fc" id="L29">        Player p = new Player(&quot;test&quot;);</span>
+<span class="fc" id="L30">        p.setScore(2);</span>
+<span class="fc" id="L31">        p.updateScore(3);</span>
+<span class="fc" id="L32">        assertEquals(p.getScore(), 5);</span>
+<span class="fc" id="L33">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
