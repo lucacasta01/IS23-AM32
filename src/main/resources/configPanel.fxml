@@ -74,14 +74,6 @@
                   <Font name="Arial Bold" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="saveConfigBtn" blendMode="OVERLAY" mnemonicParsing="false" onAction="#doSetConfig" text="Save">
-               <font>
-                  <Font name="Arial Bold" size="12.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="5.0" />
-               </HBox.margin>
-            </Button>
          </children>
          <VBox.margin>
             <Insets top="40.0" />

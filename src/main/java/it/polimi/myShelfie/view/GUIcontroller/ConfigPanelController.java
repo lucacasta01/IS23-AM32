@@ -72,36 +72,4 @@ public class ConfigPanelController {
         Pattern port = Pattern.compile("^\\d{1,5}$");
         return port.matcher(rmiPort).matches() && !rmiPort.equals(tcpPortTxt.getText());
     }
-
-    public void doSetConfig(ActionEvent actionEvent) {
-        StringBuilder error = new StringBuilder();
-        if(!checkIp(ipTxt.getText())){
-            error.append("Invalid IP Address\n");
-            ipTxt.setText(Client.getInstance().getServerIP());
-        }else{
-            //todo
-        }
-
-        if(!checkTcpPort(tcpPortTxt.getText())){
-            error.append("Invalid TCP port\n");
-            tcpPortTxt.setText(Integer.toString(Client.getInstance().getTCPPort()));
-        }else{
-            //todo
-        }
-
-        if(!checkRmiPort(rmiPortTxt.getText())){
-            error.append("Invalid RMI port\n");
-            rmiPortTxt.setText(Integer.toString(Client.getInstance().getRMIPort()));
-        }else{
-            //todo
-        }
-
-        if(!error.toString().equals("")){
-            errorLbl.setText(error.toString());
-            errorLbl.setVisible(true);
-        }
-        else{
-            errorLbl.setVisible(false);
-        }
-    }
 }
