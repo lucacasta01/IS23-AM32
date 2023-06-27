@@ -135,7 +135,7 @@
                         <configuration>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>project-classifier</shadedClassifierName>
-                            <outputFile>deliveries\application\MyShelfie-Client_mac.jar</outputFile>
+                            <outputFile>deliveries\application\MyShelfie-Server.jar</outputFile>
                             <transformers>
                                 <transformer implementation= "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>it.polimi.myShelfie.application.Server</mainClass>
