@@ -64,15 +64,15 @@ public class GamePanelController implements Initializable {
         addGridEvent();
         setResetEnabled(false);
         chatNotificationImg.setVisible(false);
-        GUIClient.getInstance().getStage().setOnCloseRequest(e -> {
-            GUIClient.getInstance().getStage().close();
-            System.exit(0);
-        });
         System.out.println("init chairs");
         myChairImg.setVisible(false);
         p2ChairImg.setVisible(false);
         p3ChairImg.setVisible(false);
         p4ChairImg.setVisible(false);
+        GUIClient.getInstance().getStage().setOnCloseRequest(e -> {
+            GUIClient.getInstance().getStage().close();
+            Client.getInstance().addGuiAction("/quit");
+        });
     }
 
     private void setResetEnabled(boolean value){
