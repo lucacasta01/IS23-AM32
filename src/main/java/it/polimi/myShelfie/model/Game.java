@@ -121,22 +121,22 @@ public class Game{
            e.printStackTrace();
         }
 
-        assert gameParameters != null;
-        this.UID = gameParameters.getUID();
-        this.playersNumber = gameParameters.getUsernames().size();
-        this.currentPlayer = gameParameters.getCurrentPlayer();
-        this.gameBoard = loadBoard(gameParameters.getBoard(),gameParameters.getTileHeap());
-        this.isLastTurn = gameParameters.isLastTurn();
-        oldGamePlayers = new ArrayList<>();
-        for(int i=0;i<playersNumber;i++){
-            Player p = new Player(gameParameters.getUsernames().get(i));
-            p.setScore(gameParameters.getScore().get(i));
-            p.setMyShelf(loadShelf(gameParameters.getShelf().get(i)));
-            p.setGoalCard(personalDeck.get(gameParameters.getPersonalCards().get(i)-1));
-            oldGamePlayers.add(p);
+        if(gameParameters != null) {
+            this.UID = gameParameters.getUID();
+            this.playersNumber = gameParameters.getUsernames().size();
+            this.currentPlayer = gameParameters.getCurrentPlayer();
+            this.gameBoard = loadBoard(gameParameters.getBoard(), gameParameters.getTileHeap());
+            this.isLastTurn = gameParameters.isLastTurn();
+            oldGamePlayers = new ArrayList<>();
+            for (int i = 0; i < playersNumber; i++) {
+                Player p = new Player(gameParameters.getUsernames().get(i));
+                p.setScore(gameParameters.getScore().get(i));
+                p.setMyShelf(loadShelf(gameParameters.getShelf().get(i)));
+                p.setGoalCard(personalDeck.get(gameParameters.getPersonalCards().get(i) - 1));
+                oldGamePlayers.add(p);
+            }
+            initializeSharedDeck(gameParameters.getSharedCards().get(0), gameParameters.getSharedCards().get(1), playersNumber);
         }
-        initializeSharedDeck(gameParameters.getSharedCards().get(0),gameParameters.getSharedCards().get(1), playersNumber);
-
     }
 
     /**

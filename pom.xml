@@ -135,10 +135,10 @@
                         <configuration>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>project-classifier</shadedClassifierName>
-                            <outputFile>deliverables\application\MyShelfie-Client.jar</outputFile>
+                            <outputFile>deliverables\application\MyShelfie-Server.jar</outputFile>
                             <transformers>
                                 <transformer implementation= "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>it.polimi.myShelfie.application.MyShelfieClient</mainClass>
+                                    <mainClass>it.polimi.myShelfie.application.Server</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

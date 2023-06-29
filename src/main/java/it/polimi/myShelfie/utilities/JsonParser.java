@@ -55,6 +55,9 @@ public class JsonParser {
             String jsonString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             Type type = new TypeToken<GameParameters>() {}.getType();
             return new Gson().fromJson(jsonString, type);
+        }catch(FileNotFoundException e){
+            System.out.println("File at: "+System.getProperty("user.dir")+jPath+" not found");
+            return null;
         }
     }
 
