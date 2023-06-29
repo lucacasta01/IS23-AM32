@@ -699,7 +699,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     /**
      * Server calls this method when the nickname is  denied (login not ok)
-     * @param message string used to describe th eerror
+     * @param message string used to describe the error
      * @throws RemoteException
      */
     @Override
@@ -764,7 +764,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     }
 
     /**
-     * Recieves a chat message from the server
+     * Receives a chat message from the server
      * @param chatMessage
      * @throws RemoteException
      */
@@ -895,6 +895,11 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
 
     }
 
+    /**
+     * notify this client that the match is over
+     * @param rank
+     * @throws RemoteException
+     */
     @Override
     public void notifyGameEnded(String rank) throws RemoteException {
         if(isGUI){
@@ -985,7 +990,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     }
 
     /**
-     * returns this client's view (last recieved from the server
+     * returns this client's view (last received from the server)
      * @return
      */
     public View getView() {

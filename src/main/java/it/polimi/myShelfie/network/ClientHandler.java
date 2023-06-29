@@ -46,6 +46,9 @@ public class ClientHandler implements Runnable {
         this.rmiActions = new ArrayList<>();
     }
 
+    /**
+     * method to close connection between server and client
+     */
     public void shutdown() {
         if(!isRMI) {
             try {
@@ -73,6 +76,10 @@ public class ClientHandler implements Runnable {
         this.rmiActions.add(rmiAction);
     }
 
+    /**
+     * method that returns and removes a specific Action from the Action's list
+     * @return the specific Action
+     */
     public Action getAction(){
         if(!isRMI) {
             try {
@@ -554,10 +561,13 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * method to send the message passed as a parameter
+     * @param chatMessage
+     */
     public synchronized void sendChatMessage(ChatMessage chatMessage){
         if(isRMI){
             try{
-                //todo handling auto-send rmi
                 rmiClient.chatMessage(chatMessage);
             }
             catch (Exception e){
@@ -575,7 +585,10 @@ public class ClientHandler implements Runnable {
             }
         }
     }
-    
+
+    /**
+     * method used to notify the client that the nickname has been accepted
+     */
     public synchronized void notifyNicknameAccept(){
         if(isRMI){
             try{
@@ -597,6 +610,10 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * method used to notify the client that the nickname has been denied
+     * @param message
+     */
     public synchronized void notifyNicknameDeny(String message){
         if(isRMI){
             try{
@@ -619,6 +636,10 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * method used to notify the client that the lobby has been created
+     * @param playersNumber
+     */
     public synchronized void notifyLobbyCreated(int playersNumber) {
         if(isRMI){
             try{
@@ -638,6 +659,11 @@ public class ClientHandler implements Runnable {
             }
         }
     }
+
+    /**
+     * method used to notify the client that the lobby has been joined
+     * @param waitPlayerStatus
+     */
     public synchronized void notifyLobbyJoined(String waitPlayerStatus){
         if(isRMI){
             try{
@@ -658,6 +684,9 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * method used to notify the client that the lobby has started
+     */
     public synchronized void notifyGameStarted() {
         if(isRMI){
             try{
@@ -678,6 +707,10 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     *
+     * @param message
+     */
     public synchronized void sendDeny(String message) {
         if(isRMI){
             try {
@@ -698,6 +731,9 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     *
+     */
     public void addPong(){
         synchronized (pongResponses){
             pongResponses.add(new PingObject(false));
@@ -705,6 +741,10 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     *
+     * @param count
+     */
     public synchronized  void sendPong(String count){
         Gson gson = new Gson();
         try {
@@ -715,6 +755,10 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     *
+     * @param message
+     */
     public synchronized void sendAccept(String message) {
         if(isRMI){
             try{
@@ -735,6 +779,10 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * method for notifying the client that a new one has joined the lobby
+     * @param waitStatus
+     */
     public synchronized void notifyNewJoin(String waitStatus) {
         if(isRMI){
             try{
@@ -755,11 +803,19 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     *
+     * @throws IOException
+     */
     public synchronized void sendPing() throws IOException{
         Gson gson = new Gson();
         out.println(gson.toJson(new Response(Response.ResponseType.PING, null,null, "ping")));
     }
 
+    /**
+     *
+     * @return
+     */
     public List<PingObject> getPongResponses() {
         return pongResponses;
     }

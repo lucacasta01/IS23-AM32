@@ -13,6 +13,9 @@ public class SharedGoal3Card extends SharedGoalCard implements CheckSharedGoal {
         initFlags();
     }
 
+    /**
+     * initialize a support matrix for goal check with false flags
+     */
     public void initFlags(){
         for(int i = 0; i< Settings.SHELFROW; i++){
             for(int j = 0; j< Settings.SHELFCOLUMN; j++){
@@ -54,6 +57,16 @@ public class SharedGoal3Card extends SharedGoalCard implements CheckSharedGoal {
         return false;
     }
 
+
+    /**
+     * method that returns the number of adjacent tiles with the same color
+     * @param row
+     * @param column
+     * @param count_tiles
+     * @param flags
+     * @param matrix
+     * @return the number of adjacent tiles with the same color
+     */
     public int counter(int row, int column,int count_tiles, boolean[][] flags, Tile[][] matrix) {
 
         if(!matrix[row][column].getColor().equals(Tile.Color.NULLTILE) || !flags[row][column]) {

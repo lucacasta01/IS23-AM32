@@ -6,6 +6,10 @@ import javafx.event.ActionEvent;
 import javafx.stage.Stage;
 
 public class ConfirmExitController {
+    /**
+     *
+     * @param actionEvent
+     */
     public void yesChoice(ActionEvent actionEvent) {
         Stage stage = (Stage)((javafx.scene.Node)actionEvent.getSource()).getScene().getWindow();
         Client.getInstance().addGuiAction("/menu");

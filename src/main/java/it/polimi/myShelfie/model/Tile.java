@@ -1,8 +1,9 @@
 package it.polimi.myShelfie.model;
 public class Tile {
 
-
-
+    /**
+     * enumeration of all tile colors
+     */
     public enum Color {
         BLUE,
         LIGHTBLUE,

@@ -42,6 +42,12 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
         System.out.println("RMI server on");
     }
 
+    /**
+     * method to send a chat message, passed as a parameter, by the client with nickname, passed as a parameter, with a specific Action
+     * @param username
+     * @param message
+     * @throws RemoteException
+     */
     @Override
     public void chatMessage(String username, String message) throws RemoteException {
         ClientHandler ch = server.getConnectedClients()
@@ -55,6 +61,12 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
         }
     }
 
+    /**
+     * method to send a chat private message, passed as a parameter, by the client with nickname, passed as a parameter, with a specific Action
+     * @param username
+     * @param message
+     * @throws RemoteException
+     */
     @Override
     public void privateMessage(String username, String message) throws RemoteException {
         ClientHandler ch = server.getConnectedClients()
@@ -68,6 +80,12 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
         }
     }
 
+    /**
+     * method used to pick, with a specific Action, the tiles contained in the list passed as a parameter
+     * @param username
+     * @param chosenTiles
+     * @throws RemoteException
+     */
     @Override
     public void pickTiles(String username, List<Position> chosenTiles) throws RemoteException {
         ClientHandler ch = server.getConnectedClients()
@@ -81,6 +99,12 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
         }
     }
 
+    /**
+     * method used to select, with a specific Action, the column in the shelf passed as a parameter
+     * @param username
+     * @param column
+     * @throws RemoteException
+     */
     @Override
     public void selectColumn(String username, Integer column) throws RemoteException {
         ClientHandler ch = server.getConnectedClients()
@@ -95,6 +119,12 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
         }
     }
 
+    /**
+     * method to sort the tiles taken in the order specified by parameter, with a specific Action
+     * @param username
+     * @param newOrder
+     * @throws RemoteException
+     */
     @Override
     public void order(String username, String newOrder) throws RemoteException {
         ClientHandler ch = server.getConnectedClients()
@@ -124,6 +154,11 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
         }
     }
 
+    /**
+     * method used to show to the client with nickname passed as a parameter the 'help menu' with a specific Action
+     * @param username
+     * @throws RemoteException
+     */
     @Override
     public void help(String username) throws RemoteException {
         ClientHandler ch = server.getConnectedClients()
@@ -152,6 +187,11 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
         }
     }
 
+    /**
+     * method used to send a 'quit' Action for the client with nickname passed as a parameter
+     * @param username
+     * @throws RemoteException
+     */
     @Override
     public void quit(String username) throws RemoteException {
         ClientHandler ch = server.getConnectedClients()
@@ -159,13 +199,18 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
                 .stream()
                 .filter(c -> c.getNickname().equals(username))
                 .toList().get(0);
-            //todo chech quit from menu GUI (maybe works)
+
         synchronized (ch.getRmiActions()) {
             ch.setRmiAction(new Action(Action.ActionType.QUIT, username, null, null, null, null));
             ch.getRmiActions().notifyAll();
         }
     }
 
+    /**
+     * method used to add an RMI client, passed as a parameter, to the game
+     * @param client
+     * @throws RemoteException
+     */
     @Override
     public void addClient(RMIClient client) throws RemoteException {
         ClientHandler clientHandler = new ClientHandler();
@@ -173,6 +218,13 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
         server.addRmiClientHandler(clientHandler);
     }
 
+    /**
+     * method used to check if login of the client passed as a parameter, with nickname passed as a parameter, was successful
+     * @param username
+     * @param client
+     * @return true if login was successful
+     * @throws RemoteException
+     */
     @Override
     public boolean login(String username, RMIClient client) throws RemoteException {
         if(!Utils.checkNicknameFormat(username)){
@@ -201,6 +253,11 @@ public class RMIController extends UnicastRemoteObject implements RMIServer,Runn
         return true;
     }
 
+    /**
+     * method used to show to the client with nickname passed as a parameter the 'starting menu' with a specific Action
+     * @param username
+     * @throws RemoteException
+     */
     @Override
     public void requestMenu(String username) throws RemoteException {
         ClientHandler ch = server.getConnectedClients()

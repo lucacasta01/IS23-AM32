@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.Objects;
 
 public class GUIClient extends Application {
@@ -36,6 +37,11 @@ public class GUIClient extends Application {
         super();
         instance = this;
     }
+
+    /**
+     * method to set and show the stage
+     * @param stage
+     */
     @Override
     public void start(Stage stage) {
         this.stage = stage;
@@ -147,8 +153,6 @@ public class GUIClient extends Application {
             stage.setHeight(850);
             stage.setWidth(1440);
             stage.setScene(new Scene(gameParent));
-
-            //stage.setFullScreen(true);
         });
     }
 
@@ -254,6 +258,9 @@ public class GUIClient extends Application {
         });
     }
 
+    /**
+     * show sever offline banner
+     */
     public void showServerOfflineBan() {
         Platform.runLater(()->{
             Parent banner;

@@ -29,14 +29,16 @@ public class Board {
     }
 
     /**
-     * Returns the current state of a board's grid
      *
-     * @return current state of the grid
+     * @return current state of the board's grid
      */
     public Tile[][] getGrid() {
         return this.grid;
     }
 
+    /**
+     * @return current state of the tile's heap
+     */
     public List<Tile> getTileHeap() {
         return tileHeap;
     }
@@ -53,7 +55,6 @@ public class Board {
      * Checks whether the board's grid needs to be refilled
      * @return true if needed, false otherwise
      */
-
     public boolean needToRefill() {
         boolean check = true;
         for (int i = 0; i < Settings.BOARD_DIM; i++) {
@@ -165,7 +166,7 @@ public class Board {
     }
 
     /**
-     *Casually picks a tile from the tileHeap then deletes the picked tile from the heap
+     * Casually picks a tile from the tileHeap then deletes the picked tile from the heap
      * @return the randomly picked tile
      */
     private Tile pickTile(){

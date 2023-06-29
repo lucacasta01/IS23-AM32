@@ -27,6 +27,7 @@ public class Lobby implements Runnable{
     private boolean close;
     private final AtomicBoolean endWaitingPlayers = new AtomicBoolean(false);
     private final GameController gameController;
+
     /**
      * Create a lobby for a brand-new game
      *
@@ -413,6 +414,9 @@ public class Lobby implements Runnable{
     }
 
 
+    /**
+     * method for notifying all players that a player has quit the game
+     */
     public void notifyExit(){
         synchronized (lobbyPlayers){
             lobbyPlayers.notifyAll();
@@ -426,10 +430,19 @@ public class Lobby implements Runnable{
         }
     }
 
+    /**
+     *
+     * @return weather lobby is open or not
+     */
     public boolean isOpen() {
         return isOpen;
     }
 
+    /**
+     * method that add a player to the lobby
+     * @param player
+     * @throws RuntimeException
+     */
     public void acceptPlayer(ClientHandler player) throws RuntimeException{
         player.setPlaying(true);
         player.setColor(colors.pop());
@@ -455,6 +468,10 @@ public class Lobby implements Runnable{
         }
     }
 
+    /**
+     * method that sends a broadcast message
+     * @param message
+     */
     public void broadcastMessage(String message){
         for(ClientHandler t : lobbyPlayers){
             t.sendInfoMessage(message);
@@ -485,10 +502,11 @@ public class Lobby implements Runnable{
         }
     }
 
-private void singleUpdate(ClientHandler chToUpdate){
-    View view = gameController.generateView(chToUpdate, this);
-    chToUpdate.sendView(view);
-}
+    private void singleUpdate(ClientHandler chToUpdate){
+        View view = gameController.generateView(chToUpdate, this);
+        chToUpdate.sendView(view);
+    }
+
     private void broadcastUpdate(){
         for(ClientHandler ch: lobbyPlayers){
             singleUpdate(ch);
@@ -510,6 +528,11 @@ private void singleUpdate(ClientHandler chToUpdate){
         actions.add(a);
     }
 
+    /**
+     * method that returns the clientHandler associated with the nickname
+     * @param nickname
+     * @return the clientHandler associated with the nickname
+     */
     public ClientHandler clientHandlerOf(String nickname){
         for(ClientHandler ch: lobbyPlayers){
             if(ch.getNickname().equals(nickname)){
@@ -520,6 +543,9 @@ private void singleUpdate(ClientHandler chToUpdate){
     }
 
 
+    /**
+     * enumeration of game's mode
+     */
     public enum GameMode{
         NEWGAME,
         SAVEDGAME

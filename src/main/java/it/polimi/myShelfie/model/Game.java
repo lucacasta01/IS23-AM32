@@ -51,17 +51,6 @@ public class Game{
     public Game(String UID){
         this.UID = UID;
         this.isFinished = false;
-        //load game by UID
-        /*
-        * JSON:
-        *   UID
-        *   PLAYER USERNAMES
-        *   PLAYER SHELVES
-        *   BOARD
-        *   POINTS AND CARDS (FOR EACH PLAYER)
-        *   SHARED CARDS
-        */
-
         initializePersonalDeck();
         try{
             loadGame(UID);
@@ -112,6 +101,10 @@ public class Game{
         }
     }
 
+    /**
+     * restore the game parameters from a json
+     * @param UID
+     */
     public void loadGame(String UID) throws IOException{
 
         GameParameters gameParameters = null;
@@ -311,6 +304,12 @@ public class Game{
         this.currentPlayer = (this.currentPlayer +1 ) % this.playersNumber;
     }
 
+    /**
+     * return the list of tiles from list of caught tiles
+     *
+     * @param tiles
+     * @return tile/tiles from "tiles" list of caught tiles
+     */
     public List<Tile> collectTiles(List<Position> tiles){
         if(tiles.size()==1){
             return this.collectTile(tiles.get(0));
@@ -429,6 +428,11 @@ public class Game{
             }
         }
     }
+
+    /**
+     * return weather it is the last turn or not
+     * @return if is the last turn or not
+     */
 
     public boolean isLastTurn() {
         return isLastTurn;

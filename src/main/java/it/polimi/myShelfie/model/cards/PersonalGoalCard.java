@@ -71,6 +71,10 @@ public class PersonalGoalCard extends Card{
         return s.toString();
     }
 
+    /**
+     * return the number of the PersonalGoalCard
+     * @return the number of the PersonalGoalCard
+     */
     public Integer getIndex(){
         String[] strings = imgPath.split("/");
         String myString = strings[3];
@@ -89,6 +93,11 @@ public class PersonalGoalCard extends Card{
         return toReturn;
     }
 
+    /**
+     *
+     * @param s
+     * @return
+     */
     public Integer checkPersonalGoal(Shelf s){
         Tile[][] toCheck = s.getTileMartrix();
         int score = 0;

@@ -79,6 +79,10 @@ public class SharedGoalCard extends Card implements CheckSharedGoal{
         return false;
     }
 
+    /**
+     * return the number of the SharedGoalCard
+     * @return the number of the SharedGoalCard
+     */
     public Integer getIndex(){
         String[] strings = imgPath.split("/");
         String myString = strings[3];

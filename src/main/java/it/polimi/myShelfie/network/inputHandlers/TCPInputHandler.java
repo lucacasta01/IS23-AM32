@@ -32,7 +32,6 @@ public class TCPInputHandler extends Thread{
         String message;
         BufferedReader inReader = null;
 
-
         if(!isGUI){
             inReader = new BufferedReader(new InputStreamReader(System.in));
         }

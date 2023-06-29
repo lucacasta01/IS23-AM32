@@ -25,6 +25,11 @@ public class JsonParser {
         }
     }
 
+    /**
+     * converts the json constraint file into a list of 'color positions' representing the personal goal card
+     * @param jPath
+     * @return
+     */
     public static List<ColorPosition> getPersonalGoalConfig(String jPath){
         try (InputStream inputStream = JsonParser.class.getResourceAsStream(jPath)){
             String jsonString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);

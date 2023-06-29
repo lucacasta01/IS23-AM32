@@ -2,7 +2,6 @@ package it.polimi.myShelfie.model;
 import it.polimi.myShelfie.model.cards.PersonalGoalCard;
 public class Player {
 
-    // private Shelf myShelf;
     private int score;
     private final String username;
     private Shelf myShelf;

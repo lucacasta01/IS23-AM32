@@ -91,7 +91,7 @@ public class Server extends UnicastRemoteObject implements Runnable{
     }
 
     /**
-     *get instance method for singleton pattern
+     * get instance method for singleton pattern
      * @return instance if not null, a new server instance if null
      */
     public static synchronized Server getInstance() {
@@ -126,18 +126,25 @@ public class Server extends UnicastRemoteObject implements Runnable{
         return userGame;
     }
 
+    /**
+     * @return the RMI port number
+     */
     public int getRMIport(){
         return this.RMIport;
     }
 
     /**
      *
-     * @return a list of active lobbys
+     * @return a list of active lobbies
      */
     public synchronized List<Lobby> getLobbyList() {
         return lobbyList;
     }
 
+    /**
+     * add the RMI client handler ch to the map of connected clients
+     * @param ch
+     */
     public void addRmiClientHandler(ClientHandler ch){
         synchronized (this.connectedClients) {
             this.connectedClients.put(ch, new ServerRmiPingThread(ch));
@@ -283,7 +290,6 @@ public class Server extends UnicastRemoteObject implements Runnable{
     }
 
     /**
-     *
      * @return connected clients map
      */
     public Map<ClientHandler,ServerPingThread> getConnectedClients() {
@@ -302,7 +308,7 @@ public class Server extends UnicastRemoteObject implements Runnable{
     }
 
     /**
-     *
+     * check if client "nickname" is connected
      * @param nickname
      * @return true if the client "nickname" is connected to the server
      */
@@ -384,15 +390,15 @@ class ServerInputHandler extends Thread {
 
                 if (message.equals("/q")) {
                     System.out.println("Quitting server...");
-                    //closes all the lobbys
-                    List<Lobby> lobbys;
+                    //closes all the lobbies
+                    List<Lobby> lobbies;
                     synchronized (server.getLobbyList()){
-                        lobbys = new ArrayList<>(server.getLobbyList());
+                        lobbies = new ArrayList<>(server.getLobbyList());
                     }
-                    for(Lobby l: lobbys){
+                    for(Lobby l: lobbies){
                         server.killLobby(l.getLobbyUID());
                     }
-                    System.out.println("All the lobbys are killed");
+                    System.out.println("All the lobbies are killed");
                     //closes all the clients
                     Map<ClientHandler, ServerPingThread> clients;
                     synchronized (server.getConnectedClients()){

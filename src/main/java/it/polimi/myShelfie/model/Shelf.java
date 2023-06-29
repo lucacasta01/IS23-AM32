@@ -15,6 +15,7 @@ public class Shelf {
     public Shelf(Tile[][] tileMatrix){
         this.tileMatrix = tileMatrix;
     }
+
     /**
      * initialize the shelf with NULLTILE type tiles
      */
@@ -25,6 +26,7 @@ public class Shelf {
             }
         }
     }
+
     /**
      * @return a copy of this object Tile[6][5] tileMatrix
      */
@@ -81,8 +83,10 @@ public class Shelf {
         }
     }
 
-
-
+    /**
+     * return a list of color and image path of each tile in the shelf
+     * @return the color and the image path of each tile in the shelf
+     */
     public List<ColorPosition> toColorPosition(){
         List<ColorPosition> toReturn = new ArrayList<>();
         for(int i = 0; i< Settings.SHELFROW; i++){
