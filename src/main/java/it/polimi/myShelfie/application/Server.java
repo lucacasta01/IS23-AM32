@@ -142,7 +142,9 @@ public class Server extends UnicastRemoteObject implements Runnable{
         synchronized (this.connectedClients) {
             this.connectedClients.put(ch, new ServerRmiPingThread(ch));
             clientPool.execute(ch);
-            pingPool.execute(connectedClients.get(ch));
+            if(Settings.pingOn) {
+                pingPool.execute(connectedClients.get(ch));
+            }
         }
     }
 
@@ -409,11 +411,31 @@ class ServerInputHandler extends Thread {
 
                 } else if(message.equals("/h")){
                     String help = "***MY SHELFIE SERVER***\n" +
-                            server.getConnectedClients().size() + " Connected clients\n" +
+                            server.getConnectedClients().size() + " connected clients\n" +
                             server.getLobbyList().size() + " started games\n" +
-                            "type /q to exit from the server app\n";
+                            "Command list:\n"+
+                            "/q to shutdown the server\n"+
+                            "/kick <username> to kick a connected client\n"+
+                            "/usergame to show usergame map";
                     System.out.println(help);
-                }else{
+                } else if (message.startsWith("/kick")) {
+                    String userToKick = message.substring("/kick ".length());
+                    synchronized (server.getConnectedClients()) {
+                        for(ClientHandler ch : server.getConnectedClients().keySet()){
+                            if(ch.getNickname().equals(userToKick)){
+                                ch.sendShutdown();
+                                server.getConnectedClients().get(ch).setElapsed();
+                                server.removeClient(ch);
+                                System.out.println(userToKick + " kicked");
+                            }
+                        }
+                    }
+                } else if (message.equals("/usergame")) {
+                    System.out.println("Usergame: ");
+                    for(String s : server.getUserGame().keySet()){
+                        System.out.println(s+" : "+server.getUserGame().get(s));
+                    }
+                } else{
                     System.out.println("*Wrong input message*");
                 }
             } catch (IOException e) {

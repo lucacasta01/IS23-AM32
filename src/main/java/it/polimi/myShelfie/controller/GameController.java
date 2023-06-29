@@ -279,7 +279,7 @@ public class GameController {
         String toReturn = "1";
         for (int i = 0; i<SharedDeck.size(); i++){
             SharedGoalCard c = SharedDeck.get(i);
-            System.out.println("checking shared goal: "+c.toString());
+            //System.out.println("checking shared goal: "+c.toString());
             if(!c.isAchieved(p)){
                 if(c.checkPattern(p)){
                     toReturn ="Shared goal "+(i+1)+" achieved";

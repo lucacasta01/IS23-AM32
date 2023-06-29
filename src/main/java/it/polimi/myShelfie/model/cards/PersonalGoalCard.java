@@ -84,7 +84,6 @@ public class PersonalGoalCard extends Card{
             toReturn = Integer.parseInt(stringBuilder.toString());
         }
         catch (Exception e){
-            System.out.println("caught this exceprion");
             e.printStackTrace();
         }
         return toReturn;

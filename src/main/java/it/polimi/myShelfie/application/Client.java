@@ -338,7 +338,9 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                                             GUIClient.getInstance().showDenyDialog("NO OLD GAME FOUND");
                                         }
                                     } else if (response.getResponseType() == Response.ResponseType.RANDOM_GAME_NOT_FOUND) {
-                                        GUIClient.getInstance().showDenyDialog("No game available\nYou should create a new one".toUpperCase());
+                                        if(isGUI) {
+                                            GUIClient.getInstance().showDenyDialog("No game available\nYou should create a new one".toUpperCase());
+                                        }
                                     } else if (response.getResponseType() == Response.ResponseType.ACCEPT_LOAD_GAME) {
                                         if (isGUI) {
                                             GUIClient.getInstance().switchToWaitingScene();
@@ -943,7 +945,9 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
      */
     @Override
     public void oldGameNotFound() throws RemoteException {
-        GUIClient.getInstance().showDenyDialog("NO STARTED OLD GAME FOUND");
+        if(isGUI) {
+            GUIClient.getInstance().showDenyDialog("NO STARTED OLD GAME FOUND");
+        }
     }
 
     /**
@@ -952,7 +956,9 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
      */
     @Override
     public void denyRandomGame() throws RemoteException {
-        GUIClient.getInstance().showDenyDialog("No game available\nYou should create a new one".toUpperCase());
+        if(isGUI) {
+            GUIClient.getInstance().showDenyDialog("No game available\nYou should create a new one".toUpperCase());
+        }
     }
 
     /**

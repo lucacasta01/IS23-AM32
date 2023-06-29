@@ -69,7 +69,7 @@ public class JsonParser {
     }
 
     public static Map<String,String> getUsergame(String jPath){
-        try (InputStream inputStream = new FileInputStream(System.getProperty("user.dir")+jPath)) {
+        try (InputStream inputStream = new FileInputStream(jPath)) {
             String jsonString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             Type type = new TypeToken<Usergame>() {}.getType();
             Usergame usergame = new Gson().fromJson(jsonString, type);
