@@ -11,7 +11,7 @@ public class SharedGoal8Card extends SharedGoalCard implements CheckSharedGoal {
 
     /**
      * Returns true if the player passed by parameter has achieved the shared goal
-     *
+     * adds the player to the achievedBy list if needed
      * @return Check result
      */
     public boolean checkPattern(Player p){
@@ -21,7 +21,7 @@ public class SharedGoal8Card extends SharedGoalCard implements CheckSharedGoal {
 <span class="fc" id="L21">        Tile[][] toCheck = p.getMyShelf().getTileMartrix();</span>
 <span class="fc bfc" id="L22" title="All 2 branches covered.">        if((toCheck[0][0].getColor() == toCheck[Settings.SHELFROW-1][0].getColor()</span>
 <span class="pc bpc" id="L23" title="1 of 2 branches missed.">                &amp;&amp; toCheck[Settings.SHELFROW-1][Settings.SHELFCOLUMN-1].getColor() == toCheck[Settings.SHELFROW-1][0].getColor()</span>
-<span class="pc bpc" id="L24" title="2 of 4 branches missed.">                &amp;&amp; toCheck[Settings.SHELFROW-1][0].getColor() == toCheck[0][Settings.SHELFCOLUMN-1].getColor())&amp;&amp;toCheck[0][0].getColor()!= Tile.Color.NULLTILE){</span>
+<span class="pc bpc" id="L24" title="1 of 4 branches missed.">                &amp;&amp; toCheck[Settings.SHELFROW-1][0].getColor() == toCheck[0][Settings.SHELFCOLUMN-1].getColor())&amp;&amp;toCheck[0][0].getColor()!= Tile.Color.NULLTILE){</span>
 <span class="fc" id="L25">            addPlayer(p);</span>
 <span class="fc" id="L26">            return true;</span>
         }

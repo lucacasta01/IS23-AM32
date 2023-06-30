@@ -15,6 +15,11 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * The network counterpart of Game.
+ * One lobby represents one match.
+ * Each Lobby is simply a group of ClientHandler which interacts in order to make a game.
+ */
 public class Lobby implements Runnable{
     private final List<ClientHandler> lobbyPlayers;
     private final String lobbyUID;

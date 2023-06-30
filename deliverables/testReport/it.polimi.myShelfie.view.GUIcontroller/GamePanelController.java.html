@@ -3,6 +3,7 @@
 import com.jfoenix.controls.JFXDrawer;
 import it.polimi.myShelfie.application.Client;
 import it.polimi.myShelfie.application.GUIClient;
+import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.Settings;
 import it.polimi.myShelfie.view.View;
 import javafx.application.Platform;
@@ -28,7 +29,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-<span class="nc" id="L31">public class GamePanelController implements Initializable {</span>
+<span class="nc" id="L32">public class GamePanelController implements Initializable {</span>
     @FXML
     GridPane boardGrid, myShelfGrid, otherShelfGrid1, otherShelfGrid2, otherShelfGrid3;
     @FXML
@@ -53,554 +54,560 @@ import java.util.*;
     ImageView myChairImg, p2ChairImg, p3ChairImg, p4ChairImg;
     @FXML
     ImageView sharedGoal1Stack, sharedGoal2Stack;
-<span class="nc" id="L56">    final List&lt;ImageView&gt; collectedTiles = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L57">    int column = -1;</span>
+<span class="nc" id="L57">    final List&lt;ImageView&gt; collectedTiles = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L58">    int column = -1;</span>
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-<span class="nc" id="L62">        initializeChatPanel();</span>
-<span class="nc" id="L63">        Client.getInstance().setGamePanelController(this);</span>
-<span class="nc" id="L64">        addGridEvent();</span>
-<span class="nc" id="L65">        setResetEnabled(false);</span>
-<span class="nc" id="L66">        chatNotificationImg.setVisible(false);</span>
-<span class="nc" id="L67">        GUIClient.getInstance().getStage().setOnCloseRequest(e -&gt; {</span>
-<span class="nc" id="L68">            GUIClient.getInstance().getStage().close();</span>
-<span class="nc" id="L69">            System.exit(0);</span>
-<span class="nc" id="L70">        });</span>
-<span class="nc" id="L71">        System.out.println(&quot;init chairs&quot;);</span>
-<span class="nc" id="L72">        myChairImg.setVisible(false);</span>
-<span class="nc" id="L73">        p2ChairImg.setVisible(false);</span>
-<span class="nc" id="L74">        p3ChairImg.setVisible(false);</span>
-<span class="nc" id="L75">        p4ChairImg.setVisible(false);</span>
-<span class="nc" id="L76">    }</span>
+<span class="nc" id="L63">        initializeChatPanel();</span>
+<span class="nc" id="L64">        Client.getInstance().setGamePanelController(this);</span>
+<span class="nc" id="L65">        addGridEvent();</span>
+<span class="nc" id="L66">        setResetEnabled(false);</span>
+<span class="nc" id="L67">        chatNotificationImg.setVisible(false);</span>
+<span class="nc" id="L68">        System.out.println(&quot;init chairs&quot;);</span>
+<span class="nc" id="L69">        myChairImg.setVisible(false);</span>
+<span class="nc" id="L70">        p2ChairImg.setVisible(false);</span>
+<span class="nc" id="L71">        p3ChairImg.setVisible(false);</span>
+<span class="nc" id="L72">        p4ChairImg.setVisible(false);</span>
+<span class="nc" id="L73">        GUIClient.getInstance().getStage().setOnCloseRequest(e -&gt; {</span>
+<span class="nc" id="L74">            GUIClient.getInstance().getStage().close();</span>
+<span class="nc" id="L75">            Client.getInstance().addGuiAction(&quot;/quit&quot;);</span>
+<span class="nc" id="L76">        });</span>
+<span class="nc" id="L77">    }</span>
 
     private void setResetEnabled(boolean value){
-<span class="nc bnc" id="L79" title="All 2 branches missed.">        collectRstBtn.setDisable(!value);</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        collectRstBtn.setDisable(!value);</span>
 
-<span class="nc" id="L81">    }</span>
+<span class="nc" id="L82">    }</span>
 
     private void addGridEvent() {
-<span class="nc" id="L84">        boardGrid.getChildren().forEach(item -&gt; item.setOnMouseClicked(event -&gt; {</span>
-<span class="nc bnc" id="L85" title="All 4 branches missed.">            if(collectedTiles.size()&lt;3&amp;&amp;isMyTurn()) {</span>
-<span class="nc" id="L86">                Node clickedNode = event.getPickResult().getIntersectedNode();</span>
-<span class="nc" id="L87">                ImageView im = (ImageView) clickedNode;</span>
-<span class="nc bnc" id="L88" title="All 2 branches missed.">                if(isCatchable(im,GridPane.getRowIndex(clickedNode),GridPane.getColumnIndex(clickedNode))) {</span>
-<span class="nc" id="L89">                    clickedNode.setVisible(false);</span>
-<span class="nc" id="L90">                    collectedTiles.add(im);</span>
-<span class="nc" id="L91">                    printCollectedTiles();</span>
-<span class="nc" id="L92">                    setResetEnabled(true);</span>
+<span class="nc" id="L85">        boardGrid.getChildren().forEach(item -&gt; item.setOnMouseClicked(event -&gt; {</span>
+<span class="nc bnc" id="L86" title="All 4 branches missed.">            if(collectedTiles.size()&lt;3&amp;&amp;isMyTurn()) {</span>
+<span class="nc" id="L87">                Node clickedNode = event.getPickResult().getIntersectedNode();</span>
+<span class="nc" id="L88">                ImageView im = (ImageView) clickedNode;</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">                if(isCatchable(im,GridPane.getRowIndex(clickedNode),GridPane.getColumnIndex(clickedNode))) {</span>
+<span class="nc" id="L90">                    clickedNode.setVisible(false);</span>
+<span class="nc" id="L91">                    collectedTiles.add(im);</span>
+<span class="nc" id="L92">                    printCollectedTiles();</span>
+<span class="nc" id="L93">                    setResetEnabled(true);</span>
                 }
                 else{
-<span class="nc" id="L95">                    GUIClient.getInstance().showDenyDialog(&quot;You can't pick this tile!&quot;);</span>
+<span class="nc" id="L96">                    GUIClient.getInstance().showDenyDialog(&quot;You can't pick this tile!&quot;);</span>
                 }
             }
-<span class="nc" id="L98">        }));</span>
-<span class="nc" id="L99">    }</span>
+<span class="nc" id="L99">        }));</span>
+<span class="nc" id="L100">    }</span>
 
     private boolean isCatchable(ImageView tile, int row, int column) {
-<span class="nc bnc" id="L102" title="All 2 branches missed.">        if (tile.getImage().getUrl().contains(&quot;transparent.png&quot;)) {</span>
-<span class="nc" id="L103">            return false;</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        if (tile.getImage().getUrl().contains(&quot;transparent.png&quot;)) {</span>
+<span class="nc" id="L104">            return false;</span>
         }
-<span class="nc bnc" id="L105" title="All 2 branches missed.">        for(ImageView imv : collectedTiles){</span>
-<span class="nc bnc" id="L106" title="All 4 branches missed.">            if(row != GridPane.getRowIndex(imv) &amp;&amp; column != GridPane.getColumnIndex(imv)) {</span>
-<span class="nc" id="L107">                return false;</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        for(ImageView imv : collectedTiles){</span>
+<span class="nc bnc" id="L107" title="All 4 branches missed.">            if(row != GridPane.getRowIndex(imv) &amp;&amp; column != GridPane.getColumnIndex(imv)) {</span>
+<span class="nc" id="L108">                return false;</span>
             }
-<span class="nc" id="L109">        }</span>
-<span class="nc bnc" id="L110" title="All 2 branches missed.">        for(ImageView im:collectedTiles){</span>
-<span class="nc bnc" id="L111" title="All 4 branches missed.">            if((Math.abs(row-GridPane.getRowIndex(im))&gt;2)||(Math.abs(column-GridPane.getColumnIndex(im))&gt;2)){</span>
-<span class="nc" id="L112">                return false;</span>
+<span class="nc" id="L110">        }</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        for(ImageView im:collectedTiles){</span>
+<span class="nc bnc" id="L112" title="All 4 branches missed.">            if((Math.abs(row-GridPane.getRowIndex(im))&gt;2)||(Math.abs(column-GridPane.getColumnIndex(im))&gt;2)){</span>
+<span class="nc" id="L113">                return false;</span>
 
             }
-<span class="nc" id="L115">        }</span>
+<span class="nc" id="L116">        }</span>
 
-<span class="nc" id="L117">        Boolean[][] grid = new Boolean[Settings.BOARD_DIM][Settings.BOARD_DIM];</span>
-<span class="nc bnc" id="L118" title="All 2 branches missed.">        for(int i=0;i&lt;Settings.BOARD_DIM;i++){</span>
-<span class="nc bnc" id="L119" title="All 2 branches missed.">            for(int j=0;j&lt;Settings.BOARD_DIM;j++){</span>
-<span class="nc bnc" id="L120" title="All 2 branches missed.">                grid[i][j] = !((ImageView) Objects.requireNonNull(getTileImgView(i, j, boardGrid))).getImage().getUrl().contains(&quot;transparent.png&quot;);</span>
+<span class="nc" id="L118">        Boolean[][] grid = new Boolean[Settings.BOARD_DIM][Settings.BOARD_DIM];</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        for(int i=0;i&lt;Settings.BOARD_DIM;i++){</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">            for(int j=0;j&lt;Settings.BOARD_DIM;j++){</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">                grid[i][j] = !((ImageView) Objects.requireNonNull(getTileImgView(i, j, boardGrid))).getImage().getUrl().contains(&quot;transparent.png&quot;);</span>
             }
         }
 
-<span class="nc bnc" id="L124" title="All 4 branches missed.">        return  ((!grid[Math.min(row + 1, Settings.BOARD_DIM)][column]) &amp;&amp;  !tilesMatch(Math.min(row + 1, Settings.BOARD_DIM), column, row, column)) ||</span>
-<span class="nc bnc" id="L125" title="All 4 branches missed.">                ((!grid[row][Math.min(column + 1, Settings.BOARD_DIM)]) &amp;&amp; !tilesMatch(row,Math.min(column + 1, Settings.BOARD_DIM),row,column)) ||</span>
-<span class="nc bnc" id="L126" title="All 4 branches missed.">                ((!grid[Math.max(row - 1, 0)][column]) &amp;&amp; !tilesMatch(Math.max(row - 1, 0),column, row, column)) ||</span>
-<span class="nc bnc" id="L127" title="All 4 branches missed.">                ((!grid[row][Math.max(column - 1, 0)]) &amp;&amp; !tilesMatch(row,Math.max(column - 1, 0),row , column));</span>
+<span class="nc bnc" id="L125" title="All 4 branches missed.">        return  ((!grid[Math.min(row + 1, Settings.BOARD_DIM)][column]) &amp;&amp;  !tilesMatch(Math.min(row + 1, Settings.BOARD_DIM), column, row, column)) ||</span>
+<span class="nc bnc" id="L126" title="All 4 branches missed.">                ((!grid[row][Math.min(column + 1, Settings.BOARD_DIM)]) &amp;&amp; !tilesMatch(row,Math.min(column + 1, Settings.BOARD_DIM),row,column)) ||</span>
+<span class="nc bnc" id="L127" title="All 4 branches missed.">                ((!grid[Math.max(row - 1, 0)][column]) &amp;&amp; !tilesMatch(Math.max(row - 1, 0),column, row, column)) ||</span>
+<span class="nc bnc" id="L128" title="All 4 branches missed.">                ((!grid[row][Math.max(column - 1, 0)]) &amp;&amp; !tilesMatch(row,Math.max(column - 1, 0),row , column));</span>
     }
 
     private boolean tilesMatch(int x1, int y1, int x2, int y2){
-<span class="nc bnc" id="L131" title="All 4 branches missed.">        return (x1==x2)&amp;&amp;(y1==y2);</span>
+<span class="nc bnc" id="L132" title="All 4 branches missed.">        return (x1==x2)&amp;&amp;(y1==y2);</span>
     }
 
     private boolean isMyTurn() {
-<span class="nc" id="L135">        return  Client.getInstance().getView().getCurrentPlayer().equals(Client.getInstance().getNickname());</span>
+<span class="nc" id="L136">        return  Client.getInstance().getView().getCurrentPlayer().equals(Client.getInstance().getNickname());</span>
     }
 
     private void printCollectedTiles() {
-<span class="nc" id="L139">        collectedTilesBox.getChildren().clear();</span>
-<span class="nc" id="L140">        List&lt;ImageView&gt; reversed = new ArrayList&lt;&gt;(collectedTiles);</span>
-<span class="nc" id="L141">        Collections.reverse(reversed);</span>
-<span class="nc bnc" id="L142" title="All 2 branches missed.">        for(ImageView im: reversed){</span>
-<span class="nc" id="L143">            ImageView imv = new ImageView(im.getImage());</span>
-<span class="nc" id="L144">            imv.setFitHeight(69);</span>
-<span class="nc" id="L145">            imv.setFitWidth(69);</span>
-<span class="nc" id="L146">            HBox.setMargin(imv, new Insets(0,0,5,0));</span>
-<span class="nc" id="L147">            collectedTilesBox.getChildren().add(imv);</span>
-<span class="nc" id="L148">        }</span>
-<span class="nc" id="L149">    }</span>
+<span class="nc" id="L140">        collectedTilesBox.getChildren().clear();</span>
+<span class="nc" id="L141">        List&lt;ImageView&gt; reversed = new ArrayList&lt;&gt;(collectedTiles);</span>
+<span class="nc" id="L142">        Collections.reverse(reversed);</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">        for(ImageView im: reversed){</span>
+<span class="nc" id="L144">            ImageView imv = new ImageView(im.getImage());</span>
+<span class="nc" id="L145">            imv.setFitHeight(69);</span>
+<span class="nc" id="L146">            imv.setFitWidth(69);</span>
+<span class="nc" id="L147">            HBox.setMargin(imv, new Insets(0,0,5,0));</span>
+<span class="nc" id="L148">            collectedTilesBox.getChildren().add(imv);</span>
+<span class="nc" id="L149">        }</span>
+<span class="nc" id="L150">    }</span>
 
     public void updateView() {
-<span class="nc" id="L152">        System.out.println(&quot;Updating view&quot;);</span>
-<span class="nc" id="L153">        View view = Client.getInstance().getView();</span>
-<span class="nc" id="L154">        String curNickname = Client.getInstance().getNickname();</span>
-<span class="nc" id="L155">        int playersNumber = view.getPlayers().size();</span>
-<span class="nc" id="L156">        int curPlayerIndex = view.getPlayers().indexOf(curNickname);</span>
-<span class="nc" id="L157">        List&lt;String&gt; otherPlayers = new ArrayList&lt;&gt;(view.getPlayers());</span>
-<span class="nc" id="L158">        List&lt;Integer&gt; otherScores = new ArrayList&lt;&gt;(view.getGUIScoring());</span>
-<span class="nc" id="L159">        otherPlayers.remove(curPlayerIndex);</span>
-<span class="nc" id="L160">        otherScores.remove(curPlayerIndex);</span>
+<span class="nc" id="L153">        System.out.println(&quot;Updating view&quot;);</span>
+<span class="nc" id="L154">        View view = Client.getInstance().getView();</span>
+<span class="nc" id="L155">        String curNickname = Client.getInstance().getNickname();</span>
+<span class="nc" id="L156">        int playersNumber = view.getPlayers().size();</span>
+<span class="nc" id="L157">        int curPlayerIndex = view.getPlayers().indexOf(curNickname);</span>
+<span class="nc" id="L158">        List&lt;String&gt; otherPlayers = new ArrayList&lt;&gt;(view.getPlayers());</span>
+<span class="nc" id="L159">        List&lt;Integer&gt; otherScores = new ArrayList&lt;&gt;(view.getGUIScoring());</span>
+<span class="nc" id="L160">        otherPlayers.remove(curPlayerIndex);</span>
+<span class="nc" id="L161">        otherScores.remove(curPlayerIndex);</span>
 
-<span class="nc" id="L162">        Platform.runLater(()-&gt;{</span>
-<span class="nc bnc" id="L163" title="All 2 branches missed.">            if(curNickname.equals(view.getPlayers().get(0))){</span>
-<span class="nc" id="L164">                myChairImg.setVisible(true);</span>
+<span class="nc" id="L163">        Platform.runLater(()-&gt;{</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">            if(curNickname.equals(view.getPlayers().get(0))){</span>
+<span class="nc" id="L165">                myChairImg.setVisible(true);</span>
             }else{
-<span class="nc bnc" id="L166" title="All 2 branches missed.">                for(int i=0; i&lt;otherPlayers.size(); i++){</span>
-<span class="nc" id="L167">                    String s = otherPlayers.get(i);</span>
-<span class="nc bnc" id="L168" title="All 2 branches missed.">                    if(s.equals(view.getPlayers().get(0))) {</span>
-<span class="nc bnc" id="L169" title="All 4 branches missed.">                        switch (i) {</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">                for(int i=0; i&lt;otherPlayers.size(); i++){</span>
+<span class="nc" id="L168">                    String s = otherPlayers.get(i);</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">                    if(s.equals(view.getPlayers().get(0))) {</span>
+<span class="nc bnc" id="L170" title="All 4 branches missed.">                        switch (i) {</span>
                             case 0 -&gt; {
-<span class="nc" id="L171">                                p2ChairImg.setVisible(true);</span>
-<span class="nc" id="L172">                            }</span>
+<span class="nc" id="L172">                                p2ChairImg.setVisible(true);</span>
+<span class="nc" id="L173">                            }</span>
                             case 1 -&gt; {
-<span class="nc" id="L174">                                p3ChairImg.setVisible(true);</span>
-<span class="nc" id="L175">                            }</span>
+<span class="nc" id="L175">                                p3ChairImg.setVisible(true);</span>
+<span class="nc" id="L176">                            }</span>
                             case 2 -&gt; {
-<span class="nc" id="L177">                                p4ChairImg.setVisible(true);</span>
+<span class="nc" id="L178">                                p4ChairImg.setVisible(true);</span>
                             }
                         }
                     }
                 }
             }
-<span class="nc" id="L183">            boardGrid.getChildren().forEach(item-&gt;item.setVisible(true));</span>
-<span class="nc" id="L184">        });</span>
+<span class="nc" id="L184">            boardGrid.getChildren().forEach(item-&gt;item.setVisible(true));</span>
+<span class="nc" id="L185">        });</span>
 
 
         //current player update &amp; turn handling
-<span class="nc" id="L188">        Platform.runLater(()-&gt;{</span>
-<span class="nc" id="L189">            curPlayerLbl.setText(curNickname);</span>
-<span class="nc" id="L190">            handleTurn(view,curNickname,curPlayerLbl);</span>
-<span class="nc" id="L191">            curPlScoreLbl.setText(&quot;Score: &quot;+view.getGUIScoring().get(view.getPlayers().indexOf(curNickname)).toString());</span>
-<span class="nc" id="L192">        });</span>
+<span class="nc" id="L189">        Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L190">            curPlayerLbl.setText(curNickname);</span>
+<span class="nc" id="L191">            handleTurn(view,curNickname,curPlayerLbl);</span>
+<span class="nc" id="L192">            curPlScoreLbl.setText(&quot;Score: &quot;+view.getGUIScoring().get(view.getPlayers().indexOf(curNickname)).toString());</span>
+<span class="nc" id="L193">        });</span>
 
 
 
         //other players update
-<span class="nc bnc" id="L197" title="All 2 branches missed.">        if(playersNumber == 2) {</span>
-<span class="nc" id="L198">            Platform.runLater(()-&gt;{</span>
-<span class="nc" id="L199">                player3Box.setVisible(false);</span>
-<span class="nc" id="L200">                player4Box.setVisible(false);</span>
+<span class="nc bnc" id="L198" title="All 2 branches missed.">        if(playersNumber == 2) {</span>
+<span class="nc" id="L199">            Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L200">                player3Box.setVisible(false);</span>
+<span class="nc" id="L201">                player4Box.setVisible(false);</span>
 
-<span class="nc" id="L202">                player2Lbl.setText(otherPlayers.get(0));</span>
-<span class="nc" id="L203">                handleTurn(view,otherPlayers.get(0),player2Lbl);</span>
-<span class="nc" id="L204">                pl2ScoreLbl.setText(&quot;Score: &quot;+otherScores.get(0));</span>
+<span class="nc" id="L203">                player2Lbl.setText(otherPlayers.get(0));</span>
+<span class="nc" id="L204">                handleTurn(view,otherPlayers.get(0),player2Lbl);</span>
+<span class="nc" id="L205">                pl2ScoreLbl.setText(&quot;Score: &quot;+otherScores.get(0));</span>
 
                 //update other player shelf
-<span class="nc" id="L207">                int i = 0;</span>
-<span class="nc bnc" id="L208" title="All 2 branches missed.">                for (int row = 0; row &lt; Settings.SHELFROW; row++) {</span>
-<span class="nc bnc" id="L209" title="All 2 branches missed.">                    for (int col = 0; col &lt; Settings.SHELFCOLUMN; col++) {</span>
-<span class="nc" id="L210">                        Node n = getTileImgView(row, col, otherShelfGrid1);</span>
-<span class="nc bnc" id="L211" title="All 2 branches missed.">                        if (n != null) {</span>
-<span class="nc" id="L212">                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(0).get(i))).toString());</span>
-<span class="nc" id="L213">                            ImageView im = (ImageView) n;</span>
-<span class="nc" id="L214">                            im.setImage(image);</span>
-<span class="nc" id="L215">                            im.setVisible(true);</span>
-<span class="nc" id="L216">                            i++;</span>
+<span class="nc" id="L208">                int i = 0;</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">                for (int row = 0; row &lt; Settings.SHELFROW; row++) {</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">                    for (int col = 0; col &lt; Settings.SHELFCOLUMN; col++) {</span>
+<span class="nc" id="L211">                        Node n = getTileImgView(row, col, otherShelfGrid1);</span>
+<span class="nc bnc" id="L212" title="All 2 branches missed.">                        if (n != null) {</span>
+<span class="nc" id="L213">                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(0).get(i))).toString());</span>
+<span class="nc" id="L214">                            ImageView im = (ImageView) n;</span>
+<span class="nc" id="L215">                            im.setImage(image);</span>
+<span class="nc" id="L216">                            im.setVisible(true);</span>
+<span class="nc" id="L217">                            i++;</span>
                         }
                     }
                 }
-<span class="nc" id="L220">                otherShelfGrid1.setVisible(true);</span>
+<span class="nc" id="L221">                otherShelfGrid1.setVisible(true);</span>
 
-<span class="nc" id="L222">            });</span>
+<span class="nc" id="L223">            });</span>
         }
-<span class="nc bnc" id="L224" title="All 2 branches missed.">        else if(playersNumber == 3){</span>
-<span class="nc" id="L225">            Platform.runLater(()-&gt;{</span>
-<span class="nc" id="L226">                player4Box.setVisible(false);</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">        else if(playersNumber == 3){</span>
+<span class="nc" id="L226">            Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L227">                player4Box.setVisible(false);</span>
 
-<span class="nc" id="L228">                player2Lbl.setText(otherPlayers.get(0));</span>
-<span class="nc" id="L229">                handleTurn(view,otherPlayers.get(0),player2Lbl);</span>
-<span class="nc" id="L230">                pl2ScoreLbl.setText(&quot;Score: &quot;+otherScores.get(0));</span>
+<span class="nc" id="L229">                player2Lbl.setText(otherPlayers.get(0));</span>
+<span class="nc" id="L230">                handleTurn(view,otherPlayers.get(0),player2Lbl);</span>
+<span class="nc" id="L231">                pl2ScoreLbl.setText(&quot;Score: &quot;+otherScores.get(0));</span>
 
-<span class="nc" id="L232">                player3Lbl.setText(otherPlayers.get(1));</span>
-<span class="nc" id="L233">                handleTurn(view,otherPlayers.get(1),player3Lbl);</span>
-<span class="nc" id="L234">                pl3ScoreLbl.setText(&quot;Score: &quot;+otherScores.get(1));</span>
+<span class="nc" id="L233">                player3Lbl.setText(otherPlayers.get(1));</span>
+<span class="nc" id="L234">                handleTurn(view,otherPlayers.get(1),player3Lbl);</span>
+<span class="nc" id="L235">                pl3ScoreLbl.setText(&quot;Score: &quot;+otherScores.get(1));</span>
 
                 //update first other player shelf
-<span class="nc" id="L237">                int i = 0;</span>
-<span class="nc bnc" id="L238" title="All 2 branches missed.">                for (int row = 0; row &lt; Settings.SHELFROW; row++) {</span>
-<span class="nc bnc" id="L239" title="All 2 branches missed.">                    for (int col = 0; col &lt; Settings.SHELFCOLUMN; col++) {</span>
-<span class="nc" id="L240">                        Node n = getTileImgView(row, col, otherShelfGrid1);</span>
-<span class="nc bnc" id="L241" title="All 2 branches missed.">                        if (n != null) {</span>
-<span class="nc" id="L242">                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(0).get(i))).toString());</span>
-<span class="nc" id="L243">                            ImageView im = (ImageView) n;</span>
-<span class="nc" id="L244">                            im.setImage(image);</span>
-<span class="nc" id="L245">                            im.setVisible(true);</span>
-<span class="nc" id="L246">                            i++;</span>
+<span class="nc" id="L238">                int i = 0;</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">                for (int row = 0; row &lt; Settings.SHELFROW; row++) {</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">                    for (int col = 0; col &lt; Settings.SHELFCOLUMN; col++) {</span>
+<span class="nc" id="L241">                        Node n = getTileImgView(row, col, otherShelfGrid1);</span>
+<span class="nc bnc" id="L242" title="All 2 branches missed.">                        if (n != null) {</span>
+<span class="nc" id="L243">                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(0).get(i))).toString());</span>
+<span class="nc" id="L244">                            ImageView im = (ImageView) n;</span>
+<span class="nc" id="L245">                            im.setImage(image);</span>
+<span class="nc" id="L246">                            im.setVisible(true);</span>
+<span class="nc" id="L247">                            i++;</span>
                         }
                     }
                 }
-<span class="nc" id="L250">                otherShelfGrid1.setVisible(true);</span>
+<span class="nc" id="L251">                otherShelfGrid1.setVisible(true);</span>
 
                 //update second other player shelf
-<span class="nc" id="L253">                i = 0;</span>
-<span class="nc bnc" id="L254" title="All 2 branches missed.">                for (int row = 0; row &lt; Settings.SHELFROW; row++) {</span>
-<span class="nc bnc" id="L255" title="All 2 branches missed.">                    for (int col = 0; col &lt; Settings.SHELFCOLUMN; col++) {</span>
-<span class="nc" id="L256">                        Node n = getTileImgView(row, col, otherShelfGrid2);</span>
-<span class="nc bnc" id="L257" title="All 2 branches missed.">                        if (n != null) {</span>
-<span class="nc" id="L258">                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(1).get(i))).toString());</span>
-<span class="nc" id="L259">                            ImageView im = (ImageView) n;</span>
-<span class="nc" id="L260">                            im.setImage(image);</span>
-<span class="nc" id="L261">                            im.setVisible(true);</span>
-<span class="nc" id="L262">                            i++;</span>
+<span class="nc" id="L254">                i = 0;</span>
+<span class="nc bnc" id="L255" title="All 2 branches missed.">                for (int row = 0; row &lt; Settings.SHELFROW; row++) {</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">                    for (int col = 0; col &lt; Settings.SHELFCOLUMN; col++) {</span>
+<span class="nc" id="L257">                        Node n = getTileImgView(row, col, otherShelfGrid2);</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">                        if (n != null) {</span>
+<span class="nc" id="L259">                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(1).get(i))).toString());</span>
+<span class="nc" id="L260">                            ImageView im = (ImageView) n;</span>
+<span class="nc" id="L261">                            im.setImage(image);</span>
+<span class="nc" id="L262">                            im.setVisible(true);</span>
+<span class="nc" id="L263">                            i++;</span>
                         }
                     }
                 }
-<span class="nc" id="L266">                otherShelfGrid2.setVisible(true);</span>
+<span class="nc" id="L267">                otherShelfGrid2.setVisible(true);</span>
 
-<span class="nc" id="L268">            });</span>
+<span class="nc" id="L269">            });</span>
         }
         else{
-<span class="nc" id="L271">            Platform.runLater(()-&gt;{</span>
-<span class="nc" id="L272">                player2Lbl.setText(otherPlayers.get(0));</span>
-<span class="nc" id="L273">                handleTurn(view,otherPlayers.get(0),player2Lbl);</span>
-<span class="nc" id="L274">                pl2ScoreLbl.setText(&quot;Score: &quot;+otherScores.get(0));</span>
+<span class="nc" id="L272">            Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L273">                player2Lbl.setText(otherPlayers.get(0));</span>
+<span class="nc" id="L274">                handleTurn(view,otherPlayers.get(0),player2Lbl);</span>
+<span class="nc" id="L275">                pl2ScoreLbl.setText(&quot;Score: &quot;+otherScores.get(0));</span>
 
-<span class="nc" id="L276">                player3Lbl.setText(otherPlayers.get(1));</span>
-<span class="nc" id="L277">                handleTurn(view,otherPlayers.get(1),player3Lbl);</span>
-<span class="nc" id="L278">                pl2ScoreLbl.setText(&quot;Score: &quot;+otherScores.get(1));</span>
+<span class="nc" id="L277">                player3Lbl.setText(otherPlayers.get(1));</span>
+<span class="nc" id="L278">                handleTurn(view,otherPlayers.get(1),player3Lbl);</span>
+<span class="nc" id="L279">                pl2ScoreLbl.setText(&quot;Score: &quot;+otherScores.get(1));</span>
 
-<span class="nc" id="L280">                player3Lbl.setText(otherPlayers.get(2));</span>
-<span class="nc" id="L281">                handleTurn(view,otherPlayers.get(2),player3Lbl);</span>
-<span class="nc" id="L282">                pl2ScoreLbl.setText(&quot;Score: &quot;+otherScores.get(3));</span>
+<span class="nc" id="L281">                player3Lbl.setText(otherPlayers.get(2));</span>
+<span class="nc" id="L282">                handleTurn(view,otherPlayers.get(2),player3Lbl);</span>
+<span class="nc" id="L283">                pl2ScoreLbl.setText(&quot;Score: &quot;+otherScores.get(3));</span>
 
                 //update first other player shelf
-<span class="nc" id="L285">                int i = 0;</span>
-<span class="nc bnc" id="L286" title="All 2 branches missed.">                for (int row = 0; row &lt; Settings.SHELFROW; row++) {</span>
-<span class="nc bnc" id="L287" title="All 2 branches missed.">                    for (int col = 0; col &lt; Settings.SHELFCOLUMN; col++) {</span>
-<span class="nc" id="L288">                        Node n = getTileImgView(row, col, otherShelfGrid1);</span>
-<span class="nc bnc" id="L289" title="All 2 branches missed.">                        if (n != null) {</span>
+<span class="nc" id="L286">                int i = 0;</span>
+<span class="nc bnc" id="L287" title="All 2 branches missed.">                for (int row = 0; row &lt; Settings.SHELFROW; row++) {</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">                    for (int col = 0; col &lt; Settings.SHELFCOLUMN; col++) {</span>
+<span class="nc" id="L289">                        Node n = getTileImgView(row, col, otherShelfGrid1);</span>
+<span class="nc bnc" id="L290" title="All 2 branches missed.">                        if (n != null) {</span>
 
-<span class="nc" id="L291">                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(0).get(i))).toString());</span>
-<span class="nc" id="L292">                            ImageView im = (ImageView) n;</span>
-<span class="nc" id="L293">                            im.setImage(image);</span>
-<span class="nc" id="L294">                            im.setVisible(true);</span>
-<span class="nc" id="L295">                            i++;</span>
+<span class="nc" id="L292">                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(0).get(i))).toString());</span>
+<span class="nc" id="L293">                            ImageView im = (ImageView) n;</span>
+<span class="nc" id="L294">                            im.setImage(image);</span>
+<span class="nc" id="L295">                            im.setVisible(true);</span>
+<span class="nc" id="L296">                            i++;</span>
                         }
                     }
                 }
-<span class="nc" id="L299">                otherShelfGrid1.setVisible(true);</span>
+<span class="nc" id="L300">                otherShelfGrid1.setVisible(true);</span>
 
                 //update second other player shelf
-<span class="nc" id="L302">                i = 0;</span>
-<span class="nc bnc" id="L303" title="All 2 branches missed.">                for (int row = 0; row &lt; Settings.SHELFROW; row++) {</span>
-<span class="nc bnc" id="L304" title="All 2 branches missed.">                    for (int col = 0; col &lt; Settings.SHELFCOLUMN; col++) {</span>
-<span class="nc" id="L305">                        Node n = getTileImgView(row, col, otherShelfGrid2);</span>
-<span class="nc bnc" id="L306" title="All 2 branches missed.">                        if (n != null) {</span>
-<span class="nc" id="L307">                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(1).get(i))).toString());</span>
-<span class="nc" id="L308">                            ImageView im = (ImageView) n;</span>
-<span class="nc" id="L309">                            im.setImage(image);</span>
-<span class="nc" id="L310">                            im.setVisible(true);</span>
-<span class="nc" id="L311">                            i++;</span>
+<span class="nc" id="L303">                i = 0;</span>
+<span class="nc bnc" id="L304" title="All 2 branches missed.">                for (int row = 0; row &lt; Settings.SHELFROW; row++) {</span>
+<span class="nc bnc" id="L305" title="All 2 branches missed.">                    for (int col = 0; col &lt; Settings.SHELFCOLUMN; col++) {</span>
+<span class="nc" id="L306">                        Node n = getTileImgView(row, col, otherShelfGrid2);</span>
+<span class="nc bnc" id="L307" title="All 2 branches missed.">                        if (n != null) {</span>
+<span class="nc" id="L308">                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(1).get(i))).toString());</span>
+<span class="nc" id="L309">                            ImageView im = (ImageView) n;</span>
+<span class="nc" id="L310">                            im.setImage(image);</span>
+<span class="nc" id="L311">                            im.setVisible(true);</span>
+<span class="nc" id="L312">                            i++;</span>
                         }
                     }
                 }
-<span class="nc" id="L315">                otherShelfGrid2.setVisible(true);</span>
+<span class="nc" id="L316">                otherShelfGrid2.setVisible(true);</span>
 
                 //update third other player shelf
-<span class="nc" id="L318">                i = 0;</span>
-<span class="nc bnc" id="L319" title="All 2 branches missed.">                for (int row = 0; row &lt; Settings.SHELFROW; row++) {</span>
-<span class="nc bnc" id="L320" title="All 2 branches missed.">                    for (int col = 0; col &lt; Settings.SHELFCOLUMN; col++) {</span>
-<span class="nc" id="L321">                        Node n = getTileImgView(row, col, otherShelfGrid3);</span>
-<span class="nc bnc" id="L322" title="All 2 branches missed.">                        if (n != null) {</span>
-<span class="nc" id="L323">                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(2).get(i))).toString());</span>
-<span class="nc" id="L324">                            ImageView im = (ImageView) n;</span>
-<span class="nc" id="L325">                            im.setImage(image);</span>
-<span class="nc" id="L326">                            im.setVisible(true);</span>
-<span class="nc" id="L327">                            i++;</span>
+<span class="nc" id="L319">                i = 0;</span>
+<span class="nc bnc" id="L320" title="All 2 branches missed.">                for (int row = 0; row &lt; Settings.SHELFROW; row++) {</span>
+<span class="nc bnc" id="L321" title="All 2 branches missed.">                    for (int col = 0; col &lt; Settings.SHELFCOLUMN; col++) {</span>
+<span class="nc" id="L322">                        Node n = getTileImgView(row, col, otherShelfGrid3);</span>
+<span class="nc bnc" id="L323" title="All 2 branches missed.">                        if (n != null) {</span>
+<span class="nc" id="L324">                            Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getOthersGUIShelves().get(2).get(i))).toString());</span>
+<span class="nc" id="L325">                            ImageView im = (ImageView) n;</span>
+<span class="nc" id="L326">                            im.setImage(image);</span>
+<span class="nc" id="L327">                            im.setVisible(true);</span>
+<span class="nc" id="L328">                            i++;</span>
                         }
                     }
                 }
-<span class="nc" id="L331">                otherShelfGrid3.setVisible(true);</span>
-<span class="nc" id="L332">            });</span>
+<span class="nc" id="L332">                otherShelfGrid3.setVisible(true);</span>
+<span class="nc" id="L333">            });</span>
         }
         //board update
 
-<span class="nc" id="L336">        Platform.runLater(()-&gt; {</span>
-<span class="nc" id="L337">                    int i = 0;</span>
-<span class="nc bnc" id="L338" title="All 2 branches missed.">                    for (int row = 0; row &lt; Settings.BOARD_DIM; row++) {</span>
-<span class="nc bnc" id="L339" title="All 2 branches missed.">                        for (int col = 0; col &lt; Settings.BOARD_DIM; col++) {</span>
-<span class="nc" id="L340">                            Node n = getTileImgView(row, col, boardGrid);</span>
-<span class="nc bnc" id="L341" title="All 2 branches missed.">                            if (n != null) {</span>
-<span class="nc" id="L342">                                Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getGUIboard().get(i))).toString());</span>
-<span class="nc" id="L343">                                ImageView im = (ImageView) n;</span>
-<span class="nc" id="L344">                                im.setImage(image);</span>
-<span class="nc" id="L345">                                im.setVisible(true);</span>
-<span class="nc" id="L346">                                i++;</span>
+<span class="nc" id="L337">        Platform.runLater(()-&gt; {</span>
+<span class="nc" id="L338">                    int i = 0;</span>
+<span class="nc bnc" id="L339" title="All 2 branches missed.">                    for (int row = 0; row &lt; Settings.BOARD_DIM; row++) {</span>
+<span class="nc bnc" id="L340" title="All 2 branches missed.">                        for (int col = 0; col &lt; Settings.BOARD_DIM; col++) {</span>
+<span class="nc" id="L341">                            Node n = getTileImgView(row, col, boardGrid);</span>
+<span class="nc bnc" id="L342" title="All 2 branches missed.">                            if (n != null) {</span>
+<span class="nc" id="L343">                                Image image = new Image(Objects.requireNonNull(getClass().getResource(view.getGUIboard().get(i))).toString());</span>
+<span class="nc" id="L344">                                ImageView im = (ImageView) n;</span>
+<span class="nc" id="L345">                                im.setImage(image);</span>
+<span class="nc" id="L346">                                im.setVisible(true);</span>
+<span class="nc" id="L347">                                i++;</span>
                             }
                         }
                     }
-<span class="nc" id="L350">                    boardGrid.setVisible(true);</span>
-<span class="nc" id="L351">                });</span>
+<span class="nc" id="L351">                    boardGrid.setVisible(true);</span>
+<span class="nc" id="L352">                });</span>
 
         //personal goal update
-<span class="nc" id="L354">        Platform.runLater(()-&gt;{</span>
-<span class="nc" id="L355">            personalGoal.setImage(new Image(Objects.requireNonNull(getClass().getResource(view.getGUIpersonalCard())).toString()));</span>
-<span class="nc" id="L356">            personalGoal.setVisible(true);</span>
-<span class="nc" id="L357">        });</span>
+<span class="nc" id="L355">        Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L356">            personalGoal.setImage(new Image(Objects.requireNonNull(getClass().getResource(view.getGUIpersonalCard())).toString()));</span>
+<span class="nc" id="L357">            personalGoal.setVisible(true);</span>
+<span class="nc" id="L358">        });</span>
 
 
         //common goals update
-<span class="nc" id="L361">        Platform.runLater(()-&gt;{</span>
-<span class="nc" id="L362">            sharedGoal1.setImage(new Image(Objects.requireNonNull(getClass().getResource(view.getGUIsharedCards().get(0))).toString()));</span>
-<span class="nc" id="L363">            sharedGoal2.setImage(new Image(Objects.requireNonNull(getClass().getResource(view.getGUIsharedCards().get(1))).toString()));</span>
-<span class="nc" id="L364">            sharedGoal1.setVisible(true);</span>
-<span class="nc" id="L365">            sharedGoal2.setVisible(true);</span>
-<span class="nc" id="L366">            sharedGoal1Stack.setImage(new Image(Objects.requireNonNull(getClass().getResource(&quot;/graphics/scoringTokens/&quot; + view.getSharedCardsPointTokens().get(0).toString() + &quot;.jpg&quot;)).toString()));</span>
-<span class="nc" id="L367">            sharedGoal2Stack.setImage(new Image(Objects.requireNonNull(getClass().getResource(&quot;/graphics/scoringTokens/&quot; + view.getSharedCardsPointTokens().get(1).toString() + &quot;.jpg&quot;)).toString()));</span>
-<span class="nc" id="L368">            sharedGoal1Stack.setVisible(true);</span>
-<span class="nc" id="L369">            sharedGoal2Stack.setVisible(true);</span>
-<span class="nc" id="L370">        });</span>
+<span class="nc" id="L362">        Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L363">            sharedGoal1.setImage(new Image(Objects.requireNonNull(getClass().getResource(view.getGUIsharedCards().get(0))).toString()));</span>
+<span class="nc" id="L364">            sharedGoal2.setImage(new Image(Objects.requireNonNull(getClass().getResource(view.getGUIsharedCards().get(1))).toString()));</span>
+<span class="nc" id="L365">            sharedGoal1.setVisible(true);</span>
+<span class="nc" id="L366">            sharedGoal2.setVisible(true);</span>
+<span class="nc" id="L367">            sharedGoal1Stack.setImage(new Image(Objects.requireNonNull(getClass().getResource(&quot;/graphics/scoringTokens/&quot; + view.getSharedCardsPointTokens().get(0).toString() + &quot;.jpg&quot;)).toString()));</span>
+<span class="nc" id="L368">            sharedGoal2Stack.setImage(new Image(Objects.requireNonNull(getClass().getResource(&quot;/graphics/scoringTokens/&quot; + view.getSharedCardsPointTokens().get(1).toString() + &quot;.jpg&quot;)).toString()));</span>
+<span class="nc" id="L369">            sharedGoal1Stack.setVisible(true);</span>
+<span class="nc" id="L370">            sharedGoal2Stack.setVisible(true);</span>
+<span class="nc" id="L371">        });</span>
 
         //myShelf update
-<span class="nc" id="L373">        Platform.runLater(()-&gt;{</span>
-<span class="nc" id="L374">            int i = 0;</span>
-<span class="nc bnc" id="L375" title="All 2 branches missed.">            for (int row = 0; row &lt; Settings.SHELFROW; row++) {</span>
-<span class="nc bnc" id="L376" title="All 2 branches missed.">                for (int col = 0; col &lt; Settings.SHELFCOLUMN; col++) {</span>
-<span class="nc" id="L377">                    Node n = getTileImgView(row, col, myShelfGrid);</span>
-<span class="nc bnc" id="L378" title="All 2 branches missed.">                    if (n != null) {</span>
-<span class="nc" id="L379">                        Image image = new Image(getClass().getResource(view.getCurPlayerGUIShelf().get(i)).toString());</span>
-<span class="nc" id="L380">                        ImageView im = (ImageView) n;</span>
-<span class="nc" id="L381">                        im.setImage(image);</span>
-<span class="nc" id="L382">                        im.setVisible(true);</span>
-<span class="nc" id="L383">                        i++;</span>
+<span class="nc" id="L374">        Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L375">            int i = 0;</span>
+<span class="nc bnc" id="L376" title="All 2 branches missed.">            for (int row = 0; row &lt; Settings.SHELFROW; row++) {</span>
+<span class="nc bnc" id="L377" title="All 2 branches missed.">                for (int col = 0; col &lt; Settings.SHELFCOLUMN; col++) {</span>
+<span class="nc" id="L378">                    Node n = getTileImgView(row, col, myShelfGrid);</span>
+<span class="nc bnc" id="L379" title="All 2 branches missed.">                    if (n != null) {</span>
+<span class="nc" id="L380">                        Image image = new Image(getClass().getResource(view.getCurPlayerGUIShelf().get(i)).toString());</span>
+<span class="nc" id="L381">                        ImageView im = (ImageView) n;</span>
+<span class="nc" id="L382">                        im.setImage(image);</span>
+<span class="nc" id="L383">                        im.setVisible(true);</span>
+<span class="nc" id="L384">                        i++;</span>
                     }
                 }
             }
-<span class="nc" id="L387">            myShelfGrid.setVisible(true);</span>
-<span class="nc" id="L388">        });</span>
-<span class="nc" id="L389">        System.out.println(&quot;GUI VIEW UPDATED&quot;);</span>
-<span class="nc" id="L390">    }</span>
+<span class="nc" id="L388">            myShelfGrid.setVisible(true);</span>
+<span class="nc" id="L389">        });</span>
+<span class="nc" id="L390">        System.out.println(&quot;GUI VIEW UPDATED&quot;);</span>
+<span class="nc" id="L391">    }</span>
 
     private void handleTurn(View v, String nickname, Label l){
-<span class="nc bnc" id="L393" title="All 2 branches missed.">        if(v.getCurrentPlayer().equals(nickname)){</span>
-<span class="nc" id="L394">            l.setText(l.getText()+&quot; (your turn)&quot;);</span>
+<span class="nc bnc" id="L394" title="All 2 branches missed.">        if(v.getCurrentPlayer().equals(nickname)){</span>
+<span class="nc" id="L395">            l.setText(l.getText()+&quot; (your turn)&quot;);</span>
         }
-<span class="nc" id="L396">    }</span>
+<span class="nc" id="L397">    }</span>
 
     private Node getTileImgView(int row, int column, GridPane grid){
-<span class="nc bnc" id="L399" title="All 2 branches missed.">        for(Node n: grid.getChildren()){</span>
+<span class="nc bnc" id="L400" title="All 2 branches missed.">        for(Node n: grid.getChildren()){</span>
             Integer r, c;
-<span class="nc" id="L401">            r=GridPane.getRowIndex(n);</span>
-<span class="nc" id="L402">            c=GridPane.getColumnIndex(n);</span>
-<span class="nc bnc" id="L403" title="All 4 branches missed.">            if(r==null||c==null){</span>
-<span class="nc" id="L404">                return null;</span>
+<span class="nc" id="L402">            r=GridPane.getRowIndex(n);</span>
+<span class="nc" id="L403">            c=GridPane.getColumnIndex(n);</span>
+<span class="nc bnc" id="L404" title="All 4 branches missed.">            if(r==null||c==null){</span>
+<span class="nc" id="L405">                return null;</span>
             }else{
-<span class="nc bnc" id="L406" title="All 4 branches missed.">                if(r==row &amp;&amp; c==column){</span>
-<span class="nc" id="L407">                    return n;</span>
+<span class="nc bnc" id="L407" title="All 4 branches missed.">                if(r==row &amp;&amp; c==column){</span>
+<span class="nc" id="L408">                    return n;</span>
                 }
             }
-<span class="nc" id="L410">        }</span>
-<span class="nc" id="L411">        return null;</span>
+<span class="nc" id="L411">        }</span>
+<span class="nc" id="L412">        return null;</span>
     }
 
     private void initializeChatPanel() {
         VBox chatPanel;
         try {
-<span class="nc" id="L417">            chatPanel = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(&quot;/chatPanel.fxml&quot;)));</span>
+<span class="nc" id="L418">            chatPanel = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(&quot;/chatPanel.fxml&quot;)));</span>
         }
-<span class="nc" id="L419">        catch (IOException e){</span>
-<span class="nc" id="L420">            throw new RuntimeException(&quot;Chat panel loading failed&quot;);</span>
-<span class="nc" id="L421">        }</span>
-<span class="nc" id="L422">        chatDrawer.setSidePane(chatPanel);</span>
-<span class="nc" id="L423">        chatDrawer.setVisible(false);</span>
-<span class="nc" id="L424">    }</span>
+<span class="nc" id="L420">        catch (IOException e){</span>
+<span class="nc" id="L421">            throw new RuntimeException(&quot;Chat panel loading failed&quot;);</span>
+<span class="nc" id="L422">        }</span>
+<span class="nc" id="L423">        chatDrawer.setSidePane(chatPanel);</span>
+<span class="nc" id="L424">        chatDrawer.setVisible(false);</span>
+<span class="nc" id="L425">    }</span>
 
     public void quit(ActionEvent actionEvent) {
-<span class="nc" id="L427">        GUIClient.getInstance().showBackToMenu();</span>
-<span class="nc" id="L428">    }</span>
+<span class="nc" id="L428">        GUIClient.getInstance().showBackToMenu();</span>
+<span class="nc" id="L429">    }</span>
 
     public void openChatPanel(ActionEvent actionEvent) {
-<span class="nc bnc" id="L431" title="All 2 branches missed.">        if(chatDrawer.isOpened()){</span>
-<span class="nc" id="L432">            chatDrawer.close();</span>
-<span class="nc" id="L433">            chatDrawer.setVisible(false);</span>
+<span class="nc bnc" id="L432" title="All 2 branches missed.">        if(chatDrawer.isOpened()){</span>
+<span class="nc" id="L433">            chatDrawer.close();</span>
+<span class="nc" id="L434">            chatDrawer.setVisible(false);</span>
         }else{
-<span class="nc" id="L435">            chatDrawer.open();</span>
-<span class="nc" id="L436">            chatDrawer.setVisible(true);</span>
-<span class="nc" id="L437">            chatNotificationImg.setVisible(false);</span>
+<span class="nc" id="L436">            chatDrawer.open();</span>
+<span class="nc" id="L437">            chatDrawer.setVisible(true);</span>
+<span class="nc" id="L438">            chatNotificationImg.setVisible(false);</span>
         }
-<span class="nc" id="L439">    }</span>
+<span class="nc" id="L440">    }</span>
 
     public void openRules(ActionEvent actionEvent) {
-<span class="nc bnc" id="L442" title="All 2 branches missed.">        if (Desktop.isDesktopSupported()) {</span>
+<span class="nc bnc" id="L443" title="All 2 branches missed.">        if (Desktop.isDesktopSupported()) {</span>
             try {
-<span class="nc" id="L444">                File myFile = new File(System.getProperty(&quot;user.dir&quot;)+&quot;/config/tmpRules.pdf&quot;);</span>
-<span class="nc" id="L445">                FileUtils.copyInputStreamToFile(getClass().getResourceAsStream(&quot;/MyShelfie_Rulebook_ITA.pdf&quot;), myFile);</span>
-<span class="nc" id="L446">                Desktop.getDesktop().open(myFile);</span>
-<span class="nc" id="L447">            } catch (Exception e) {</span>
-<span class="nc" id="L448">                GUIClient.getInstance().showDenyDialog(&quot;Rules file not found&quot;);</span>
-<span class="nc" id="L449">            }</span>
+<span class="nc" id="L445">                File myFile = new File(System.getProperty(&quot;user.dir&quot;)+&quot;/config/tmpRules.pdf&quot;);</span>
+<span class="nc" id="L446">                FileUtils.copyInputStreamToFile(getClass().getResourceAsStream(&quot;/MyShelfie_Rulebook_ITA.pdf&quot;), myFile);</span>
+<span class="nc" id="L447">                Desktop.getDesktop().open(myFile);</span>
+<span class="nc" id="L448">            } catch (Exception e) {</span>
+<span class="nc" id="L449">                GUIClient.getInstance().showDenyDialog(&quot;Rules file not found&quot;);</span>
+<span class="nc" id="L450">            }</span>
         }
-<span class="nc" id="L451">    }</span>
+<span class="nc" id="L452">    }</span>
 
     public void resetCollectedTiles(ActionEvent actionEvent) {
-<span class="nc" id="L454">        setResetEnabled(false);</span>
-<span class="nc" id="L455">        collectedTiles.clear();</span>
-<span class="nc" id="L456">        boardGrid.getChildren().forEach(tile-&gt;tile.setVisible(true));</span>
-<span class="nc" id="L457">        collectedTilesBox.getChildren().clear();</span>
-<span class="nc" id="L458">    }</span>
+<span class="nc" id="L455">        setResetEnabled(false);</span>
+<span class="nc" id="L456">        collectedTiles.clear();</span>
+<span class="nc" id="L457">        boardGrid.getChildren().forEach(tile-&gt;tile.setVisible(true));</span>
+<span class="nc" id="L458">        collectedTilesBox.getChildren().clear();</span>
+<span class="nc" id="L459">    }</span>
 
     public void glowColumn1(MouseEvent mouseEvent) {
-<span class="nc bnc" id="L461" title="All 2 branches missed.">        if(collectedTiles.size()&gt;0) {</span>
-<span class="nc" id="L462">            Platform.runLater(() -&gt; {</span>
-<span class="nc" id="L463">                col1Box.setBackground(new Background(new BackgroundFill(Color.web(&quot;#7cb8d6&quot;), CornerRadii.EMPTY, Insets.EMPTY)));</span>
-<span class="nc" id="L464">                col1Box.setOpacity(0.5);</span>
-<span class="nc" id="L465">            });</span>
+<span class="nc bnc" id="L462" title="All 2 branches missed.">        if(collectedTiles.size()&gt;0) {</span>
+<span class="nc" id="L463">            Platform.runLater(() -&gt; {</span>
+<span class="nc" id="L464">                col1Box.setBackground(new Background(new BackgroundFill(Color.web(&quot;#7cb8d6&quot;), CornerRadii.EMPTY, Insets.EMPTY)));</span>
+<span class="nc" id="L465">                col1Box.setOpacity(0.5);</span>
+<span class="nc" id="L466">            });</span>
         }
-<span class="nc" id="L467">    }</span>
+<span class="nc" id="L468">    }</span>
 
     public void deglowColumn1(MouseEvent mouseEvent) {
-<span class="nc" id="L470">        Platform.runLater(() -&gt; {</span>
-<span class="nc" id="L471">            col1Box.setBackground(null);</span>
-<span class="nc" id="L472">            col1Box.setOpacity(0);</span>
-<span class="nc" id="L473">        });</span>
-<span class="nc" id="L474">    }</span>
+<span class="nc" id="L471">        Platform.runLater(() -&gt; {</span>
+<span class="nc" id="L472">            col1Box.setBackground(null);</span>
+<span class="nc" id="L473">            col1Box.setOpacity(0);</span>
+<span class="nc" id="L474">        });</span>
+<span class="nc" id="L475">    }</span>
 
     public void glowColumn2(MouseEvent mouseEvent) {
-<span class="nc bnc" id="L477" title="All 2 branches missed.">        if(collectedTiles.size()&gt;0) {</span>
-<span class="nc" id="L478">            Platform.runLater(() -&gt; {</span>
-<span class="nc" id="L479">                col2Box.setBackground(new Background(new BackgroundFill(Color.web(&quot;#7cb8d6&quot;), CornerRadii.EMPTY, Insets.EMPTY)));</span>
-<span class="nc" id="L480">                col2Box.setOpacity(0.5);</span>
-<span class="nc" id="L481">            });</span>
+<span class="nc bnc" id="L478" title="All 2 branches missed.">        if(collectedTiles.size()&gt;0) {</span>
+<span class="nc" id="L479">            Platform.runLater(() -&gt; {</span>
+<span class="nc" id="L480">                col2Box.setBackground(new Background(new BackgroundFill(Color.web(&quot;#7cb8d6&quot;), CornerRadii.EMPTY, Insets.EMPTY)));</span>
+<span class="nc" id="L481">                col2Box.setOpacity(0.5);</span>
+<span class="nc" id="L482">            });</span>
         }
-<span class="nc" id="L483">    }</span>
+<span class="nc" id="L484">    }</span>
 
     public void deglowColumn2(MouseEvent mouseEvent) {
-<span class="nc" id="L486">        Platform.runLater(()-&gt;{</span>
-<span class="nc" id="L487">            col2Box.setBackground(null);</span>
-<span class="nc" id="L488">            col2Box.setOpacity(0);</span>
-<span class="nc" id="L489">        });</span>
-<span class="nc" id="L490">    }</span>
+<span class="nc" id="L487">        Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L488">            col2Box.setBackground(null);</span>
+<span class="nc" id="L489">            col2Box.setOpacity(0);</span>
+<span class="nc" id="L490">        });</span>
+<span class="nc" id="L491">    }</span>
     public void glowColumn3(MouseEvent mouseEvent) {
-<span class="nc bnc" id="L492" title="All 2 branches missed.">        if(collectedTiles.size()&gt;0) {</span>
-<span class="nc" id="L493">            Platform.runLater(() -&gt; {</span>
-<span class="nc" id="L494">                col3Box.setBackground(new Background(new BackgroundFill(Color.web(&quot;#7cb8d6&quot;), CornerRadii.EMPTY, Insets.EMPTY)));</span>
-<span class="nc" id="L495">                col3Box.setOpacity(0.5);</span>
-<span class="nc" id="L496">            });</span>
+<span class="nc bnc" id="L493" title="All 2 branches missed.">        if(collectedTiles.size()&gt;0) {</span>
+<span class="nc" id="L494">            Platform.runLater(() -&gt; {</span>
+<span class="nc" id="L495">                col3Box.setBackground(new Background(new BackgroundFill(Color.web(&quot;#7cb8d6&quot;), CornerRadii.EMPTY, Insets.EMPTY)));</span>
+<span class="nc" id="L496">                col3Box.setOpacity(0.5);</span>
+<span class="nc" id="L497">            });</span>
         }
-<span class="nc" id="L498">    }</span>
+<span class="nc" id="L499">    }</span>
 
     public void deglowColumn3(MouseEvent mouseEvent) {
-<span class="nc" id="L501">        Platform.runLater(()-&gt;{</span>
-<span class="nc" id="L502">            col3Box.setBackground(null);</span>
-<span class="nc" id="L503">            col3Box.setOpacity(0);</span>
-<span class="nc" id="L504">        });</span>
+<span class="nc" id="L502">        Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L503">            col3Box.setBackground(null);</span>
+<span class="nc" id="L504">            col3Box.setOpacity(0);</span>
+<span class="nc" id="L505">        });</span>
 
-<span class="nc" id="L506">    }</span>
+<span class="nc" id="L507">    }</span>
     public void glowColumn4(MouseEvent mouseEvent) {
-<span class="nc bnc" id="L508" title="All 2 branches missed.">        if(collectedTiles.size()&gt;0) {</span>
-<span class="nc" id="L509">            Platform.runLater(() -&gt; {</span>
-<span class="nc" id="L510">                col4Box.setBackground(new Background(new BackgroundFill(Color.web(&quot;#7cb8d6&quot;), CornerRadii.EMPTY, Insets.EMPTY)));</span>
-<span class="nc" id="L511">                col4Box.setOpacity(0.5);</span>
-<span class="nc" id="L512">            });</span>
+<span class="nc bnc" id="L509" title="All 2 branches missed.">        if(collectedTiles.size()&gt;0) {</span>
+<span class="nc" id="L510">            Platform.runLater(() -&gt; {</span>
+<span class="nc" id="L511">                col4Box.setBackground(new Background(new BackgroundFill(Color.web(&quot;#7cb8d6&quot;), CornerRadii.EMPTY, Insets.EMPTY)));</span>
+<span class="nc" id="L512">                col4Box.setOpacity(0.5);</span>
+<span class="nc" id="L513">            });</span>
         }
-<span class="nc" id="L514">    }</span>
+<span class="nc" id="L515">    }</span>
 
     public void deglowColumn4(MouseEvent mouseEvent) {
-<span class="nc" id="L517">        Platform.runLater(()-&gt;{</span>
-<span class="nc" id="L518">            col4Box.setBackground(null);</span>
-<span class="nc" id="L519">            col4Box.setOpacity(0);</span>
-<span class="nc" id="L520">        });</span>
-<span class="nc" id="L521">    }</span>
+<span class="nc" id="L518">        Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L519">            col4Box.setBackground(null);</span>
+<span class="nc" id="L520">            col4Box.setOpacity(0);</span>
+<span class="nc" id="L521">        });</span>
+<span class="nc" id="L522">    }</span>
     public void glowColumn5(MouseEvent mouseEvent) {
-<span class="nc bnc" id="L523" title="All 2 branches missed.">        if(collectedTiles.size()&gt;0) {</span>
-<span class="nc" id="L524">            Platform.runLater(() -&gt; {</span>
-<span class="nc" id="L525">                col5Box.setBackground(new Background(new BackgroundFill(Color.web(&quot;#7cb8d6&quot;), CornerRadii.EMPTY, Insets.EMPTY)));</span>
-<span class="nc" id="L526">                col5Box.setOpacity(0.5);</span>
-<span class="nc" id="L527">            });</span>
+<span class="nc bnc" id="L524" title="All 2 branches missed.">        if(collectedTiles.size()&gt;0) {</span>
+<span class="nc" id="L525">            Platform.runLater(() -&gt; {</span>
+<span class="nc" id="L526">                col5Box.setBackground(new Background(new BackgroundFill(Color.web(&quot;#7cb8d6&quot;), CornerRadii.EMPTY, Insets.EMPTY)));</span>
+<span class="nc" id="L527">                col5Box.setOpacity(0.5);</span>
+<span class="nc" id="L528">            });</span>
         }
-<span class="nc" id="L529">    }</span>
+<span class="nc" id="L530">    }</span>
 
     public void deglowColumn5(MouseEvent mouseEvent) {
-<span class="nc" id="L532">        Platform.runLater(()-&gt;{</span>
-<span class="nc" id="L533">            col5Box.setBackground(null);</span>
-<span class="nc" id="L534">            col5Box.setOpacity(0);</span>
-<span class="nc" id="L535">        });</span>
-<span class="nc" id="L536">    }</span>
+<span class="nc" id="L533">        Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L534">            col5Box.setBackground(null);</span>
+<span class="nc" id="L535">            col5Box.setOpacity(0);</span>
+<span class="nc" id="L536">        });</span>
+<span class="nc" id="L537">    }</span>
 
     private void collectTiles(int col) {
-<span class="nc bnc" id="L539" title="All 2 branches missed.">        if(collectedTiles.size() &gt; freeSpots(col)){</span>
-<span class="nc" id="L540">            GUIClient.getInstance().showDenyDialog(&quot;Column &quot;+col+&quot; can contain\na maximum of &quot;+freeSpots(col)+&quot; other tiles&quot;);</span>
+<span class="nc bnc" id="L540" title="All 2 branches missed.">        if(collectedTiles.size() &gt; freeSpots(col)){</span>
+<span class="nc" id="L541">            GUIClient.getInstance().showDenyDialog(&quot;Column &quot;+col+&quot; can contain\na maximum of &quot;+freeSpots(col)+&quot; other tiles&quot;);</span>
         }
         else {
-<span class="nc" id="L543">            column = col;</span>
-<span class="nc bnc" id="L544" title="All 2 branches missed.">            if (collectedTiles.size() &gt; 0) {</span>
-<span class="nc" id="L545">                StringBuilder tiles = new StringBuilder();</span>
-<span class="nc bnc" id="L546" title="All 2 branches missed.">                for (ImageView imv : collectedTiles) {</span>
-<span class="nc" id="L547">                    tiles.append(GridPane.getRowIndex(imv) + 1).append(&quot;,&quot;).append(GridPane.getColumnIndex(imv) + 1).append(&quot; &quot;);</span>
-<span class="nc" id="L548">                }</span>
-<span class="nc" id="L549">                Client.getInstance().addGuiAction(&quot;/collect &quot; + tiles.toString().trim());</span>
+<span class="nc" id="L544">            column = col;</span>
+<span class="nc bnc" id="L545" title="All 2 branches missed.">            if (collectedTiles.size() &gt; 0) {</span>
+<span class="nc" id="L546">                StringBuilder tiles = new StringBuilder();</span>
+<span class="nc" id="L547">                List&lt;Position&gt; positions = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L548" title="All 2 branches missed.">                for (ImageView imv : collectedTiles) {</span>
+<span class="nc" id="L549">                    tiles.append(GridPane.getRowIndex(imv) + 1).append(&quot;,&quot;).append(GridPane.getColumnIndex(imv) + 1).append(&quot; &quot;);</span>
+<span class="nc" id="L550">                    positions.add(new Position(GridPane.getRowIndex(imv),GridPane.getColumnIndex(imv)));</span>
+<span class="nc" id="L551">                }</span>
+<span class="nc bnc" id="L552" title="All 2 branches missed.">                if(Position.areAdjacent(positions)) {</span>
+<span class="nc" id="L553">                    Client.getInstance().addGuiAction(&quot;/collect &quot; + tiles.toString().trim());</span>
+                }else{
+<span class="nc" id="L555">                    GUIClient.getInstance().showDenyDialog(&quot;Tiles must be adjacent&quot;);</span>
+                }
             }
         }
-<span class="nc" id="L552">    }</span>
+<span class="nc" id="L559">    }</span>
 
     public void insertInColumn(){
-<span class="nc bnc" id="L555" title="All 2 branches missed.">        if(column&gt;0) {</span>
-<span class="nc" id="L556">            Client.getInstance().addGuiAction(&quot;/column &quot; + column);</span>
-<span class="nc" id="L557">            collectedTiles.clear();</span>
-<span class="nc" id="L558">            Platform.runLater(()-&gt;{</span>
-<span class="nc" id="L559">                collectedTilesBox.getChildren().clear();</span>
-<span class="nc" id="L560">                setResetEnabled(false);</span>
-<span class="nc" id="L561">            });</span>
+<span class="nc bnc" id="L562" title="All 2 branches missed.">        if(column&gt;0) {</span>
+<span class="nc" id="L563">            Client.getInstance().addGuiAction(&quot;/column &quot; + column);</span>
+<span class="nc" id="L564">            collectedTiles.clear();</span>
+<span class="nc" id="L565">            Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L566">                collectedTilesBox.getChildren().clear();</span>
+<span class="nc" id="L567">                setResetEnabled(false);</span>
+<span class="nc" id="L568">            });</span>
 
         }
-<span class="nc" id="L564">    }</span>
+<span class="nc" id="L571">    }</span>
 
     private int freeSpots(int col) {
-<span class="nc" id="L567">        int count = 0;</span>
-<span class="nc" id="L568">        int i=0;</span>
+<span class="nc" id="L574">        int count = 0;</span>
+<span class="nc" id="L575">        int i=0;</span>
 
-<span class="nc bnc" id="L570" title="All 2 branches missed.">        for(Node n : myShelfGrid.getChildren()){</span>
-<span class="nc bnc" id="L571" title="All 2 branches missed.">            if(i % Settings.SHELFCOLUMN == col-1){</span>
+<span class="nc bnc" id="L577" title="All 2 branches missed.">        for(Node n : myShelfGrid.getChildren()){</span>
+<span class="nc bnc" id="L578" title="All 2 branches missed.">            if(i % Settings.SHELFCOLUMN == col-1){</span>
                 try{
-<span class="nc bnc" id="L573" title="All 2 branches missed.">                    if(((ImageView)n).getImage().getUrl().contains(&quot;transparent.png&quot;)){</span>
-<span class="nc" id="L574">                        count++;</span>
+<span class="nc bnc" id="L580" title="All 2 branches missed.">                    if(((ImageView)n).getImage().getUrl().contains(&quot;transparent.png&quot;)){</span>
+<span class="nc" id="L581">                        count++;</span>
                     }
-<span class="nc" id="L576">                }catch (ClassCastException e){</span>
+<span class="nc" id="L583">                }catch (ClassCastException e){</span>
                     //ignore
-<span class="nc" id="L578">                }</span>
+<span class="nc" id="L585">                }</span>
             }
-<span class="nc" id="L580">            i++;</span>
-<span class="nc" id="L581">        }</span>
-<span class="nc" id="L582">        return count;</span>
+<span class="nc" id="L587">            i++;</span>
+<span class="nc" id="L588">        }</span>
+<span class="nc" id="L589">        return count;</span>
     }
 
     public void insertTiles1(MouseEvent mouseEvent) {
-<span class="nc" id="L586">        collectTiles(1);</span>
-<span class="nc" id="L587">    }</span>
+<span class="nc" id="L593">        collectTiles(1);</span>
+<span class="nc" id="L594">    }</span>
 
     public void insertTiles2(MouseEvent mouseEvent) {
-<span class="nc" id="L590">        collectTiles(2);</span>
-<span class="nc" id="L591">    }</span>
+<span class="nc" id="L597">        collectTiles(2);</span>
+<span class="nc" id="L598">    }</span>
     public void insertTiles3(MouseEvent mouseEvent) {
-<span class="nc" id="L593">        collectTiles(3);</span>
-<span class="nc" id="L594">    }</span>
+<span class="nc" id="L600">        collectTiles(3);</span>
+<span class="nc" id="L601">    }</span>
     public void insertTiles4(MouseEvent mouseEvent) {
-<span class="nc" id="L596">        collectTiles(4);</span>
-<span class="nc" id="L597">    }</span>
+<span class="nc" id="L603">        collectTiles(4);</span>
+<span class="nc" id="L604">    }</span>
     public void insertTiles5(MouseEvent mouseEvent) {
-<span class="nc" id="L599">        collectTiles(5);</span>
-<span class="nc" id="L600">    }</span>
+<span class="nc" id="L606">        collectTiles(5);</span>
+<span class="nc" id="L607">    }</span>
 
     public void chatNotification() {
-<span class="nc" id="L603">        chatNotificationImg.setVisible(true);</span>
-<span class="nc" id="L604">    }</span>
+<span class="nc" id="L610">        chatNotificationImg.setVisible(true);</span>
+<span class="nc" id="L611">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

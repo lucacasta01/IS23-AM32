@@ -54,7 +54,7 @@ public class SharedGoal6Card extends SharedGoalCard implements CheckSharedGoal {
                 }
 <span class="fc" id="L55">                colors.clear();</span>
             }
-<span class="fc bfc" id="L57" title="All 2 branches covered.">            if(achievedRows&gt;=3){</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">            if(achievedRows&gt;=2){</span>
 <span class="fc" id="L58">                addPlayer(p);</span>
 <span class="fc" id="L59">                return true;</span>
             }else{
@@ -67,7 +67,7 @@ public class SharedGoal6Card extends SharedGoalCard implements CheckSharedGoal {
 
     @Override
     public String toString() {
-<span class="fc" id="L70">        return &quot;Card 6: You must have two full rows of your shelf made up with &quot; +</span>
+<span class="nc" id="L70">        return &quot;Card 6: You must have two full rows of your shelf made up with &quot; +</span>
                 &quot;tiles of different color&quot;;
     }
 }

@@ -16,6 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This is the network rep of the player.
+ * This class is useful to make the client-server communication possible
+ * Is important to remember that each ClientHandler is executed as a stand-alone thread.
+ * For each Player connected, a new ClientHandler thread is executed on Server pool.
+ */
 public class ClientHandler implements Runnable {
     private final Socket clientSocket;
     private String nickname="/";

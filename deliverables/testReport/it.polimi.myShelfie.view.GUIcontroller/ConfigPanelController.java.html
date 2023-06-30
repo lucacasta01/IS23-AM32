@@ -72,37 +72,5 @@ import java.util.regex.Pattern;
 <span class="nc" id="L72">        Pattern port = Pattern.compile(&quot;^\\d{1,5}$&quot;);</span>
 <span class="nc bnc" id="L73" title="All 4 branches missed.">        return port.matcher(rmiPort).matches() &amp;&amp; !rmiPort.equals(tcpPortTxt.getText());</span>
     }
-
-    public void doSetConfig(ActionEvent actionEvent) {
-<span class="nc" id="L77">        StringBuilder error = new StringBuilder();</span>
-<span class="nc bnc" id="L78" title="All 2 branches missed.">        if(!checkIp(ipTxt.getText())){</span>
-<span class="nc" id="L79">            error.append(&quot;Invalid IP Address\n&quot;);</span>
-<span class="nc" id="L80">            ipTxt.setText(Client.getInstance().getServerIP());</span>
-        }else{
-            //todo
-        }
-
-<span class="nc bnc" id="L85" title="All 2 branches missed.">        if(!checkTcpPort(tcpPortTxt.getText())){</span>
-<span class="nc" id="L86">            error.append(&quot;Invalid TCP port\n&quot;);</span>
-<span class="nc" id="L87">            tcpPortTxt.setText(Integer.toString(Client.getInstance().getTCPPort()));</span>
-        }else{
-            //todo
-        }
-
-<span class="nc bnc" id="L92" title="All 2 branches missed.">        if(!checkRmiPort(rmiPortTxt.getText())){</span>
-<span class="nc" id="L93">            error.append(&quot;Invalid RMI port\n&quot;);</span>
-<span class="nc" id="L94">            rmiPortTxt.setText(Integer.toString(Client.getInstance().getRMIPort()));</span>
-        }else{
-            //todo
-        }
-
-<span class="nc bnc" id="L99" title="All 2 branches missed.">        if(!error.toString().equals(&quot;&quot;)){</span>
-<span class="nc" id="L100">            errorLbl.setText(error.toString());</span>
-<span class="nc" id="L101">            errorLbl.setVisible(true);</span>
-        }
-        else{
-<span class="nc" id="L104">            errorLbl.setVisible(false);</span>
-        }
-<span class="nc" id="L106">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

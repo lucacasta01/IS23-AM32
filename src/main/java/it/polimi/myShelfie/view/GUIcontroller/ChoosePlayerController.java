@@ -32,6 +32,7 @@ public class ChoosePlayerController {
             Client.getInstance().addGuiAction("/quit");
         });
     }
+
     public void twoPlayersChoice(ActionEvent actionEvent) {
         stage = (Stage)((javafx.scene.Node)actionEvent.getSource()).getScene().getWindow();
         client = Client.getInstance();

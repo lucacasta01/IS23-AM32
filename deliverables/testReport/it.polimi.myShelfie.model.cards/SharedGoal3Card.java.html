@@ -13,13 +13,16 @@ public class SharedGoal3Card extends SharedGoalCard implements CheckSharedGoal {
 <span class="fc" id="L13">        initFlags();</span>
 <span class="fc" id="L14">    }</span>
 
+    /**
+     * initialize a support matrix for goal check with false flags
+     */
     public void initFlags(){
-<span class="fc bfc" id="L17" title="All 2 branches covered.">        for(int i = 0; i&lt; Settings.SHELFROW; i++){</span>
-<span class="fc bfc" id="L18" title="All 2 branches covered.">            for(int j = 0; j&lt; Settings.SHELFCOLUMN; j++){</span>
-<span class="fc" id="L19">                flags[i][j] = false;</span>
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        for(int i = 0; i&lt; Settings.SHELFROW; i++){</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">            for(int j = 0; j&lt; Settings.SHELFCOLUMN; j++){</span>
+<span class="fc" id="L22">                flags[i][j] = false;</span>
             }
         }
-<span class="fc" id="L22">    }</span>
+<span class="fc" id="L25">    }</span>
 
     /**
     * Returns true if the player passed by parameter has achieved the shared goal
@@ -27,72 +30,82 @@ public class SharedGoal3Card extends SharedGoalCard implements CheckSharedGoal {
     * @return Check result
     */
     public boolean checkPattern(Player p) {
-<span class="fc bfc" id="L30" title="All 2 branches covered.">        if(isAchieved(p)){</span>
-<span class="fc" id="L31">            return false;</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        if(isAchieved(p)){</span>
+<span class="fc" id="L34">            return false;</span>
         }
-<span class="fc" id="L33">        Tile[][] matrix = p.getMyShelf().getTileMartrix();</span>
-<span class="fc" id="L34">        initFlags();</span>
-<span class="fc" id="L35">        int tilesPerGroup = 4;</span>
-<span class="fc" id="L36">        int numOfGroup = 4;</span>
-<span class="fc" id="L37">        int count_groups = 0;</span>
+<span class="fc" id="L36">        Tile[][] matrix = p.getMyShelf().getTileMartrix();</span>
+<span class="fc" id="L37">        initFlags();</span>
+<span class="fc" id="L38">        int tilesPerGroup = 4;</span>
+<span class="fc" id="L39">        int numOfGroup = 4;</span>
+<span class="fc" id="L40">        int count_groups = 0;</span>
 
-<span class="fc bfc" id="L39" title="All 2 branches covered.">        for(int row = Settings.SHELFROW-1; row &gt;= 0; row--){</span>
-<span class="fc bfc" id="L40" title="All 2 branches covered.">            for(int column = 0; column &lt; Settings.SHELFCOLUMN; column++){</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        for(int row = Settings.SHELFROW-1; row &gt;= 0; row--){</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">            for(int column = 0; column &lt; Settings.SHELFCOLUMN; column++){</span>
 
-<span class="pc bpc" id="L42" title="1 of 4 branches missed.">                if(!matrix[row][column].getColor().equals(Tile.Color.NULLTILE) || !flags[row][column]){</span>
-<span class="fc" id="L43">                    flags[row][column]=true;</span>
-<span class="fc bfc" id="L44" title="All 2 branches covered.">                    if(counter(row, column,count_tiles, flags, matrix)==tilesPerGroup) count_groups++;</span>
-<span class="fc bfc" id="L45" title="All 2 branches covered.">                    if(count_groups==numOfGroup){</span>
-<span class="fc" id="L46">                        addPlayer(p);</span>
-<span class="fc" id="L47">                        return true;</span>
+<span class="pc bpc" id="L45" title="1 of 4 branches missed.">                if(!matrix[row][column].getColor().equals(Tile.Color.NULLTILE) || !flags[row][column]){</span>
+<span class="fc" id="L46">                    flags[row][column]=true;</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">                    if(counter(row, column,count_tiles, flags, matrix)==tilesPerGroup) count_groups++;</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">                    if(count_groups==numOfGroup){</span>
+<span class="fc" id="L49">                        addPlayer(p);</span>
+<span class="fc" id="L50">                        return true;</span>
                     }
 
                 }
-<span class="fc" id="L51">                count_tiles = 0;</span>
+<span class="fc" id="L54">                count_tiles = 0;</span>
             }
         }
-<span class="fc" id="L54">        return false;</span>
+<span class="fc" id="L57">        return false;</span>
     }
 
+
+    /**
+     * method that returns the number of adjacent tiles with the same color
+     * @param row
+     * @param column
+     * @param count_tiles
+     * @param flags
+     * @param matrix
+     * @return the number of adjacent tiles with the same color
+     */
     public int counter(int row, int column,int count_tiles, boolean[][] flags, Tile[][] matrix) {
 
-<span class="pc bpc" id="L59" title="1 of 4 branches missed.">        if(!matrix[row][column].getColor().equals(Tile.Color.NULLTILE) || !flags[row][column]) {</span>
+<span class="pc bpc" id="L72" title="1 of 4 branches missed.">        if(!matrix[row][column].getColor().equals(Tile.Color.NULLTILE) || !flags[row][column]) {</span>
 
 
-<span class="fc" id="L62">            flags[row][column] = true;</span>
+<span class="fc" id="L75">            flags[row][column] = true;</span>
 
             //up
-<span class="fc bfc" id="L65" title="All 2 branches covered.">            if(row!=0){</span>
-<span class="fc bfc" id="L66" title="All 4 branches covered.">                if (matrix[row][column].getColor().equals(matrix[row - 1][column].getColor()) &amp;&amp; !flags[row-1][column]) {</span>
-<span class="fc" id="L67">                    count_tiles += counter(row -1, column, count_tiles, flags, matrix);</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">            if(row!=0){</span>
+<span class="fc bfc" id="L79" title="All 4 branches covered.">                if (matrix[row][column].getColor().equals(matrix[row - 1][column].getColor()) &amp;&amp; !flags[row-1][column]) {</span>
+<span class="fc" id="L80">                    count_tiles += counter(row -1, column, count_tiles, flags, matrix);</span>
                 }
             }
             //down
-<span class="fc bfc" id="L71" title="All 2 branches covered.">            if(row!=5){</span>
-<span class="fc bfc" id="L72" title="All 4 branches covered.">                if (matrix[row][column].getColor().equals(matrix[row + 1][column].getColor()) &amp;&amp; !flags[row+1][column]) {</span>
-<span class="fc" id="L73">                    count_tiles += counter(row +1, column, count_tiles, flags, matrix);</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">            if(row!=5){</span>
+<span class="fc bfc" id="L85" title="All 4 branches covered.">                if (matrix[row][column].getColor().equals(matrix[row + 1][column].getColor()) &amp;&amp; !flags[row+1][column]) {</span>
+<span class="fc" id="L86">                    count_tiles += counter(row +1, column, count_tiles, flags, matrix);</span>
                 }
             }
             //right
-<span class="fc bfc" id="L77" title="All 2 branches covered.">            if(column!=4) {</span>
-<span class="fc bfc" id="L78" title="All 4 branches covered.">                if (matrix[row][column].getColor().equals(matrix[row][column + 1].getColor()) &amp;&amp; !flags[row][column+1]) {</span>
-<span class="fc" id="L79">                    count_tiles += counter(row, column + 1, count_tiles, flags, matrix);</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">            if(column!=4) {</span>
+<span class="fc bfc" id="L91" title="All 4 branches covered.">                if (matrix[row][column].getColor().equals(matrix[row][column + 1].getColor()) &amp;&amp; !flags[row][column+1]) {</span>
+<span class="fc" id="L92">                    count_tiles += counter(row, column + 1, count_tiles, flags, matrix);</span>
                 }
             }
             //left
-<span class="fc bfc" id="L83" title="All 2 branches covered.">            if(column!=0) {</span>
-<span class="pc bpc" id="L84" title="1 of 4 branches missed.">                if (matrix[row][column].getColor().equals(matrix[row][column - 1].getColor()) &amp;&amp; !flags[row][column-1]) {</span>
-<span class="nc" id="L85">                    count_tiles += counter(row, column - 1, count_tiles, flags, matrix);</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">            if(column!=0) {</span>
+<span class="pc bpc" id="L97" title="1 of 4 branches missed.">                if (matrix[row][column].getColor().equals(matrix[row][column - 1].getColor()) &amp;&amp; !flags[row][column-1]) {</span>
+<span class="nc" id="L98">                    count_tiles += counter(row, column - 1, count_tiles, flags, matrix);</span>
                 }
             }
-<span class="fc" id="L88">            return count_tiles+1;</span>
+<span class="fc" id="L101">            return count_tiles+1;</span>
         }
-<span class="fc" id="L90">        return count_tiles;</span>
+<span class="fc" id="L103">        return count_tiles;</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L95">        return &quot;Card 3: You must have 4 groups of tiles that meet this requirement:\n&quot; +</span>
+<span class="fc" id="L108">        return &quot;Card 3: You must have 4 groups of tiles that meet this requirement:\n&quot; +</span>
                 &quot;4 Tiles of the same color stacked on top of each other&quot;;
     }
 }

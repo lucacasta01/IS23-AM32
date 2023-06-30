@@ -1,5 +1,9 @@
 package it.polimi.myShelfie.model;
 import it.polimi.myShelfie.model.cards.PersonalGoalCard;
+
+/**
+ * Represent the player, with his username, his score, his shelf and his personal goal card.
+ */
 public class Player {
 
     private int score;

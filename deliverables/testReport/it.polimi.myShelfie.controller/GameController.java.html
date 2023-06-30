@@ -17,292 +17,307 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-<span class="fc" id="L20">public class GameController {</span>
+/**
+ * The controller core.
+ * It manipulates the model consequently to the players actions, in order to make the
+ * game go on.
+ * Almost all the methods of this class are called by Lobby
+ */
+<span class="fc" id="L26">public class GameController {</span>
     private Game game;
-<span class="fc" id="L22">    private List&lt;Tile&gt; collectedTiles = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L28">    private List&lt;Tile&gt; collectedTiles = new ArrayList&lt;&gt;();</span>
 
     /**
      * Method used to pick up tiles from the game board
-     * @param a action to execute
+     * @param a action to execute that contains the tiles to be picked
      */
     public String pickTiles(Action a){
-<span class="fc" id="L29">        String nickname = a.getNickname();</span>
-<span class="fc bfc" id="L30" title="All 2 branches covered.">        if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){</span>
+<span class="fc" id="L35">        String nickname = a.getNickname();</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){</span>
             //your turn
-<span class="fc" id="L32">            List&lt;Position&gt; tiles = a.getChosenTiles();</span>
-<span class="fc" id="L33">            collectedTiles = game.collectTiles(tiles);</span>
-<span class="pc bpc" id="L34" title="1 of 2 branches missed.">            if (collectedTiles == null) {</span>
-<span class="nc" id="L35">                return &quot;1&quot;;</span>
+<span class="fc" id="L38">            List&lt;Position&gt; tiles = a.getChosenTiles();</span>
+<span class="fc" id="L39">            collectedTiles = game.collectTiles(tiles);</span>
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">            if (collectedTiles == null) {</span>
+<span class="nc" id="L41">                return &quot;1&quot;;</span>
             }else{
-<span class="fc" id="L37">                StringBuilder builder = new StringBuilder();</span>
-<span class="fc" id="L38">                builder.append(&quot;picked tiles: &quot;);</span>
-<span class="fc bfc" id="L39" title="All 2 branches covered.">                for (Tile t : collectedTiles) {</span>
-<span class="fc" id="L40">                    builder.append(t.toString());</span>
-<span class="fc" id="L41">                    builder.append(&quot; &quot;);</span>
-<span class="fc" id="L42">                }</span>
-<span class="fc" id="L43">                return builder.toString();</span>
+<span class="fc" id="L43">                StringBuilder builder = new StringBuilder();</span>
+<span class="fc" id="L44">                builder.append(&quot;picked tiles: &quot;);</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">                for (Tile t : collectedTiles) {</span>
+<span class="fc" id="L46">                    builder.append(t.toString());</span>
+<span class="fc" id="L47">                    builder.append(&quot; &quot;);</span>
+<span class="fc" id="L48">                }</span>
+<span class="fc" id="L49">                return builder.toString();</span>
             }
-
         }else{
             //not your turn
-<span class="fc" id="L48">            return &quot;0&quot;;</span>
+<span class="fc" id="L53">            return &quot;0&quot;;</span>
         }
     }
 
     /**
      * Method used to select in which column you want to insert the tiles you picked
-     * @param a action
+     * @param a action that contains the column the tiles need to be inserted in
      */
     public String selectColumn(Action a){
-<span class="fc" id="L57">        String nickname = a.getNickname();</span>
-<span class="fc bfc" id="L58" title="All 2 branches covered.">        if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){</span>
-<span class="pc bpc" id="L59" title="1 of 2 branches missed.">            if(collectedTiles.size()==0){</span>
+<span class="fc" id="L62">        String nickname = a.getNickname();</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){</span>
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">            if(collectedTiles.size()==0){</span>
                 //no tiles selected
-<span class="nc" id="L61">                return &quot;2&quot;;</span>
+<span class="nc" id="L66">                return &quot;2&quot;;</span>
             }else{
-<span class="fc bfc" id="L63" title="All 2 branches covered.">                if(game.insertTiles(collectedTiles, a.getChosenColumn())){</span>
-<span class="fc" id="L64">                    collectedTiles.clear();</span>
-<span class="fc" id="L65">                    boolean res = this.game.getGameBoard().needToRefill();</span>
-<span class="pc bpc" id="L66" title="1 of 2 branches missed.">                    if(res){</span>
-<span class="nc" id="L67">                        this.game.getGameBoard().initBoard(game.getPlayersNumber());</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">                if(game.insertTiles(collectedTiles, a.getChosenColumn())){</span>
+<span class="fc" id="L69">                    collectedTiles.clear();</span>
+<span class="fc" id="L70">                    boolean res = this.game.getGameBoard().needToRefill();</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">                    if(res){</span>
+<span class="nc" id="L72">                        this.game.getGameBoard().initBoard(game.getPlayersNumber());</span>
                     }
-<span class="fc" id="L69">                    return &quot;Tiles inserted correctly&quot;;</span>
+<span class="fc" id="L74">                    return &quot;Tiles inserted correctly&quot;;</span>
                 }else{
                     //out of column limit
-<span class="fc" id="L72">                    return &quot;1&quot;;</span>
+<span class="fc" id="L77">                    return &quot;1&quot;;</span>
                 }
             }
         }else{
             //not your turn
-<span class="fc" id="L77">            return &quot;0&quot;;</span>
+<span class="fc" id="L82">            return &quot;0&quot;;</span>
         }
     }
 
     /**
      * Method used to select the order of insertion of the tiles
-     * @param a action
+     * @param a action that contains the new order of the tiles
      */
     public String orderTiles(Action a){
-<span class="fc" id="L86">        String nickname = a.getNickname();</span>
-<span class="fc bfc" id="L87" title="All 2 branches covered.">        if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){</span>
-<span class="pc bpc" id="L88" title="1 of 2 branches missed.">            if(collectedTiles!=null){</span>
-<span class="fc bfc" id="L89" title="All 2 branches covered.">                if(collectedTiles.size()!=0){</span>
-<span class="fc" id="L90">                    String order = a.getInfo();</span>
-<span class="fc" id="L91">                    String[] colors = order.split(&quot; &quot;);</span>
-<span class="fc" id="L92">                    Tile[] tiles = new Tile[colors.length];</span>
-<span class="fc" id="L93">                    Tile toRemove = null;</span>
-<span class="fc bfc" id="L94" title="All 2 branches covered.">                    for (int i = 0; i&lt; colors.length; i++) {</span>
-<span class="fc" id="L95">                        String s = colors[i];</span>
-<span class="pc bpc" id="L96" title="1 of 2 branches missed.">                        for (Tile t : collectedTiles) {</span>
-<span class="fc bfc" id="L97" title="All 2 branches covered.">                            if (t.toString().equals(s)) {</span>
-<span class="fc" id="L98">                                toRemove = t;</span>
-<span class="fc" id="L99">                                tiles[i] = new Tile(t.getImagePath(), t.getColor());</span>
-<span class="fc" id="L100">                                break;</span>
+<span class="fc" id="L91">        String nickname = a.getNickname();</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        if(game.getPlayers().get(game.getCurrentPlayer()).getUsername().equals(nickname)){</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">            if(collectedTiles!=null){</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">                if(collectedTiles.size()!=0){</span>
+<span class="fc" id="L95">                    String order = a.getInfo();</span>
+<span class="fc" id="L96">                    String[] colors = order.split(&quot; &quot;);</span>
+<span class="fc" id="L97">                    Tile[] tiles = new Tile[colors.length];</span>
+<span class="fc" id="L98">                    Tile toRemove = null;</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">                    for (int i = 0; i&lt; colors.length; i++) {</span>
+<span class="fc" id="L100">                        String s = colors[i];</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">                        for (Tile t : collectedTiles) {</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">                            if (t.toString().equals(s)) {</span>
+<span class="fc" id="L103">                                toRemove = t;</span>
+<span class="fc" id="L104">                                tiles[i] = new Tile(t.getImagePath(), t.getColor());</span>
+<span class="fc" id="L105">                                break;</span>
                             }
-<span class="fc" id="L102">                        }</span>
-<span class="pc bpc" id="L103" title="1 of 2 branches missed.">                        if(toRemove!=null){</span>
-<span class="fc" id="L104">                            collectedTiles.remove(toRemove);</span>
-<span class="fc" id="L105">                            toRemove=null;</span>
+<span class="fc" id="L107">                        }</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">                        if(toRemove!=null){</span>
+<span class="fc" id="L109">                            collectedTiles.remove(toRemove);</span>
+<span class="fc" id="L110">                            toRemove=null;</span>
                         }
                     }
 
-<span class="fc" id="L109">                    this.collectedTiles.clear();</span>
-<span class="fc" id="L110">                    this.collectedTiles.addAll(Arrays.asList(tiles));</span>
-<span class="fc" id="L111">                    StringBuilder string = new StringBuilder();</span>
-<span class="fc" id="L112">                    string.append(&quot;Order changed successfully: &quot;);</span>
-<span class="fc bfc" id="L113" title="All 2 branches covered.">                    for (Tile t : this.collectedTiles) {</span>
-<span class="fc" id="L114">                        string.append(t.toString()).append(&quot; &quot;);</span>
-<span class="fc" id="L115">                    }</span>
-<span class="fc" id="L116">                    return string.toString();</span>
+<span class="fc" id="L114">                    this.collectedTiles.clear();</span>
+<span class="fc" id="L115">                    this.collectedTiles.addAll(Arrays.asList(tiles));</span>
+<span class="fc" id="L116">                    StringBuilder string = new StringBuilder();</span>
+<span class="fc" id="L117">                    string.append(&quot;Order changed successfully: &quot;);</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">                    for (Tile t : this.collectedTiles) {</span>
+<span class="fc" id="L119">                        string.append(t.toString()).append(&quot; &quot;);</span>
+<span class="fc" id="L120">                    }</span>
+<span class="fc" id="L121">                    return string.toString();</span>
                 }else{
-<span class="fc" id="L118">                    return &quot;1&quot;;</span>
+<span class="fc" id="L123">                    return &quot;1&quot;;</span>
                 }
             }else{
-<span class="nc" id="L121">                return &quot;1&quot;;</span>
+<span class="nc" id="L126">                return &quot;1&quot;;</span>
             }
         }else{
-<span class="fc" id="L124">            return &quot;0&quot;;</span>
+<span class="fc" id="L129">            return &quot;0&quot;;</span>
         }
     }
+
     public ClientHandler[] reorderLobbyPlayers(List&lt;ClientHandler&gt; lobbyPlayers){
-<span class="fc" id="L128">        ClientHandler[] oldGameOrder = new ClientHandler[lobbyPlayers.size()];</span>
-<span class="fc bfc" id="L129" title="All 2 branches covered.">        for(int i = 0; i&lt;lobbyPlayers.size(); i++){</span>
-<span class="fc bfc" id="L130" title="All 2 branches covered.">            for(int j = 0; j&lt;lobbyPlayers.size(); j++){</span>
-<span class="fc bfc" id="L131" title="All 2 branches covered.">                if(lobbyPlayers.get(i).getNickname().equals(this.game.getOldGamePlayers().get(j).getUsername())){</span>
-<span class="fc" id="L132">                    oldGameOrder[j]=lobbyPlayers.get(i);</span>
+<span class="fc" id="L134">        ClientHandler[] oldGameOrder = new ClientHandler[lobbyPlayers.size()];</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">        for(int i = 0; i&lt;lobbyPlayers.size(); i++){</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">            for(int j = 0; j&lt;lobbyPlayers.size(); j++){</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">                if(lobbyPlayers.get(i).getNickname().equals(this.game.getOldGamePlayers().get(j).getUsername())){</span>
+<span class="fc" id="L138">                    oldGameOrder[j]=lobbyPlayers.get(i);</span>
                 }
             }
         }
-<span class="fc" id="L136">        return oldGameOrder;</span>
+<span class="fc" id="L142">        return oldGameOrder;</span>
     }
+
+    /**
+     *  Method used to perform turn-end actions and to save the current state of the game
+     */
     public void handleTurn(){
-<span class="fc" id="L139">        this.game.handleTurn();</span>
-<span class="fc" id="L140">        this.game.saveGame();</span>
-<span class="fc" id="L141">    }</span>
+<span class="fc" id="L149">        this.game.handleTurn();</span>
+<span class="fc" id="L150">        this.game.saveGame();</span>
+<span class="fc" id="L151">    }</span>
     public PersonalGoalCard drawPersonalGoal(){
-<span class="nc" id="L143">        return this.game.drawPersonalGoal();</span>
+<span class="nc" id="L153">        return this.game.drawPersonalGoal();</span>
     }
     public boolean checkLastTurn(){
-<span class="nc" id="L146">        return game.isLastTurn();</span>
+<span class="nc" id="L156">        return game.isLastTurn();</span>
     }
-
     public List&lt;Player&gt; getGamePlayers(){
-<span class="fc" id="L150">        return this.game.getPlayers();</span>
+<span class="fc" id="L159">        return this.game.getPlayers();</span>
     }
     public void setOldGamepLayers(){
-<span class="nc" id="L153">        this.game.setPlayers(this.getOldGamePlayers());</span>
-<span class="nc" id="L154">    }</span>
+<span class="nc" id="L162">        this.game.setPlayers(this.getOldGamePlayers());</span>
+<span class="nc" id="L163">    }</span>
     public void setGamePlayers(List&lt;Player&gt; players){
-<span class="fc" id="L156">        this.game.setPlayers(players);</span>
-<span class="fc" id="L157">    }</span>
+<span class="fc" id="L165">        this.game.setPlayers(players);</span>
+<span class="fc" id="L166">    }</span>
     public List&lt;Player&gt; getOldGamePlayers(){
-<span class="nc" id="L159">        return this.game.getOldGamePlayers();</span>
+<span class="nc" id="L168">        return this.game.getOldGamePlayers();</span>
     }
     public void saveGame(){
-<span class="nc bnc" id="L162" title="All 2 branches missed.">        if(this.game!=null) {</span>
-<span class="nc" id="L163">            this.game.saveGame();</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        if(this.game!=null) {</span>
+<span class="nc" id="L172">            this.game.saveGame();</span>
         }
-<span class="nc" id="L165">    }</span>
+<span class="nc" id="L174">    }</span>
 
     public void setGameFinished() {
-<span class="nc" id="L168">        this.game.setFinished(true);</span>
-<span class="nc" id="L169">    }</span>
+<span class="nc" id="L177">        this.game.setFinished(true);</span>
+<span class="nc" id="L178">    }</span>
 
     /**
      * checks if the game has ended
      */
     public boolean isGameFinished(){
-<span class="fc bfc" id="L175" title="All 2 branches covered.">        if(game!=null) {</span>
-<span class="fc" id="L176">            return this.game.isFinished();</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">        if(game!=null) {</span>
+<span class="fc" id="L185">            return this.game.isFinished();</span>
         }else{
-<span class="fc" id="L178">            return false;</span>
+<span class="fc" id="L187">            return false;</span>
         }
     }
 
     public String getRank(boolean isGui){
-<span class="nc" id="L183">        return game.getRank(isGui);</span>
+<span class="nc" id="L192">        return game.getRank(isGui);</span>
     }
 
+
+    /**
+     * Method that generates a client's view
+     * @param chToUpdate clientHandler that needs to have its view updated
+     * @param lobby lobby that contains the client, used to update other clients' view too
+     */
     public View generateView(ClientHandler chToUpdate, Lobby lobby) {
-<span class="fc" id="L187">        View view = new View();</span>
-<span class="fc" id="L188">        List&lt;String&gt; players = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L189">        List&lt;String&gt; GUIBoard = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L190">        List&lt;List&lt;String&gt;&gt; othersGUIShelves = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L191">        List&lt;String&gt; myShelf = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L192">        List&lt;Integer&gt; GUIScores = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L193">        List&lt;String&gt; GuiSharedCard = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L194">        List&lt;String&gt; shelves = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L195">        view.setANSIcolor(chToUpdate.getColor());</span>
-<span class="fc" id="L196">        view.setCurrentPlayer(game.getPlayers().get(game.getCurrentPlayer()).getUsername());</span>
+<span class="fc" id="L202">        View view = new View();</span>
+<span class="fc" id="L203">        List&lt;String&gt; players = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L204">        List&lt;String&gt; GUIBoard = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L205">        List&lt;List&lt;String&gt;&gt; othersGUIShelves = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L206">        List&lt;String&gt; myShelf = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L207">        List&lt;Integer&gt; GUIScores = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L208">        List&lt;String&gt; GuiSharedCard = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L209">        List&lt;String&gt; shelves = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L210">        view.setANSIcolor(chToUpdate.getColor());</span>
+<span class="fc" id="L211">        view.setCurrentPlayer(game.getPlayers().get(game.getCurrentPlayer()).getUsername());</span>
         //TUI board
-<span class="fc" id="L198">        view.setBoard(this.game.getGameBoard().toString());</span>
+<span class="fc" id="L213">        view.setBoard(this.game.getGameBoard().toString());</span>
         //GUI board
-<span class="fc bfc" id="L200" title="All 2 branches covered.">        for(int i = 0; i&lt; Settings.BOARD_DIM; i++){</span>
-<span class="fc bfc" id="L201" title="All 2 branches covered.">            for(int j = 0; j&lt; Settings.BOARD_DIM; j++){</span>
-<span class="fc" id="L202">                GUIBoard.add(game.getGameBoard().getGrid()[i][j].getImagePath());</span>
+<span class="fc bfc" id="L215" title="All 2 branches covered.">        for(int i = 0; i&lt; Settings.BOARD_DIM; i++){</span>
+<span class="fc bfc" id="L216" title="All 2 branches covered.">            for(int j = 0; j&lt; Settings.BOARD_DIM; j++){</span>
+<span class="fc" id="L217">                GUIBoard.add(game.getGameBoard().getGrid()[i][j].getImagePath());</span>
             }
         }
-<span class="fc" id="L205">        view.setGUIboard(GUIBoard);</span>
+<span class="fc" id="L220">        view.setGUIboard(GUIBoard);</span>
 
         //GUI players, shelves and points
 
         //shared cards
-<span class="fc" id="L210">        view.setSharedCardsPointTokens(new ArrayList&lt;&gt;());</span>
-<span class="fc bfc" id="L211" title="All 2 branches covered.">        for(SharedGoalCard s:game.getSharedDeck()){</span>
-<span class="fc" id="L212">            GuiSharedCard.add(s.getImgPath());</span>
-<span class="fc" id="L213">            view.getSharedCardsPointTokens().add(s.actualPointToken());</span>
-<span class="fc" id="L214">        }</span>
-<span class="fc" id="L215">        view.setGUIsharedCards(GuiSharedCard);</span>
+<span class="fc" id="L225">        view.setSharedCardsPointTokens(new ArrayList&lt;&gt;());</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">        for(SharedGoalCard s:game.getSharedDeck()){</span>
+<span class="fc" id="L227">            GuiSharedCard.add(s.getImgPath());</span>
+<span class="fc" id="L228">            view.getSharedCardsPointTokens().add(s.actualPointToken());</span>
+<span class="fc" id="L229">        }</span>
+<span class="fc" id="L230">        view.setGUIsharedCards(GuiSharedCard);</span>
 
 
         //TUI shelves
-<span class="fc" id="L219">        synchronized (game.getPlayers()) {</span>
-<span class="fc bfc" id="L220" title="All 2 branches covered.">            for (Player p : game.getPlayers()) {</span>
-<span class="fc" id="L221">                shelves.add(lobby.clientHandlerOf(p.getUsername()).getColor() + p.getUsername() + ANSI.RESET_COLOR + &quot;: &quot; + p.getScore() + &quot; points\n&quot; + p.getMyShelf().toString());</span>
-<span class="fc" id="L222">            }</span>
-<span class="fc" id="L223">        }</span>
-<span class="fc" id="L224">        view.setShelves(shelves);</span>
+<span class="fc" id="L234">        synchronized (game.getPlayers()) {</span>
+<span class="fc bfc" id="L235" title="All 2 branches covered.">            for (Player p : game.getPlayers()) {</span>
+<span class="fc" id="L236">                shelves.add(lobby.clientHandlerOf(p.getUsername()).getColor() + p.getUsername() + ANSI.RESET_COLOR + &quot;: &quot; + p.getScore() + &quot; points\n&quot; + p.getMyShelf().toString());</span>
+<span class="fc" id="L237">            }</span>
+<span class="fc" id="L238">        }</span>
+<span class="fc" id="L239">        view.setShelves(shelves);</span>
 
-<span class="fc" id="L226">        List&lt;String&gt; sharedCards = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L227" title="All 2 branches covered.">        for(SharedGoalCard c: game.getSharedDeck()){</span>
-<span class="fc" id="L228">            sharedCards.add(c.toString());</span>
-<span class="fc" id="L229">        }</span>
-<span class="fc" id="L230">        view.setSharedCards(sharedCards);</span>
+<span class="fc" id="L241">        List&lt;String&gt; sharedCards = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L242" title="All 2 branches covered.">        for(SharedGoalCard c: game.getSharedDeck()){</span>
+<span class="fc" id="L243">            sharedCards.add(c.toString());</span>
+<span class="fc" id="L244">        }</span>
+<span class="fc" id="L245">        view.setSharedCards(sharedCards);</span>
 
-<span class="fc bfc" id="L232" title="All 2 branches covered.">        for(Player p:game.getPlayers()){</span>
-<span class="fc bfc" id="L233" title="All 2 branches covered.">            if(!p.getUsername().equals(chToUpdate.getNickname())) {</span>
-<span class="fc" id="L234">                List&lt;String&gt; pShelf = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L235" title="All 2 branches covered.">                for (int i = 0; i &lt; Settings.SHELFROW; i++) {</span>
-<span class="fc bfc" id="L236" title="All 2 branches covered.">                    for (int j = 0; j &lt; Settings.SHELFCOLUMN; j++) {</span>
-<span class="fc" id="L237">                        pShelf.add(p.getMyShelf().getTileMartrix()[i][j].getImagePath());</span>
+<span class="fc bfc" id="L247" title="All 2 branches covered.">        for(Player p:game.getPlayers()){</span>
+<span class="fc bfc" id="L248" title="All 2 branches covered.">            if(!p.getUsername().equals(chToUpdate.getNickname())) {</span>
+<span class="fc" id="L249">                List&lt;String&gt; pShelf = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L250" title="All 2 branches covered.">                for (int i = 0; i &lt; Settings.SHELFROW; i++) {</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">                    for (int j = 0; j &lt; Settings.SHELFCOLUMN; j++) {</span>
+<span class="fc" id="L252">                        pShelf.add(p.getMyShelf().getTileMartrix()[i][j].getImagePath());</span>
                     }
                 }
-<span class="fc" id="L240">                othersGUIShelves.add(pShelf);</span>
-<span class="fc" id="L241">            }else{</span>
-<span class="fc bfc" id="L242" title="All 2 branches covered.">                for (int i = 0; i &lt; Settings.SHELFROW; i++) {</span>
-<span class="fc bfc" id="L243" title="All 2 branches covered.">                    for (int j = 0; j &lt; Settings.SHELFCOLUMN; j++) {</span>
-<span class="fc" id="L244">                        myShelf.add(p.getMyShelf().getTileMartrix()[i][j].getImagePath());</span>
+<span class="fc" id="L255">                othersGUIShelves.add(pShelf);</span>
+<span class="fc" id="L256">            }else{</span>
+<span class="fc bfc" id="L257" title="All 2 branches covered.">                for (int i = 0; i &lt; Settings.SHELFROW; i++) {</span>
+<span class="fc bfc" id="L258" title="All 2 branches covered.">                    for (int j = 0; j &lt; Settings.SHELFCOLUMN; j++) {</span>
+<span class="fc" id="L259">                        myShelf.add(p.getMyShelf().getTileMartrix()[i][j].getImagePath());</span>
                     }
                 }
             }
-<span class="fc" id="L248">            GUIScores.add(p.getScore());</span>
-<span class="fc" id="L249">            players.add(p.getUsername());</span>
-<span class="fc" id="L250">        }</span>
-<span class="fc" id="L251">        view.setCurPlayerGUIShelf(myShelf);</span>
-<span class="fc" id="L252">        view.setOthersGUIShelves(othersGUIShelves);</span>
-<span class="fc" id="L253">        view.setGUIScoring(GUIScores);</span>
-<span class="fc" id="L254">        view.setPlayers(players);</span>
-<span class="fc" id="L255">        view.setPersonalCard(game.chToPlayer(chToUpdate).getMyGoalCard().toString());</span>
-<span class="fc" id="L256">        view.setGUIpersonalCard(game.chToPlayer(chToUpdate).getMyGoalCard().getImgPath());</span>
-<span class="fc" id="L257">        return view;</span>
+<span class="fc" id="L263">            GUIScores.add(p.getScore());</span>
+<span class="fc" id="L264">            players.add(p.getUsername());</span>
+<span class="fc" id="L265">        }</span>
+<span class="fc" id="L266">        view.setCurPlayerGUIShelf(myShelf);</span>
+<span class="fc" id="L267">        view.setOthersGUIShelves(othersGUIShelves);</span>
+<span class="fc" id="L268">        view.setGUIScoring(GUIScores);</span>
+<span class="fc" id="L269">        view.setPlayers(players);</span>
+<span class="fc" id="L270">        view.setPersonalCard(game.chToPlayer(chToUpdate).getMyGoalCard().toString());</span>
+<span class="fc" id="L271">        view.setGUIpersonalCard(game.chToPlayer(chToUpdate).getMyGoalCard().getImgPath());</span>
+<span class="fc" id="L272">        return view;</span>
     }
 
     /**
      * Performs endgame tasks to calculate points
      */
     public void endGameChecks() {
-<span class="fc bfc" id="L264" title="All 2 branches covered.">        for(Player p:game.getPlayers()){</span>
-<span class="fc" id="L265">            p.updateScore(p.getMyGoalCard().checkPersonalGoal(p.getMyShelf()));</span>
-<span class="fc" id="L266">            p.updateScore(p.getMyShelf().getShelfScore());</span>
-<span class="fc" id="L267">        }</span>
-<span class="fc" id="L268">    }</span>
+<span class="fc bfc" id="L279" title="All 2 branches covered.">        for(Player p:game.getPlayers()){</span>
+<span class="fc" id="L280">            p.updateScore(p.getMyGoalCard().checkPersonalGoal(p.getMyShelf()));</span>
+<span class="fc" id="L281">            p.updateScore(p.getMyShelf().getShelfScore());</span>
+<span class="fc" id="L282">        }</span>
+<span class="fc" id="L283">    }</span>
 
     /**
      * Performs game checks at the end of a turn
      */
     public String endTurnChecks(String nickname) {
-<span class="fc" id="L274">        Player p=null;</span>
-<span class="fc bfc" id="L275" title="All 2 branches covered.">        for(Player pl:game.getPlayers()){</span>
-<span class="fc bfc" id="L276" title="All 2 branches covered.">            if(pl.getUsername().equals(nickname)){</span>
-<span class="fc" id="L277">                p=pl;</span>
+<span class="fc" id="L289">        Player p=null;</span>
+<span class="fc bfc" id="L290" title="All 2 branches covered.">        for(Player pl:game.getPlayers()){</span>
+<span class="fc bfc" id="L291" title="All 2 branches covered.">            if(pl.getUsername().equals(nickname)){</span>
+<span class="fc" id="L292">                p=pl;</span>
             }
-<span class="fc" id="L279">        }</span>
-<span class="fc" id="L280">        List&lt;SharedGoalCard&gt; SharedDeck = game.getSharedDeck();</span>
-<span class="fc" id="L281">        String toReturn = &quot;1&quot;;</span>
-<span class="fc bfc" id="L282" title="All 2 branches covered.">        for (int i = 0; i&lt;SharedDeck.size(); i++){</span>
-<span class="fc" id="L283">            SharedGoalCard c = SharedDeck.get(i);</span>
-<span class="fc" id="L284">            System.out.println(&quot;checking shared goal: &quot;+c.toString());</span>
-<span class="pc bpc" id="L285" title="1 of 2 branches missed.">            if(!c.isAchieved(p)){</span>
-<span class="pc bpc" id="L286" title="1 of 2 branches missed.">                if(c.checkPattern(p)){</span>
-<span class="nc" id="L287">                    toReturn =&quot;Shared goal &quot;+(i+1)+&quot; achieved&quot;;</span>
-<span class="nc" id="L288">                    p.updateScore(c.popPointToken());</span>
+<span class="fc" id="L294">        }</span>
+<span class="fc" id="L295">        List&lt;SharedGoalCard&gt; SharedDeck = game.getSharedDeck();</span>
+<span class="fc" id="L296">        String toReturn = &quot;1&quot;;</span>
+<span class="fc bfc" id="L297" title="All 2 branches covered.">        for (int i = 0; i&lt;SharedDeck.size(); i++){</span>
+<span class="fc" id="L298">            SharedGoalCard c = SharedDeck.get(i);</span>
+            //System.out.println(&quot;checking shared goal: &quot;+c.toString());
+<span class="pc bpc" id="L300" title="1 of 2 branches missed.">            if(!c.isAchieved(p)){</span>
+<span class="pc bpc" id="L301" title="1 of 2 branches missed.">                if(c.checkPattern(p)){</span>
+<span class="nc" id="L302">                    toReturn =&quot;Shared goal &quot;+(i+1)+&quot; achieved&quot;;</span>
+<span class="nc" id="L303">                    p.updateScore(c.popPointToken());</span>
                 }
             }
         }
-<span class="fc" id="L292">        game.checkLastTurn(p);</span>
-<span class="fc" id="L293">        return toReturn;</span>
+<span class="fc" id="L307">        game.checkLastTurn(p);</span>
+<span class="fc" id="L308">        return toReturn;</span>
     }
 
     public void setGame(Game game) {
-<span class="fc" id="L297">        this.game = game;</span>
-<span class="fc" id="L298">    }</span>
+<span class="fc" id="L312">        this.game = game;</span>
+<span class="fc" id="L313">    }</span>
 
     public void addPlayer(List&lt;Player&gt; players) {
-<span class="fc" id="L301">        game.addPlayer(players);</span>
-<span class="fc" id="L302">    }</span>
+<span class="fc" id="L316">        game.addPlayer(players);</span>
+<span class="fc" id="L317">    }</span>
 
     public List&lt;Tile&gt; getCollectedTiles() {
-<span class="fc" id="L305">        return collectedTiles;</span>
+<span class="fc" id="L320">        return collectedTiles;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

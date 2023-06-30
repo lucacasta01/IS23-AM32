@@ -4,46 +4,50 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-<span class="nc" id="L7">public class MyShelfieClient {</span>
-    private static String message;
+/**
+ * MyShelfie client launcher.
+ * It will ask you if you want play with GUI or TUI
+ */
+<span class="nc" id="L11">public class MyShelfieClient {</span>
+    private static String interfaceType;
     /**
      * The main process for our game
      * @param args
      */
     public static void main(String[] args) {
         BufferedReader inReader;
-<span class="nc" id="L15">        System.out.println(&quot;***MY SHELFIE***&quot;);</span>
-<span class="nc" id="L16">        System.out.println(&quot;Select your interface [TUI/GUI]&quot;);</span>
-<span class="nc" id="L17">        inReader =  new BufferedReader(new InputStreamReader(System.in));</span>
+<span class="nc" id="L19">        System.out.println(&quot;***MY SHELFIE***&quot;);</span>
+<span class="nc" id="L20">        System.out.println(&quot;Select your interface [TUI/GUI]&quot;);</span>
+<span class="nc" id="L21">        inReader =  new BufferedReader(new InputStreamReader(System.in));</span>
         try{
-<span class="nc" id="L19">            message = inReader.readLine();</span>
-<span class="nc" id="L20">        }catch (Exception e){</span>
-<span class="nc" id="L21">            e.printStackTrace();</span>
-<span class="nc" id="L22">        }</span>
+<span class="nc" id="L23">            interfaceType = inReader.readLine();</span>
+<span class="nc" id="L24">        }catch (Exception e){</span>
+<span class="nc" id="L25">            e.printStackTrace();</span>
+<span class="nc" id="L26">        }</span>
 
-<span class="nc bnc" id="L24" title="All 4 branches missed.">        while (!message.equalsIgnoreCase(&quot;TUI&quot;)&amp;&amp;!message.equalsIgnoreCase(&quot;GUI&quot;)){</span>
-<span class="nc" id="L25">            System.out.println(&quot;Type the right key...&quot;);</span>
+<span class="nc bnc" id="L28" title="All 4 branches missed.">        while (!interfaceType.equalsIgnoreCase(&quot;TUI&quot;)&amp;&amp;!interfaceType.equalsIgnoreCase(&quot;GUI&quot;)){</span>
+<span class="nc" id="L29">            System.out.println(&quot;Type the right key...&quot;);</span>
             try{
 
-<span class="nc" id="L28">                message = inReader.readLine();</span>
-<span class="nc" id="L29">            }catch (Exception e){</span>
-<span class="nc" id="L30">                e.printStackTrace();</span>
-<span class="nc" id="L31">            }</span>
+<span class="nc" id="L32">                interfaceType = inReader.readLine();</span>
+<span class="nc" id="L33">            }catch (Exception e){</span>
+<span class="nc" id="L34">                e.printStackTrace();</span>
+<span class="nc" id="L35">            }</span>
         }
-<span class="nc bnc" id="L33" title="All 2 branches missed.">        if(message.equalsIgnoreCase(&quot;TUI&quot;)){</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        if(interfaceType.equalsIgnoreCase(&quot;TUI&quot;)){</span>
             try {
-<span class="nc" id="L35">                Client.main(args);</span>
-<span class="nc" id="L36">            }catch (Exception e){</span>
-<span class="nc" id="L37">                System.out.println(&quot;Error while launching TUI client&quot;);</span>
-<span class="nc" id="L38">            }</span>
+<span class="nc" id="L39">                Client.main(args);</span>
+<span class="nc" id="L40">            }catch (Exception e){</span>
+<span class="nc" id="L41">                System.out.println(&quot;Error while launching TUI client&quot;);</span>
+<span class="nc" id="L42">            }</span>
         }else{
             try{
-<span class="nc" id="L41">                GUIClient.main(args);</span>
-<span class="nc" id="L42">            }catch(Exception e){</span>
-<span class="nc" id="L43">                System.out.println(&quot;Error while launching GUI client&quot;);</span>
-<span class="nc" id="L44">                e.printStackTrace();</span>
-<span class="nc" id="L45">            }</span>
+<span class="nc" id="L45">                GUIClient.main(args);</span>
+<span class="nc" id="L46">            }catch(Exception e){</span>
+<span class="nc" id="L47">                System.out.println(&quot;Error while launching GUI client&quot;);</span>
+<span class="nc" id="L48">                e.printStackTrace();</span>
+<span class="nc" id="L49">            }</span>
         }
-<span class="nc" id="L47">    }</span>
+<span class="nc" id="L51">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

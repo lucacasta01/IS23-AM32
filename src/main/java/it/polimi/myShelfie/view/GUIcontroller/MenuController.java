@@ -24,27 +24,38 @@ public class MenuController {
         }
     }
 
+    /**
+     * equivalent to select option 1 in the tui main menu
+     * @param actionEvent
+     */
     public void newGameAction(ActionEvent actionEvent) {
         GUIClient.getInstance().switchToPlayerNumber();
         Client.getInstance().addGuiAction("1");
     }
 
+
+    /**
+     * equivalent to select option 3 in the tui main menu
+     * @param actionEvent
+     */
     public void randomGameAction(ActionEvent actionEvent) {
         Client.getInstance().addGuiAction("3");
     }
 
-    public void oldGameFound() {
-
-    }
-
+    /**
+     * equivalent to select option 2 in the tui main menu
+     * @param actionEvent
+     */
     public void restoreGameAction(ActionEvent actionEvent) {
         Client.getInstance().addGuiAction("2");
-        //todo
     }
 
+    /**
+     * equivalent to select option 4 in the tui main menu
+     * @param actionEvent
+     */
     public void searchRestoredAction(ActionEvent actionEvent) {
         Client.getInstance().addGuiAction("4");
-        //todo
     }
 }
 

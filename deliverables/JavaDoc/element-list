@@ -1,0 +1,16 @@
+it.polimi.myShelfie.application
+it.polimi.myShelfie.controller
+it.polimi.myShelfie.model
+it.polimi.myShelfie.model.cards
+it.polimi.myShelfie.network
+it.polimi.myShelfie.network.inputHandlers
+it.polimi.myShelfie.network.ping
+it.polimi.myShelfie.network.RMI
+it.polimi.myShelfie.utilities
+it.polimi.myShelfie.utilities.pojo
+it.polimi.myShelfie.view
+it.polimi.myShelfie.view.GUIcontroller
+it.polimi.myShelfie.view.GUIcontroller.banners
+test
+test.controller
+test.model

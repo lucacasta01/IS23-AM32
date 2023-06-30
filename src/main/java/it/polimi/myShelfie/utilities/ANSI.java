@@ -1,4 +1,8 @@
 package it.polimi.myShelfie.utilities;
+
+/**
+ * this class acts like a list of ANSI text-format escape codes. It's used to make TUI more charming.
+ */
 public class ANSI {
     public static final String RESET_COLOR = "\u001B[0m";
     public static final String BLACK = "\u001B[30m";

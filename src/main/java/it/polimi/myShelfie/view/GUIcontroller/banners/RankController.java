@@ -30,6 +30,11 @@ public class RankController {
     public void initialize(){
         GridPane.setHalignment(rankGrid, HPos.CENTER);
     }
+
+    /**
+     * Gets the rank from JSON string and parse it into a charming graphic final ranking
+     * @param rank
+     */
     public void setRank(String rank) {
         GUIRank guiRank = JsonParser.getGUIRank(rank);
         rankRow = generateRankMap();

@@ -1,4 +1,6 @@
 package it.polimi.myShelfie.model.cards;
+
+
 public abstract class Card {
     protected final String imgPath;
 

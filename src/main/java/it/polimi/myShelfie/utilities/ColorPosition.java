@@ -1,5 +1,9 @@
 package it.polimi.myShelfie.utilities;
 import it.polimi.myShelfie.model.Tile;
+
+/**
+ * Aggregates a row-column reference with a color and an image path
+ */
 public class ColorPosition {
     private String color;
     private String imgpath;

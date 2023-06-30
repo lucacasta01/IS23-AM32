@@ -1,4 +1,8 @@
 package it.polimi.myShelfie.utilities;
+
+/**
+ * Contains all the setting parameters needed
+ */
 public class Settings {
     public static final int SHELFROW = 6;
     public static final int SHELFCOLUMN = 5;

@@ -1,4 +1,9 @@
 package it.polimi.myShelfie.model;
+
+/**
+ * Represent single tiles item.
+ * One tile has its own color and an image path.
+ */
 public class Tile {
 
     /**

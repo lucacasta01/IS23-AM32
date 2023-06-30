@@ -7,6 +7,12 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+/**
+ * Represent the game board.
+ * It's composed by a tiles-grid and a tiles-heap.
+ * The latter represent the tile bag.
+ */
 public class Board {
     private final Tile[][] grid;
     private List<Tile> tileHeap;
@@ -37,6 +43,7 @@ public class Board {
     }
 
     /**
+     *
      * @return current state of the tile's heap
      */
     public List<Tile> getTileHeap() {

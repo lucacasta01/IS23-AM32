@@ -10,6 +10,9 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * Set of methods useful to handle with JSON parsing
+ */
 public class JsonParser {
     /**
      * converts the json constraint file into a list of positions

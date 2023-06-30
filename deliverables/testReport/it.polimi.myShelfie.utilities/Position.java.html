@@ -1,20 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Position.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jacoco.exec</a> &gt; <a href="index.source.html" class="el_package">it.polimi.myShelfie.utilities</a> &gt; <span class="el_source">Position.java</span></div><h1>Position.java</h1><pre class="source lang-java linenums">package it.polimi.myShelfie.utilities;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
+
 public class Position implements Serializable {
     private final int row;
     private final int column;
 
-<span class="fc" id="L7">    public Position(int row, int column) {</span>
-<span class="fc" id="L8">        this.row = row;</span>
-<span class="fc" id="L9">        this.column = column;</span>
-<span class="fc" id="L10">    }</span>
+<span class="fc" id="L10">    public Position(int row, int column) {</span>
+<span class="fc" id="L11">        this.row = row;</span>
+<span class="fc" id="L12">        this.column = column;</span>
+<span class="fc" id="L13">    }</span>
 
     public int getRow() {
-<span class="fc" id="L13">        return row;</span>
+<span class="fc" id="L16">        return row;</span>
     }
 
     public int getColumn() {
-<span class="fc" id="L17">        return column;</span>
+<span class="fc" id="L20">        return column;</span>
+    }
+
+    /**
+     * check if positions are adjacent, i.e. if they are in a row or in a column
+     * @param positions list of positions to be checked
+     * @return true if adjacent, false otherwise
+     */
+    public static boolean areAdjacent(List&lt;Position&gt; positions) {
+<span class="fc" id="L29">        boolean rAdj=true, cAdj=true;</span>
+<span class="fc" id="L30">        int r = positions.get(0).getRow();</span>
+<span class="fc" id="L31">        int c = positions.get(0).getColumn();</span>
+
+<span class="fc" id="L33">        int[] rows = new int[positions.size()];</span>
+<span class="fc" id="L34">        int[] cols = new int[positions.size()];</span>
+
+<span class="fc" id="L36">        cols[0] = c;</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        for(int i=1;i&lt;positions.size();i++){</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">            if (positions.get(i).getRow() != r) {</span>
+<span class="fc" id="L39">                rAdj = false;</span>
+            }
+<span class="fc" id="L41">            cols[i] = positions.get(i).getColumn();</span>
+        }
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        if(rAdj){</span>
+<span class="fc" id="L44">            Arrays.sort(cols);</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">            for(int i=0;i&lt;cols.length-1;i++){</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">                if (cols[i+1] != cols[i] + 1) {</span>
+<span class="fc" id="L47">                    rAdj = false;</span>
+<span class="fc" id="L48">                    break;</span>
+                }
+            }
+        }
+
+<span class="fc" id="L53">        rows[0] = r;</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        for(int i=1;i&lt;positions.size();i++){</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">            if (positions.get(i).getColumn() != c) {</span>
+<span class="fc" id="L56">                cAdj = false;</span>
+            }
+<span class="fc" id="L58">            rows[i] = positions.get(i).getRow();</span>
+        }
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        if(cAdj){</span>
+<span class="fc" id="L61">            Arrays.sort(rows);</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">            for(int i=0;i&lt;rows.length-1;i++){</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">                if (rows[i+1] != rows[i] + 1) {</span>
+<span class="fc" id="L64">                    cAdj = false;</span>
+<span class="fc" id="L65">                    break;</span>
+                }
+            }
+        }
+<span class="fc bfc" id="L69" title="All 4 branches covered.">        return rAdj || cAdj;</span>
     }
 
 }

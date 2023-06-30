@@ -13,6 +13,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+
+/**
+ * Represent the proper match.
+ * Contains all the methods needed to manipulate Board, Shelf and Player.
+ * Manages the various cards too.
+ */
 public class Game{
     private int playersNumber;
     private List<Player> players;

@@ -77,6 +77,10 @@ public class LoginController {
         });
     }
 
+    /**
+     * try to connect to the server with the supplied nickname
+     * @param actionEvent
+     */
     public void doLogin(ActionEvent actionEvent){
         stage = (Stage)((javafx.scene.Node)actionEvent.getSource()).getScene().getWindow();
         if (TCPrbtn.isSelected()) {
@@ -105,6 +109,10 @@ public class LoginController {
         client.addGuiAction(nickname);
     }
 
+    /**
+     * show error label in case nickname was denied
+     * @param message
+     */
     public void nicknameDenied(String message) {
         Platform.runLater(() -> {
             nicknameDeniedLbl.setText(message);
@@ -112,6 +120,9 @@ public class LoginController {
         });
     }
 
+    /**
+     * redirect to menu page
+     */
     public void loginAccepted(){
         Platform.runLater(new Runnable() {
             @Override
@@ -131,6 +142,10 @@ public class LoginController {
         System.exit(0);
     }
 
+    /**
+     * shows a deny dialog which inform that server at the specified IP:port is not available
+     * @throws IOException
+     */
     public void serverOffline() throws IOException {
         GUIClient guiClient = GUIClient.getInstance();
         guiClient.showDenyDialog("Server is offline");

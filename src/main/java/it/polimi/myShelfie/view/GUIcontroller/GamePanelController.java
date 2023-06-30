@@ -3,6 +3,7 @@ package it.polimi.myShelfie.view.GUIcontroller;
 import com.jfoenix.controls.JFXDrawer;
 import it.polimi.myShelfie.application.Client;
 import it.polimi.myShelfie.application.GUIClient;
+import it.polimi.myShelfie.utilities.Position;
 import it.polimi.myShelfie.utilities.Settings;
 import it.polimi.myShelfie.view.View;
 import javafx.application.Platform;
@@ -77,7 +78,6 @@ public class GamePanelController implements Initializable {
 
     private void setResetEnabled(boolean value){
         collectRstBtn.setDisable(!value);
-
     }
 
     private void addGridEvent() {
@@ -107,18 +107,12 @@ public class GamePanelController implements Initializable {
                 return false;
             }
         }
-        if(collectedTiles.size()==1){
-            if((Math.abs(row-GridPane.getRowIndex(collectedTiles.get(0)))>1)||(Math.abs(column-GridPane.getColumnIndex(collectedTiles.get(0)))>1)){
+        for(ImageView im:collectedTiles){
+            if((Math.abs(row-GridPane.getRowIndex(im))>2)||(Math.abs(column-GridPane.getColumnIndex(im))>2)){
                 return false;
-            }
-        }else if(collectedTiles.size()==2){
-            for(ImageView im:collectedTiles){
-                if((Math.abs(row-GridPane.getRowIndex(im))>2)||(Math.abs(column-GridPane.getColumnIndex(im))>2)){
-                    return false;
-                }
+
             }
         }
-
 
         Boolean[][] grid = new Boolean[Settings.BOARD_DIM][Settings.BOARD_DIM];
         for(int i=0;i<Settings.BOARD_DIM;i++){
@@ -154,6 +148,9 @@ public class GamePanelController implements Initializable {
         }
     }
 
+    /**
+     * Updates the GUI view
+     */
     public void updateView() {
         System.out.println("Updating view");
         View view = Client.getInstance().getView();
@@ -429,10 +426,19 @@ public class GamePanelController implements Initializable {
         chatDrawer.setVisible(false);
     }
 
+    /**
+     * Opens a dialog that ask if you really want leave the game
+     * @param actionEvent
+     */
     public void quit(ActionEvent actionEvent) {
         GUIClient.getInstance().showBackToMenu();
     }
 
+
+    /**
+     * Show chat panel
+     * @param actionEvent
+     */
     public void openChatPanel(ActionEvent actionEvent) {
         if(chatDrawer.isOpened()){
             chatDrawer.close();
@@ -444,6 +450,10 @@ public class GamePanelController implements Initializable {
         }
     }
 
+    /**
+     * Copies from resources the pdf file to local machine and opens it with default app
+     * @param actionEvent
+     */
     public void openRules(ActionEvent actionEvent) {
         if (Desktop.isDesktopSupported()) {
             try {
@@ -456,6 +466,10 @@ public class GamePanelController implements Initializable {
         }
     }
 
+    /**
+     * Put back to the board the collected tiles
+     * @param actionEvent
+     */
     public void resetCollectedTiles(ActionEvent actionEvent) {
         setResetEnabled(false);
         collectedTiles.clear();
@@ -549,14 +563,23 @@ public class GamePanelController implements Initializable {
             column = col;
             if (collectedTiles.size() > 0) {
                 StringBuilder tiles = new StringBuilder();
+                List<Position> positions = new ArrayList<>();
                 for (ImageView imv : collectedTiles) {
                     tiles.append(GridPane.getRowIndex(imv) + 1).append(",").append(GridPane.getColumnIndex(imv) + 1).append(" ");
+                    positions.add(new Position(GridPane.getRowIndex(imv),GridPane.getColumnIndex(imv)));
                 }
-                Client.getInstance().addGuiAction("/collect " + tiles.toString().trim());
+                if(Position.areAdjacent(positions)) {
+                    Client.getInstance().addGuiAction("/collect " + tiles.toString().trim());
+                }else{
+                    GUIClient.getInstance().showDenyDialog("Tiles must be adjacent");
+                }
             }
         }
     }
 
+    /**
+     * adds a /column action
+     */
     public void insertInColumn(){
         if(column>0) {
             Client.getInstance().addGuiAction("/column " + column);
@@ -605,6 +628,9 @@ public class GamePanelController implements Initializable {
         collectTiles(5);
     }
 
+    /**
+     * show chat push-notification
+     */
     public void chatNotification() {
         chatNotificationImg.setVisible(true);
     }

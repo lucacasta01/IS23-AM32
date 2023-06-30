@@ -71,43 +71,51 @@ public class PersonalGoalCard extends Card{
 <span class="fc" id="L71">        return s.toString();</span>
     }
 
+    /**
+     * return the number of the PersonalGoalCard
+     * @return the number of the PersonalGoalCard
+     */
     public Integer getIndex(){
-<span class="fc" id="L75">        String[] strings = imgPath.split(&quot;/&quot;);</span>
-<span class="fc" id="L76">        String myString = strings[3];</span>
-<span class="fc" id="L77">        StringBuilder stringBuilder = new StringBuilder();</span>
-<span class="fc" id="L78">        stringBuilder.append(myString.charAt(14));</span>
-<span class="fc bfc" id="L79" title="All 2 branches covered.">        if(myString.charAt(15) != '.'){</span>
-<span class="fc" id="L80">            stringBuilder.append(myString.charAt(15));</span>
+<span class="fc" id="L79">        String[] strings = imgPath.split(&quot;/&quot;);</span>
+<span class="fc" id="L80">        String myString = strings[3];</span>
+<span class="fc" id="L81">        StringBuilder stringBuilder = new StringBuilder();</span>
+<span class="fc" id="L82">        stringBuilder.append(myString.charAt(14));</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        if(myString.charAt(15) != '.'){</span>
+<span class="fc" id="L84">            stringBuilder.append(myString.charAt(15));</span>
         }
-<span class="fc" id="L82">        int toReturn = -1;</span>
+<span class="fc" id="L86">        int toReturn = -1;</span>
         try{
-<span class="fc" id="L84">            toReturn = Integer.parseInt(stringBuilder.toString());</span>
+<span class="fc" id="L88">            toReturn = Integer.parseInt(stringBuilder.toString());</span>
         }
-<span class="nc" id="L86">        catch (Exception e){</span>
-<span class="nc" id="L87">            System.out.println(&quot;caught this exceprion&quot;);</span>
-<span class="nc" id="L88">            e.printStackTrace();</span>
-<span class="fc" id="L89">        }</span>
-<span class="fc" id="L90">        return toReturn;</span>
+<span class="nc" id="L90">        catch (Exception e){</span>
+<span class="nc" id="L91">            e.printStackTrace();</span>
+<span class="fc" id="L92">        }</span>
+<span class="fc" id="L93">        return toReturn;</span>
     }
 
+    /**
+     *
+     * @param s
+     * @return
+     */
     public Integer checkPersonalGoal(Shelf s){
-<span class="fc" id="L94">        Tile[][] toCheck = s.getTileMartrix();</span>
-<span class="fc" id="L95">        int score = 0;</span>
-<span class="fc bfc" id="L96" title="All 2 branches covered.">        for(int i = 0; i&lt; Settings.SHELFROW; i++){</span>
-<span class="fc bfc" id="L97" title="All 2 branches covered.">            for(int j = 0; j&lt; Settings.SHELFCOLUMN; j++){</span>
-<span class="fc bfc" id="L98" title="All 4 branches covered.">                if(patternToMatch[i][j].getColor() == toCheck[i][j].getColor() &amp;&amp; patternToMatch[i][j].getColor() != Tile.Color.NULLTILE){</span>
-<span class="fc" id="L99">                    score ++;</span>
+<span class="fc" id="L102">        Tile[][] toCheck = s.getTileMartrix();</span>
+<span class="fc" id="L103">        int score = 0;</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        for(int i = 0; i&lt; Settings.SHELFROW; i++){</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">            for(int j = 0; j&lt; Settings.SHELFCOLUMN; j++){</span>
+<span class="fc bfc" id="L106" title="All 4 branches covered.">                if(patternToMatch[i][j].getColor() == toCheck[i][j].getColor() &amp;&amp; patternToMatch[i][j].getColor() != Tile.Color.NULLTILE){</span>
+<span class="fc" id="L107">                    score ++;</span>
                 }
             }
         }
-<span class="fc bfc" id="L103" title="All 7 branches covered.">        return switch (score) {</span>
-<span class="fc" id="L104">            case 1 -&gt; 1;</span>
-<span class="fc" id="L105">            case 2 -&gt; 2;</span>
-<span class="fc" id="L106">            case 3 -&gt; 4;</span>
-<span class="fc" id="L107">            case 4 -&gt; 6;</span>
-<span class="fc" id="L108">            case 5 -&gt; 9;</span>
-<span class="fc" id="L109">            case 6 -&gt; 12;</span>
-<span class="fc" id="L110">            default -&gt; 0;</span>
+<span class="fc bfc" id="L111" title="All 7 branches covered.">        return switch (score) {</span>
+<span class="fc" id="L112">            case 1 -&gt; 1;</span>
+<span class="fc" id="L113">            case 2 -&gt; 2;</span>
+<span class="fc" id="L114">            case 3 -&gt; 4;</span>
+<span class="fc" id="L115">            case 4 -&gt; 6;</span>
+<span class="fc" id="L116">            case 5 -&gt; 9;</span>
+<span class="fc" id="L117">            case 6 -&gt; 12;</span>
+<span class="fc" id="L118">            default -&gt; 0;</span>
         };
     }
 }

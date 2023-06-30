@@ -24,6 +24,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
+/**
+ * MyShelfie server launcher.
+ */
 public class Server extends UnicastRemoteObject implements Runnable{
 
     public boolean done = false;
@@ -345,6 +348,10 @@ public class Server extends UnicastRemoteObject implements Runnable{
         server.run();
     }
 }
+
+/**
+ * Thread which listens to tcp client connection requests.
+ */
 class TCPaccepter extends Thread {
     @Override
     public void run() {
@@ -377,6 +384,9 @@ class TCPaccepter extends Thread {
     }
 }
 
+/**
+ * Text input handler for server. Needed to handle server commands
+ */
 class ServerInputHandler extends Thread {
     @Override
     public void run() {

@@ -34,6 +34,9 @@ import java.util.List;
 import java.util.Objects;
 
 
+/**
+ * Text User Interface client.
+ */
 public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
     private static Client instance;
     private BufferedReader in;

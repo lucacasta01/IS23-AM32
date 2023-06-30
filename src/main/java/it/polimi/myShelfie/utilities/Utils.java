@@ -2,6 +2,10 @@ package it.polimi.myShelfie.utilities;
 import it.polimi.myShelfie.application.Server;
 import it.polimi.myShelfie.view.View;
 import java.util.Random;
+
+/**
+ * A bunch of some useful methods
+ */
 public class Utils {
     public static String UIDGenerator(){
         StringBuilder stringBuilder = new StringBuilder();

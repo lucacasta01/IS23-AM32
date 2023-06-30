@@ -31,6 +31,11 @@ public class ChatController {
         }
 
     }
+
+    /**
+     * adds a /chat action
+     * @param actionEvent
+     */
     public void sendMessage(ActionEvent actionEvent) {
         if(messageTxt.getText().length()>0){
             if(messageToCombo.getValue().equals("Broadcast")) {
@@ -43,6 +48,10 @@ public class ChatController {
         }
     }
 
+    /**
+     * Adds the message into the text area
+     * @param chatMessage
+     */
     public void addMessage(ChatMessage chatMessage) {
         chatTxt.appendText(chatMessage.getSender()+": "+chatMessage.getMessage()+"\n");
     }

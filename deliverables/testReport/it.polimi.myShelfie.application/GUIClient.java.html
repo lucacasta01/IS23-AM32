@@ -13,8 +13,14 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.Objects;
 
+/**
+ * Graphic User Interface client.
+ * It's important to say that GUIClient is only a graphic mapping of Client.
+ * So, the methods called are the same; only the way they're called is different.
+ */
 public class GUIClient extends Application {
     private static GUIClient instance;
     private Stage stage;
@@ -24,253 +30,260 @@ public class GUIClient extends Application {
      * @return a new instance of GUIclient if instance is null, instance if it's not null
      */
     public static synchronized GUIClient getInstance() {
-<span class="nc bnc" id="L27" title="All 2 branches missed.">        if(instance == null){</span>
-<span class="nc" id="L28">            System.out.println(&quot;created new client&quot;);</span>
-<span class="nc" id="L29">            instance = new GUIClient();</span>
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        if(instance == null){</span>
+<span class="nc" id="L34">            System.out.println(&quot;created new client&quot;);</span>
+<span class="nc" id="L35">            instance = new GUIClient();</span>
         }
-<span class="nc" id="L31">        return instance;</span>
+<span class="nc" id="L37">        return instance;</span>
     }
 
 
     public GUIClient(){
-<span class="nc" id="L36">        super();</span>
-<span class="nc" id="L37">        instance = this;</span>
-<span class="nc" id="L38">    }</span>
+<span class="nc" id="L42">        super();</span>
+<span class="nc" id="L43">        instance = this;</span>
+<span class="nc" id="L44">    }</span>
+
+    /**
+     * method to set and show the stage
+     * @param stage
+     */
     @Override
     public void start(Stage stage) {
-<span class="nc" id="L41">        this.stage = stage;</span>
-<span class="nc" id="L42">        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(&quot;/loginPanel.fxml&quot;));</span>
+<span class="nc" id="L52">        this.stage = stage;</span>
+<span class="nc" id="L53">        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(&quot;/loginPanel.fxml&quot;));</span>
         Parent root;
         try {
-<span class="nc" id="L45">            root = fxmlLoader.load();</span>
-<span class="nc" id="L46">        }catch (Exception e){</span>
-<span class="nc" id="L47">            throw new RuntimeException(&quot;Login panel loading failed&quot;);</span>
-<span class="nc" id="L48">        }</span>
-<span class="nc" id="L49">        stage.setTitle(&quot;My Shelfie&quot;);</span>
-<span class="nc" id="L50">        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource(&quot;/graphics/publisherMaterial/Icon.png&quot;)).toString()));</span>
-<span class="nc" id="L51">        stage.setScene(new Scene(root));</span>
-<span class="nc" id="L52">        stage.setMinWidth(820);</span>
-<span class="nc" id="L53">        stage.setMinHeight(520);</span>
-<span class="nc" id="L54">        stage.show();</span>
-<span class="nc" id="L55">    }</span>
+<span class="nc" id="L56">            root = fxmlLoader.load();</span>
+<span class="nc" id="L57">        }catch (Exception e){</span>
+<span class="nc" id="L58">            throw new RuntimeException(&quot;Login panel loading failed&quot;);</span>
+<span class="nc" id="L59">        }</span>
+<span class="nc" id="L60">        stage.setTitle(&quot;My Shelfie&quot;);</span>
+<span class="nc" id="L61">        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource(&quot;/graphics/publisherMaterial/Icon.png&quot;)).toString()));</span>
+<span class="nc" id="L62">        stage.setScene(new Scene(root));</span>
+<span class="nc" id="L63">        stage.setMinWidth(820);</span>
+<span class="nc" id="L64">        stage.setMinHeight(520);</span>
+<span class="nc" id="L65">        stage.show();</span>
+<span class="nc" id="L66">    }</span>
 
     /**
      *
      * @return this gui application's stage
      */
     public Stage getStage() {
-<span class="nc" id="L62">        return stage;</span>
+<span class="nc" id="L73">        return stage;</span>
     }
 
 
     public static void main(String[] args) {
-<span class="nc" id="L67">        launch();</span>
-<span class="nc" id="L68">    }</span>
+<span class="nc" id="L78">        launch();</span>
+<span class="nc" id="L79">    }</span>
 
     /**
      * show old game choice banner
      */
     public void showOldGameChoice(){
-<span class="nc" id="L74">        System.out.println(&quot;Show old game choice&quot;);</span>
-<span class="nc" id="L75">        Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L85">        System.out.println(&quot;Show old game choice&quot;);</span>
+<span class="nc" id="L86">        Platform.runLater(()-&gt;{</span>
             Parent choice;
             try {
-<span class="nc" id="L78">                choice = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(&quot;/oldGameJoinBanner.fxml&quot;)));</span>
-<span class="nc" id="L79">            } catch (IOException e) {</span>
-<span class="nc" id="L80">                throw new RuntimeException(e);</span>
-<span class="nc" id="L81">            }</span>
-<span class="nc" id="L82">            Stage banStage = new Stage();</span>
-<span class="nc" id="L83">            banStage.setTitle(&quot;My Shelfie&quot;);</span>
-<span class="nc" id="L84">            banStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource(&quot;/graphics/publisherMaterial/Icon.png&quot;)).toString()));</span>
-<span class="nc" id="L85">            banStage.setMinWidth(300);</span>
-<span class="nc" id="L86">            banStage.setMinHeight(200);</span>
-<span class="nc" id="L87">            banStage.setWidth(300);</span>
-<span class="nc" id="L88">            banStage.setHeight(200);</span>
-<span class="nc" id="L89">            banStage.setScene(new Scene(choice));</span>
-<span class="nc" id="L90">            banStage.show();</span>
-<span class="nc" id="L91">        });</span>
-<span class="nc" id="L92">    }</span>
+<span class="nc" id="L89">                choice = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(&quot;/oldGameJoinBanner.fxml&quot;)));</span>
+<span class="nc" id="L90">            } catch (IOException e) {</span>
+<span class="nc" id="L91">                throw new RuntimeException(e);</span>
+<span class="nc" id="L92">            }</span>
+<span class="nc" id="L93">            Stage banStage = new Stage();</span>
+<span class="nc" id="L94">            banStage.setTitle(&quot;My Shelfie&quot;);</span>
+<span class="nc" id="L95">            banStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource(&quot;/graphics/publisherMaterial/Icon.png&quot;)).toString()));</span>
+<span class="nc" id="L96">            banStage.setMinWidth(300);</span>
+<span class="nc" id="L97">            banStage.setMinHeight(200);</span>
+<span class="nc" id="L98">            banStage.setWidth(300);</span>
+<span class="nc" id="L99">            banStage.setHeight(200);</span>
+<span class="nc" id="L100">            banStage.setScene(new Scene(choice));</span>
+<span class="nc" id="L101">            banStage.show();</span>
+<span class="nc" id="L102">        });</span>
+<span class="nc" id="L103">    }</span>
 
     /**
      * switch the scene to waiting for players scene
      */
     public void switchToWaitingScene() {
-<span class="nc" id="L98">        Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L109">        Platform.runLater(()-&gt;{</span>
             Parent waitPlayers;
             try {
-<span class="nc" id="L101">                waitPlayers = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(&quot;/waitPlayerBanner.fxml&quot;)));</span>
-<span class="nc" id="L102">            } catch (IOException e) {</span>
-<span class="nc" id="L103">                throw new RuntimeException(&quot;Waiting scene failed to load&quot;);</span>
-<span class="nc" id="L104">            }</span>
-<span class="nc" id="L105">            stage.setMinWidth(300);</span>
-<span class="nc" id="L106">            stage.setMinHeight(200);</span>
-<span class="nc" id="L107">            stage.setWidth(300);</span>
-<span class="nc" id="L108">            stage.setHeight(200);</span>
-<span class="nc" id="L109">            stage.setScene(new Scene(waitPlayers));</span>
-<span class="nc" id="L110">        });</span>
-<span class="nc" id="L111">    }</span>
+<span class="nc" id="L112">                waitPlayers = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(&quot;/waitPlayerBanner.fxml&quot;)));</span>
+<span class="nc" id="L113">            } catch (IOException e) {</span>
+<span class="nc" id="L114">                throw new RuntimeException(&quot;Waiting scene failed to load&quot;);</span>
+<span class="nc" id="L115">            }</span>
+<span class="nc" id="L116">            stage.setMinWidth(300);</span>
+<span class="nc" id="L117">            stage.setMinHeight(200);</span>
+<span class="nc" id="L118">            stage.setWidth(300);</span>
+<span class="nc" id="L119">            stage.setHeight(200);</span>
+<span class="nc" id="L120">            stage.setScene(new Scene(waitPlayers));</span>
+<span class="nc" id="L121">        });</span>
+<span class="nc" id="L122">    }</span>
 
     /**
      * switch the scene to menu scene
      */
     public void switchToMenu() {
-<span class="nc" id="L117">        Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L128">        Platform.runLater(()-&gt;{</span>
             Parent menu;
             try {
-<span class="nc" id="L120">                menu = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(&quot;/menuPanel.fxml&quot;)));</span>
-<span class="nc" id="L121">            } catch (IOException e) {</span>
-<span class="nc" id="L122">                throw new RuntimeException(e);</span>
-<span class="nc" id="L123">            }</span>
-<span class="nc" id="L124">            stage.setMinWidth(820);</span>
-<span class="nc" id="L125">            stage.setMinHeight(520);</span>
-<span class="nc" id="L126">            stage.setWidth(820);</span>
-<span class="nc" id="L127">            stage.setHeight(520);</span>
-<span class="nc" id="L128">            stage.setScene(new Scene(menu));</span>
-<span class="nc" id="L129">        });</span>
-<span class="nc" id="L130">    }</span>
+<span class="nc" id="L131">                menu = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(&quot;/menuPanel.fxml&quot;)));</span>
+<span class="nc" id="L132">            } catch (IOException e) {</span>
+<span class="nc" id="L133">                throw new RuntimeException(e);</span>
+<span class="nc" id="L134">            }</span>
+<span class="nc" id="L135">            stage.setMinWidth(820);</span>
+<span class="nc" id="L136">            stage.setMinHeight(520);</span>
+<span class="nc" id="L137">            stage.setWidth(820);</span>
+<span class="nc" id="L138">            stage.setHeight(520);</span>
+<span class="nc" id="L139">            stage.setScene(new Scene(menu));</span>
+<span class="nc" id="L140">        });</span>
+<span class="nc" id="L141">    }</span>
 
     /**
      * switch scene to game scene
      */
     public void switchToGame() {
-<span class="nc" id="L136">        Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L147">        Platform.runLater(()-&gt;{</span>
             Parent gameParent;
             try {
-<span class="nc" id="L139">                gameParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(&quot;/gamePanel.fxml&quot;)));</span>
-<span class="nc" id="L140">            } catch (IOException e) {</span>
-<span class="nc" id="L141">                e.printStackTrace();</span>
-<span class="nc" id="L142">                throw new RuntimeException(&quot;Game panel loading failed&quot;);</span>
-<span class="nc" id="L143">            }</span>
+<span class="nc" id="L150">                gameParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(&quot;/gamePanel.fxml&quot;)));</span>
+<span class="nc" id="L151">            } catch (IOException e) {</span>
+<span class="nc" id="L152">                e.printStackTrace();</span>
+<span class="nc" id="L153">                throw new RuntimeException(&quot;Game panel loading failed&quot;);</span>
+<span class="nc" id="L154">            }</span>
 
-<span class="nc" id="L145">            stage.setMinWidth(1440);</span>
-<span class="nc" id="L146">            stage.setMinHeight(850);</span>
-<span class="nc" id="L147">            stage.setHeight(850);</span>
-<span class="nc" id="L148">            stage.setWidth(1440);</span>
-<span class="nc" id="L149">            stage.setScene(new Scene(gameParent));</span>
-            //stage.setFullScreen(true);
-<span class="nc" id="L151">        });</span>
-<span class="nc" id="L152">    }</span>
+<span class="nc" id="L156">            stage.setMinWidth(1440);</span>
+<span class="nc" id="L157">            stage.setMinHeight(850);</span>
+<span class="nc" id="L158">            stage.setHeight(850);</span>
+<span class="nc" id="L159">            stage.setWidth(1440);</span>
+<span class="nc" id="L160">            stage.setScene(new Scene(gameParent));</span>
+<span class="nc" id="L161">        });</span>
+<span class="nc" id="L162">    }</span>
 
     /**
      * adds my chat message to the chat room
      * @param message
      */
     public void addMyChatMessage(String message){
-<span class="nc" id="L159">        ChatController chatController = Client.getInstance().getChatController();</span>
-<span class="nc" id="L160">        chatController.addMessage(new ChatMessage(Client.getInstance().getNickname(), message, null));</span>
-<span class="nc" id="L161">    }</span>
+<span class="nc" id="L169">        ChatController chatController = Client.getInstance().getChatController();</span>
+<span class="nc" id="L170">        chatController.addMessage(new ChatMessage(Client.getInstance().getNickname(), message, null));</span>
+<span class="nc" id="L171">    }</span>
 
     /**
      * show a generic error message
      * @param errorMessage to be shown
      */
     public void showDenyDialog(String errorMessage) {
-<span class="nc" id="L168">        Platform.runLater(()-&gt;{</span>
-<span class="nc" id="L169">            System.out.println(&quot;Show deny ban&quot;);</span>
+<span class="nc" id="L178">        Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L179">            System.out.println(&quot;Show deny ban&quot;);</span>
             Parent denyPanel;
             FXMLLoader loader;
             try {
-<span class="nc" id="L173">                loader = new FXMLLoader(getClass().getResource(&quot;/errorBanner.fxml&quot;));</span>
-<span class="nc" id="L174">            } catch (Exception e) {</span>
-<span class="nc" id="L175">                throw new RuntimeException(&quot;Error banner loading failed&quot;);</span>
-<span class="nc" id="L176">            }</span>
+<span class="nc" id="L183">                loader = new FXMLLoader(getClass().getResource(&quot;/errorBanner.fxml&quot;));</span>
+<span class="nc" id="L184">            } catch (Exception e) {</span>
+<span class="nc" id="L185">                throw new RuntimeException(&quot;Error banner loading failed&quot;);</span>
+<span class="nc" id="L186">            }</span>
 
             try {
-<span class="nc" id="L179">                denyPanel = loader.load();</span>
-<span class="nc" id="L180">            } catch (IOException e) {</span>
-<span class="nc" id="L181">                throw new RuntimeException(&quot;Error banner loading failed&quot;);</span>
-<span class="nc" id="L182">            }</span>
-<span class="nc" id="L183">            ErrorBannerController controller = loader.getController();</span>
-<span class="nc" id="L184">            controller.setLabel(errorMessage);</span>
-<span class="nc" id="L185">            Stage ban = new Stage();</span>
-<span class="nc" id="L186">            ban.setTitle(&quot;Warning!&quot;);</span>
-<span class="nc" id="L187">            ban.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource(&quot;/graphics/icons/alert.png&quot;)).toString()));</span>
-<span class="nc" id="L188">            ban.setScene(new Scene(denyPanel));</span>
-<span class="nc" id="L189">            ban.show();</span>
-<span class="nc" id="L190">        });</span>
-<span class="nc" id="L191">    }</span>
+<span class="nc" id="L189">                denyPanel = loader.load();</span>
+<span class="nc" id="L190">            } catch (IOException e) {</span>
+<span class="nc" id="L191">                throw new RuntimeException(&quot;Error banner loading failed&quot;);</span>
+<span class="nc" id="L192">            }</span>
+<span class="nc" id="L193">            ErrorBannerController controller = loader.getController();</span>
+<span class="nc" id="L194">            controller.setLabel(errorMessage);</span>
+<span class="nc" id="L195">            Stage ban = new Stage();</span>
+<span class="nc" id="L196">            ban.setTitle(&quot;Warning!&quot;);</span>
+<span class="nc" id="L197">            ban.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource(&quot;/graphics/icons/alert.png&quot;)).toString()));</span>
+<span class="nc" id="L198">            ban.setScene(new Scene(denyPanel));</span>
+<span class="nc" id="L199">            ban.show();</span>
+<span class="nc" id="L200">        });</span>
+<span class="nc" id="L201">    }</span>
 
     /**
      * switch the scene to choose player number scene
      */
     public void switchToPlayerNumber() {
-<span class="nc" id="L197">        Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L207">        Platform.runLater(()-&gt;{</span>
             Parent numberPanel;
             try {
-<span class="nc" id="L200">                numberPanel = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(&quot;/chosePlayerNumber.fxml&quot;)));</span>
-<span class="nc" id="L201">            } catch (IOException e) {</span>
-<span class="nc" id="L202">                throw new RuntimeException(&quot;Player number chose form loading failed&quot;);</span>
-<span class="nc" id="L203">            }</span>
-<span class="nc" id="L204">            stage.setScene(new Scene(numberPanel));</span>
-<span class="nc" id="L205">        });</span>
-<span class="nc" id="L206">    }</span>
+<span class="nc" id="L210">                numberPanel = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(&quot;/chosePlayerNumber.fxml&quot;)));</span>
+<span class="nc" id="L211">            } catch (IOException e) {</span>
+<span class="nc" id="L212">                throw new RuntimeException(&quot;Player number chose form loading failed&quot;);</span>
+<span class="nc" id="L213">            }</span>
+<span class="nc" id="L214">            stage.setScene(new Scene(numberPanel));</span>
+<span class="nc" id="L215">        });</span>
+<span class="nc" id="L216">    }</span>
 
     /**
      * show exit game choice banner
      */
     public void showBackToMenu() {
-<span class="nc" id="L212">        Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L222">        Platform.runLater(()-&gt;{</span>
             Parent choice;
             try {
-<span class="nc" id="L215">                choice = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(&quot;/confirmExitBanner.fxml&quot;)));</span>
-<span class="nc" id="L216">            } catch (IOException e) {</span>
-<span class="nc" id="L217">                throw new RuntimeException(&quot;Menu loading failed&quot;);</span>
-<span class="nc" id="L218">            }</span>
-<span class="nc" id="L219">            Stage banStage = new Stage();</span>
-<span class="nc" id="L220">            banStage.setTitle(&quot;Back to menu&quot;);</span>
-<span class="nc" id="L221">            banStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource(&quot;/graphics/icons/alert.png&quot;)).toString()));</span>
-<span class="nc" id="L222">            banStage.setMinWidth(300);</span>
-<span class="nc" id="L223">            banStage.setMinHeight(200);</span>
-<span class="nc" id="L224">            banStage.setWidth(300);</span>
-<span class="nc" id="L225">            banStage.setHeight(200);</span>
-<span class="nc" id="L226">            banStage.setFullScreen(false);</span>
-<span class="nc" id="L227">            banStage.setScene(new Scene(choice));</span>
-<span class="nc" id="L228">            banStage.show();</span>
-<span class="nc" id="L229">        });</span>
-<span class="nc" id="L230">    }</span>
+<span class="nc" id="L225">                choice = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(&quot;/confirmExitBanner.fxml&quot;)));</span>
+<span class="nc" id="L226">            } catch (IOException e) {</span>
+<span class="nc" id="L227">                throw new RuntimeException(&quot;Menu loading failed&quot;);</span>
+<span class="nc" id="L228">            }</span>
+<span class="nc" id="L229">            Stage banStage = new Stage();</span>
+<span class="nc" id="L230">            banStage.setTitle(&quot;Back to menu&quot;);</span>
+<span class="nc" id="L231">            banStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource(&quot;/graphics/icons/alert.png&quot;)).toString()));</span>
+<span class="nc" id="L232">            banStage.setMinWidth(300);</span>
+<span class="nc" id="L233">            banStage.setMinHeight(200);</span>
+<span class="nc" id="L234">            banStage.setWidth(300);</span>
+<span class="nc" id="L235">            banStage.setHeight(200);</span>
+<span class="nc" id="L236">            banStage.setFullScreen(false);</span>
+<span class="nc" id="L237">            banStage.setScene(new Scene(choice));</span>
+<span class="nc" id="L238">            banStage.show();</span>
+<span class="nc" id="L239">        });</span>
+<span class="nc" id="L240">    }</span>
 
     /**
      * show the game rank
      * @param rank computed by the server
      */
     public void showRank(String rank) {
-<span class="nc" id="L237">        Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L247">        Platform.runLater(()-&gt;{</span>
             Parent rankPanel;
             FXMLLoader loader;
             try {
-<span class="nc" id="L241">                loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(&quot;/rankPanel.fxml&quot;)));</span>
-<span class="nc" id="L242">                rankPanel = loader.load();</span>
-<span class="nc" id="L243">            } catch (Exception e) {</span>
-<span class="nc" id="L244">                throw new RuntimeException(&quot;Rank panel loading failed&quot;);</span>
-<span class="nc" id="L245">            }</span>
-<span class="nc" id="L246">            RankController ctrl = loader.getController();</span>
-<span class="nc" id="L247">            ctrl.setRank(rank);</span>
-<span class="nc" id="L248">            Stage rankStage = new Stage();</span>
-<span class="nc" id="L249">            rankStage.setOnCloseRequest(event -&gt; switchToMenu());</span>
-<span class="nc" id="L250">            rankStage.setScene(new Scene(rankPanel));</span>
-<span class="nc" id="L251">            rankStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource(&quot;/graphics/icons/rank.png&quot;)).toString()));</span>
-<span class="nc" id="L252">            rankStage.show();</span>
-<span class="nc" id="L253">        });</span>
-<span class="nc" id="L254">    }</span>
+<span class="nc" id="L251">                loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(&quot;/rankPanel.fxml&quot;)));</span>
+<span class="nc" id="L252">                rankPanel = loader.load();</span>
+<span class="nc" id="L253">            } catch (Exception e) {</span>
+<span class="nc" id="L254">                throw new RuntimeException(&quot;Rank panel loading failed&quot;);</span>
+<span class="nc" id="L255">            }</span>
+<span class="nc" id="L256">            RankController ctrl = loader.getController();</span>
+<span class="nc" id="L257">            ctrl.setRank(rank);</span>
+<span class="nc" id="L258">            Stage rankStage = new Stage();</span>
+<span class="nc" id="L259">            rankStage.setOnCloseRequest(event -&gt; switchToMenu());</span>
+<span class="nc" id="L260">            rankStage.setScene(new Scene(rankPanel));</span>
+<span class="nc" id="L261">            rankStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource(&quot;/graphics/icons/rank.png&quot;)).toString()));</span>
+<span class="nc" id="L262">            rankStage.show();</span>
+<span class="nc" id="L263">        });</span>
+<span class="nc" id="L264">    }</span>
 
+    /**
+     * show sever offline banner
+     */
     public void showServerOfflineBan() {
-<span class="nc" id="L257">        Platform.runLater(()-&gt;{</span>
+<span class="nc" id="L270">        Platform.runLater(()-&gt;{</span>
             Parent banner;
             FXMLLoader loader;
             try {
-<span class="nc" id="L261">                loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(&quot;/serverOfflineBanner.fxml&quot;)));</span>
-<span class="nc" id="L262">                banner = loader.load();</span>
-<span class="nc" id="L263">            } catch (Exception e) {</span>
-<span class="nc" id="L264">                throw new RuntimeException(&quot;Server offline banner loading failed&quot;);</span>
-<span class="nc" id="L265">            }</span>
-<span class="nc" id="L266">            ServerOfflineController ctrl = loader.getController();</span>
+<span class="nc" id="L274">                loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(&quot;/serverOfflineBanner.fxml&quot;)));</span>
+<span class="nc" id="L275">                banner = loader.load();</span>
+<span class="nc" id="L276">            } catch (Exception e) {</span>
+<span class="nc" id="L277">                throw new RuntimeException(&quot;Server offline banner loading failed&quot;);</span>
+<span class="nc" id="L278">            }</span>
+<span class="nc" id="L279">            ServerOfflineController ctrl = loader.getController();</span>
 
-<span class="nc" id="L268">            Stage bannerStage = new Stage();</span>
-<span class="nc" id="L269">            bannerStage.setOnCloseRequest(event -&gt; ctrl.doShutdown(null));</span>
-<span class="nc" id="L270">            bannerStage.setScene(new Scene(banner));</span>
-<span class="nc" id="L271">            bannerStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource(&quot;/graphics/icons/alert.png&quot;)).toString()));</span>
-<span class="nc" id="L272">            bannerStage.show();</span>
-<span class="nc" id="L273">        });</span>
-<span class="nc" id="L274">    }</span>
+<span class="nc" id="L281">            Stage bannerStage = new Stage();</span>
+<span class="nc" id="L282">            bannerStage.setOnCloseRequest(event -&gt; ctrl.doShutdown(null));</span>
+<span class="nc" id="L283">            bannerStage.setScene(new Scene(banner));</span>
+<span class="nc" id="L284">            bannerStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResource(&quot;/graphics/icons/alert.png&quot;)).toString()));</span>
+<span class="nc" id="L285">            bannerStage.show();</span>
+<span class="nc" id="L286">        });</span>
+<span class="nc" id="L287">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

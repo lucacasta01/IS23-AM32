@@ -1,6 +1,10 @@
 package it.polimi.myShelfie.utilities.pojo;
 import it.polimi.myShelfie.utilities.Position;
 import java.util.List;
+
+/**
+ * This class basically represent the network request performed by the client in order to do any game action
+ */
 public class Action {
     private final ActionType actionType;
     private String nickname;
@@ -40,6 +44,10 @@ public class Action {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
+
+    /**
+     * enumeration of all the possible actions
+     */
     public enum ActionType{
         CHAT,
         PRIVATEMESSAGE,

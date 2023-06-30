@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 
 public class ConfirmExitController {
     /**
-     *
+     * adds a /menu action
      * @param actionEvent
      */
     public void yesChoice(ActionEvent actionEvent) {
@@ -17,6 +17,10 @@ public class ConfirmExitController {
         stage.close();
     }
 
+    /**
+     * close the dialog
+     * @param actionEvent
+     */
     public void noChoice(ActionEvent actionEvent) {
         Stage stage = (Stage)((javafx.scene.Node)actionEvent.getSource()).getScene().getWindow();
         stage.close();

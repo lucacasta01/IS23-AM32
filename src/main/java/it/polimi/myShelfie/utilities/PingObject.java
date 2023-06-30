@@ -1,5 +1,6 @@
 package it.polimi.myShelfie.utilities;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 public class PingObject {
     private final AtomicBoolean isElapsed = new AtomicBoolean(false);
     public PingObject(boolean isElapsed){

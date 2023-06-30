@@ -14,7 +14,7 @@ public class SharedGoal1Card extends SharedGoalCard implements CheckSharedGoal {
 
     /**
      * Returns true if the player passed by parameter has achieved the shared goal
-     *
+     * adds the player to the achievedBy list if needed
      * @return Check result
      */
     @Override

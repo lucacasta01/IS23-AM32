@@ -17,6 +17,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The controller core.
+ * It manipulates the model consequently to the players actions, in order to make the
+ * game go on.
+ * Almost all the methods of this class are called by Lobby
+ */
 public class GameController {
     private Game game;
     private List<Tile> collectedTiles = new ArrayList<>();

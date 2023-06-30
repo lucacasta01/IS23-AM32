@@ -16,864 +16,926 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This is the network rep of the player.
+ * This class is useful to make the client-server communication possible
+ * Is important to remember that each ClientHandler is executed as a stand-alone thread.
+ * For each Player connected, a new ClientHandler thread is executed on Server pool.
+ */
 public class ClientHandler implements Runnable {
     private final Socket clientSocket;
-<span class="fc" id="L21">    private String nickname=&quot;/&quot;;</span>
-<span class="fc" id="L22">    private Boolean isRMI = false;</span>
+<span class="fc" id="L27">    private String nickname=&quot;/&quot;;</span>
+<span class="fc" id="L28">    private Boolean isRMI = false;</span>
     private BufferedReader in;
     private PrintWriter out;
     private final Server server;
-<span class="fc" id="L26">    private boolean isPlaying = false;</span>
+<span class="fc" id="L32">    private boolean isPlaying = false;</span>
     private String color;
-<span class="fc" id="L28">    private final List&lt;PingObject&gt; pongResponses = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L34">    private final List&lt;PingObject&gt; pongResponses = new ArrayList&lt;&gt;();</span>
     private final List&lt;Action&gt; rmiActions;
     private RMIClient rmiClient;
-<span class="fc" id="L31">    public final Object locker = new Object();</span>
+<span class="fc" id="L37">    public final Object locker = new Object();</span>
 
 
 
 
-<span class="fc" id="L36">    public ClientHandler(Socket clientSocket) {</span>
-<span class="fc" id="L37">        this.clientSocket = clientSocket;</span>
-<span class="fc" id="L38">        this.server = Server.getInstance();</span>
-<span class="fc" id="L39">        this.rmiClient = null;</span>
-<span class="fc" id="L40">        this.rmiActions = null;</span>
-<span class="fc" id="L41">    }</span>
-<span class="fc" id="L42">    public ClientHandler() {</span>
-<span class="fc" id="L43">        this.clientSocket = null;</span>
+<span class="fc" id="L42">    public ClientHandler(Socket clientSocket) {</span>
+<span class="fc" id="L43">        this.clientSocket = clientSocket;</span>
 <span class="fc" id="L44">        this.server = Server.getInstance();</span>
-<span class="fc" id="L45">        this.isRMI = true;</span>
-<span class="fc" id="L46">        this.rmiActions = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L45">        this.rmiClient = null;</span>
+<span class="fc" id="L46">        this.rmiActions = null;</span>
 <span class="fc" id="L47">    }</span>
+<span class="fc" id="L48">    public ClientHandler() {</span>
+<span class="fc" id="L49">        this.clientSocket = null;</span>
+<span class="fc" id="L50">        this.server = Server.getInstance();</span>
+<span class="fc" id="L51">        this.isRMI = true;</span>
+<span class="fc" id="L52">        this.rmiActions = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L53">    }</span>
 
+    /**
+     * method to close connection between server and client
+     */
     public void shutdown() {
-<span class="nc bnc" id="L50" title="All 2 branches missed.">        if(!isRMI) {</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if(!isRMI) {</span>
             try {
-<span class="nc" id="L52">                in.close();</span>
-<span class="nc" id="L53">                out.close();</span>
-<span class="nc bnc" id="L54" title="All 2 branches missed.">                if (!clientSocket.isClosed()) {</span>
-<span class="nc" id="L55">                    clientSocket.close();</span>
+<span class="nc" id="L61">                in.close();</span>
+<span class="nc" id="L62">                out.close();</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">                if (!clientSocket.isClosed()) {</span>
+<span class="nc" id="L64">                    clientSocket.close();</span>
                 }
-<span class="nc" id="L57">            } catch (Exception e) {</span>
-<span class="nc" id="L58">                e.printStackTrace();</span>
-<span class="nc" id="L59">            }</span>
+<span class="nc" id="L66">            } catch (Exception e) {</span>
+<span class="nc" id="L67">                e.printStackTrace();</span>
+<span class="nc" id="L68">            }</span>
         }else{
-<span class="nc" id="L61">            synchronized (server.getConnectedClients()) {</span>
-<span class="nc" id="L62">                server.getConnectedClients().get(this).setKill(true);</span>
-<span class="nc" id="L63">            }</span>
+<span class="nc" id="L70">            synchronized (server.getConnectedClients()) {</span>
+<span class="nc" id="L71">                server.getConnectedClients().get(this).setKill(true);</span>
+<span class="nc" id="L72">            }</span>
         }
-<span class="nc" id="L65">        server.removeClient(this);</span>
-<span class="nc" id="L66">    }</span>
+<span class="nc" id="L74">        server.removeClient(this);</span>
+<span class="nc" id="L75">    }</span>
 
     public List&lt;Action&gt; getRmiActions() {
-<span class="nc" id="L69">        return rmiActions;</span>
+<span class="nc" id="L78">        return rmiActions;</span>
     }
 
     public void setRmiAction(Action rmiAction) {
-<span class="nc" id="L73">        this.rmiActions.add(rmiAction);</span>
-<span class="nc" id="L74">    }</span>
+<span class="nc" id="L82">        this.rmiActions.add(rmiAction);</span>
+<span class="nc" id="L83">    }</span>
 
+    /**
+     * method that returns and removes a specific Action from the Action's list
+     * @return the specific Action
+     */
     public Action getAction(){
-<span class="nc bnc" id="L77" title="All 2 branches missed.">        if(!isRMI) {</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if(!isRMI) {</span>
             try {
-<span class="nc" id="L79">                Action a = JsonParser.getAction(in.readLine());</span>
-<span class="nc bnc" id="L80" title="All 2 branches missed.">                if (a == null) {</span>
-<span class="nc" id="L81">                    return new Action(Action.ActionType.VOID, null, null, null, null, null);</span>
+<span class="nc" id="L92">                Action a = JsonParser.getAction(in.readLine());</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">                if (a == null) {</span>
+<span class="nc" id="L94">                    return new Action(Action.ActionType.VOID, null, null, null, null, null);</span>
                 }
-<span class="nc" id="L83">                return a;</span>
-<span class="nc" id="L84">            } catch (Exception e) {</span>
-<span class="nc" id="L85">                return new Action(Action.ActionType.VOID, null, null, null, null, null);</span>
+<span class="nc" id="L96">                return a;</span>
+<span class="nc" id="L97">            } catch (Exception e) {</span>
+<span class="nc" id="L98">                return new Action(Action.ActionType.VOID, null, null, null, null, null);</span>
             }
         }else{
-<span class="nc bnc" id="L88" title="All 2 branches missed.">            if(rmiActions.size()==0){</span>
-<span class="nc" id="L89">                synchronized (rmiActions){</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">            if(rmiActions.size()==0){</span>
+<span class="nc" id="L102">                synchronized (rmiActions){</span>
                     try {
-<span class="nc" id="L91">                        rmiActions.wait();</span>
-<span class="nc" id="L92">                    }catch (Exception e){</span>
-<span class="nc" id="L93">                        e.printStackTrace();</span>
-<span class="nc" id="L94">                    }</span>
-<span class="nc" id="L95">                }</span>
+<span class="nc" id="L104">                        rmiActions.wait();</span>
+<span class="nc" id="L105">                    }catch (Exception e){</span>
+<span class="nc" id="L106">                        e.printStackTrace();</span>
+<span class="nc" id="L107">                    }</span>
+<span class="nc" id="L108">                }</span>
             }
-<span class="nc" id="L97">            Action toReturn = rmiActions.get(0);</span>
-<span class="nc" id="L98">            rmiActions.remove(0);</span>
-<span class="nc" id="L99">            return toReturn;</span>
+<span class="nc" id="L110">            Action toReturn = rmiActions.get(0);</span>
+<span class="nc" id="L111">            rmiActions.remove(0);</span>
+<span class="nc" id="L112">            return toReturn;</span>
         }
     }
 
 
 
     public void run() {
-<span class="nc bnc" id="L106" title="All 2 branches missed.">        if(!isRMI){ //TCP</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        if(!isRMI){ //TCP</span>
             try {
-<span class="nc" id="L108">                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));</span>
-<span class="nc" id="L109">                out = new PrintWriter(clientSocket.getOutputStream(), true);</span>
-<span class="nc" id="L110">                synchronized (locker){</span>
-<span class="nc" id="L111">                    locker.notifyAll();</span>
-<span class="nc" id="L112">                }</span>
-<span class="nc" id="L113">            } catch (Exception e) {</span>
-<span class="nc" id="L114">                System.err.println(&quot;Exception throws during stream creation: &quot;);</span>
-<span class="nc" id="L115">                e.printStackTrace();</span>
-<span class="nc" id="L116">            }</span>
+<span class="nc" id="L121">                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));</span>
+<span class="nc" id="L122">                out = new PrintWriter(clientSocket.getOutputStream(), true);</span>
+<span class="nc" id="L123">                synchronized (locker){</span>
+<span class="nc" id="L124">                    locker.notifyAll();</span>
+<span class="nc" id="L125">                }</span>
+<span class="nc" id="L126">            } catch (Exception e) {</span>
+<span class="nc" id="L127">                System.err.println(&quot;Exception throws during stream creation: &quot;);</span>
+<span class="nc" id="L128">                e.printStackTrace();</span>
+<span class="nc" id="L129">            }</span>
         }
-<span class="nc" id="L118">        gameLoop();</span>
-<span class="nc" id="L119">    }</span>
+<span class="nc" id="L131">        gameLoop();</span>
+<span class="nc" id="L132">    }</span>
 
     public void setNickname(String nickname) {
-<span class="fc" id="L122">        this.nickname = nickname;</span>
-<span class="fc" id="L123">    }</span>
+<span class="fc" id="L135">        this.nickname = nickname;</span>
+<span class="fc" id="L136">    }</span>
 
     private void gameLoop(){
         try {
             Action action;
-<span class="nc bnc" id="L128" title="All 2 branches missed.">            if(nickname.equals(&quot;/&quot;)){</span>
-<span class="nc" id="L129">                sendInfoMessage(&quot;Please insert your username&quot;);</span>
-<span class="nc" id="L130">                action = getAction();</span>
-<span class="nc" id="L131">                String nickname = action.getInfo();</span>
-<span class="nc bnc" id="L132" title="All 6 branches missed.">                while(action.getActionType() != Action.ActionType.INFO || server.isConnected(nickname) || !Utils.checkNicknameFormat(nickname)) {</span>
-<span class="nc bnc" id="L133" title="All 2 branches missed.">                    if(action.getActionType() == Action.ActionType.INFO) {</span>
-<span class="nc bnc" id="L134" title="All 2 branches missed.">                        if(!Utils.checkNicknameFormat(nickname)){</span>
-<span class="nc" id="L135">                            notifyNicknameDeny(&quot;Invalid nickname&quot;);</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">            if(nickname.equals(&quot;/&quot;)){</span>
+<span class="nc" id="L142">                sendInfoMessage(&quot;Please insert your username&quot;);</span>
+<span class="nc" id="L143">                action = getAction();</span>
+<span class="nc" id="L144">                String nickname = action.getInfo();</span>
+<span class="nc bnc" id="L145" title="All 6 branches missed.">                while(action.getActionType() != Action.ActionType.INFO || server.isConnected(nickname) || !Utils.checkNicknameFormat(nickname)) {</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">                    if(action.getActionType() == Action.ActionType.INFO) {</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">                        if(!Utils.checkNicknameFormat(nickname)){</span>
+<span class="nc" id="L148">                            notifyNicknameDeny(&quot;Invalid nickname&quot;);</span>
                         }
-<span class="nc bnc" id="L137" title="All 2 branches missed.">                        else if(server.isConnected(nickname)){</span>
-<span class="nc" id="L138">                            notifyNicknameDeny(&quot;Nickname already used&quot;);</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">                        else if(server.isConnected(nickname)){</span>
+<span class="nc" id="L151">                            notifyNicknameDeny(&quot;Nickname already used&quot;);</span>
                         }
 
-<span class="nc bnc" id="L141" title="All 2 branches missed.">                    }else if(action.getActionType()== Action.ActionType.CHAT){</span>
-<span class="nc" id="L142">                        sendDeny(&quot;The chat is not active now&quot;);</span>
-<span class="nc bnc" id="L143" title="All 2 branches missed.">                    }else if(action.getActionType()== Action.ActionType.PICKTILES){</span>
-<span class="nc" id="L144">                        sendDeny(&quot;Cannot pick tiles here, game not started&quot;);</span>
-<span class="nc bnc" id="L145" title="All 2 branches missed.">                    }else if(action.getActionType()== Action.ActionType.SELECTCOLUMN){</span>
-<span class="nc" id="L146">                        sendDeny(&quot;Cannot select column here, game not started&quot;);</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">                    }else if(action.getActionType()== Action.ActionType.CHAT){</span>
+<span class="nc" id="L155">                        sendDeny(&quot;The chat is not active now&quot;);</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">                    }else if(action.getActionType()== Action.ActionType.PICKTILES){</span>
+<span class="nc" id="L157">                        sendDeny(&quot;Cannot pick tiles here, game not started&quot;);</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">                    }else if(action.getActionType()== Action.ActionType.SELECTCOLUMN){</span>
+<span class="nc" id="L159">                        sendDeny(&quot;Cannot select column here, game not started&quot;);</span>
                     }
-<span class="nc bnc" id="L148" title="All 2 branches missed.">                    else if(action.getActionType() == Action.ActionType.QUIT){</span>
-<span class="nc bnc" id="L149" title="All 2 branches missed.">                        if(!isRMI) {</span>
-<span class="nc" id="L150">                            server.getConnectedClients().get(this).setElapsed();</span>
-<span class="nc" id="L151">                            sendShutdown();</span>
-<span class="nc" id="L152">                            shutdown();</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">                    else if(action.getActionType() == Action.ActionType.QUIT){</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">                        if(!isRMI) {</span>
+<span class="nc" id="L163">                            server.getConnectedClients().get(this).setElapsed();</span>
+<span class="nc" id="L164">                            sendShutdown();</span>
+<span class="nc" id="L165">                            shutdown();</span>
                         }else{
-<span class="nc" id="L154">                            server.getConnectedClients().get(this).setKill(true);</span>
-<span class="nc" id="L155">                            server.getConnectedClients().remove(this);</span>
-<span class="nc" id="L156">                            sendShutdown();</span>
-<span class="nc" id="L157">                            shutdown();</span>
+<span class="nc" id="L167">                            server.getConnectedClients().get(this).setKill(true);</span>
+<span class="nc" id="L168">                            server.getConnectedClients().remove(this);</span>
+<span class="nc" id="L169">                            sendShutdown();</span>
+<span class="nc" id="L170">                            shutdown();</span>
                         }
-<span class="nc bnc" id="L159" title="All 2 branches missed.">                    }else if(action.getActionType() == Action.ActionType.PING){</span>
-<span class="nc" id="L160">                        sendPong(action.getInfo());</span>
-<span class="nc bnc" id="L161" title="All 2 branches missed.">                    } else if (action.getActionType() == Action.ActionType.PONG) {</span>
-<span class="nc" id="L162">                        addPong();</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">                    }else if(action.getActionType() == Action.ActionType.PING){</span>
+<span class="nc" id="L173">                        sendPong(action.getInfo());</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">                    } else if (action.getActionType() == Action.ActionType.PONG) {</span>
+<span class="nc" id="L175">                        addPong();</span>
                     }
-<span class="nc" id="L164">                    action = getAction();</span>
-<span class="nc bnc" id="L165" title="All 2 branches missed.">                    if(action.getActionType() == Action.ActionType.INFO) {</span>
-<span class="nc" id="L166">                        nickname = action.getInfo();</span>
+<span class="nc" id="L177">                    action = getAction();</span>
+<span class="nc bnc" id="L178" title="All 2 branches missed.">                    if(action.getActionType() == Action.ActionType.INFO) {</span>
+<span class="nc" id="L179">                        nickname = action.getInfo();</span>
                     }
 
                 }
-<span class="nc" id="L170">                synchronized (server.getUserGame()){</span>
-<span class="nc bnc" id="L171" title="All 2 branches missed.">                    if(!server.getUserGame().containsKey(nickname)) {</span>
-<span class="nc" id="L172">                        server.getUserGame().put(nickname, &quot;-&quot;);</span>
+<span class="nc" id="L183">                synchronized (server.getUserGame()){</span>
+<span class="nc bnc" id="L184" title="All 2 branches missed.">                    if(!server.getUserGame().containsKey(nickname)) {</span>
+<span class="nc" id="L185">                        server.getUserGame().put(nickname, &quot;-&quot;);</span>
                     }
-<span class="nc" id="L174">                }</span>
-<span class="nc" id="L175">                this.nickname = nickname;</span>
-<span class="nc" id="L176">                sendAccept(&quot;Username accepted&quot;);</span>
-<span class="nc" id="L177">                notifyNicknameAccept();</span>
-<span class="nc" id="L178">                System.out.println(nickname + &quot; connected to the server&quot;);</span>
+<span class="nc" id="L187">                }</span>
+<span class="nc" id="L188">                this.nickname = nickname;</span>
+<span class="nc" id="L189">                sendAccept(&quot;Username accepted&quot;);</span>
+<span class="nc" id="L190">                notifyNicknameAccept();</span>
+<span class="nc" id="L191">                System.out.println(nickname + &quot; connected to the server&quot;);</span>
             }
 
-<span class="nc" id="L181">            boolean lobbyCreated = false;</span>
+<span class="nc" id="L194">            boolean lobbyCreated = false;</span>
             String message;
             String chose;
-<span class="nc" id="L184">            sendMenu();</span>
-<span class="nc bnc" id="L185" title="All 2 branches missed.">            while((action=getAction())!=null){</span>
-<span class="nc bnc" id="L186" title="All 2 branches missed.">                if(server.lobbyOf(this)==null){</span>
-<span class="nc" id="L187">                    lobbyCreated=false;</span>
+<span class="nc" id="L197">            sendMenu();</span>
+<span class="nc bnc" id="L198" title="All 2 branches missed.">            while((action=getAction())!=null){</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">                if(server.lobbyOf(this)==null){</span>
+<span class="nc" id="L200">                    lobbyCreated=false;</span>
                 }
-<span class="nc bnc" id="L189" title="All 2 branches missed.">                if(!lobbyCreated){</span>
-<span class="nc" id="L190">                    chose=action.getInfo();</span>
-<span class="nc bnc" id="L191" title="All 14 branches missed.">                    while(action.getActionType() != Action.ActionType.INFO ||(action.getActionType()== Action.ActionType.INFO&amp;&amp;(!chose.equals(&quot;1&quot;) &amp;&amp; !chose.equals(&quot;2&quot;) &amp;&amp; !chose.equals(&quot;3&quot;) &amp;&amp; !chose.equals(&quot;4&quot;) &amp;&amp; !chose.equals(&quot;0&quot;)))){</span>
-<span class="nc bnc" id="L192" title="All 2 branches missed.">                        if(action.getActionType() == Action.ActionType.INFO) {</span>
-<span class="nc" id="L193">                            sendDeny(&quot;Type the right key&quot;);</span>
-<span class="nc bnc" id="L194" title="All 2 branches missed.">                        }else if(action.getActionType()== Action.ActionType.CHAT){</span>
-<span class="nc" id="L195">                            sendDeny(&quot;The chat is not active now&quot;);</span>
-<span class="nc bnc" id="L196" title="All 2 branches missed.">                        }else if(action.getActionType()== Action.ActionType.PICKTILES){</span>
-<span class="nc" id="L197">                            sendDeny(&quot;Cannot pick tiles here, game not started&quot;);</span>
-<span class="nc bnc" id="L198" title="All 2 branches missed.">                        }else if(action.getActionType()== Action.ActionType.SELECTCOLUMN){</span>
-<span class="nc" id="L199">                            sendDeny(&quot;Cannot select column here, game not started&quot;);</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">                if(!lobbyCreated){</span>
+<span class="nc" id="L203">                    chose=action.getInfo();</span>
+<span class="nc bnc" id="L204" title="All 14 branches missed.">                    while(action.getActionType() != Action.ActionType.INFO ||(action.getActionType()== Action.ActionType.INFO&amp;&amp;(!chose.equals(&quot;1&quot;) &amp;&amp; !chose.equals(&quot;2&quot;) &amp;&amp; !chose.equals(&quot;3&quot;) &amp;&amp; !chose.equals(&quot;4&quot;) &amp;&amp; !chose.equals(&quot;0&quot;)))){</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">                        if(action.getActionType() == Action.ActionType.INFO) {</span>
+<span class="nc" id="L206">                            sendDeny(&quot;Type the right key&quot;);</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">                        }else if(action.getActionType()== Action.ActionType.CHAT){</span>
+<span class="nc" id="L208">                            sendDeny(&quot;The chat is not active now&quot;);</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">                        }else if(action.getActionType()== Action.ActionType.PICKTILES){</span>
+<span class="nc" id="L210">                            sendDeny(&quot;Cannot pick tiles here, game not started&quot;);</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">                        }else if(action.getActionType()== Action.ActionType.SELECTCOLUMN){</span>
+<span class="nc" id="L212">                            sendDeny(&quot;Cannot select column here, game not started&quot;);</span>
                         }
-<span class="nc bnc" id="L201" title="All 2 branches missed.">                        else if(action.getActionType() == Action.ActionType.QUIT){</span>
-<span class="nc bnc" id="L202" title="All 2 branches missed.">                            if(!isRMI) {</span>
-<span class="nc" id="L203">                                server.getConnectedClients().get(this).setElapsed();</span>
-<span class="nc" id="L204">                                sendShutdown();</span>
-<span class="nc" id="L205">                                shutdown();</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">                        else if(action.getActionType() == Action.ActionType.QUIT){</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">                            if(!isRMI) {</span>
+<span class="nc" id="L216">                                server.getConnectedClients().get(this).setElapsed();</span>
+<span class="nc" id="L217">                                sendShutdown();</span>
+<span class="nc" id="L218">                                shutdown();</span>
                             }else{
-<span class="nc" id="L207">                                sendShutdown();</span>
-<span class="nc" id="L208">                                shutdown();</span>
+<span class="nc" id="L220">                                sendShutdown();</span>
+<span class="nc" id="L221">                                shutdown();</span>
                             }
-<span class="nc" id="L210">                            System.out.println(nickname + &quot; disconnected&quot;);</span>
-<span class="nc bnc" id="L211" title="All 2 branches missed.">                        }else if(action.getActionType() == Action.ActionType.PING){</span>
-<span class="nc" id="L212">                            sendPong(action.getInfo());</span>
+<span class="nc" id="L223">                            System.out.println(nickname + &quot; disconnected&quot;);</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">                        }else if(action.getActionType() == Action.ActionType.PING){</span>
+<span class="nc" id="L225">                            sendPong(action.getInfo());</span>
                         }
-<span class="nc bnc" id="L214" title="All 2 branches missed.">                        else if (action.getActionType() == Action.ActionType.PONG) {</span>
-<span class="nc" id="L215">                            addPong();</span>
+<span class="nc bnc" id="L227" title="All 2 branches missed.">                        else if (action.getActionType() == Action.ActionType.PONG) {</span>
+<span class="nc" id="L228">                            addPong();</span>
                         }
-<span class="nc" id="L217">                        action = getAction();</span>
-<span class="nc bnc" id="L218" title="All 2 branches missed.">                        if(action !=null){</span>
-<span class="nc" id="L219">                            chose = action.getInfo();</span>
+<span class="nc" id="L230">                        action = getAction();</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">                        if(action !=null){</span>
+<span class="nc" id="L232">                            chose = action.getInfo();</span>
                         }
 
                     }
 
                     //sendAccept(&quot;Game mode selected&quot;);
-<span class="nc bnc" id="L225" title="All 6 branches missed.">                    switch (chose) {</span>
+<span class="nc bnc" id="L238" title="All 6 branches missed.">                    switch (chose) {</span>
                         case &quot;1&quot; -&gt; {
-<span class="nc" id="L227">                            sendInfoMessage(&quot;* CREATE NEW GAME *\n&quot;);</span>
-<span class="nc" id="L228">                            String UID = Utils.UIDGenerator();</span>
-<span class="nc" id="L229">                            Lobby lobby = new Lobby(this, UID, 0);</span>
-<span class="nc" id="L230">                            System.out.println(&quot;New lobby created [&quot; + UID + &quot;]&quot;);</span>
-<span class="nc" id="L231">                            server.getLobbyList().add(lobby);</span>
-<span class="nc" id="L232">                            synchronized (server.getUserGame()) {</span>
-<span class="nc bnc" id="L233" title="All 2 branches missed.">                                if(server.getUserGame().containsKey(this.nickname)){</span>
-<span class="nc bnc" id="L234" title="All 2 branches missed.">                                    if(!server.getUserGame().get(this.nickname).equals(&quot;-&quot;)){</span>
-<span class="nc" id="L235">                                        String oldUID = server.getUserGame().get(this.nickname);</span>
-<span class="nc" id="L236">                                        server.getUserGame().entrySet().removeIf(entry -&gt; entry.getValue().equals(oldUID));</span>
-<span class="nc" id="L237">                                        Path savingFilePath = Paths.get(System.getProperty(&quot;user.dir&quot;) + &quot;/config/savedgames/&quot;+ oldUID + &quot;.json&quot;);</span>
-<span class="nc bnc" id="L238" title="All 2 branches missed.">                                        if(savingFilePath.toFile().isFile()){</span>
+<span class="nc" id="L240">                            sendInfoMessage(&quot;* CREATE NEW GAME *\n&quot;);</span>
+<span class="nc" id="L241">                            String UID = Utils.UIDGenerator();</span>
+<span class="nc" id="L242">                            Lobby lobby = new Lobby(this, UID, 0);</span>
+<span class="nc" id="L243">                            System.out.println(&quot;New lobby created [&quot; + UID + &quot;]&quot;);</span>
+<span class="nc" id="L244">                            server.getLobbyList().add(lobby);</span>
+<span class="nc" id="L245">                            synchronized (server.getUserGame()) {</span>
+<span class="nc bnc" id="L246" title="All 2 branches missed.">                                if(server.getUserGame().containsKey(this.nickname)){</span>
+<span class="nc bnc" id="L247" title="All 2 branches missed.">                                    if(!server.getUserGame().get(this.nickname).equals(&quot;-&quot;)){</span>
+<span class="nc" id="L248">                                        String oldUID = server.getUserGame().get(this.nickname);</span>
+<span class="nc" id="L249">                                        server.getUserGame().entrySet().removeIf(entry -&gt; entry.getValue().equals(oldUID));</span>
+<span class="nc" id="L250">                                        Path savingFilePath = Paths.get(System.getProperty(&quot;user.dir&quot;) + &quot;/config/savedgames/&quot;+ oldUID + &quot;.json&quot;);</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">                                        if(savingFilePath.toFile().isFile()){</span>
                                             try {
-<span class="nc" id="L240">                                                Files.delete(savingFilePath);</span>
-<span class="nc" id="L241">                                                System.out.println(&quot;Old game file deleted successfully, UID: &quot;+ oldUID);</span>
+<span class="nc" id="L253">                                                Files.delete(savingFilePath);</span>
+<span class="nc" id="L254">                                                System.out.println(&quot;Old game file deleted successfully, UID: &quot;+ oldUID);</span>
                                             }
-<span class="nc" id="L243">                                            catch (IOException e){</span>
-<span class="nc" id="L244">                                                e.printStackTrace();</span>
-<span class="nc" id="L245">                                            }</span>
+<span class="nc" id="L256">                                            catch (IOException e){</span>
+<span class="nc" id="L257">                                                e.printStackTrace();</span>
+<span class="nc" id="L258">                                            }</span>
                                         }
                                     }
                                 }
-<span class="nc" id="L249">                                server.getUserGame().put(nickname, lobby.getLobbyUID());</span>
-<span class="nc" id="L250">                                server.saveUserGame();</span>
-<span class="nc" id="L251">                            }</span>
-<span class="nc" id="L252">                            lobbyCreated = true;</span>
-<span class="nc" id="L253">                            this.isPlaying=true;</span>
-<span class="nc" id="L254">                            server.runLobby(lobby);</span>
-<span class="nc" id="L255">                        }</span>
+<span class="nc" id="L262">                                server.getUserGame().put(nickname, lobby.getLobbyUID());</span>
+<span class="nc" id="L263">                                server.saveUserGame();</span>
+<span class="nc" id="L264">                            }</span>
+<span class="nc" id="L265">                            lobbyCreated = true;</span>
+<span class="nc" id="L266">                            this.isPlaying=true;</span>
+<span class="nc" id="L267">                            server.runLobby(lobby);</span>
+<span class="nc" id="L268">                        }</span>
                         case &quot;2&quot; -&gt; {
-<span class="nc" id="L257">                            sendInfoMessage(&quot;* GAME LOADING *\n&quot;);</span>
+<span class="nc" id="L270">                            sendInfoMessage(&quot;* GAME LOADING *\n&quot;);</span>
                             Map&lt;String, String&gt; userGame;
-<span class="nc" id="L259">                            synchronized (server.getUserGame()) {</span>
-<span class="nc" id="L260">                                userGame = server.getUserGame();</span>
-<span class="nc" id="L261">                            }</span>
+<span class="nc" id="L272">                            synchronized (server.getUserGame()) {</span>
+<span class="nc" id="L273">                                userGame = server.getUserGame();</span>
+<span class="nc" id="L274">                            }</span>
 
-<span class="nc bnc" id="L263" title="All 4 branches missed.">                            if (!userGame.containsKey(nickname) || userGame.get(nickname).equals(&quot;-&quot;)) {</span>
-<span class="nc" id="L264">                                sendDeny(&quot;No game was found&quot;);</span>
-<span class="nc" id="L265">                                denyLoadGame();</span>
-<span class="nc" id="L266">                                sendMenu();</span>
-<span class="nc bnc" id="L267" title="All 2 branches missed.">                            } else if(server.getLobbyList().stream().filter(lobby -&gt; lobby.getLobbyUID().equals(userGame.get(nickname))).toList().size()&gt;0){</span>
-<span class="nc" id="L268">                                sendDeny(&quot;Another client started this game, retry to connect...&quot;);</span>
-<span class="nc" id="L269">                                denyLoadGame();</span>
-<span class="nc" id="L270">                                sendMenu();</span>
+<span class="nc bnc" id="L276" title="All 4 branches missed.">                            if (!userGame.containsKey(nickname) || userGame.get(nickname).equals(&quot;-&quot;)) {</span>
+<span class="nc" id="L277">                                sendDeny(&quot;No game was found&quot;);</span>
+<span class="nc" id="L278">                                denyLoadGame();</span>
+<span class="nc" id="L279">                                sendMenu();</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">                            } else if(server.getLobbyList().stream().filter(lobby -&gt; lobby.getLobbyUID().equals(userGame.get(nickname))).toList().size()&gt;0){</span>
+<span class="nc" id="L281">                                sendDeny(&quot;Another client started this game, retry to connect...&quot;);</span>
+<span class="nc" id="L282">                                denyLoadGame();</span>
+<span class="nc" id="L283">                                sendMenu();</span>
                             } else {
-<span class="nc" id="L272">                                Lobby lobby = new Lobby(this, userGame.get(nickname));</span>
-<span class="nc" id="L273">                                synchronized (server.getLobbyList()) {</span>
-<span class="nc" id="L274">                                    sendInfoMessage(&quot;Joining game &quot; + userGame.get(nickname));</span>
-<span class="nc" id="L275">                                    server.getLobbyList().add(lobby);</span>
-<span class="nc" id="L276">                                }</span>
-<span class="nc" id="L277">                                System.out.println(&quot;New lobby created [&quot; + lobby.getLobbyUID() + &quot;]&quot;);</span>
-<span class="nc" id="L278">                                lobbyCreated = true;</span>
-<span class="nc" id="L279">                                this.isPlaying=true;</span>
-<span class="nc" id="L280">                                server.runLobby(lobby);</span>
+<span class="nc" id="L285">                                Lobby lobby = new Lobby(this, userGame.get(nickname));</span>
+<span class="nc" id="L286">                                synchronized (server.getLobbyList()) {</span>
+<span class="nc" id="L287">                                    sendInfoMessage(&quot;Joining game &quot; + userGame.get(nickname));</span>
+<span class="nc" id="L288">                                    server.getLobbyList().add(lobby);</span>
+<span class="nc" id="L289">                                }</span>
+<span class="nc" id="L290">                                System.out.println(&quot;New lobby created [&quot; + lobby.getLobbyUID() + &quot;]&quot;);</span>
+<span class="nc" id="L291">                                lobbyCreated = true;</span>
+<span class="nc" id="L292">                                this.isPlaying=true;</span>
+<span class="nc" id="L293">                                server.runLobby(lobby);</span>
                             }
-<span class="nc" id="L282">                        }</span>
+<span class="nc" id="L295">                        }</span>
                         case &quot;3&quot; -&gt; {
-<span class="nc" id="L284">                            sendInfoMessage(&quot;* GAME JOINING *\n&quot;);</span>
+<span class="nc" id="L297">                            sendInfoMessage(&quot;* GAME JOINING *\n&quot;);</span>
                             List&lt;Lobby&gt; lobbyList;
-<span class="nc" id="L286">                            boolean flag = false;</span>
-<span class="nc" id="L287">                            synchronized (server.getLobbyList()) {</span>
-<span class="nc" id="L288">                                lobbyList = server.getLobbyList();</span>
-<span class="nc" id="L289">                            }</span>
-<span class="nc bnc" id="L290" title="All 2 branches missed.">                            for (Lobby l : lobbyList) {</span>
-<span class="nc bnc" id="L291" title="All 2 branches missed.">                                if (l.isOpen()) {</span>
-<span class="nc" id="L292">                                    System.out.println(nickname + &quot; joined game &quot; + l.getLobbyUID());</span>
-<span class="nc" id="L293">                                    synchronized (server.getUserGame()) {</span>
-<span class="nc" id="L294">                                        server.getUserGame().put(nickname, l.getLobbyUID());</span>
-<span class="nc" id="L295">                                        server.saveUserGame();</span>
-<span class="nc" id="L296">                                    }</span>
-<span class="nc" id="L297">                                    flag = true;</span>
-<span class="nc" id="L298">                                    lobbyCreated = true;</span>
-<span class="nc" id="L299">                                    this.isPlaying=false;</span>
-<span class="nc" id="L300">                                    l.acceptPlayer(this);</span>
-<span class="nc" id="L301">                                    break;</span>
+<span class="nc" id="L299">                            boolean flag = false;</span>
+<span class="nc" id="L300">                            synchronized (server.getLobbyList()) {</span>
+<span class="nc" id="L301">                                lobbyList = server.getLobbyList();</span>
+<span class="nc" id="L302">                            }</span>
+<span class="nc bnc" id="L303" title="All 2 branches missed.">                            for (Lobby l : lobbyList) {</span>
+<span class="nc bnc" id="L304" title="All 2 branches missed.">                                if (l.isOpen()) {</span>
+<span class="nc" id="L305">                                    System.out.println(nickname + &quot; joined game &quot; + l.getLobbyUID());</span>
+<span class="nc" id="L306">                                    synchronized (server.getUserGame()) {</span>
+<span class="nc" id="L307">                                        server.getUserGame().put(nickname, l.getLobbyUID());</span>
+<span class="nc" id="L308">                                        server.saveUserGame();</span>
+<span class="nc" id="L309">                                    }</span>
+<span class="nc" id="L310">                                    flag = true;</span>
+<span class="nc" id="L311">                                    lobbyCreated = true;</span>
+<span class="nc" id="L312">                                    this.isPlaying=false;</span>
+<span class="nc" id="L313">                                    l.acceptPlayer(this);</span>
+<span class="nc" id="L314">                                    break;</span>
                                 }
-<span class="nc" id="L303">                            }</span>
-<span class="nc bnc" id="L304" title="All 2 branches missed.">                            if (!flag) {</span>
-<span class="nc" id="L305">                                sendInfoMessage(&quot;No game available. You should create a new one&quot;);</span>
-<span class="nc" id="L306">                                denyRandomGame();</span>
-<span class="nc" id="L307">                                sendMenu();</span>
+<span class="nc" id="L316">                            }</span>
+<span class="nc bnc" id="L317" title="All 2 branches missed.">                            if (!flag) {</span>
+<span class="nc" id="L318">                                sendInfoMessage(&quot;No game available. You should create a new one&quot;);</span>
+<span class="nc" id="L319">                                denyRandomGame();</span>
+<span class="nc" id="L320">                                sendMenu();</span>
                             }
-<span class="nc" id="L309">                        }</span>
+<span class="nc" id="L322">                        }</span>
                         case &quot;4&quot; -&gt; {
-<span class="nc" id="L311">                            List&lt;Lobby&gt; filteredLobbyList = server.getLobbyList().stream()</span>
-<span class="nc bnc" id="L312" title="All 2 branches missed.">                                    .filter(l -&gt; l.getGameMode() == Lobby.GameMode.SAVEDGAME)</span>
-<span class="nc" id="L313">                                    .filter(l -&gt; l.getLobbyUID().equals(server.getUserGame().get(nickname)))</span>
-<span class="nc" id="L314">                                    .toList();</span>
-<span class="nc bnc" id="L315" title="All 2 branches missed.">                            if (filteredLobbyList.size() &gt; 1) {</span>
-<span class="nc" id="L316">                                throw new RuntimeException(&quot;UID not unique&quot;);</span>
-<span class="nc bnc" id="L317" title="All 2 branches missed.">                            } else if (filteredLobbyList.size() == 1) {</span>
-<span class="nc" id="L318">                                Lobby lobby = filteredLobbyList.get(0);</span>
-<span class="nc" id="L319">                                sendInfoMessage(&quot;Game &quot; + lobby.getLobbyUID() + &quot; started by &quot; + lobby.getLobbyPlayers().get(0).nickname);</span>
-<span class="nc" id="L320">                                sendInfoMessage(&quot;Would you like to join? [y/n]&quot;);</span>
-<span class="nc" id="L321">                                oldGameFound();</span>
-<span class="nc" id="L322">                                System.out.println(&quot;Saved game for &quot; + nickname + &quot; found&quot;);</span>
+<span class="nc" id="L324">                            List&lt;Lobby&gt; filteredLobbyList = server.getLobbyList().stream()</span>
+<span class="nc bnc" id="L325" title="All 2 branches missed.">                                    .filter(l -&gt; l.getGameMode() == Lobby.GameMode.SAVEDGAME)</span>
+<span class="nc" id="L326">                                    .filter(l -&gt; l.getLobbyUID().equals(server.getUserGame().get(nickname)))</span>
+<span class="nc" id="L327">                                    .toList();</span>
+<span class="nc bnc" id="L328" title="All 2 branches missed.">                            if (filteredLobbyList.size() &gt; 1) {</span>
+<span class="nc" id="L329">                                throw new RuntimeException(&quot;UID not unique&quot;);</span>
+<span class="nc bnc" id="L330" title="All 2 branches missed.">                            } else if (filteredLobbyList.size() == 1) {</span>
+<span class="nc" id="L331">                                Lobby lobby = filteredLobbyList.get(0);</span>
+<span class="nc" id="L332">                                sendInfoMessage(&quot;Game &quot; + lobby.getLobbyUID() + &quot; started by &quot; + lobby.getLobbyPlayers().get(0).nickname);</span>
+<span class="nc" id="L333">                                sendInfoMessage(&quot;Would you like to join? [y/n]&quot;);</span>
+<span class="nc" id="L334">                                oldGameFound();</span>
+<span class="nc" id="L335">                                System.out.println(&quot;Saved game for &quot; + nickname + &quot; found&quot;);</span>
 
-<span class="nc" id="L324">                                action = getAction();</span>
+<span class="nc" id="L337">                                action = getAction();</span>
 
-<span class="nc bnc" id="L326" title="All 8 branches missed.">                                while ((action.getActionType()!= Action.ActionType.INFO)||(action.getActionType()== Action.ActionType.INFO&amp;&amp;(!action.getInfo().equalsIgnoreCase(&quot;Y&quot;)&amp;&amp;!action.getInfo().equalsIgnoreCase(&quot;N&quot;)))){</span>
-<span class="nc bnc" id="L327" title="All 2 branches missed.">                                    if(action.getActionType() == Action.ActionType.INFO) {</span>
-<span class="nc" id="L328">                                        sendDeny(&quot;Type the right key...&quot;);</span>
-<span class="nc bnc" id="L329" title="All 2 branches missed.">                                    }else if(action.getActionType()== Action.ActionType.CHAT){</span>
-<span class="nc" id="L330">                                        sendDeny(&quot;The chat is not active now&quot;);</span>
-<span class="nc bnc" id="L331" title="All 2 branches missed.">                                    }else if(action.getActionType()== Action.ActionType.PICKTILES){</span>
-<span class="nc" id="L332">                                        sendDeny(&quot;Cannot pick tiles here, game not started&quot;);</span>
-<span class="nc bnc" id="L333" title="All 2 branches missed.">                                    }else if(action.getActionType()== Action.ActionType.SELECTCOLUMN){</span>
-<span class="nc" id="L334">                                        sendDeny(&quot;Cannot select column here, game not started&quot;);</span>
+<span class="nc bnc" id="L339" title="All 8 branches missed.">                                while ((action.getActionType()!= Action.ActionType.INFO)||(action.getActionType()== Action.ActionType.INFO&amp;&amp;(!action.getInfo().equalsIgnoreCase(&quot;Y&quot;)&amp;&amp;!action.getInfo().equalsIgnoreCase(&quot;N&quot;)))){</span>
+<span class="nc bnc" id="L340" title="All 2 branches missed.">                                    if(action.getActionType() == Action.ActionType.INFO) {</span>
+<span class="nc" id="L341">                                        sendDeny(&quot;Type the right key...&quot;);</span>
+<span class="nc bnc" id="L342" title="All 2 branches missed.">                                    }else if(action.getActionType()== Action.ActionType.CHAT){</span>
+<span class="nc" id="L343">                                        sendDeny(&quot;The chat is not active now&quot;);</span>
+<span class="nc bnc" id="L344" title="All 2 branches missed.">                                    }else if(action.getActionType()== Action.ActionType.PICKTILES){</span>
+<span class="nc" id="L345">                                        sendDeny(&quot;Cannot pick tiles here, game not started&quot;);</span>
+<span class="nc bnc" id="L346" title="All 2 branches missed.">                                    }else if(action.getActionType()== Action.ActionType.SELECTCOLUMN){</span>
+<span class="nc" id="L347">                                        sendDeny(&quot;Cannot select column here, game not started&quot;);</span>
                                     }
-<span class="nc bnc" id="L336" title="All 2 branches missed.">                                    else if(action.getActionType() == Action.ActionType.QUIT){</span>
-<span class="nc bnc" id="L337" title="All 2 branches missed.">                                        if(!isRMI) {</span>
-<span class="nc" id="L338">                                            server.getConnectedClients().get(this).setElapsed();</span>
-<span class="nc" id="L339">                                            sendShutdown();</span>
-<span class="nc" id="L340">                                            shutdown();</span>
+<span class="nc bnc" id="L349" title="All 2 branches missed.">                                    else if(action.getActionType() == Action.ActionType.QUIT){</span>
+<span class="nc bnc" id="L350" title="All 2 branches missed.">                                        if(!isRMI) {</span>
+<span class="nc" id="L351">                                            server.getConnectedClients().get(this).setElapsed();</span>
+<span class="nc" id="L352">                                            sendShutdown();</span>
+<span class="nc" id="L353">                                            shutdown();</span>
                                         }else{
-<span class="nc" id="L342">                                            sendShutdown();</span>
-<span class="nc" id="L343">                                            shutdown();</span>
+<span class="nc" id="L355">                                            sendShutdown();</span>
+<span class="nc" id="L356">                                            shutdown();</span>
                                         }
-<span class="nc bnc" id="L345" title="All 2 branches missed.">                                    }else if(action.getActionType() == Action.ActionType.PING){</span>
-<span class="nc" id="L346">                                        sendPong(action.getInfo());</span>
-<span class="nc bnc" id="L347" title="All 2 branches missed.">                                    } else if (action.getActionType() == Action.ActionType.PONG){</span>
-<span class="nc" id="L348">                                        addPong();</span>
+<span class="nc bnc" id="L358" title="All 2 branches missed.">                                    }else if(action.getActionType() == Action.ActionType.PING){</span>
+<span class="nc" id="L359">                                        sendPong(action.getInfo());</span>
+<span class="nc bnc" id="L360" title="All 2 branches missed.">                                    } else if (action.getActionType() == Action.ActionType.PONG){</span>
+<span class="nc" id="L361">                                        addPong();</span>
                                     }
 
-<span class="nc" id="L351">                                    action = getAction();</span>
+<span class="nc" id="L364">                                    action = getAction();</span>
                                 }
-<span class="nc" id="L353">                                message = action.getInfo();</span>
-<span class="nc bnc" id="L354" title="All 2 branches missed.">                                if (message.equalsIgnoreCase(&quot;Y&quot;)) {</span>
-<span class="nc" id="L355">                                    lobby.broadcastMessage(nickname + &quot; joined&quot;);</span>
-<span class="nc" id="L356">                                    System.out.println(nickname + &quot; joined game &quot; + lobby.getLobbyUID());</span>
-<span class="nc" id="L357">                                    this.isPlaying=true;</span>
-<span class="nc" id="L358">                                    filteredLobbyList.get(0).acceptPlayer(this);</span>
-<span class="nc" id="L359">                                    lobbyCreated=true;</span>
+<span class="nc" id="L366">                                message = action.getInfo();</span>
+<span class="nc bnc" id="L367" title="All 2 branches missed.">                                if (message.equalsIgnoreCase(&quot;Y&quot;)) {</span>
+<span class="nc" id="L368">                                    lobby.broadcastMessage(nickname + &quot; joined&quot;);</span>
+<span class="nc" id="L369">                                    System.out.println(nickname + &quot; joined game &quot; + lobby.getLobbyUID());</span>
+<span class="nc" id="L370">                                    this.isPlaying=true;</span>
+<span class="nc" id="L371">                                    filteredLobbyList.get(0).acceptPlayer(this);</span>
+<span class="nc" id="L372">                                    lobbyCreated=true;</span>
                                 } else {
-<span class="nc" id="L361">                                    System.out.println(nickname + &quot; rejected invitation from &quot; + lobby.getLobbyUID());</span>
-<span class="nc" id="L362">                                    lobby.broadcastMessage(nickname + &quot; has rejected the invitation.&quot;);</span>
-<span class="nc" id="L363">                                    lobby.broadcastMessage(&quot;Game is closing...&quot;);</span>
-<span class="nc" id="L364">                                    server.killLobby(lobby.getLobbyUID());</span>
+<span class="nc" id="L374">                                    System.out.println(nickname + &quot; rejected invitation from &quot; + lobby.getLobbyUID());</span>
+<span class="nc" id="L375">                                    lobby.broadcastMessage(nickname + &quot; has rejected the invitation.&quot;);</span>
+<span class="nc" id="L376">                                    lobby.broadcastMessage(&quot;Game is closing...&quot;);</span>
+<span class="nc" id="L377">                                    server.killLobby(lobby.getLobbyUID());</span>
                                     //System.out.println(&quot;Lobby &quot; + lobby.getLobbyUID() + &quot; killed.&quot;);
                                 }
-<span class="nc" id="L367">                            } else {</span>
-<span class="nc" id="L368">                                sendInfoMessage(&quot;No lobby was found.&quot;);</span>
-<span class="nc" id="L369">                                oldGameNotFound();</span>
-<span class="nc" id="L370">                                sendMenu();</span>
+<span class="nc" id="L380">                            } else {</span>
+<span class="nc" id="L381">                                sendInfoMessage(&quot;No lobby was found.&quot;);</span>
+<span class="nc" id="L382">                                oldGameNotFound();</span>
+<span class="nc" id="L383">                                sendMenu();</span>
                             }
 
-<span class="nc" id="L373">                        }</span>
+<span class="nc" id="L386">                        }</span>
                         case &quot;0&quot; -&gt; {
-<span class="nc bnc" id="L375" title="All 2 branches missed.">                            if(!isRMI) {</span>
-<span class="nc" id="L376">                                server.getConnectedClients().get(this).setElapsed();</span>
+<span class="nc bnc" id="L388" title="All 2 branches missed.">                            if(!isRMI) {</span>
+<span class="nc" id="L389">                                server.getConnectedClients().get(this).setElapsed();</span>
                             }
-<span class="nc" id="L378">                            System.out.println(nickname + &quot; disconnected&quot;);</span>
-<span class="nc" id="L379">                            sendShutdown();</span>
-<span class="nc" id="L380">                            shutdown();</span>
+<span class="nc" id="L391">                            System.out.println(nickname + &quot; disconnected&quot;);</span>
+<span class="nc" id="L392">                            sendShutdown();</span>
+<span class="nc" id="L393">                            shutdown();</span>
                         }
-<span class="nc" id="L382">                    }</span>
+<span class="nc" id="L395">                    }</span>
 
 
                 }else{
-<span class="nc" id="L386">                    Lobby l = server.lobbyOf(this);</span>
+<span class="nc" id="L399">                    Lobby l = server.lobbyOf(this);</span>
 
-<span class="nc bnc" id="L388" title="All 2 branches missed.">                    if(l!=null){</span>
-<span class="nc" id="L389">                        synchronized (l.actions){</span>
-<span class="nc bnc" id="L390" title="All 2 branches missed.">                            if(action.getActionType()== Action.ActionType.PING){</span>
-<span class="nc" id="L391">                                sendPong(action.getInfo());</span>
+<span class="nc bnc" id="L401" title="All 2 branches missed.">                    if(l!=null){</span>
+<span class="nc" id="L402">                        synchronized (l.actions){</span>
+<span class="nc bnc" id="L403" title="All 2 branches missed.">                            if(action.getActionType()== Action.ActionType.PING){</span>
+<span class="nc" id="L404">                                sendPong(action.getInfo());</span>
                             }
-<span class="nc bnc" id="L393" title="All 2 branches missed.">                            else if (action.getActionType() == Action.ActionType.PONG) {</span>
-<span class="nc" id="L394">                                addPong();</span>
+<span class="nc bnc" id="L406" title="All 2 branches missed.">                            else if (action.getActionType() == Action.ActionType.PONG) {</span>
+<span class="nc" id="L407">                                addPong();</span>
                             }
-<span class="nc bnc" id="L396" title="All 2 branches missed.">                            else if(action.getActionType() == Action.ActionType.QUIT){</span>
-<span class="nc bnc" id="L397" title="All 2 branches missed.">                                if(!isRMI){</span>
-<span class="nc" id="L398">                                    server.getConnectedClients().get(this).setElapsed();</span>
-<span class="nc" id="L399">                                    server.getConnectedClients().remove(this);</span>
-<span class="nc" id="L400">                                    System.out.println(ANSI.RED+nickname+&quot; left the game&quot;+ANSI.RESET_COLOR);</span>
+<span class="nc bnc" id="L409" title="All 2 branches missed.">                            else if(action.getActionType() == Action.ActionType.QUIT){</span>
+<span class="nc bnc" id="L410" title="All 2 branches missed.">                                if(!isRMI){</span>
+<span class="nc" id="L411">                                    server.getConnectedClients().get(this).setElapsed();</span>
+<span class="nc" id="L412">                                    server.getConnectedClients().remove(this);</span>
+<span class="nc" id="L413">                                    System.out.println(ANSI.RED+nickname+&quot; left the game&quot;+ANSI.RESET_COLOR);</span>
                                 }else{
-<span class="nc" id="L402">                                    server.getConnectedClients().get(this).setKill(true);</span>
-<span class="nc" id="L403">                                    server.getConnectedClients().remove(this);</span>
-<span class="nc" id="L404">                                    l.getLobbyPlayers().remove(this);</span>
-<span class="nc" id="L405">                                    System.out.println(ANSI.RED+nickname+&quot; left the game&quot;+ANSI.RESET_COLOR);</span>
+<span class="nc" id="L415">                                    server.getConnectedClients().get(this).setKill(true);</span>
+<span class="nc" id="L416">                                    server.getConnectedClients().remove(this);</span>
+<span class="nc" id="L417">                                    l.getLobbyPlayers().remove(this);</span>
+<span class="nc" id="L418">                                    System.out.println(ANSI.RED+nickname+&quot; left the game&quot;+ANSI.RESET_COLOR);</span>
                                 }
-<span class="nc" id="L407">                                l.notifyExit();</span>
-<span class="nc" id="L408">                                server.killLobby(l.getLobbyUID());</span>
-<span class="nc bnc" id="L409" title="All 2 branches missed.">                            }else if(action.getActionType()== Action.ActionType.REQUEST_MENU){</span>
-<span class="nc" id="L410">                                l.recieveAction(action);</span>
-<span class="nc" id="L411">                                l.actions.notifyAll();</span>
-<span class="nc" id="L412">                                isPlaying=false;</span>
-<span class="nc" id="L413">                                l.setEndWaitingPlayers();</span>
-<span class="nc" id="L414">                                lobbyCreated=false;</span>
-<span class="nc" id="L415">                                synchronized (server.getLobbyList()) {</span>
-<span class="nc" id="L416">                                    server.getLobbyList().remove(server.lobbyOf(this));</span>
-<span class="nc" id="L417">                                }</span>
+<span class="nc" id="L420">                                l.notifyExit();</span>
+<span class="nc" id="L421">                                server.killLobby(l.getLobbyUID());</span>
+<span class="nc bnc" id="L422" title="All 2 branches missed.">                            }else if(action.getActionType()== Action.ActionType.REQUEST_MENU){</span>
+<span class="nc" id="L423">                                l.recieveAction(action);</span>
+<span class="nc" id="L424">                                l.actions.notifyAll();</span>
+<span class="nc" id="L425">                                isPlaying=false;</span>
+<span class="nc" id="L426">                                l.setEndWaitingPlayers();</span>
+<span class="nc" id="L427">                                lobbyCreated=false;</span>
+<span class="nc" id="L428">                                synchronized (server.getLobbyList()) {</span>
+<span class="nc" id="L429">                                    server.getLobbyList().remove(server.lobbyOf(this));</span>
+<span class="nc" id="L430">                                }</span>
                             }else{
-<span class="nc" id="L419">                                l.recieveAction(action);</span>
-<span class="nc" id="L420">                                l.actions.notifyAll();</span>
+<span class="nc" id="L432">                                l.recieveAction(action);</span>
+<span class="nc" id="L433">                                l.actions.notifyAll();</span>
                             }
-<span class="nc" id="L422">                        }</span>
+<span class="nc" id="L435">                        }</span>
                     }
-<span class="nc" id="L424">                }</span>
+<span class="nc" id="L437">                }</span>
 
             }
-<span class="nc" id="L427">        } catch (Exception e) {</span>
-<span class="nc" id="L428">            e.printStackTrace();</span>
-<span class="nc" id="L429">        }</span>
-<span class="nc" id="L430">    }</span>
+<span class="nc" id="L440">        } catch (Exception e) {</span>
+<span class="nc" id="L441">            e.printStackTrace();</span>
+<span class="nc" id="L442">        }</span>
+<span class="nc" id="L443">    }</span>
 
     private void denyRandomGame() {
-<span class="nc bnc" id="L433" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L446" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L435">                rmiClient.denyRandomGame();</span>
+<span class="nc" id="L448">                rmiClient.denyRandomGame();</span>
             }
-<span class="nc" id="L437">            catch (Exception e){</span>
-<span class="nc" id="L438">                e.printStackTrace();</span>
-<span class="nc" id="L439">            }</span>
+<span class="nc" id="L450">            catch (Exception e){</span>
+<span class="nc" id="L451">                e.printStackTrace();</span>
+<span class="nc" id="L452">            }</span>
         }
         else {
-<span class="nc" id="L442">            Response r = new Response(Response.ResponseType.RANDOM_GAME_NOT_FOUND, null, null, null);</span>
-<span class="nc" id="L443">            Gson gson = new Gson();</span>
+<span class="nc" id="L455">            Response r = new Response(Response.ResponseType.RANDOM_GAME_NOT_FOUND, null, null, null);</span>
+<span class="nc" id="L456">            Gson gson = new Gson();</span>
             try {
-<span class="nc" id="L445">                out.println(gson.toJson(r));</span>
-<span class="nc" id="L446">            } catch (Exception e) {</span>
-<span class="nc" id="L447">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
-<span class="nc" id="L448">                e.printStackTrace();</span>
-<span class="nc" id="L449">            }</span>
+<span class="nc" id="L458">                out.println(gson.toJson(r));</span>
+<span class="nc" id="L459">            } catch (Exception e) {</span>
+<span class="nc" id="L460">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
+<span class="nc" id="L461">                e.printStackTrace();</span>
+<span class="nc" id="L462">            }</span>
         }
-<span class="nc" id="L451">    }</span>
+<span class="nc" id="L464">    }</span>
 
     private void oldGameNotFound() {
-<span class="nc bnc" id="L454" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L467" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L456">                rmiClient.oldGameNotFound();</span>
+<span class="nc" id="L469">                rmiClient.oldGameNotFound();</span>
             }
-<span class="nc" id="L458">            catch (Exception e){</span>
-<span class="nc" id="L459">                e.printStackTrace();</span>
-<span class="nc" id="L460">            }</span>
+<span class="nc" id="L471">            catch (Exception e){</span>
+<span class="nc" id="L472">                e.printStackTrace();</span>
+<span class="nc" id="L473">            }</span>
         }
         else {
-<span class="nc" id="L463">            Response r = new Response(Response.ResponseType.OLD_GAME_NOT_FOUND, null, null, null);</span>
-<span class="nc" id="L464">            Gson gson = new Gson();</span>
+<span class="nc" id="L476">            Response r = new Response(Response.ResponseType.OLD_GAME_NOT_FOUND, null, null, null);</span>
+<span class="nc" id="L477">            Gson gson = new Gson();</span>
             try {
-<span class="nc" id="L466">                out.println(gson.toJson(r));</span>
-<span class="nc" id="L467">            } catch (Exception e) {</span>
-<span class="nc" id="L468">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
-<span class="nc" id="L469">                e.printStackTrace();</span>
-<span class="nc" id="L470">            }</span>
+<span class="nc" id="L479">                out.println(gson.toJson(r));</span>
+<span class="nc" id="L480">            } catch (Exception e) {</span>
+<span class="nc" id="L481">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
+<span class="nc" id="L482">                e.printStackTrace();</span>
+<span class="nc" id="L483">            }</span>
         }
-<span class="nc" id="L472">    }</span>
+<span class="nc" id="L485">    }</span>
 
     private synchronized void oldGameFound() {
-<span class="nc bnc" id="L475" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L488" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L477">                rmiClient.foundOldGame();</span>
+<span class="nc" id="L490">                rmiClient.foundOldGame();</span>
             }
-<span class="nc" id="L479">            catch (Exception e){</span>
-<span class="nc" id="L480">                e.printStackTrace();</span>
-<span class="nc" id="L481">            }</span>
+<span class="nc" id="L492">            catch (Exception e){</span>
+<span class="nc" id="L493">                e.printStackTrace();</span>
+<span class="nc" id="L494">            }</span>
         }
         else {
-<span class="nc" id="L484">            Response r = new Response(Response.ResponseType.FOUND_OLD_GAME, null, null, null);</span>
-<span class="nc" id="L485">            Gson gson = new Gson();</span>
+<span class="nc" id="L497">            Response r = new Response(Response.ResponseType.FOUND_OLD_GAME, null, null, null);</span>
+<span class="nc" id="L498">            Gson gson = new Gson();</span>
             try {
-<span class="nc" id="L487">                out.println(gson.toJson(r));</span>
-<span class="nc" id="L488">            } catch (Exception e) {</span>
-<span class="nc" id="L489">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
-<span class="nc" id="L490">                e.printStackTrace();</span>
-<span class="nc" id="L491">            }</span>
+<span class="nc" id="L500">                out.println(gson.toJson(r));</span>
+<span class="nc" id="L501">            } catch (Exception e) {</span>
+<span class="nc" id="L502">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
+<span class="nc" id="L503">                e.printStackTrace();</span>
+<span class="nc" id="L504">            }</span>
         }
-<span class="nc" id="L493">    }</span>
+<span class="nc" id="L506">    }</span>
 
     public synchronized void denyLoadGame() {
-<span class="nc bnc" id="L496" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L509" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L498">                rmiClient.denyLoadGame();</span>
+<span class="nc" id="L511">                rmiClient.denyLoadGame();</span>
             }
-<span class="nc" id="L500">            catch (Exception e){</span>
-<span class="nc" id="L501">                e.printStackTrace();</span>
-<span class="nc" id="L502">            }</span>
+<span class="nc" id="L513">            catch (Exception e){</span>
+<span class="nc" id="L514">                e.printStackTrace();</span>
+<span class="nc" id="L515">            }</span>
         }
         else {
-<span class="nc" id="L505">            Response r = new Response(Response.ResponseType.DENY_LOAD_GAME, null, null, null);</span>
-<span class="nc" id="L506">            Gson gson = new Gson();</span>
+<span class="nc" id="L518">            Response r = new Response(Response.ResponseType.DENY_LOAD_GAME, null, null, null);</span>
+<span class="nc" id="L519">            Gson gson = new Gson();</span>
             try {
-<span class="nc" id="L508">                out.println(gson.toJson(r));</span>
-<span class="nc" id="L509">            } catch (Exception e) {</span>
-<span class="nc" id="L510">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
-<span class="nc" id="L511">                e.printStackTrace();</span>
-<span class="nc" id="L512">            }</span>
+<span class="nc" id="L521">                out.println(gson.toJson(r));</span>
+<span class="nc" id="L522">            } catch (Exception e) {</span>
+<span class="nc" id="L523">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
+<span class="nc" id="L524">                e.printStackTrace();</span>
+<span class="nc" id="L525">            }</span>
         }
-<span class="nc" id="L514">    }</span>
+<span class="nc" id="L527">    }</span>
 
     public String getNickname() {
-<span class="fc" id="L517">        return nickname;</span>
+<span class="fc" id="L530">        return nickname;</span>
     }
 
     public String getColor() {
-<span class="fc" id="L521">        return color;</span>
+<span class="fc" id="L534">        return color;</span>
     }
     public boolean isRMI(){
-<span class="nc" id="L524">        return this.isRMI;</span>
+<span class="nc" id="L537">        return this.isRMI;</span>
     }
 
     public void setColor(String color) {
-<span class="fc" id="L528">        this.color = color;</span>
-<span class="fc" id="L529">    }</span>
+<span class="fc" id="L541">        this.color = color;</span>
+<span class="fc" id="L542">    }</span>
     public synchronized boolean isPlaying() {
-<span class="nc" id="L531">        return isPlaying;</span>
+<span class="nc" id="L544">        return isPlaying;</span>
     }
 
     public synchronized void setPlaying(boolean playing) {
-<span class="nc" id="L535">        isPlaying = playing;</span>
-<span class="nc" id="L536">    }</span>
+<span class="nc" id="L548">        isPlaying = playing;</span>
+<span class="nc" id="L549">    }</span>
     public synchronized void sendInfoMessage(String message) {
-<span class="nc bnc" id="L538" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L551" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L540">                rmiClient.infoMessage(message);</span>
+<span class="nc" id="L553">                rmiClient.infoMessage(message);</span>
             }
-<span class="nc" id="L542">            catch (Exception e){</span>
-<span class="nc" id="L543">                e.printStackTrace();</span>
-<span class="nc" id="L544">            }</span>
+<span class="nc" id="L555">            catch (Exception e){</span>
+<span class="nc" id="L556">                e.printStackTrace();</span>
+<span class="nc" id="L557">            }</span>
         }
         else {
-<span class="nc" id="L547">            Gson gson = new Gson();</span>
+<span class="nc" id="L560">            Gson gson = new Gson();</span>
             try {
-<span class="nc" id="L549">                out.println(gson.toJson(new Response(Response.ResponseType.INFO, null, null, message)));</span>
-<span class="nc" id="L550">            } catch (Exception e) {</span>
-<span class="nc" id="L551">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
-<span class="nc" id="L552">                e.printStackTrace();</span>
-<span class="nc" id="L553">            }</span>
+<span class="nc" id="L562">                out.println(gson.toJson(new Response(Response.ResponseType.INFO, null, null, message)));</span>
+<span class="nc" id="L563">            } catch (Exception e) {</span>
+<span class="nc" id="L564">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
+<span class="nc" id="L565">                e.printStackTrace();</span>
+<span class="nc" id="L566">            }</span>
         }
-<span class="nc" id="L555">    }</span>
+<span class="nc" id="L568">    }</span>
 
+    /**
+     * method to send the message passed as a parameter
+     * @param chatMessage
+     */
     public synchronized void sendChatMessage(ChatMessage chatMessage){
-<span class="nc bnc" id="L558" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L575" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-                //todo handling auto-send rmi
-<span class="nc" id="L561">                rmiClient.chatMessage(chatMessage);</span>
+<span class="nc" id="L577">                rmiClient.chatMessage(chatMessage);</span>
             }
-<span class="nc" id="L563">            catch (Exception e){</span>
-<span class="nc" id="L564">                e.printStackTrace();</span>
-<span class="nc" id="L565">            }</span>
+<span class="nc" id="L579">            catch (Exception e){</span>
+<span class="nc" id="L580">                e.printStackTrace();</span>
+<span class="nc" id="L581">            }</span>
         }
         else {
-<span class="nc" id="L568">            Response r = new Response(Response.ResponseType.CHATMESSAGE, chatMessage, null, null);</span>
-<span class="nc" id="L569">            Gson gson = new Gson();</span>
+<span class="nc" id="L584">            Response r = new Response(Response.ResponseType.CHATMESSAGE, chatMessage, null, null);</span>
+<span class="nc" id="L585">            Gson gson = new Gson();</span>
             try {
-<span class="nc" id="L571">                out.println(gson.toJson(r));</span>
-<span class="nc" id="L572">            } catch (Exception e) {</span>
-<span class="nc" id="L573">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
-<span class="nc" id="L574">                e.printStackTrace();</span>
-<span class="nc" id="L575">            }</span>
+<span class="nc" id="L587">                out.println(gson.toJson(r));</span>
+<span class="nc" id="L588">            } catch (Exception e) {</span>
+<span class="nc" id="L589">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
+<span class="nc" id="L590">                e.printStackTrace();</span>
+<span class="nc" id="L591">            }</span>
         }
-<span class="nc" id="L577">    }</span>
-    
+<span class="nc" id="L593">    }</span>
+
+    /**
+     * method used to notify the client that the nickname has been accepted
+     */
     public synchronized void notifyNicknameAccept(){
-<span class="nc bnc" id="L580" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L599" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L582">                rmiClient.nicknameAccepted();</span>
+<span class="nc" id="L601">                rmiClient.nicknameAccepted();</span>
             }
-<span class="nc" id="L584">            catch (Exception e){</span>
-<span class="nc" id="L585">                e.printStackTrace();</span>
-<span class="nc" id="L586">            }</span>
+<span class="nc" id="L603">            catch (Exception e){</span>
+<span class="nc" id="L604">                e.printStackTrace();</span>
+<span class="nc" id="L605">            }</span>
         }
         else {
-<span class="nc" id="L589">            Response r = new Response(Response.ResponseType.NICKNAME_ACCEPTED, new ChatMessage(nickname, &quot;&quot;,&quot;&quot;), null, null);</span>
-<span class="nc" id="L590">            Gson gson = new Gson();</span>
+<span class="nc" id="L608">            Response r = new Response(Response.ResponseType.NICKNAME_ACCEPTED, new ChatMessage(nickname, &quot;&quot;,&quot;&quot;), null, null);</span>
+<span class="nc" id="L609">            Gson gson = new Gson();</span>
             try {
-<span class="nc" id="L592">                out.println(gson.toJson(r));</span>
-<span class="nc" id="L593">            } catch (Exception e) {</span>
-<span class="nc" id="L594">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
-<span class="nc" id="L595">                e.printStackTrace();</span>
-<span class="nc" id="L596">            }</span>
+<span class="nc" id="L611">                out.println(gson.toJson(r));</span>
+<span class="nc" id="L612">            } catch (Exception e) {</span>
+<span class="nc" id="L613">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
+<span class="nc" id="L614">                e.printStackTrace();</span>
+<span class="nc" id="L615">            }</span>
         }
-<span class="nc" id="L598">    }</span>
+<span class="nc" id="L617">    }</span>
 
+    /**
+     * method used to notify the client that the nickname has been denied
+     * @param message
+     */
     public synchronized void notifyNicknameDeny(String message){
-<span class="nc bnc" id="L601" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L624" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L603">                rmiClient.nicknameDenied(message);</span>
+<span class="nc" id="L626">                rmiClient.nicknameDenied(message);</span>
             }
-<span class="nc" id="L605">            catch (Exception e){</span>
-<span class="nc" id="L606">                e.printStackTrace();</span>
-<span class="nc" id="L607">            }</span>
+<span class="nc" id="L628">            catch (Exception e){</span>
+<span class="nc" id="L629">                e.printStackTrace();</span>
+<span class="nc" id="L630">            }</span>
         }
         else {
-<span class="nc" id="L610">            sendDeny(message);</span>
-<span class="nc" id="L611">            Response r = new Response(Response.ResponseType.NICKNAME_DENIED, new ChatMessage(nickname, &quot;&quot;,&quot;&quot;), null, message);</span>
-<span class="nc" id="L612">            Gson gson = new Gson();</span>
+<span class="nc" id="L633">            sendDeny(message);</span>
+<span class="nc" id="L634">            Response r = new Response(Response.ResponseType.NICKNAME_DENIED, new ChatMessage(nickname, &quot;&quot;,&quot;&quot;), null, message);</span>
+<span class="nc" id="L635">            Gson gson = new Gson();</span>
             try {
-<span class="nc" id="L614">                out.println(gson.toJson(r));</span>
-<span class="nc" id="L615">            } catch (Exception e) {</span>
-<span class="nc" id="L616">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
-<span class="nc" id="L617">                e.printStackTrace();</span>
-<span class="nc" id="L618">            }</span>
+<span class="nc" id="L637">                out.println(gson.toJson(r));</span>
+<span class="nc" id="L638">            } catch (Exception e) {</span>
+<span class="nc" id="L639">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
+<span class="nc" id="L640">                e.printStackTrace();</span>
+<span class="nc" id="L641">            }</span>
         }
-<span class="nc" id="L620">    }</span>
+<span class="nc" id="L643">    }</span>
 
+    /**
+     * method used to notify the client that the lobby has been created
+     * @param playersNumber
+     */
     public synchronized void notifyLobbyCreated(int playersNumber) {
-<span class="nc bnc" id="L623" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L650" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L625">                rmiClient.notifyLobbyCreated(Integer.toString(playersNumber));</span>
+<span class="nc" id="L652">                rmiClient.notifyLobbyCreated(Integer.toString(playersNumber));</span>
             }
-<span class="nc" id="L627">            catch (Exception e){</span>
-<span class="nc" id="L628">                e.printStackTrace();</span>
-<span class="nc" id="L629">            }</span>
+<span class="nc" id="L654">            catch (Exception e){</span>
+<span class="nc" id="L655">                e.printStackTrace();</span>
+<span class="nc" id="L656">            }</span>
         }
         else {
-<span class="nc" id="L632">            Gson gson = new Gson();</span>
+<span class="nc" id="L659">            Gson gson = new Gson();</span>
             try {
-<span class="nc" id="L634">                out.println(gson.toJson(new Response(Response.ResponseType.LOBBY_CREATED, null, null, Integer.toString(playersNumber))));</span>
-<span class="nc" id="L635">            } catch (Exception e) {</span>
-<span class="nc" id="L636">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
-<span class="nc" id="L637">                e.printStackTrace();</span>
-<span class="nc" id="L638">            }</span>
+<span class="nc" id="L661">                out.println(gson.toJson(new Response(Response.ResponseType.LOBBY_CREATED, null, null, Integer.toString(playersNumber))));</span>
+<span class="nc" id="L662">            } catch (Exception e) {</span>
+<span class="nc" id="L663">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
+<span class="nc" id="L664">                e.printStackTrace();</span>
+<span class="nc" id="L665">            }</span>
         }
-<span class="nc" id="L640">    }</span>
+<span class="nc" id="L667">    }</span>
+
+    /**
+     * method used to notify the client that the lobby has been joined
+     * @param waitPlayerStatus
+     */
     public synchronized void notifyLobbyJoined(String waitPlayerStatus){
-<span class="nc bnc" id="L642" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L674" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L644">                rmiClient.notifyGameJoined();</span>
+<span class="nc" id="L676">                rmiClient.notifyGameJoined();</span>
             }
-<span class="nc" id="L646">            catch (Exception e){</span>
-<span class="nc" id="L647">                e.printStackTrace();</span>
-<span class="nc" id="L648">            }</span>
+<span class="nc" id="L678">            catch (Exception e){</span>
+<span class="nc" id="L679">                e.printStackTrace();</span>
+<span class="nc" id="L680">            }</span>
         }
         else {
-<span class="nc" id="L651">            Gson gson = new Gson();</span>
+<span class="nc" id="L683">            Gson gson = new Gson();</span>
             try {
-<span class="nc" id="L653">                out.println(gson.toJson(new Response(Response.ResponseType.LOBBY_JOINED, null, null, waitPlayerStatus)));</span>
-<span class="nc" id="L654">            } catch (Exception e) {</span>
-<span class="nc" id="L655">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
-<span class="nc" id="L656">                e.printStackTrace();</span>
-<span class="nc" id="L657">            }</span>
+<span class="nc" id="L685">                out.println(gson.toJson(new Response(Response.ResponseType.LOBBY_JOINED, null, null, waitPlayerStatus)));</span>
+<span class="nc" id="L686">            } catch (Exception e) {</span>
+<span class="nc" id="L687">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
+<span class="nc" id="L688">                e.printStackTrace();</span>
+<span class="nc" id="L689">            }</span>
         }
-<span class="nc" id="L659">    }</span>
+<span class="nc" id="L691">    }</span>
 
+    /**
+     * method used to notify the client that the lobby has started
+     */
     public synchronized void notifyGameStarted() {
-<span class="nc bnc" id="L662" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L697" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L664">                rmiClient.notifyGameStarted();</span>
+<span class="nc" id="L699">                rmiClient.notifyGameStarted();</span>
             }
-<span class="nc" id="L666">            catch (Exception e){</span>
-<span class="nc" id="L667">                e.printStackTrace();</span>
-<span class="nc" id="L668">            }</span>
+<span class="nc" id="L701">            catch (Exception e){</span>
+<span class="nc" id="L702">                e.printStackTrace();</span>
+<span class="nc" id="L703">            }</span>
         }
         else {
-<span class="nc" id="L671">            Gson gson = new Gson();</span>
+<span class="nc" id="L706">            Gson gson = new Gson();</span>
             try {
-<span class="nc" id="L673">                out.println(gson.toJson(new Response(Response.ResponseType.GAME_STARTED, null, null, null)));</span>
-<span class="nc" id="L674">            } catch (Exception e) {</span>
-<span class="nc" id="L675">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
-<span class="nc" id="L676">                e.printStackTrace();</span>
-<span class="nc" id="L677">            }</span>
+<span class="nc" id="L708">                out.println(gson.toJson(new Response(Response.ResponseType.GAME_STARTED, null, null, null)));</span>
+<span class="nc" id="L709">            } catch (Exception e) {</span>
+<span class="nc" id="L710">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
+<span class="nc" id="L711">                e.printStackTrace();</span>
+<span class="nc" id="L712">            }</span>
         }
-<span class="nc" id="L679">    }</span>
+<span class="nc" id="L714">    }</span>
 
+    /**
+     *
+     * @param message
+     */
     public synchronized void sendDeny(String message) {
-<span class="nc bnc" id="L682" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L721" title="All 2 branches missed.">        if(isRMI){</span>
             try {
-<span class="nc" id="L684">                rmiClient.denied(message);</span>
+<span class="nc" id="L723">                rmiClient.denied(message);</span>
             }
-<span class="nc" id="L686">            catch (Exception e){</span>
-<span class="nc" id="L687">                e.printStackTrace();</span>
-<span class="nc" id="L688">            }</span>
+<span class="nc" id="L725">            catch (Exception e){</span>
+<span class="nc" id="L726">                e.printStackTrace();</span>
+<span class="nc" id="L727">            }</span>
         }
         else {
-<span class="nc" id="L691">            Gson gson = new Gson();</span>
+<span class="nc" id="L730">            Gson gson = new Gson();</span>
             try {
-<span class="nc" id="L693">                out.println(gson.toJson(new Response(Response.ResponseType.DENIED, null, null, message)));</span>
-<span class="nc" id="L694">            } catch (Exception e) {</span>
-<span class="nc" id="L695">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
-<span class="nc" id="L696">                e.printStackTrace();</span>
-<span class="nc" id="L697">            }</span>
+<span class="nc" id="L732">                out.println(gson.toJson(new Response(Response.ResponseType.DENIED, null, null, message)));</span>
+<span class="nc" id="L733">            } catch (Exception e) {</span>
+<span class="nc" id="L734">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
+<span class="nc" id="L735">                e.printStackTrace();</span>
+<span class="nc" id="L736">            }</span>
         }
-<span class="nc" id="L699">    }</span>
+<span class="nc" id="L738">    }</span>
 
+    /**
+     *
+     */
     public void addPong(){
-<span class="nc" id="L702">        synchronized (pongResponses){</span>
-<span class="nc" id="L703">            pongResponses.add(new PingObject(false));</span>
-<span class="nc" id="L704">            pongResponses.notifyAll();</span>
-<span class="nc" id="L705">        }</span>
-<span class="nc" id="L706">    }</span>
+<span class="nc" id="L744">        synchronized (pongResponses){</span>
+<span class="nc" id="L745">            pongResponses.add(new PingObject(false));</span>
+<span class="nc" id="L746">            pongResponses.notifyAll();</span>
+<span class="nc" id="L747">        }</span>
+<span class="nc" id="L748">    }</span>
 
+    /**
+     *
+     * @param count
+     */
     public synchronized  void sendPong(String count){
-<span class="nc" id="L709">        Gson gson = new Gson();</span>
+<span class="nc" id="L755">        Gson gson = new Gson();</span>
         try {
-<span class="nc" id="L711">            out.println(gson.toJson(new Response(Response.ResponseType.PONG, null ,null,count)));</span>
-<span class="nc" id="L712">        } catch (Exception e) {</span>
-<span class="nc" id="L713">            System.out.println(&quot;Error occurred while sending a pong: &quot;);</span>
-<span class="nc" id="L714">            e.printStackTrace();</span>
-<span class="nc" id="L715">        }</span>
-<span class="nc" id="L716">    }</span>
+<span class="nc" id="L757">            out.println(gson.toJson(new Response(Response.ResponseType.PONG, null ,null,count)));</span>
+<span class="nc" id="L758">        } catch (Exception e) {</span>
+<span class="nc" id="L759">            System.out.println(&quot;Error occurred while sending a pong: &quot;);</span>
+<span class="nc" id="L760">            e.printStackTrace();</span>
+<span class="nc" id="L761">        }</span>
+<span class="nc" id="L762">    }</span>
 
+    /**
+     *
+     * @param message
+     */
     public synchronized void sendAccept(String message) {
-<span class="nc bnc" id="L719" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L769" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L721">                rmiClient.valid(message);</span>
+<span class="nc" id="L771">                rmiClient.valid(message);</span>
             }
-<span class="nc" id="L723">            catch (Exception e){</span>
-<span class="nc" id="L724">                e.printStackTrace();</span>
-<span class="nc" id="L725">            }</span>
+<span class="nc" id="L773">            catch (Exception e){</span>
+<span class="nc" id="L774">                e.printStackTrace();</span>
+<span class="nc" id="L775">            }</span>
         }
         else {
-<span class="nc" id="L728">            Gson gson = new Gson();</span>
+<span class="nc" id="L778">            Gson gson = new Gson();</span>
             try {
-<span class="nc" id="L730">                out.println(gson.toJson(new Response(Response.ResponseType.VALID, new ChatMessage(this.nickname, &quot;&quot;,&quot;&quot;), null, message)));</span>
-<span class="nc" id="L731">            } catch (Exception e) {</span>
-<span class="nc" id="L732">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
-<span class="nc" id="L733">                e.printStackTrace();</span>
-<span class="nc" id="L734">            }</span>
+<span class="nc" id="L780">                out.println(gson.toJson(new Response(Response.ResponseType.VALID, new ChatMessage(this.nickname, &quot;&quot;,&quot;&quot;), null, message)));</span>
+<span class="nc" id="L781">            } catch (Exception e) {</span>
+<span class="nc" id="L782">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
+<span class="nc" id="L783">                e.printStackTrace();</span>
+<span class="nc" id="L784">            }</span>
         }
-<span class="nc" id="L736">    }</span>
+<span class="nc" id="L786">    }</span>
 
+    /**
+     * method for notifying the client that a new one has joined the lobby
+     * @param waitStatus
+     */
     public synchronized void notifyNewJoin(String waitStatus) {
-<span class="nc bnc" id="L739" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L793" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L741">                rmiClient.notifyNewJoin();</span>
+<span class="nc" id="L795">                rmiClient.notifyNewJoin();</span>
             }
-<span class="nc" id="L743">            catch (Exception e){</span>
-<span class="nc" id="L744">                e.printStackTrace();</span>
-<span class="nc" id="L745">            }</span>
+<span class="nc" id="L797">            catch (Exception e){</span>
+<span class="nc" id="L798">                e.printStackTrace();</span>
+<span class="nc" id="L799">            }</span>
         }
         else {
-<span class="nc" id="L748">            Gson gson = new Gson();</span>
+<span class="nc" id="L802">            Gson gson = new Gson();</span>
             try {
-<span class="nc" id="L750">                out.println(gson.toJson(new Response(Response.ResponseType.SOMEONE_JOINED_LOBBY, null, null, waitStatus)));</span>
-<span class="nc" id="L751">            } catch (Exception e) {</span>
-<span class="nc" id="L752">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
-<span class="nc" id="L753">                e.printStackTrace();</span>
-<span class="nc" id="L754">            }</span>
+<span class="nc" id="L804">                out.println(gson.toJson(new Response(Response.ResponseType.SOMEONE_JOINED_LOBBY, null, null, waitStatus)));</span>
+<span class="nc" id="L805">            } catch (Exception e) {</span>
+<span class="nc" id="L806">                System.out.println(&quot;Error occurred while sending a message: &quot;);</span>
+<span class="nc" id="L807">                e.printStackTrace();</span>
+<span class="nc" id="L808">            }</span>
         }
-<span class="nc" id="L756">    }</span>
+<span class="nc" id="L810">    }</span>
 
+    /**
+     *
+     * @throws IOException
+     */
     public synchronized void sendPing() throws IOException{
-<span class="nc" id="L759">        Gson gson = new Gson();</span>
-<span class="nc" id="L760">        out.println(gson.toJson(new Response(Response.ResponseType.PING, null,null, &quot;ping&quot;)));</span>
-<span class="nc" id="L761">    }</span>
+<span class="nc" id="L817">        Gson gson = new Gson();</span>
+<span class="nc" id="L818">        out.println(gson.toJson(new Response(Response.ResponseType.PING, null,null, &quot;ping&quot;)));</span>
+<span class="nc" id="L819">    }</span>
 
+    /**
+     *
+     * @return
+     */
     public List&lt;PingObject&gt; getPongResponses() {
-<span class="nc" id="L764">        return pongResponses;</span>
+<span class="nc" id="L826">        return pongResponses;</span>
     }
 
 
 
     public synchronized void sendShutdown(){
-<span class="nc bnc" id="L770" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L832" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L772">                rmiClient.remoteShutdown(&quot;Closing...&quot;);</span>
+<span class="nc" id="L834">                rmiClient.remoteShutdown(&quot;Closing...&quot;);</span>
             }
-<span class="nc" id="L774">            catch (Exception e){</span>
-<span class="nc" id="L775">                e.printStackTrace();</span>
-<span class="nc" id="L776">            }</span>
+<span class="nc" id="L836">            catch (Exception e){</span>
+<span class="nc" id="L837">                e.printStackTrace();</span>
+<span class="nc" id="L838">            }</span>
         }
         else {
-<span class="nc" id="L779">            Gson gson = new Gson();</span>
-<span class="nc" id="L780">            out.println(gson.toJson(new Response(Response.ResponseType.SHUTDOWN, null, null, &quot;Closing...&quot;)));</span>
+<span class="nc" id="L841">            Gson gson = new Gson();</span>
+<span class="nc" id="L842">            out.println(gson.toJson(new Response(Response.ResponseType.SHUTDOWN, null, null, &quot;Closing...&quot;)));</span>
         }
-<span class="nc" id="L782">    }</span>
+<span class="nc" id="L844">    }</span>
 
     public synchronized void sendView(View view) {
-<span class="nc bnc" id="L785" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L847" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L787">                rmiClient.update(view);</span>
+<span class="nc" id="L849">                rmiClient.update(view);</span>
             }
-<span class="nc" id="L789">            catch (Exception e){</span>
-<span class="nc" id="L790">                e.printStackTrace();</span>
-<span class="nc" id="L791">            }</span>
+<span class="nc" id="L851">            catch (Exception e){</span>
+<span class="nc" id="L852">                e.printStackTrace();</span>
+<span class="nc" id="L853">            }</span>
         }
         else {
-<span class="nc" id="L794">            Gson gson = new Gson();</span>
-<span class="nc" id="L795">            out.println(gson.toJson(new Response(Response.ResponseType.UPDATE, null, view, null)));</span>
+<span class="nc" id="L856">            Gson gson = new Gson();</span>
+<span class="nc" id="L857">            out.println(gson.toJson(new Response(Response.ResponseType.UPDATE, null, view, null)));</span>
         }
-<span class="nc" id="L797">    }</span>
+<span class="nc" id="L859">    }</span>
 
     public RMIClient getRmiClient() {
-<span class="nc" id="L800">        return rmiClient;</span>
+<span class="nc" id="L862">        return rmiClient;</span>
     }
 
     public synchronized void sendHelpMessage(){
 
-<span class="nc" id="L805">        String string = &quot;\t\t\t\t\t\t&quot; + ANSI.BOLD + ANSI.ITALIC + &quot;****** MY SHELFIE ******&quot; + ANSI.RESET_STYLE + &quot;\n\n&quot; +</span>
+<span class="nc" id="L867">        String string = &quot;\t\t\t\t\t\t&quot; + ANSI.BOLD + ANSI.ITALIC + &quot;****** MY SHELFIE ******&quot; + ANSI.RESET_STYLE + &quot;\n\n&quot; +</span>
                 ANSI.BOLD + &quot;Command\t\t\tArguments\t\t\t\tNotes&quot; + ANSI.RESET_STYLE + &quot;\n&quot; +
                 &quot;/chat\t\t\ttext message\t\t\tuse it to send a chat message to other players\n&quot; +
                 &quot;/collect\t\tr1,c1 (r2,c2) (r3,c3)\t\tgame command to collect tiles from the board\n&quot; +
                 &quot;/order\t\t\tC1 C2 C3\t\t\t\tuse it if you want change the tiles order before insert them in your shelf\n&quot; +
                 &quot;/column\t\t\tcol number\t\t\t\tgame command to insert the tiles you have collected into your shelf at the selected column\n&quot; +
                 &quot;/quit\t\t\t-\t\t\t\t\t\texit from the game\n&quot;;
-<span class="nc" id="L812">        sendInfoMessage(string);</span>
-<span class="nc" id="L813">    }</span>
+<span class="nc" id="L874">        sendInfoMessage(string);</span>
+<span class="nc" id="L875">    }</span>
     public void sendMenu(){
-<span class="nc bnc" id="L815" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L877" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L817">                rmiClient.returnToMenu();</span>
+<span class="nc" id="L879">                rmiClient.returnToMenu();</span>
             }
-<span class="nc" id="L819">            catch (Exception e){</span>
-<span class="nc" id="L820">                e.printStackTrace();</span>
-<span class="nc" id="L821">            }</span>
+<span class="nc" id="L881">            catch (Exception e){</span>
+<span class="nc" id="L882">                e.printStackTrace();</span>
+<span class="nc" id="L883">            }</span>
         }
         else {
-<span class="nc" id="L824">            Gson gson = new Gson();</span>
-<span class="nc" id="L825">            out.println(gson.toJson(new Response(Response.ResponseType.RETURN_TO_MENU, null, null, null)));</span>
+<span class="nc" id="L886">            Gson gson = new Gson();</span>
+<span class="nc" id="L887">            out.println(gson.toJson(new Response(Response.ResponseType.RETURN_TO_MENU, null, null, null)));</span>
         }
-<span class="nc" id="L827">    }</span>
+<span class="nc" id="L889">    }</span>
 
     public synchronized void setRmiClient(RMIClient client){
-<span class="nc" id="L830">        this.rmiClient = client;</span>
-<span class="nc" id="L831">    }</span>
+<span class="nc" id="L892">        this.rmiClient = client;</span>
+<span class="nc" id="L893">    }</span>
 
 
     public void acceptLoadGame() {
-<span class="nc bnc" id="L835" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L897" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L837">                rmiClient.acceptLoadGame();</span>
+<span class="nc" id="L899">                rmiClient.acceptLoadGame();</span>
             }
-<span class="nc" id="L839">            catch (Exception e){</span>
-<span class="nc" id="L840">                e.printStackTrace();</span>
-<span class="nc" id="L841">            }</span>
+<span class="nc" id="L901">            catch (Exception e){</span>
+<span class="nc" id="L902">                e.printStackTrace();</span>
+<span class="nc" id="L903">            }</span>
         }
         else {
-<span class="nc" id="L844">            Gson gson = new Gson();</span>
-<span class="nc" id="L845">            out.println(gson.toJson(new Response(Response.ResponseType.ACCEPT_LOAD_GAME, null, null, null)));</span>
+<span class="nc" id="L906">            Gson gson = new Gson();</span>
+<span class="nc" id="L907">            out.println(gson.toJson(new Response(Response.ResponseType.ACCEPT_LOAD_GAME, null, null, null)));</span>
         }
-<span class="nc" id="L847">    }</span>
+<span class="nc" id="L909">    }</span>
 
     public void notifyCollectAccepted() {
-<span class="nc bnc" id="L850" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L912" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L852">                rmiClient.acceptCollect();</span>
+<span class="nc" id="L914">                rmiClient.acceptCollect();</span>
             }
-<span class="nc" id="L854">            catch (Exception e){</span>
-<span class="nc" id="L855">                e.printStackTrace();</span>
-<span class="nc" id="L856">            }</span>
+<span class="nc" id="L916">            catch (Exception e){</span>
+<span class="nc" id="L917">                e.printStackTrace();</span>
+<span class="nc" id="L918">            }</span>
         }
         else {
-<span class="nc" id="L859">            Gson gson = new Gson();</span>
-<span class="nc" id="L860">            out.println(gson.toJson(new Response(Response.ResponseType.ACCEPT_COLLECT, null, null, null)));</span>
+<span class="nc" id="L921">            Gson gson = new Gson();</span>
+<span class="nc" id="L922">            out.println(gson.toJson(new Response(Response.ResponseType.ACCEPT_COLLECT, null, null, null)));</span>
         }
-<span class="nc" id="L862">    }</span>
+<span class="nc" id="L924">    }</span>
 
     public void notifyGameEnded(String rank) {
-<span class="nc bnc" id="L865" title="All 2 branches missed.">        if(isRMI){</span>
+<span class="nc bnc" id="L927" title="All 2 branches missed.">        if(isRMI){</span>
             try{
-<span class="nc" id="L867">                rmiClient.notifyGameEnded(rank);</span>
+<span class="nc" id="L929">                rmiClient.notifyGameEnded(rank);</span>
             }
-<span class="nc" id="L869">            catch (Exception e){</span>
-<span class="nc" id="L870">                e.printStackTrace();</span>
-<span class="nc" id="L871">            }</span>
+<span class="nc" id="L931">            catch (Exception e){</span>
+<span class="nc" id="L932">                e.printStackTrace();</span>
+<span class="nc" id="L933">            }</span>
         }
         else {
-<span class="nc" id="L874">            Gson gson = new Gson();</span>
-<span class="nc" id="L875">            out.println(gson.toJson(new Response(Response.ResponseType.GAME_ENDED, null, null, rank)));</span>
+<span class="nc" id="L936">            Gson gson = new Gson();</span>
+<span class="nc" id="L937">            out.println(gson.toJson(new Response(Response.ResponseType.GAME_ENDED, null, null, rank)));</span>
         }
-<span class="nc" id="L877">    }</span>
+<span class="nc" id="L939">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

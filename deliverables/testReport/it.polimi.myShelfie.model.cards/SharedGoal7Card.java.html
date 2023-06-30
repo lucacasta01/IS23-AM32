@@ -12,7 +12,7 @@ public class SharedGoal7Card extends SharedGoalCard implements CheckSharedGoal {
 
     /**
      * Returns true if the player passed by parameter has achieved the shared goal
-     *
+     * adds the player to the achievedBy list if needed
      * @return Check result
      */
     public boolean checkPattern(Player p){
@@ -55,7 +55,7 @@ public class SharedGoal7Card extends SharedGoalCard implements CheckSharedGoal {
 
     @Override
     public String toString() {
-<span class="nc" id="L58">        return &quot;Card 7: You must have 4 rows that have a maximum&quot; +</span>
+<span class="fc" id="L58">        return &quot;Card 7: You must have 4 rows that have a maximum&quot; +</span>
                 &quot;of three different colors in them &quot;;
     }
 }

@@ -4,6 +4,10 @@ package it.polimi.myShelfie.application;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+/**
+ * MyShelfie client launcher.
+ * It will ask you if you want play with GUI or TUI
+ */
 public class MyShelfieClient {
     private static String interfaceType;
     /**

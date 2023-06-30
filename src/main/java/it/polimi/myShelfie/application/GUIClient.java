@@ -16,6 +16,11 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Objects;
 
+/**
+ * Graphic User Interface client.
+ * It's important to say that GUIClient is only a graphic mapping of Client.
+ * So, the methods called are the same; only the way they're called is different.
+ */
 public class GUIClient extends Application {
     private static GUIClient instance;
     private Stage stage;

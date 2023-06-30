@@ -4,6 +4,10 @@ import it.polimi.myShelfie.utilities.ColorPosition;
 import it.polimi.myShelfie.utilities.Settings;
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * Represent the player's shelf.
+ */
 public class Shelf {
     private final Tile[][] tileMatrix;
 

@@ -26,6 +26,10 @@ public class ConfigPanelController {
         rmiPortTxt.setText(Integer.toString(Client.getInstance().getRMIPort()));
     }
 
+    /**
+     * Set ip and ports, obviously checking if their format is right.
+     * @param actionEvent
+     */
     public void doSet(ActionEvent actionEvent) {
         StringBuilder error = new StringBuilder();
         if(!checkIp(ipTxt.getText())){
@@ -58,17 +62,17 @@ public class ConfigPanelController {
         }
     }
 
-    public boolean checkIp(String ip){
+    private boolean checkIp(String ip){
         Pattern IPV4 = Pattern.compile("^localhost|((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
         return IPV4.matcher(ip).matches();
     }
 
-    public boolean checkTcpPort(String tcpPort){
+    private boolean checkTcpPort(String tcpPort){
         Pattern port = Pattern.compile("^\\d{1,5}$");
         return port.matcher(tcpPort).matches() && !tcpPort.equals(rmiPortTxt.getText());
     }
 
-    public boolean checkRmiPort(String rmiPort){
+    private boolean checkRmiPort(String rmiPort){
         Pattern port = Pattern.compile("^\\d{1,5}$");
         return port.matcher(rmiPort).matches() && !rmiPort.equals(tcpPortTxt.getText());
     }
