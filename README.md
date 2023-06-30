@@ -77,4 +77,7 @@ Each connected client has an associated ping thread that ensures that the client
 * `Chat room`: Players have the possibility to send private messages to another player as well as broadcast messages during the game.
 * `Game persistence`: Whenever a game is stopped for any reason other than its "natural" ending, the game state is saved on the server. Whenever one of those players connects to the server, they can decide to continue playing that game instead of creating a new one.
 
+### Running the server/client
 
+The command to run the server is: `java -jar MyShelfie-Server.jar` and the one to run the client is: `java -jar MyShelfie-Client.jar`,
+after starting the client process you'll be able to choose whether you want to play with the GUI or CLI.
