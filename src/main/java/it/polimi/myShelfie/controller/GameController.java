@@ -186,6 +186,12 @@ public class GameController {
         return game.getRank(isGui);
     }
 
+
+    /**
+     * Method that generates a client's view
+     * @param chToUpdate clientHandler that needs to have its view updated
+     * @param lobby lobby that contains the client, used to update other clients' view too
+     */
     public View generateView(ClientHandler chToUpdate, Lobby lobby) {
         View view = new View();
         List<String> players = new ArrayList<>();
