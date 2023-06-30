@@ -3,6 +3,9 @@ package it.polimi.myShelfie.utilities.pojo;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * represent the GUI rank, split by positions, nicknames and scores.
+ */
 public class GUIRank {
     private final List<String> pos;
     private final List<String> nicknames;

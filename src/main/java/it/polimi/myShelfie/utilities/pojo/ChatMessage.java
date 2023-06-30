@@ -2,6 +2,9 @@ package it.polimi.myShelfie.utilities.pojo;
 
 import java.io.Serializable;
 
+/**
+ * Represents a chat message composed by the sender, the body message and the color associated to the sender
+ */
 public class ChatMessage implements Serializable {
     private final String sender;
     private final String message;

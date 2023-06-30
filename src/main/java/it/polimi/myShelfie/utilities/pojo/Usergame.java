@@ -1,6 +1,10 @@
 package it.polimi.myShelfie.utilities.pojo;
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * Map of nickname and game UID. Useful to find saved game on the disk.
+ */
 public class Usergame {
     private List<String> nicknames;
     private List<String> UIDs;

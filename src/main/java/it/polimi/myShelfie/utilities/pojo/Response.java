@@ -2,6 +2,9 @@ package it.polimi.myShelfie.utilities.pojo;
 
 import it.polimi.myShelfie.view.View;
 
+/**
+ * Represent the network response of the server in order to do inform the client about the outcome of the request
+ */
 public class Response {
     private final ChatMessage chatMessage;
     private View view;

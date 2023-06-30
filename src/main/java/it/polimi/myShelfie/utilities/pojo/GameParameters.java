@@ -3,6 +3,10 @@ import it.polimi.myShelfie.model.Tile;
 import it.polimi.myShelfie.utilities.ColorPosition;
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * represents game parameters needed to load a game from disk
+ */
 public class GameParameters {
     /*
      * JSON:

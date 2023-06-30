@@ -3,7 +3,7 @@ import it.polimi.myShelfie.utilities.Position;
 import java.util.List;
 
 /**
- * This class basically represent the network request performed by the client in order to do any game action
+ * Represent the network request performed by the client in order to do any game action
  */
 public class Action {
     private final ActionType actionType;
