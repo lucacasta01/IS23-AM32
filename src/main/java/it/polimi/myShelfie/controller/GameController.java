@@ -23,7 +23,7 @@ public class GameController {
 
     /**
      * Method used to pick up tiles from the game board
-     * @param a action to execute
+     * @param a action to execute that contains the tiles to be picked
      */
     public String pickTiles(Action a){
         String nickname = a.getNickname();
@@ -50,7 +50,7 @@ public class GameController {
 
     /**
      * Method used to select in which column you want to insert the tiles you picked
-     * @param a action
+     * @param a action that contains the column the tiles need to be inserted in
      */
     public String selectColumn(Action a){
         String nickname = a.getNickname();
@@ -79,7 +79,7 @@ public class GameController {
 
     /**
      * Method used to select the order of insertion of the tiles
-     * @param a action
+     * @param a action that contains the new order of the tiles
      */
     public String orderTiles(Action a){
         String nickname = a.getNickname();
@@ -123,6 +123,7 @@ public class GameController {
             return "0";
         }
     }
+
     public ClientHandler[] reorderLobbyPlayers(List<ClientHandler> lobbyPlayers){
         ClientHandler[] oldGameOrder = new ClientHandler[lobbyPlayers.size()];
         for(int i = 0; i<lobbyPlayers.size(); i++){
@@ -134,6 +135,10 @@ public class GameController {
         }
         return oldGameOrder;
     }
+
+    /**
+     *  Method used to perform turn-end actions and to save the current state of the game
+     */
     public void handleTurn(){
         this.game.handleTurn();
         this.game.saveGame();
