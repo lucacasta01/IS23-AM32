@@ -18,7 +18,16 @@ game [MyShelfie](https://www.craniocreations.it/prodotto/my-shelfie)
 | View                 | 🟢     |
 | Controller           | 🟢     |
 
-| Advanced feature     | State |
+| Basic Features       | State |
+|----------------------|-------|
+| Full rules           | 🟢    |
+| TUI                  | 🟢    |
+| GUI                  | 🟢    |
+| RMI                  | 🟢    |
+| Socket               | 🟢    |
+
+
+| Advanced Features    | State |
 |----------------------|-------|
 | Multiple games       | 🟢    |
 | Game persistence     | 🟢    |
