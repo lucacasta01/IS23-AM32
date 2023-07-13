@@ -1,6 +1,7 @@
 package it.polimi.myShelfie.application;
 
 import it.polimi.myShelfie.view.GUIcontroller.ChatController;
+import it.polimi.myShelfie.view.GUIcontroller.GamePanelController;
 import it.polimi.myShelfie.view.GUIcontroller.banners.ErrorBannerController;
 import it.polimi.myShelfie.view.GUIcontroller.banners.RankController;
 import it.polimi.myShelfie.view.GUIcontroller.banners.ServerOfflineController;
@@ -146,12 +147,15 @@ public class GUIClient extends Application {
     public void switchToGame() {
         Platform.runLater(()->{
             Parent gameParent;
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/gamePanel.fxml")));
             try {
-                gameParent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gamePanel.fxml")));
+                gameParent = loader.load();
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException("Game panel loading failed");
             }
+
+            ((GamePanelController)loader.getController()).init();
 
             stage.setMinWidth(1440);
             stage.setMinHeight(850);

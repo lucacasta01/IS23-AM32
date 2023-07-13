@@ -1,6 +1,9 @@
 package it.polimi.myShelfie.application;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import it.polimi.myShelfie.network.ClientHandler;
+import it.polimi.myShelfie.network.Lobby;
+import it.polimi.myShelfie.network.ping.ServerRmiPingThread;
 import it.polimi.myShelfie.view.GUIcontroller.ChatController;
 import it.polimi.myShelfie.view.GUIcontroller.GamePanelController;
 import it.polimi.myShelfie.view.GUIcontroller.LoginController;
@@ -29,9 +32,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.regex.Pattern;
 
 
 /**
@@ -212,6 +214,7 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
         boolean close = false;
         if (!isGUI) {
             connectionProtocol = protocolHandler();
+            ipHandler();
             portHandler(connectionProtocol);
         }
 
@@ -549,25 +552,43 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                     boolean pingFailed = false;
                     while (!pingFailed) {
                         try {
+                            Timer timer = new Timer(true);
+                            TimerTask interruptTimerTask = new InterruptTimerTask(Thread.currentThread(), isGUI);
+                            timer.schedule(interruptTimerTask, 15000);
                             rmiServer.ping();
+                            timer.cancel();
                         } catch (RemoteException e) { //ping failed
                             pingFailed = true;
-                            System.err.println("Server offline: closing...");
-                            if(!isGUI) {
-                                System.exit(1);
-                            }else{
-                                GUIClient.getInstance().showServerOfflineBan();
-                            }
                         }
                         try {
                             Thread.sleep(Settings.PINGPERIOD);
                         } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            pingFailed = true;
                         }
                     }
                 }
             }
         });
+    }
+
+    private static class InterruptTimerTask extends TimerTask {
+        private Thread thread;
+        private boolean isGUI;
+        public InterruptTimerTask(Thread thread, boolean isGUI) {
+            this.thread=thread;
+            this.isGUI = isGUI;
+        }
+
+        @Override
+        public void run(){
+            System.err.println("Server offline: closing...");
+            if(!isGUI) {
+                System.exit(1);
+            }else{
+                GUIClient.getInstance().showServerOfflineBan();
+            }
+            thread.interrupt();
+        }
     }
 
     public static void main(String[] args) throws RemoteException {
@@ -650,6 +671,30 @@ public class Client extends UnicastRemoteObject implements Runnable,RMIClient {
                 this.TCPPort = Integer.parseInt(message);
             }
         }
+    }
+
+    private void ipHandler(){
+        String message;
+        BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
+
+        System.out.println("Insert server IP: ");
+        try {
+            message= inReader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        while(!message.matches("^localhost|((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")){
+            System.out.println("Type the right key...");
+            try {
+                message= inReader.readLine().toUpperCase();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        this.serverIP = message;
+        System.out.println(ANSI.GREEN + "IP address set" + ANSI.RESET_COLOR);
     }
 
     /**

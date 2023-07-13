@@ -39,10 +39,12 @@ public class BoardTest {
     public void isCatchableTest() {
         Board board =new Board();
         board.initBoard(2);
+        System.out.println(board);
         assertTrue(board.isCatchable(3,2));
         assertTrue(board.isCatchable(6,5));
         assertFalse(board.isCatchable(4,4));
         assertFalse(board.isCatchable(7,7));
+
     }
 
     @Test

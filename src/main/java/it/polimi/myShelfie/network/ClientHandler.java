@@ -68,7 +68,9 @@ public class ClientHandler implements Runnable {
             }
         }else{
             synchronized (server.getConnectedClients()) {
-                server.getConnectedClients().get(this).setKill(true);
+                if(server.getConnectedClients().get(this) != null) {
+                    server.getConnectedClients().get(this).setKill(true);
+                }
             }
         }
         server.removeClient(this);

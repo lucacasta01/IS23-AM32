@@ -30,14 +30,14 @@ public class SharedGoalsTests {
             }
         }
 
-        testingShelfAchieved[0][0].setColor(Tile.Color.GREEN);
-        testingShelfAchieved[0][1].setColor(Tile.Color.YELLOW);
-        testingShelfAchieved[1][0].setColor(Tile.Color.WHITE);
+        testingShelfAchieved[0][0].setColor(Tile.Color.PINK);
+        testingShelfAchieved[0][1].setColor(Tile.Color.PINK);
+        testingShelfAchieved[1][0].setColor(Tile.Color.PINK);
         testingShelfAchieved[1][1].setColor(Tile.Color.PINK);
 
-        testingShelfAchieved[3][3].setColor(Tile.Color.GREEN);
-        testingShelfAchieved[3][4].setColor(Tile.Color.YELLOW);
-        testingShelfAchieved[4][3].setColor(Tile.Color.WHITE);
+        testingShelfAchieved[3][3].setColor(Tile.Color.PINK);
+        testingShelfAchieved[3][4].setColor(Tile.Color.PINK);
+        testingShelfAchieved[4][3].setColor(Tile.Color.PINK);
         testingShelfAchieved[4][4].setColor(Tile.Color.PINK);
 
         /*
@@ -59,6 +59,22 @@ public class SharedGoalsTests {
         testingShelfNotAchieved[0][2].setColor(Tile.Color.BLUE);
         testingShelfNotAchieved[1][1].setColor(Tile.Color.BLUE);
         testingShelfNotAchieved[1][2].setColor(Tile.Color.BLUE);
+
+        for(int i=0;i<Settings.SHELFROW;i++){
+            for(int j=0;j<Settings.SHELFCOLUMN;j++){
+                System.out.print(testingShelfAchieved[i][j].toString()+" ");
+            }
+            System.out.println("");
+        }
+
+        System.out.println("");
+
+        for(int i=0;i<Settings.SHELFROW;i++){
+            for(int j=0;j<Settings.SHELFCOLUMN;j++){
+                System.out.print(testingShelfNotAchieved[i][j].toString()+" ");
+            }
+            System.out.println("");
+        }
 
 
         Player p1 = new Player("player1");

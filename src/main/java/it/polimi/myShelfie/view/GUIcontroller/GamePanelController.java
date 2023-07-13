@@ -60,6 +60,10 @@ public class GamePanelController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    }
+
+    public void init(){
         initializeChatPanel();
         Client.getInstance().setGamePanelController(this);
         addGridEvent();
@@ -121,8 +125,8 @@ public class GamePanelController implements Initializable {
             }
         }
 
-        return  ((!grid[Math.min(row + 1, Settings.BOARD_DIM)][column]) &&  !tilesMatch(Math.min(row + 1, Settings.BOARD_DIM), column, row, column)) ||
-                ((!grid[row][Math.min(column + 1, Settings.BOARD_DIM)]) && !tilesMatch(row,Math.min(column + 1, Settings.BOARD_DIM),row,column)) ||
+        return  ((!grid[Math.min(row + 1, Settings.BOARD_DIM - 1)][column]) &&  !tilesMatch(Math.min(row + 1, Settings.BOARD_DIM - 1), column, row, column)) ||
+                ((!grid[row][Math.min(column + 1, Settings.BOARD_DIM - 1)]) && !tilesMatch(row,Math.min(column + 1, Settings.BOARD_DIM - 1),row,column)) ||
                 ((!grid[Math.max(row - 1, 0)][column]) && !tilesMatch(Math.max(row - 1, 0),column, row, column)) ||
                 ((!grid[row][Math.max(column - 1, 0)]) && !tilesMatch(row,Math.max(column - 1, 0),row , column));
     }
